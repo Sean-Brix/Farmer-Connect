@@ -1,0 +1,1 @@
+// Backup of the original Chat.jsx before redesign

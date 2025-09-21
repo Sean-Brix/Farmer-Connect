@@ -12,7 +12,7 @@ export default function Chat() {
     const { theme } = useTheme();
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
-    const [activeTab, setActiveTab] = useState('active'); // 'active' | 'history'
+    const [sidebarOpen, setSidebarOpen] = useState(false); // Controls sidebar visibility
     const [chatMode, setChatMode] = useState('admin'); // Direct to live agent
     const [adminRequested, setAdminRequested] = useState(false);
     const [pastInquiries, setPastInquiries] = useState([]);
@@ -73,11 +73,9 @@ export default function Chat() {
                     // expecting either null or an inquiry object
                     if (data && data.id) {
                         setActiveInquiry(data);
-                        setActiveTab('active');
                         loadInquiryConversation(data);
                     } else {
                         setActiveInquiry(null);
-                        setActiveTab('active');
                         // keep default system message and wait for user input
                     }
                 }
@@ -114,6 +112,11 @@ export default function Chat() {
     // Removed automatic admin support request; new inquiry will be created on first user message
 
     // Bot mode is removed
+
+    // Toggle sidebar visibility
+    const toggleSidebar = () => {
+        setSidebarOpen(!sidebarOpen);
+    };
 
     // Handle sending a message
     const handleSend = async (e) => {
@@ -305,6 +308,7 @@ export default function Chat() {
     const loadInquiryConversation = (inquiry) => {
         setActiveInquiry(inquiry);
         setSearchQuery(''); // Clear search when loading a conversation
+        setSidebarOpen(false); // Close sidebar when loading a conversation
         // Build a single timeline from initial message, replies, and attachments
         const timeline = [];
         timeline.push({
@@ -395,7 +399,7 @@ export default function Chat() {
             }
         ]);
         setChatMode('admin');
-        setActiveTab('active');
+        setSidebarOpen(false); // Close sidebar when starting new conversation
     };
 
     // Filter inquiries based on search query
@@ -501,11 +505,12 @@ export default function Chat() {
                         onClick={e => e.stopPropagation()}
                     >
                         {/* Enhanced Left Panel: Tabs with Inquiry History */}
-                        <div className={`w-80 lg:w-96 flex flex-col transition-all duration-300 ${
-                            theme === 'dark' 
+                        <div className={`${sidebarOpen ? 'w-80 lg:w-96' : 'w-0'} flex flex-col transition-all duration-300 overflow-hidden ${
+                            sidebarOpen ? (theme === 'dark' 
                                 ? 'bg-gradient-to-b from-gray-800 to-gray-900 border-r border-gray-700' 
                                 : 'bg-gradient-to-b from-gray-50 to-gray-100 border-r border-gray-200'
-                        } rounded-l-3xl overflow-hidden`}>
+                            ) : ''
+                        } ${sidebarOpen ? 'rounded-l-3xl' : ''}`}>
                                 {/* Enhanced Modern Sidebar Header */}
                                 <div className={`p-6 border-b ${
                                     theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
@@ -529,12 +534,9 @@ export default function Chat() {
                                                     <p className={`text-sm mt-0.5 ${
                                                         theme === 'dark' ? 'text-emerald-100' : 'text-indigo-100'
                                                     }`}>
-                                                        {activeTab === 'history' ?
-                                                            (searchQuery.trim() 
-                                                                ? `${filteredInquiries.length} of ${pastInquiries.length} found`
-                                                                : `${pastInquiries.length} ${pastInquiries.length === 1 ? 'conversation' : 'conversations'}`
-                                                            )
-                                                            : (activeInquiry ? 'Active inquiry' : 'Ready to help')
+                                                        {searchQuery.trim() 
+                                                            ? `${filteredInquiries.length} of ${pastInquiries.length} found`
+                                                            : `${pastInquiries.length} ${pastInquiries.length === 1 ? 'conversation' : 'conversations'}`
                                                         }
                                                     </p>
                                                 </div>
@@ -547,37 +549,8 @@ export default function Chat() {
                                                 {isConnected ? 'Online' : 'Offline'}
                                             </div>
                                         </div>
-                                        <div className="mt-4 grid grid-cols-2 gap-3">
-                                            <button
-                                                onClick={() => setActiveTab('active')}
-                                                className={`w-full px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 border shadow-sm ${
-                                                    activeTab === 'active' 
-                                                        ? 'bg-white text-gray-800 border-white/30 shadow-md' 
-                                                        : 'bg-white/20 text-white border-white/30 hover:bg-white/30'
-                                                }`}
-                                            >
-                                                <div className="flex items-center justify-center gap-2">
-                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
-                                                    </svg>
-                                                    Active
-                                                </div>
-                                            </button>
-                                            <button
-                                                onClick={() => setActiveTab('history')}
-                                                className={`w-full px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 border shadow-sm ${
-                                                    activeTab === 'history' 
-                                                        ? 'bg-white text-gray-800 border-white/30 shadow-md' 
-                                                        : 'bg-white/20 text-white border-white/30 hover:bg-white/30'
-                                                }`}
-                                            >
-                                                <div className="flex items-center justify-center gap-2">
-                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                                                    </svg>
-                                                    History
-                                                </div>
-                                            </button>
+                                        <div className="mt-4">
+                                            <h4 className="text-white text-sm font-medium">Message History</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -630,44 +603,7 @@ export default function Chat() {
                                         ? 'bg-gradient-to-b from-gray-800 to-gray-900' 
                                         : 'bg-gradient-to-b from-white to-gray-50'
                                 }`}>
-                                    {activeTab === 'active' ? (
-                                        <div className="space-y-3">
-                                            {activeInquiry ? (
-                                                <div className="p-4 bg-white border border-slate-200 rounded-xl">
-                                                    <div className="flex items-center justify-between">
-                                                        <div>
-                                                            <div className="text-sm text-slate-500">Active Inquiry</div>
-                                                            <div className="font-semibold text-slate-900">{activeInquiry.subject || 'General Inquiry'}</div>
-                                                        </div>
-                                                        <span className="text-xs px-2 py-1 rounded-full bg-indigo-100 text-indigo-700">{activeInquiry.status}</span>
-                                                    </div>
-                                                    <div className="mt-2 text-sm text-slate-600 line-clamp-3">{activeInquiry.message}</div>
-                                                    <div className="mt-3 flex gap-2">
-                                                        <button
-                                                            onClick={() => loadInquiryConversation(activeInquiry)}
-                                                            className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 shadow-sm"
-                                                        >
-                                                            Open
-                                                        </button>
-                                                        {activeInquiry.status !== 'RESOLVED' && (
-                                                            <button
-                                                                onClick={(e) => { e.stopPropagation(); markAsResolved(activeInquiry.id); }}
-                                                                className="px-3 py-1.5 border border-emerald-300 text-emerald-600 hover:bg-emerald-50 rounded-lg text-xs font-medium transition-colors duration-200"
-                                                            >
-                                                                Mark Resolved
-                                                            </button>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <div className="p-6 bg-white border border-slate-200 rounded-xl text-center">
-                                                    <div className="text-slate-700 font-medium">No active inquiry</div>
-                                                    <div className="text-slate-500 text-sm mt-1">Start a new message to create one</div>
-                                                    <button onClick={startNewConversation} className="mt-3 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">Start New Message</button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    ) : isLoadingHistory ? (
+                                    {isLoadingHistory ? (
                                         <div className="flex flex-col items-center justify-center py-12">
                                             <div className="w-8 h-8 border-2 border-blue-300 border-t-blue-600 rounded-full animate-spin mb-3"></div>
                                             <span className="text-gray-600 text-sm">Loading conversations...</span>
@@ -814,7 +750,7 @@ export default function Chat() {
                         {/* Main Chat Area */}
                         <div className="flex-1 flex flex-col bg-white">
                         {/* Header */}
-                        <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white px-6 py-5 rounded-tr-3xl relative overflow-hidden">
+                        <div className={`bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white px-6 py-5 relative overflow-hidden ${sidebarOpen ? 'rounded-tr-3xl' : 'rounded-t-3xl'}`}>
                             <div className="relative z-10 flex items-center justify-between">
                                 <div className="flex items-center gap-4">
                                     <div className="relative">
@@ -833,6 +769,27 @@ export default function Chat() {
                                 </div>
                                 
                                 <div className="flex items-center gap-2">
+                                    {/* History Toggle Button */}
+                                    <button
+                                        onClick={toggleSidebar}
+                                        className="p-2.5 hover:bg-white/20 rounded-full transition-all duration-200 group"
+                                        aria-label="Toggle history"
+                                    >
+                                        <svg className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </button>
+                                    
+                                    {/* New Message Button */}
+                                    <button
+                                        onClick={startNewConversation}
+                                        className="p-2.5 hover:bg-white/20 rounded-full transition-all duration-200 group"
+                                        aria-label="Start new message"
+                                    >
+                                        <svg className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                        </svg>
+                                    </button>
                                     {activeInquiry?.id && activeInquiry?.status !== 'RESOLVED' && (
                                         <button
                                             type="button"
