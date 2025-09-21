@@ -369,12 +369,15 @@ export default function Chat() {
     // Mark conversation as resolved
     const markAsResolved = async (inquiryId) => {
         try {
+            console.log('Client: Marking inquiry as resolved:', inquiryId);
             // Notify admins via socket before resolving
             if (socket && isConnected && inquiryId) {
                 try {
+                    console.log('Client: Emitting resolve request to server');
                     socket.emit('user_inquiry:resolve_request', { inquiryId });
                 } catch {}
             }
+            console.log('Client: Making API call to resolve inquiry');
             const response = await fetch(`/api/inquiries/${inquiryId}/resolve`, {
                 method: 'PATCH',
                 headers: {
@@ -384,6 +387,7 @@ export default function Chat() {
             });
             
             if (response.ok) {
+                console.log('Client: API call successful, inquiry resolved');
                 // Refresh the inquiries list
                 await fetchPastInquiries();
                 // If current conversation was resolved, clear active state (do not auto-start a new inquiry)

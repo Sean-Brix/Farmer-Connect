@@ -47,15 +47,20 @@ export const resolveInquiry = async (req, res) => {
 
         try {
             // Broadcast to admins that inquiry is resolved
-            const io = socketLogoutService.getIO?.();
+            const io = socketLogoutService.io;
             if (io) {
+                console.log('Emitting status update to admins:', { inquiryId, status: 'RESOLVED' });
                 io.to('admin_room').emit('admin_inquiry:status_update', {
                     inquiryId,
                     status: 'RESOLVED',
                     updatedAt: new Date().toISOString()
                 });
+            } else {
+                console.error('Socket IO not available in socketLogoutService');
             }
-        } catch {}
+        } catch (error) {
+            console.error('Error emitting status update:', error);
+        }
 
         res.status(200).json({
             success: true,

@@ -46,6 +46,36 @@ function Chat_Module() {
     return () => clearTimeout(t);
   }, [toast]);
 
+  // Track the last resolved inquiry for auto-selection
+  const [lastResolvedInquiryId, setLastResolvedInquiryId] = useState(null);
+
+  // Refetch resolved list when switching to RESOLVED tab
+  useEffect(() => {
+    if (activeTab === 'RESOLVED' && isConnected && socket) {
+      const refetchResolvedList = async () => {
+        try {
+          const res = await fetchByStatus('RESOLVED');
+          setResolved(res.items || []);
+          
+          // Auto-select the last resolved inquiry if available
+          if (lastResolvedInquiryId && res.items && res.items.length > 0) {
+            const foundInquiry = res.items.find(item => 
+              item.id === lastResolvedInquiryId || item.inquiryId === lastResolvedInquiryId
+            );
+            if (foundInquiry) {
+              setSelectedChat(foundInquiry);
+              setLastResolvedInquiryId(null); // Clear after selecting
+            }
+          }
+        } catch (error) {
+          console.error('Failed to refetch resolved list:', error);
+        }
+      };
+      
+      refetchResolvedList();
+    }
+  }, [activeTab, isConnected, socket, lastResolvedInquiryId]);
+
   // Load inquiries for tabs
   useEffect(() => {
     if (isConnected && socket) loadTabs();
@@ -78,41 +108,73 @@ function Chat_Module() {
 
   // Helpers
   const upsert = (list, item) => {
-    const idx = list.findIndex(c => c.id === item.id);
+    const itemId = item.id || item.inquiryId;
+    const idx = list.findIndex(c => c.id === itemId || c.inquiryId === itemId);
     if (idx >= 0) {
       const copy = [...list];
       copy[idx] = { ...copy[idx], ...item };
+      console.log(`Admin: Updated existing item in list at index ${idx}`);
       return copy;
     }
+    console.log(`Admin: Adding new item to list`);
     return [item, ...list];
   };
-  const removeFrom = (list, id) => list.filter(c => c.id !== id);
+
+  // Helper function to find inquiry data and create updated item
+  const upsertInquiry = (list, inquiryId, patch, newStatus) => {
+    // Try to find the inquiry in any of the current lists
+    const findInList = (searchList) => searchList.find(c => c.id === inquiryId || c.inquiryId === inquiryId);
+    const found = findInList(pending) || findInList(inProgress) || findInList(resolved) || 
+                  (selectedChat && (selectedChat.id === inquiryId || selectedChat.inquiryId === inquiryId) ? selectedChat : null);
+    
+    if (!found) {
+      console.log(`Admin: Could not find inquiry ${inquiryId} to move`);
+      return list;
+    }
+    
+    const updated = { ...found, id: inquiryId, status: newStatus, ...patch };
+    return upsert(list, updated);
+  };
+  const removeFrom = (list, id) => {
+    const filtered = list.filter(c => c.id !== id && c.inquiryId !== id);
+    console.log(`Admin: removeFrom - original length: ${list.length}, after removal: ${filtered.length}, removing id: ${id}`);
+    return filtered;
+  };
 
   const moveInquiry = (inquiryId, toStatus, patch = {}) => {
-    const findIn = (list) => list.find(c => c.id === inquiryId || c.inquiryId === inquiryId);
-    const found = findIn(pending) || findIn(inProgress) || findIn(resolved);
-    if (!found) return;
-    const id = found.id || found.inquiryId || inquiryId;
-    const updated = { ...found, id, status: toStatus, ...patch };
-
-    // Remove from all tabs first
-    const newPending = removeFrom(pending, id);
-    const newInProgress = removeFrom(inProgress, id);
-    const newResolved = removeFrom(resolved, id);
-    setPending(newPending);
-    setInProgress(newInProgress);
-    setResolved(newResolved);
-
-    // Insert into the target tab
-    if (toStatus === 'PENDING') setPending(prev => upsert(prev, updated));
-    else if (toStatus === 'IN_PROGRESS') setInProgress(prev => upsert(prev, updated));
-    else setResolved(prev => upsert(prev, updated));
+    console.log(`Admin: Moving inquiry ${inquiryId} to ${toStatus}`);
+    
+    // Create a single state update that handles all three arrays atomically
+    const updateAllLists = () => {
+      setPending(prevPending => {
+        const pendingWithoutTarget = prevPending.filter(c => c.id !== inquiryId && c.inquiryId !== inquiryId);
+        return toStatus === 'PENDING' ? upsertInquiry(pendingWithoutTarget, inquiryId, patch, toStatus) : pendingWithoutTarget;
+      });
+      
+      setInProgress(prevInProgress => {
+        const inProgressWithoutTarget = prevInProgress.filter(c => c.id !== inquiryId && c.inquiryId !== inquiryId);
+        return toStatus === 'IN_PROGRESS' ? upsertInquiry(inProgressWithoutTarget, inquiryId, patch, toStatus) : inProgressWithoutTarget;
+      });
+      
+      setResolved(prevResolved => {
+        const resolvedWithoutTarget = prevResolved.filter(c => c.id !== inquiryId && c.inquiryId !== inquiryId);
+        if (toStatus === 'RESOLVED') {
+          const result = upsertInquiry(resolvedWithoutTarget, inquiryId, patch, toStatus);
+          console.log(`Admin: Added to resolved list, new length: ${result.length}`);
+          return result;
+        }
+        return resolvedWithoutTarget;
+      });
+    };
+    
+    updateAllLists();
 
     // Keep selected chat's message thread/details
     setSelectedChat(prev => {
       if (!prev) return prev;
-      const matches = prev.id === id || prev.inquiryId === id;
+      const matches = prev.id === inquiryId || prev.inquiryId === inquiryId;
       if (!matches) return prev;
+      const updated = { ...prev, status: toStatus, ...patch };
       return {
         ...updated,
         replies: prev.replies || updated.replies || [],
@@ -199,15 +261,28 @@ function Chat_Module() {
 
     // Status change (e.g., admin first reply -> IN_PROGRESS, user resolve -> RESOLVED)
     socket.on('admin_inquiry:status_update', (payload) => {
+      console.log('Admin received status update:', payload);
       const { inquiryId, status, updatedAt } = payload || {};
       if (!inquiryId || !status) return;
+      
+      // Track newly resolved inquiries for auto-selection
+      if (status === 'RESOLVED') {
+        setLastResolvedInquiryId(inquiryId);
+      }
+      
+      console.log(`Admin: Before moveInquiry - activeTab: ${activeTabRef.current}`);
       moveInquiry(inquiryId, status, { updatedAt, status });
+      
       // If we're following this conversation, switch to its new status tab for continuity
       const current = selectedChatRef.current;
       if (current && (current.id === inquiryId || current.inquiryId === inquiryId)) {
-        if (activeTabRef.current !== status) setActiveTab(status);
-  // also update selectedChat status immediately
-  setSelectedChat(prev => prev ? { ...prev, status, updatedAt } : prev);
+        console.log(`Admin: Currently viewing this inquiry, switching from ${activeTabRef.current} to ${status}`);
+        if (activeTabRef.current !== status) {
+          console.log(`Admin: Setting activeTab to ${status}`);
+          setActiveTab(status);
+        }
+        // also update selectedChat status immediately
+        setSelectedChat(prev => prev ? { ...prev, status, updatedAt } : prev);
       }
     });
 

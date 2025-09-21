@@ -346,6 +346,7 @@ function setup_socket(io){
         switch (socket.user.role) {
             case 'Admin':
             case 'Super_Admin':
+                console.log(`Admin ${socket.user.id} joining admin_room`);
                 socket.join('admin_room'); // Join admin room for chat
                 admin_inquiry(io, socket);
                 break;
