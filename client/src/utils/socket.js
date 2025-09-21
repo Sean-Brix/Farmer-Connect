@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-// Prefer current origin + Socket.IO path so Vite proxy can route to the server (8091)
+// Prefer current origin + Socket.IO path so Vite proxy can route to the server (8080)
 const SOCKET_URL = import.meta?.env?.VITE_SOCKET_URL || window.location.origin;
 
 // Initialize socket connection

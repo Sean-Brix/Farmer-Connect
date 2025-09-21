@@ -4,7 +4,7 @@ import MessageInput from './MessageInput.jsx';
 import FileAttachment from './FileAttachment.jsx';
 import SendFormModal from './SendFormModal.jsx';
 
-const ChatWindow = ({ selectedChat, messagesEndRef, messagesContainerRef, getUserName, onSendMessage }) => {
+const ChatWindow = ({ selectedChat, messagesEndRef, messagesContainerRef, getUserName, onSendMessage, onSendAttachment, onError }) => {
   const [showSendForm, setShowSendForm] = useState(false);
 
   // Build a combined timeline: initial message, replies, and attachments
@@ -158,7 +158,7 @@ const ChatWindow = ({ selectedChat, messagesEndRef, messagesContainerRef, getUse
       </div>
 
       {/* Message Input */}
-  <MessageInput onSendMessage={onSendMessage} selectedChat={selectedChat} />
+  <MessageInput onSendMessage={onSendMessage} onSendAttachment={onSendAttachment} selectedChat={selectedChat} onError={onError} />
 
       {/* Send Form Modal */}
       {showSendForm && (

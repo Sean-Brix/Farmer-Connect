@@ -16,18 +16,18 @@ export default defineConfig({
 
     proxy: {
       '/socket.io': {
-        target: 'http://localhost:8091',
+        target: 'http://localhost:8080',
         ws: true,
         changeOrigin: true,
       },
       
       '/api': {
-        target: 'http://localhost:8091/',
+        target: 'http://localhost:8080/',
         changeOrigin: true,
       },
 
       '/auth': {
-        target: 'http://localhost:8091/',
+        target: 'http://localhost:8080/',
         changeOrigin: true,
       }
 

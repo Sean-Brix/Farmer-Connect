@@ -13,7 +13,7 @@ colors.enable();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // Force a stable local dev port to avoid environment overriding PORT
-const PORT = 8091;
+const PORT = process.env.PORT || 3000;
 
 // Server
 const server = http.createServer(app);

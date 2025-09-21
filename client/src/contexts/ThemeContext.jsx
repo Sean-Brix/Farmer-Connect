@@ -46,7 +46,7 @@ export const ThemeProvider = ({ children }) => {
   // Load theme preference from database when user is authenticated
   const loadThemePreference = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/preferences/theme', {
+      const response = await fetch('http://localhost:8080/api/preferences/theme', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -69,7 +69,7 @@ export const ThemeProvider = ({ children }) => {
   // Save theme preference to database
   const saveThemePreference = async (newTheme) => {
     try {
-      await fetch('http://localhost:3000/api/preferences/theme', {
+      await fetch('http://localhost:8080/api/preferences/theme', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

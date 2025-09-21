@@ -299,6 +299,30 @@ function client_inquiry(io, socket) {
         }
     });
 
+    // Handle user attachment upload notification
+    socket.on('inquiry_attachment_uploaded', async (data) => {
+        try {
+            const { inquiryId, filename, streamUrl, filesize, mimetype } = data;
+            
+            console.log(`User ${socket.user.username} uploaded attachment to inquiry ${inquiryId}`);
+            
+            // Notify all admins about the new attachment
+            io.to(ROOMS.ADMIN_ROOM).emit('admin_inquiry:attachment', {
+                inquiryId: inquiryId,
+                filename: filename,
+                streamUrl: streamUrl,
+                filepath: streamUrl, // For backward compatibility
+                filesize: filesize,
+                mimetype: mimetype,
+                timestamp: new Date().toISOString(),
+                userName: `${socket.user.firstName} ${socket.user.surname}`
+            });
+            
+        } catch (error) {
+            console.error('Error handling user attachment:', error);
+        }
+    });
+
     // Handle disconnect
     socket.on(CLIENT_LISTENERS.DISCONNECT, () => {
         console.log(`Client disconnected: ${socket.user?.username || socket.user?.id} (ID: ${socket.id})`);

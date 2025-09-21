@@ -232,11 +232,12 @@ function Chat_Module() {
       setInProgress(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage: preview, lastMessageTime: ts, updatedAt: ts } : c));
       setResolved(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage: preview, lastMessageTime: ts, updatedAt: ts } : c));
 
-      // If the chat is open, append a reply-like item that contains a direct link
+      // If the chat is open, add attachment both to attachments array and replies for real-time display
       setSelectedChat(prev => {
         if (!prev) return prev;
         const matches = prev.id === inquiryId || prev.inquiryId === inquiryId;
         if (!matches) return prev;
+        
         const att = {
           id: `temp-${Date.now()}`,
           filename,
@@ -246,11 +247,31 @@ function Chat_Module() {
           uploadedById: prev.userId,
           createdAt: ts,
         };
+        
+        // Check if attachment already exists
         const prevAtts = Array.isArray(prev.attachments) ? prev.attachments : [];
-        // Dedupe by streamUrl+filename
         const exists = prevAtts.some(a => (a.streamUrl || a.filepath) === att.streamUrl && (a.filename || '') === (filename || ''));
-        const nextAtts = exists ? prevAtts : [...prevAtts, att];
-        return { ...prev, attachments: nextAtts, lastMessage: preview, lastMessageTime: ts, updatedAt: ts };
+        
+        if (exists) return prev; // Don't add duplicates
+        
+        // Add attachment message to replies array for immediate display like admin attachments
+        const attachmentReply = {
+          id: `user-att-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          message: streamUrl || filepath,
+          mime: mimetype,
+          filename: filename,
+          createdAt: ts,
+          senderType: 'USER'
+        };
+        
+        return { 
+          ...prev, 
+          attachments: [...prevAtts, att],
+          replies: [...(prev.replies || []), attachmentReply],
+          lastMessage: preview, 
+          lastMessageTime: ts, 
+          updatedAt: ts 
+        };
       });
     });
 
@@ -373,6 +394,123 @@ function Chat_Module() {
 
     // Follow the conversation into In Progress
     if (activeTabRef.current !== 'IN_PROGRESS') setActiveTab('IN_PROGRESS');
+  };
+
+  // Handle sending attachments - sequential upload like client-side
+  const handleSendAttachment = async (attachmentFiles) => {
+    if (!attachmentFiles || attachmentFiles.length === 0 || !selectedChat) return;
+
+    // Get the inquiry ID - could be either id or inquiryId depending on data structure
+    const inquiryId = selectedChat.inquiryId || selectedChat.id;
+    const id = selectedChat.id || selectedChat.inquiryId;
+    
+    if (!inquiryId) {
+      console.error('No inquiry ID found in selectedChat:', selectedChat);
+      setToast({
+        type: 'error',
+        title: 'Upload Failed',
+        message: 'Cannot upload attachment: No inquiry ID found.'
+      });
+      return;
+    }
+
+    let successCount = 0;
+
+    // Upload files sequentially like client-side
+    for (let i = 0; i < attachmentFiles.length; i++) {
+      const file = attachmentFiles[i];
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        // Upload to server using the resolved inquiryId
+        const response = await fetch(`/api/inquiries/${inquiryId}/attachments`, {
+          method: 'POST',
+          body: formData,
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText || 'Upload failed');
+        }
+
+        const { data } = await response.json();
+        const streamUrl = data.streamUrl || data.filepath;
+        const nowIso = new Date().toISOString();
+        const attachmentPreview = `📎 ${data.filename}`;
+        
+        // Add attachment message to replies array like client-side
+        const attachmentReply = {
+          id: `admin-att-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          message: streamUrl,
+          mime: data.mimetype,
+          filename: data.filename,
+          createdAt: nowIso,
+          senderType: 'ADMIN'
+        };
+
+        setSelectedChat(prev => ({
+          ...prev,
+          lastMessage: attachmentPreview,
+          lastMessageTime: nowIso,
+          status: 'IN_PROGRESS',
+          replies: [...(prev.replies || []), attachmentReply],
+          attachments: [
+            ...(prev.attachments || []),
+            {
+              id: data.id || `temp-${Date.now()}`,
+              filename: data.filename,
+              mimetype: data.mimetype,
+              streamUrl: streamUrl,
+              filesize: data.filesize,
+              uploadedById: 'admin', // Mark as admin upload
+              createdAt: nowIso,
+            }
+          ]
+        }));
+
+        // Update the inquiry status and move to IN_PROGRESS if needed
+        moveInquiry(id, 'IN_PROGRESS', { lastMessage: attachmentPreview, lastMessageTime: nowIso, updatedAt: nowIso });
+
+        // Emit socket event to notify user of admin attachment
+        if (socket && isConnected) {
+          socket.emit('admin_attachment_uploaded', {
+            userId: selectedChat.userId,
+            inquiryId: inquiryId,
+            filename: data.filename,
+            streamUrl: streamUrl,
+            filesize: data.filesize,
+            mimetype: data.mimetype,
+            timestamp: nowIso
+          });
+        }
+
+        successCount++;
+      } catch (error) {
+        console.error(`Failed to upload ${file.name}:`, error);
+        setToast({
+          type: 'error',
+          title: 'Upload failed',
+          message: `${file.name}: ${error.message || 'Attachment upload failed'}`
+        });
+        // Continue with next file like client-side
+      }
+    }
+
+    // Follow the conversation into In Progress if any files succeeded
+    if (successCount > 0 && activeTabRef.current !== 'IN_PROGRESS') {
+      setActiveTab('IN_PROGRESS');
+    }
+
+    // Show success toast for successful uploads
+    if (successCount > 0) {
+      setToast({
+        type: 'success',
+        title: 'Files Sent',
+        message: `${successCount} file(s) uploaded successfully.`
+      });
+    }
   };
 
   // Helper function to get user name from chat data
@@ -573,6 +711,8 @@ function Chat_Module() {
               messagesEndRef={messagesEndRef}
               messagesContainerRef={messagesContainerRef}
               onSendMessage={handleSendMessage}
+              onSendAttachment={handleSendAttachment}
+              onError={setToast}
             />
           </div>
         </div>

@@ -12,11 +12,14 @@ export async function uploadInquiryAttachment(req, res) {
       return res.status(400).json({ success: false, message: 'No file uploaded' });
     }
 
-    // Validate inquiry belongs to user and is active (or allow any status?)
+    // Validate inquiry exists - allow admins to upload to any inquiry
+    const isAdmin = req.user?.access === 'Admin' || req.user?.access === 'Super_Admin';
     const inquiry = await prisma.inquiry.findFirst({
       where: {
         id: inquiryId,
-        userId,
+        // Regular users can only upload to their own inquiries
+        // Admins can upload to any inquiry
+        ...(isAdmin ? {} : { userId }),
       },
     });
 

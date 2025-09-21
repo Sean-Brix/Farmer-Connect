@@ -140,6 +140,39 @@ function admin_inquiry(io, socket) {
         }
     });
 
+    // Handle admin attachment upload
+    socket.on(ADMIN_LISTENERS.ATTACHMENT_UPLOADED, async (data) => {
+        try {
+            const { userId, inquiryId, filename, streamUrl, filesize, mimetype, timestamp } = data;
+            
+            console.log(`Admin ${socket.user.username} uploaded attachment to inquiry ${inquiryId}`);
+            
+            // Forward the attachment event to the specific user
+            if (userId) {
+                io.to(`${ROOMS.USER_PREFIX}${userId}`).emit('admin_attachment_received', {
+                    inquiryId: inquiryId,
+                    filename: filename,
+                    streamUrl: streamUrl,
+                    filesize: filesize,
+                    mimetype: mimetype,
+                    timestamp: timestamp || new Date().toISOString(),
+                    adminName: `${socket.user.firstName} ${socket.user.surname}`
+                });
+            }
+            
+            // Also notify other admins about the attachment
+            socket.to(ROOMS.ADMIN_ROOM).emit(ADMIN_EVENTS.MESSAGE_UPDATE, {
+                inquiryId: inquiryId,
+                lastMessage: `📎 ${filename}`,
+                timestamp: timestamp || new Date().toISOString()
+            });
+            
+        } catch (error) {
+            console.error('Error handling admin attachment:', error);
+            socket.emit(ADMIN_EVENTS.ERROR, { message: ERROR_MESSAGES.DATABASE_ERROR });
+        }
+    });
+
     // Handle disconnect
     socket.on(ADMIN_LISTENERS.DISCONNECT, () => {
         console.log(`Admin disconnected: ${socket.user?.username || socket.user?.id} (ID: ${socket.id})`);

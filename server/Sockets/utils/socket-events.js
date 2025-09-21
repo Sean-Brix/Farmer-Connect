@@ -70,6 +70,7 @@ export const ADMIN_LISTENERS = {
     UPDATE_STATUS: 'admin_inquiry:update_status',
     ASSIGN_INQUIRY: 'admin_inquiry:assign_inquiry',
     CLOSE_INQUIRY: 'admin_inquiry:close_inquiry',
+    ATTACHMENT_UPLOADED: 'admin_attachment_uploaded',
     
     // Statistics
     GET_STATS: 'admin_inquiry:get_stats',

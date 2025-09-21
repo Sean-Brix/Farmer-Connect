@@ -102,8 +102,24 @@ export default function Chat() {
             fetchPastInquiries();
         });
 
+        socket.on('admin_attachment_received', (data) => {
+            console.debug('[chat] on admin_attachment_received', { filename: data?.filename, streamUrl: data?.streamUrl });
+            const attachmentMsg = {
+                from: 'admin',
+                text: data.streamUrl || data.filepath,
+                mime: data.mimetype,
+                filename: data.filename,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            setMessages(prev => [...prev, attachmentMsg]);
+            
+            // Refresh conversation history when receiving admin attachment
+            fetchPastInquiries();
+        });
+
         return () => {
             socket.off('admin_reply_received');
+            socket.off('admin_attachment_received');
         };
     }, [socket]);
 
