@@ -107,37 +107,7 @@ const Preferences = () => {
         </div>
       )}
 
-      {/* Modern Success Alert - Centered Popup */}
-      {showSuccess && (
-        <div className="fixed inset-0 h-full z-50 flex items-center justify-center bg-black/60">
-          <div 
-            className="border border-emerald-200/50 dark:border-emerald-700/50 rounded-2xl p-8 flex flex-col items-center text-center shadow-2xl max-w-sm mx-4 transform animate-in fade-in zoom-in duration-300"
-            style={{ backgroundColor: isDark ? '#0f3730' : '#f0fdfa' }}
-          >
-            <div 
-              className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
-              style={{ backgroundColor: isDark ? '#047857' : '#d1fae5' }}
-            >
-              <i 
-                className="fas fa-check text-2xl"
-                style={{ color: isDark ? '#6ee7b7' : '#047857' }}
-              ></i>
-            </div>
-            <h3 
-              className="font-semibold text-lg mb-2"
-              style={{ color: isDark ? '#6ee7b7' : '#047857' }}
-            >
-              {t('settings.preferences_updated')}
-            </h3>
-            <p 
-              className="text-sm opacity-80"
-              style={{ color: isDark ? '#86efac' : '#059669' }}
-            >
-              Your preferences have been saved successfully
-            </p>
-          </div>
-        </div>
-      )}
+      {/* Success popup removed - no alert on preference update */}
 
       {/* Language Preferences */}
       <div 

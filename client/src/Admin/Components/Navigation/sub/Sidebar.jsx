@@ -12,7 +12,8 @@ export default function Sidebar({
     handleSetPage,
     theme,
     isDark,
-}) {
+         mobile, // Added mobile prop
+    }) {
     const navigate = useNavigate();
 
     const handleClick = (item) => {
@@ -54,85 +55,38 @@ export default function Sidebar({
                     </div>
                     <nav className="mt-3 flex-1 overflow-y-auto minimalist-scrollbar">
                         <ul className="space-y-2 px-4 py-4">
-                            {filteredMenuItems.map((item) => (
-                                <li
-                                    key={item.key}
-                                    className={`flex items-center gap-4 px-6 py-4 text-lg rounded-xl transition cursor-pointer shadow-sm
-                                        ${
-                                            currentPageKey === item.key
-                                                ? isDark 
-                                                    ? 'bg-gradient-to-r from-green-900/50 to-green-800/50 text-green-300 ring-2 ring-green-500/30 shadow-lg'
-                                                    : 'bg-gradient-to-r from-green-200/80 to-green-100/80 text-green-800 ring-2 ring-green-400/30 shadow-lg'
-                                                : isDark
-                                                    ? 'text-gray-300 hover:bg-green-900/30 hover:shadow-md'
-                                                    : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
-                                        }
-                                    `}
-                                    style={{ minHeight: '3.5rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
-                                    onClick={() => handleClick(item)}
-                                >
-                                    <div className={`sidebar-icon flex items-center justify-center drop-shadow-sm ${
-                                        currentPageKey === item.key 
-                                            ? isDark ? 'text-green-400' : 'text-green-700'
-                                            : isDark ? 'text-green-500' : 'text-green-600'
-                                    }`} style={{ fontSize: '1.25rem', width: '1.25rem', height: '1.25rem', minWidth: '1.25rem', minHeight: '1.25rem' }}>
-                                        {item.icon}
-                                    </div>
-                                    <span className="sidebar-label font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '500' }}>{item.label}</span>
-                                </li>
-                            ))}
+                            {filteredMenuItems
+                                .filter(item => item.key !== 'settings' && item.key !== 'profile' && item.key !== 'logout')
+                                .map((item) => (
+                                    <li
+                                        key={item.key}
+                                        className={`flex items-center gap-4 px-6 py-4 text-lg rounded-xl transition cursor-pointer shadow-sm
+                                            ${
+                                                currentPageKey === item.key
+                                                    ? isDark 
+                                                        ? 'bg-gradient-to-r from-green-900/50 to-green-800/50 text-green-300 ring-2 ring-green-500/30 shadow-lg'
+                                                        : 'bg-gradient-to-r from-green-200/80 to-green-100/80 text-green-800 ring-2 ring-green-400/30 shadow-lg'
+                                                    : isDark
+                                                        ? 'text-gray-300 hover:bg-green-900/30 hover:shadow-md'
+                                                        : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
+                                            }
+                                        `}
+                                        style={{ minHeight: '3.5rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
+                                        onClick={() => handleClick(item)}
+                                    >
+                                        <div className={`sidebar-icon flex items-center justify-center drop-shadow-sm ${
+                                            currentPageKey === item.key 
+                                                ? isDark ? 'text-green-400' : 'text-green-700'
+                                                : isDark ? 'text-green-500' : 'text-green-600'
+                                        }`} style={{ fontSize: '1.25rem', width: '1.25rem', height: '1.25rem', minWidth: '1.25rem', minHeight: '1.25rem' }}>
+                                            {item.icon}
+                                        </div>
+                                        <span className="sidebar-label font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '500' }}>{item.label}</span>
+                                    </li>
+                                ))}
                         </ul>
                     </nav>
-                    <div className={`p-6 border-t flex flex-col items-center mt-auto shadow-inner ${
-                        isDark 
-                            ? 'border-gray-700 bg-gray-800' 
-                            : 'border-green-200 bg-white'
-                    }`}>
-                        <div
-                            className={`flex items-center mb-5 w-full gap-4 cursor-pointer rounded-xl p-3 transition shadow-sm ${
-                                isDark 
-                                    ? 'hover:bg-green-900/30' 
-                                    : 'hover:bg-green-100/60'
-                            }`}
-                            onClick={() => navigate('/settings/profile')}
-                            style={{ minHeight: '4.2rem' }}
-                        >
-                            <img
-                                src={details.picture}
-                                alt="Profile"
-                                className={`h-12 w-12 rounded-full object-cover border-2 shadow ${
-                                    isDark ? 'border-green-500' : 'border-green-300'
-                                }`}
-                                style={{ background: '#e0e7ef' }}
-                            />
-                            <div className="flex flex-col sidebar-profile-info">
-                                <span className={`font-bold sidebar-username text-base tracking-tight drop-shadow-sm ${
-                                    isDark ? 'text-green-300' : 'text-green-900'
-                                }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '600' }}>
-                                    {details.username}
-                                </span>
-                                <span className={`text-sm sidebar-position font-medium ${
-                                    isDark ? 'text-green-400' : 'text-green-500'
-                                }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '500' }}>
-                                    {details.position}
-                                </span>
-                            </div>
-                        </div>
-                        <button
-                            className={`flex items-center justify-center gap-3 px-6 py-3 rounded-xl transition w-full border font-bold text-base shadow-md hover:shadow-lg sidebar-logout-btn ${
-                                isDark 
-                                    ? 'bg-gray-700 hover:bg-red-900 border-gray-600 text-red-400 hover:text-red-300' 
-                                    : 'bg-white hover:bg-red-50 border-red-200 text-red-700 hover:text-red-800'
-                            }`}
-                            onClick={logging}
-                            style={{ letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
-                        >
-                            <span>
-                                <i className="fas fa-sign-out-alt h-5 w-5"></i>
-                            </span>
-                            <span className="sidebar-logout-text" style={{ fontWeight: '600' }}>Logout</span>
-                        </button>
-                    </div>
+                    {/* Removed profile icon, settings, and logout button from sidebar */}
                 </div>
                 {/* Minimalist scrollbar and icon-only mode styles */}
                 <style>{`

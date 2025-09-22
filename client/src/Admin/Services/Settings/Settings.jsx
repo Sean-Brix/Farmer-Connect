@@ -47,39 +47,16 @@ const Settings = () => {
       }`}
     >
       
-      {/* Header Section */}
-      <div 
-        className={`border-b shadow-sm mb-8 mt-20 ${
-          isDark ? 'border-gray-700' : 'border-gray-200'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="py-6 sm:py-8">
-            <div className="flex items-center space-x-4">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
-                  <i className="fas fa-cog text-white text-xl sm:text-2xl"></i>
-                </div>
-              </div>
-              <div className="min-w-0 flex-1">
-                <h1 
-                  className={`text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight ${
-                    isDark ? 'text-white' : 'text-gray-900'
-                  }`}
-                >
-                  Admin Settings
-                </h1>
-                <p 
-                  className={`mt-1 sm:mt-2 text-sm sm:text-base max-w-2xl ${
-                    isDark ? 'text-gray-400' : 'text-gray-600'
-                  }`}
-                >
-                  Manage your admin preferences and account settings
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* Header Section - flattened, icon inline with title */}
+      <div className="mt-20 mb-8 px-2">
+        <h1 className={`flex items-center gap-3 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}
+            style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
+          <span className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-lg">
+            <i className="fas fa-cog text-white text-xl sm:text-2xl"></i>
+          </span>
+          Admin Settings
+        </h1>
+        <p className={`mt-1 sm:mt-2 text-sm sm:text-base max-w-2xl ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Manage your admin preferences and account settings</p>
       </div>
 
       {/* Main Content Container */}

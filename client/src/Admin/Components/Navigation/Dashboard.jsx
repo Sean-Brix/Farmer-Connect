@@ -26,6 +26,9 @@ import Audit from '../../Services/Logs/Audit.jsx';
 import { menuItems } from './sub/menuItems.jsx';
 
 export default function Dashboard() {
+    // Modern profile dropdown state
+    const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+    const profileDropdownTimeout = useRef(null);
     const { theme, isDark } = useTheme();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [showAccountPanel, setShowAccountPanel] = useState(false);
@@ -409,20 +412,38 @@ export default function Dashboard() {
                             ? 'bg-gray-800/90 border-gray-700' 
                             : 'bg-white/90 border-green-100'
                     }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
-                        {/* Home button (left) */}
-                        <button
-                            className={`flex items-center gap-2 px-4 py-2 border rounded-lg font-bold shadow transition mr-4 ${
-                                isDark 
-                                    ? 'bg-gray-700 border-gray-600 hover:bg-green-800 text-green-400' 
-                                    : 'bg-white border-gray-300 hover:bg-green-200 text-green-700'
-                            }`}
-                            onClick={() => navigate('/')}
-                            aria-label="Go to Landing Page"
-                            style={{ letterSpacing: '0.01em' }}
-                        >
-                            <i className="fas fa-home text-xl"></i>
-                            <span className="hidden sm:inline">Home</span>
-                        </button>
+                        {/* Mobile: Home button only (menu bar icon removed) */}
+                        <div className="flex md:hidden items-center gap-2">
+                            <button
+                                className={`flex items-center gap-2 px-4 py-2 border rounded-lg font-bold shadow transition ${
+                                    isDark 
+                                        ? 'bg-gray-700 border-gray-600 hover:bg-green-800 text-green-400' 
+                                        : 'bg-white border-gray-300 hover:bg-green-200 text-green-700'
+                                }`}
+                                onClick={() => navigate('/')}
+                                aria-label="Go to Landing Page"
+                                style={{ letterSpacing: '0.01em' }}
+                            >
+                                <i className="fas fa-home text-xl"></i>
+                                <span className="hidden sm:inline">Home</span>
+                            </button>
+                        </div>
+                        {/* Desktop: Home button first, then menu bar button (unchanged) */}
+                        <div className="hidden md:flex items-center">
+                            <button
+                                className={`flex items-center gap-2 px-4 py-2 border rounded-lg font-bold shadow transition mr-4 ${
+                                    isDark 
+                                        ? 'bg-gray-700 border-gray-600 hover:bg-green-800 text-green-400' 
+                                        : 'bg-white border-gray-300 hover:bg-green-200 text-green-700'
+                                }`}
+                                onClick={() => navigate('/')}
+                                aria-label="Go to Landing Page"
+                                style={{ letterSpacing: '0.01em' }}
+                            >
+                                <i className="fas fa-home text-xl"></i>
+                                <span className="hidden sm:inline">Home</span>
+                            </button>
+                        </div>
                         {/* Centered dashboard title */}
                         <div className="flex-1 flex items-center justify-center">
                             <div className="flex items-center gap-2">
@@ -441,17 +462,60 @@ export default function Dashboard() {
                         </div>
                         {/* Settings icon (right) and mobile menu */}
                         <div className="flex items-center gap-2 ml-4">
-                            <button
-                                className={`flex items-center justify-center p-3 border rounded-full shadow transition ${
-                                    isDark 
-                                        ? 'bg-gray-700 border-gray-600 hover:bg-green-800 text-green-400' 
-                                        : 'bg-white border-gray-300 hover:bg-green-200 text-green-700'
-                                }`}
-                                onClick={() => handleSetPage('settings')}
-                                aria-label="Settings"
+                            {/* Modern Profile icon with animated dropdown */}
+                            <div
+                                className="relative"
+                                onMouseEnter={() => {
+                                    if (profileDropdownTimeout.current) clearTimeout(profileDropdownTimeout.current);
+                                    setProfileDropdownOpen(true);
+                                }}
+                                onMouseLeave={() => {
+                                    profileDropdownTimeout.current = setTimeout(() => setProfileDropdownOpen(false), 300);
+                                }}
+                                tabIndex={0}
+                                onFocus={() => setProfileDropdownOpen(true)}
+                                onBlur={() => profileDropdownTimeout.current = setTimeout(() => setProfileDropdownOpen(false), 300)}
                             >
-                                <i className="fas fa-cog text-xl"></i>
-                            </button>
+                                <button
+                                    className={`flex items-center justify-center rounded-full shadow-lg transition-all duration-200 focus:outline-none ${
+                                        isDark 
+                                            ? 'bg-transparent border-2 border-green-500 hover:bg-green-900 text-green-300' 
+                                            : 'bg-transparent border-2 border-green-500 hover:bg-green-100 text-green-700'
+                                    }`}
+                                    aria-label="Profile"
+                                    style={{ boxShadow: isDark ? '0 4px 24px #0003' : '0 4px 24px #22c55e22', padding: 0, width: '40px', height: '40px' }}
+                                >
+                                    <img
+                                        src={details.picture}
+                                        alt="Profile"
+                                        className="w-full h-full rounded-full object-cover transition-all duration-200"
+                                        style={{ border: 'none' }}
+                                    />
+                                </button>
+                                {/* Dropdown menu with fade/slide animation and delay */}
+                                <div
+                                    className={`absolute right-0 mt-3 w-48 rounded-2xl shadow-2xl border z-50 bg-white/95 ${isDark ? 'bg-gray-900/95 border-gray-700' : 'bg-white/95 border-green-100'} transition-all duration-300 ease-in-out ${profileDropdownOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'}`}
+                                    style={{
+                                        boxShadow: isDark ? '0 8px 32px #22c55e22' : '0 8px 32px #22c55e22',
+                                        backdropFilter: 'blur(8px)',
+                                    }}
+                                >
+                                    <div className="py-2">
+                                        <button
+                                            className={`w-full flex items-center gap-2 px-5 py-3 rounded-xl text-base font-semibold transition-all duration-150 hover:bg-green-100 ${isDark ? 'text-green-300 hover:bg-green-900/30' : 'text-green-700 hover:bg-green-100'}`}
+                                            onClick={() => { setProfileDropdownOpen(false); handleSetPage('settings'); }}
+                                        >
+                                            <i className="fas fa-cog"></i> Settings
+                                        </button>
+                                        <button
+                                            className={`w-full flex items-center gap-2 px-5 py-3 rounded-xl text-base font-semibold transition-all duration-150 hover:bg-red-100 ${isDark ? 'text-red-400 hover:bg-red-900/30' : 'text-red-700 hover:bg-red-100'}`}
+                                            onClick={() => { setProfileDropdownOpen(false); logging(); }}
+                                        >
+                                            <i className="fas fa-sign-out-alt"></i> Logout
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                             <button
                                 className={`md:hidden transition ml-2 ${
                                     isDark 
@@ -587,63 +651,7 @@ export default function Dashboard() {
                             </nav>
                         </div>
                         {/* Profile and Logout at the bottom, styled like desktop */}
-                        <div className={`p-6 border-t flex flex-col items-center mt-auto shadow-inner ${
-                            isDark 
-                                ? 'border-gray-700 bg-gray-800' 
-                                : 'border-green-200 bg-white'
-                        }`}>
-                            <div
-                                className={`flex items-center mb-5 w-full gap-4 cursor-pointer rounded-xl p-3 transition shadow-sm ${
-                                    isDark 
-                                        ? 'hover:bg-green-900/30' 
-                                        : 'hover:bg-green-100/60'
-                                }`}
-                                onClick={() => {
-                                    if (window.innerWidth <= 751) {
-                                        setMobileMenuOpen(false);
-                                        setTimeout(() => navigate('/settings/profile'), 300);
-                                    } else {
-                                        navigate('/settings/profile');
-                                    }
-                                }}
-                                style={{ minHeight: '4.2rem' }}
-                            >
-                                <img
-                                    src={details.picture}
-                                    alt="Profile"
-                                    className={`h-12 w-12 rounded-full object-cover border-2 shadow ${
-                                        isDark ? 'border-green-500' : 'border-green-300'
-                                    }`}
-                                    style={{ background: '#e0e7ef' }}
-                                />
-                                <div className="flex flex-col sidebar-profile-info">
-                                    <span className={`font-bold sidebar-username text-base tracking-tight drop-shadow-sm ${
-                                        isDark ? 'text-green-300' : 'text-green-900'
-                                    }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '600' }}>
-                                        {details.username}
-                                    </span>
-                                    <span className={`text-sm sidebar-position font-medium ${
-                                        isDark ? 'text-green-400' : 'text-green-500'
-                                    }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '500' }}>
-                                        {details.position}
-                                    </span>
-                                </div>
-                            </div>
-                            <button
-                                className={`flex items-center justify-center gap-3 px-6 py-3 rounded-xl transition w-full border font-bold text-base shadow-md hover:shadow-lg sidebar-logout-btn ${
-                                    isDark 
-                                        ? 'bg-gray-700 hover:bg-red-900 border-gray-600 text-red-400 hover:text-red-300' 
-                                        : 'bg-white hover:bg-red-50 border-red-200 text-red-700 hover:text-red-800'
-                                }`}
-                                onClick={logging}
-                                style={{ letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '600' }}
-                            >
-                                <span>
-                                    <i className="fas fa-sign-out-alt h-5 w-5"></i>
-                                </span>
-                                <span className="sidebar-logout-text">Logout</span>
-                            </button>
-                        </div>
+                        {/* ...existing code... (removed profile, settings, and logout from mobile sidebar) */}
                     </div>
                 </aside>
             )}

@@ -748,7 +748,7 @@ function Survey() {
               className="fixed bottom-8 right-8 bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 z-50 group"
               title="Create New Survey"
             >
-              <span className="text-2xl group-hover:scale-110 transition-transform duration-200">➕</span>
+              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-2xl text-white group-hover:scale-110 transition-transform duration-200">+</span>
             </button>
           </div>
         )}
