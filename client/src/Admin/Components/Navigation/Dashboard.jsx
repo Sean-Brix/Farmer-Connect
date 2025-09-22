@@ -106,7 +106,7 @@ export default function Dashboard() {
                 container.style.width = '100vw';
                 container.style.height = '100vh';
                 container.style.background =
-                    'linear-gradient(135deg, #2563eb 0%, #1e293b 100%)';
+                    'linear-gradient(135deg, #16a34a 0%, #064e3b 100%)';
                 container.style.display = 'flex';
                 container.style.alignItems = 'center';
                 container.style.justifyContent = 'center';
@@ -127,7 +127,7 @@ export default function Dashboard() {
             ">
               <div style="
           font-size:3.5rem;
-          color:#2563eb;
+          color:#16a34a;
           margin-bottom:0.5rem;
           font-weight:900;
           letter-spacing: -2px;
@@ -143,14 +143,14 @@ export default function Dashboard() {
           Please login to continue.
               </div>
               <button id="go-login-btn" style="
-          background: linear-gradient(90deg,#2563eb 60%,#1e293b 100%);
+          background: linear-gradient(90deg,#16a34a 60%,#064e3b 100%);
           color: #fff;
           border: none;
           border-radius: 0.8rem;
           padding: 0.7rem 2.2rem;
           font-weight: 700;
           font-size: 1.1rem;
-          box-shadow: 0 2px 12px #2563eb22;
+          box-shadow: 0 2px 12px #16a34a22;
           cursor: pointer;
           transition: background 0.18s, transform 0.12s;
           outline: none;
@@ -169,7 +169,7 @@ export default function Dashboard() {
           transform: scale(0.97);
               }
               #go-login-btn:hover {
-          background: linear-gradient(90deg,#1d4ed8 60%,#1e293b 100%);
+          background: linear-gradient(90deg,#15803d 60%,#064e3b 100%);
               }
             </style>
           `;
@@ -234,14 +234,14 @@ export default function Dashboard() {
         border: 1.5px solid #e0e7ef;
         animation: minimalFadeIn 0.32s cubic-bezier(.4,2,.6,1) both;
       ">
-        <div style="
-          font-size:2.1rem;
-          color:#2563eb;
-          margin-bottom:0.5rem;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-        ">
+                <div style="
+                    font-size:2.1rem;
+                    color:#16a34a;
+                    margin-bottom:0.5rem;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                ">
           <span style="
         display: inline-flex;
         align-items: center;
@@ -262,19 +262,19 @@ export default function Dashboard() {
           Are you sure you want to logout?
         </div>
         <div style="display:flex; gap:0.8rem; justify-content:center;">
-          <button id="modern-logout-yes" style="
-        background: #2563eb;
-        color: #fff;
-        border: none;
-        border-radius: 0.7rem;
-        padding: 0.55rem 1.6rem;
-        font-weight: 700;
-        font-size: 1rem;
-        box-shadow: 0 2px 8px #2563eb22;
-        cursor: pointer;
-        transition: background 0.18s, transform 0.12s;
-        outline: none;
-          ">Logout</button>
+                    <button id="modern-logout-yes" style="
+                background: #16a34a;
+                color: #fff;
+                border: none;
+                border-radius: 0.7rem;
+                padding: 0.55rem 1.6rem;
+                font-weight: 700;
+                font-size: 1rem;
+                box-shadow: 0 2px 8px #16a34a22;
+                cursor: pointer;
+                transition: background 0.18s, transform 0.12s;
+                outline: none;
+                    ">Logout</button>
           <button id="modern-logout-no" style="
         background: #f1f5f9;
         color: #222;
@@ -302,9 +302,9 @@ export default function Dashboard() {
         #modern-logout-yes:active, #modern-logout-no:active {
           transform: scale(0.97);
         }
-        #modern-logout-yes:hover {
-          background: #1d4ed8;
-        }
+                #modern-logout-yes:hover {
+                    background: #15803d;
+                }
         #modern-logout-no:hover {
           background: #e0e7ef;
         }
@@ -494,21 +494,21 @@ export default function Dashboard() {
                                 </button>
                                 {/* Dropdown menu with fade/slide animation and delay */}
                                 <div
-                                    className={`absolute right-0 mt-3 w-48 rounded-2xl shadow-2xl border z-50 bg-white/95 ${isDark ? 'bg-gray-900/95 border-gray-700' : 'bg-white/95 border-green-100'} transition-all duration-300 ease-in-out ${profileDropdownOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'}`}
+                                    className={`absolute right-0 mt-3 w-48 rounded-2xl shadow-2xl border z-50 transition-all duration-300 ease-in-out ${profileDropdownOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'}`}
                                     style={{
-                                        boxShadow: isDark ? '0 8px 32px #22c55e22' : '0 8px 32px #22c55e22',
+                                        boxShadow: isDark ? '0 8px 32px #0f172a55' : '0 8px 32px #22c55e22',
                                         backdropFilter: 'blur(8px)',
                                     }}
                                 >
-                                    <div className="py-2">
+                                    <div className={`${isDark ? 'bg-gray-900 border border-gray-700 text-gray-100' : 'bg-white/95 border border-green-100' } rounded-2xl py-2`}>
                                         <button
-                                            className={`w-full flex items-center gap-2 px-5 py-3 rounded-xl text-base font-semibold transition-all duration-150 hover:bg-green-100 ${isDark ? 'text-green-300 hover:bg-green-900/30' : 'text-green-700 hover:bg-green-100'}`}
+                                            className={`w-full flex items-center gap-2 px-5 py-3 rounded-xl text-base font-semibold transition-all duration-150 ${isDark ? 'text-green-300 hover:bg-green-900/30' : 'text-green-700 hover:bg-green-100'}`}
                                             onClick={() => { setProfileDropdownOpen(false); handleSetPage('settings'); }}
                                         >
                                             <i className="fas fa-cog"></i> Settings
                                         </button>
                                         <button
-                                            className={`w-full flex items-center gap-2 px-5 py-3 rounded-xl text-base font-semibold transition-all duration-150 hover:bg-red-100 ${isDark ? 'text-red-400 hover:bg-red-900/30' : 'text-red-700 hover:bg-red-100'}`}
+                                            className={`w-full flex items-center gap-2 px-5 py-3 rounded-xl text-base font-semibold transition-all duration-150 ${isDark ? 'text-red-400 hover:bg-red-900/30' : 'text-red-700 hover:bg-red-100'}`}
                                             onClick={() => { setProfileDropdownOpen(false); logging(); }}
                                         >
                                             <i className="fas fa-sign-out-alt"></i> Logout
