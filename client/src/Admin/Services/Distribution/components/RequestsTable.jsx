@@ -363,30 +363,23 @@ export default function RequestsTable({
                                 {/* Actions */}
                                 <td className="py-4 px-6">
                                     {getStatusOptions(request.status).length > 0 ? (
-                                        <div className="flex gap-2">
-                                            {getStatusOptions(request.status).map(
-                                                (status) => (
-                                                    <button
-                                                        key={status}
-                                                        onClick={() =>
-                                                            onStatusChange(
-                                                                request.id,
-                                                                status
-                                                            )
-                                                        }
-                                                        className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-                                                            status === 'Approved'
-                                                                ? 'bg-green-100 text-green-700 hover:bg-green-200 border border-green-300'
-                                                                : status === 'Rejected'
-                                                                ? 'bg-red-100 text-red-700 hover:bg-red-200 border border-red-300'
-                                                                : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200 border border-indigo-300'
-                                                        }`}
-                                                    >
-                                                        Mark as{' '}
-                                                        {status.replace('_', ' ')}
-                                                    </button>
-                                                )
-                                            )}
+                                        <div className="flex items-center">
+                                            <select
+                                                className={`px-2 py-1 rounded-md text-xs font-medium border focus:outline-none focus:ring-1 focus:ring-green-400 shadow-sm ${isDark ? 'bg-gray-800 text-gray-100 border-gray-700' : 'bg-white text-gray-700 border-gray-300'}`}
+                                                defaultValue=""
+                                                onChange={e => {
+                                                    if (e.target.value) {
+                                                        onStatusChange(request.id, e.target.value);
+                                                    }
+                                                }}
+                                            >
+                                                <option value="" disabled>Change status...</option>
+                                                {getStatusOptions(request.status).map((status) => (
+                                                    <option key={status} value={status}>
+                                                        {status === 'Approved' ? 'Approve' : status === 'Rejected' ? 'Reject' : status.replace('_', ' ')}
+                                                    </option>
+                                                ))}
+                                            </select>
                                         </div>
                                     ) : (
                                         <span className="text-xs text-gray-400">

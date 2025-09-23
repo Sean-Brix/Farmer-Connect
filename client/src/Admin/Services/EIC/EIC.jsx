@@ -1790,16 +1790,6 @@ function EICItemRow({ stack, onViewDetails, onEdit, imageUpdateTimestamp, isDark
                     {/* Actions - Col 3 */}
                     <div className="col-span-3 flex justify-end space-x-2">
                         <button
-                            onClick={() => setShowDescription(!showDescription)}
-                            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
-                                isDark 
-                                    ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' 
-                                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                            }`}
-                        >
-                            Details
-                        </button>
-                        <button
                             onClick={() => onViewDetails(stack)}
                             className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
                                 isDark 
