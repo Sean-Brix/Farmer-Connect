@@ -1830,10 +1830,10 @@ function DistributionDetailModal({
     };
 
     return (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-            <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full border border-gray-200 overflow-hidden max-h-[95vh] overflow-y-auto">
+            <div className={`fixed inset-0 flex items-center justify-center z-50 px-4 ${isDark ? 'bg-black/80' : 'bg-black/60'}`}>
+                <div className={`rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden max-h-[95vh] overflow-y-auto border ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}>
                 {/* Header */}
-                <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+                <div className={`px-6 py-4 border-b ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-600 rounded-lg">
@@ -1842,8 +1842,8 @@ function DistributionDetailModal({
                                 </svg>
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-gray-800">Distribution Item Details</h3>
-                                <p className="text-sm text-gray-600">View item information and statistics</p>
+                                <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>Distribution Item Details</h3>
+                                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>View item information and statistics</p>
                             </div>
                         </div>
                         <button
@@ -1859,7 +1859,7 @@ function DistributionDetailModal({
                 </div>
 
                 {/* IMAGE */}
-                <div className="w-full h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
+                <div className={`w-full h-64 flex items-center justify-center overflow-hidden ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}> 
                     {stack.item?.id ? (
                         <img
                             className="object-cover w-full h-full"
@@ -1873,7 +1873,7 @@ function DistributionDetailModal({
                         />
                     ) : null}
                     <div
-                        className="text-gray-400 text-3xl flex flex-col items-center"
+                        className={`text-3xl flex flex-col items-center ${isDark ? 'text-gray-500' : 'text-gray-400'}`}
                         style={{ display: stack.item?.id ? 'none' : 'flex' }}
                     >
                         <svg
@@ -1894,21 +1894,21 @@ function DistributionDetailModal({
                 </div>
 
                 {/* DETAILS */}
-                <div className="px-6 py-6 bg-white">
+                <div className={`px-6 py-6 ${isDark ? 'bg-gray-900' : 'bg-white'}`}> 
                     <div className="mb-4">
-                        <span className="text-xs uppercase tracking-widest text-gray-400 font-semibold">
+                        <span className={`text-xs uppercase tracking-widest font-semibold ${isDark ? 'text-gray-500' : 'text-gray-400'}`}> 
                             Item Name
                         </span>
-                        <h1 className="text-2xl font-bold text-gray-900 mt-1">
+                        <h1 className={`text-2xl font-bold mt-1 ${isDark ? 'text-white' : 'text-gray-900'}`}> 
                             {stack.item?.name || 'Unknown Item'}
                         </h1>
                     </div>
 
                     <div className="mb-6">
-                        <span className="text-xs uppercase tracking-widest text-gray-400 font-semibold">
+                        <span className={`text-xs uppercase tracking-widest font-semibold ${isDark ? 'text-gray-500' : 'text-gray-400'}`}> 
                             Description
                         </span>
-                        <p className="text-gray-600 mt-1 leading-relaxed">
+                        <p className={`mt-1 leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}> 
                             {stack.item?.description ||
                                 'No description available'}
                         </p>
@@ -1918,7 +1918,7 @@ function DistributionDetailModal({
                     <div className="flex flex-wrap gap-3 mb-6">
                         {/* CATEGORY */}
                         <span
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default bg-green-100 text-green-800"
+                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default ${isDark ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-800'}`}
                             title="Category"
                         >
                             <svg
@@ -1941,7 +1941,7 @@ function DistributionDetailModal({
 
                         {/* QUANTITY */}
                         <span
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-green-100 text-green-800 text-xs font-semibold cursor-default"
+                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default ${isDark ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-800'}`}
                             title="Available Quantity"
                         >
                             <svg
@@ -1969,7 +1969,7 @@ function DistributionDetailModal({
 
                         {/* STATUS */}
                         <span
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-green-100 text-green-800 text-xs font-semibold cursor-default"
+                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default ${isDark ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-800'}`}
                             title="Distribution Status"
                         >
                             <svg
@@ -1995,7 +1995,7 @@ function DistributionDetailModal({
                     <div className="mt-4">
                         <button
                             onClick={handleViewRequests}
-                            className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-colors"
+                            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${isDark ? 'bg-green-700 hover:bg-green-600 text-green-100' : 'bg-green-500 hover:bg-green-600 text-white'}`}
                         >
                             <svg
                                 className="w-4 h-4"
@@ -2016,8 +2016,8 @@ function DistributionDetailModal({
                 </div>
 
                 {/* Footer */}
-                <div className="bg-gray-50 border-t border-gray-200 px-6 py-4">
-                    <div className="flex flex-wrap gap-4 text-xs text-gray-500">
+                <div className={`px-6 py-4 border-t ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                    <div className={`flex flex-wrap gap-4 text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}> 
                         <span>
                             <span className="font-medium">Added:</span>{' '}
                             {formatDate(stack.createdAt)}
@@ -2163,10 +2163,10 @@ function DistributionEditModal({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto border border-gray-200">
+        <div className={`fixed inset-0 z-50 flex items-center justify-center px-4 ${isDark ? 'bg-black/80' : 'bg-black/60'}`}> 
+            <div className={`rounded-xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto border ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}> 
                 {/* Header */}
-                <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+                <div className={`px-6 py-4 border-b ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-600 rounded-lg">
@@ -2175,13 +2175,13 @@ function DistributionEditModal({
                                 </svg>
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-gray-800">Edit Distribution Item</h3>
-                                <p className="text-sm text-gray-600">Modify item details and inventory</p>
+                                <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>Edit Distribution Item</h3>
+                                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Modify item details and inventory</p>
                             </div>
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            className={`p-2 rounded-lg transition-colors duration-200 focus:outline-none ${isDark ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-900 focus:ring-2 focus:ring-gray-700' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:ring-2 focus:ring-gray-300'}`}
                             aria-label="Close"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -2195,10 +2195,10 @@ function DistributionEditModal({
                 <form onSubmit={handleSubmit} className="p-6">
                     <div className="space-y-6">
                         {/* Item Name */}
-                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
                             <label
                                 htmlFor="name"
-                                className="block text-sm font-semibold text-gray-700 mb-3"
+                                className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}
                             >
                                 Item Name
                             </label>
@@ -2208,12 +2208,12 @@ function DistributionEditModal({
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                                 required
                             />
                             {formData.name !== originalData.name && (
-                                <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                                    <p className="text-sm text-amber-700 font-medium flex items-center gap-2">
+                                <div className={`mt-2 p-3 rounded-lg border ${isDark ? 'bg-amber-900 border-amber-700' : 'bg-amber-50 border-amber-200'}`}> 
+                                    <p className={`text-sm font-medium flex items-center gap-2 ${isDark ? 'text-amber-200' : 'text-amber-700'}`}> 
                                         <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L5.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                         </svg>
@@ -2224,10 +2224,10 @@ function DistributionEditModal({
                         </div>
 
                         {/* Description */}
-                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
                             <label
                                 htmlFor="description"
-                                className="block text-sm font-semibold text-gray-700 mb-3"
+                                className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}
                             >
                                 Description
                             </label>
@@ -2237,12 +2237,12 @@ function DistributionEditModal({
                                 value={formData.description}
                                 onChange={handleChange}
                                 rows="3"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white resize-none transition-colors duration-200"
+                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                                 placeholder="Enter item description..."
                             />
                             {formData.description !== originalData.description && (
-                                <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                                    <p className="text-sm text-amber-700 font-medium flex items-center gap-2">
+                                <div className={`mt-2 p-3 rounded-lg border ${isDark ? 'bg-amber-900 border-amber-700' : 'bg-amber-50 border-amber-200'}`}> 
+                                    <p className={`text-sm font-medium flex items-center gap-2 ${isDark ? 'text-amber-200' : 'text-amber-700'}`}> 
                                         <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L5.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                         </svg>
@@ -2253,10 +2253,10 @@ function DistributionEditModal({
                         </div>
 
                         {/* Category */}
-                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
                             <label
                                 htmlFor="category"
-                                className="block text-sm font-semibold text-gray-700 mb-3"
+                                className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}
                             >
                                 Category
                             </label>
@@ -2265,7 +2265,7 @@ function DistributionEditModal({
                                 name="category"
                                 value={formData.category}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                             >
                                 {categories.map((cat) => (
                                     <option key={cat} value={cat}>
@@ -2274,8 +2274,8 @@ function DistributionEditModal({
                                 ))}
                             </select>
                             {formData.category !== originalData.category && (
-                                <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                                    <p className="text-sm text-amber-700 font-medium flex items-center gap-2">
+                                <div className={`mt-2 p-3 rounded-lg border ${isDark ? 'bg-amber-900 border-amber-700' : 'bg-amber-50 border-amber-200'}`}> 
+                                    <p className={`text-sm font-medium flex items-center gap-2 ${isDark ? 'text-amber-200' : 'text-amber-700'}`}> 
                                         <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L5.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                         </svg>
@@ -2286,10 +2286,10 @@ function DistributionEditModal({
                         </div>
 
                         {/* Quantity */}
-                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
                             <label
                                 htmlFor="quantity"
-                                className="block text-sm font-semibold text-gray-700 mb-3"
+                                className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}
                             >
                                 Available Quantity
                             </label>
@@ -2300,27 +2300,27 @@ function DistributionEditModal({
                                 value={formData.quantity}
                                 onChange={handleChange}
                                 min="0"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                                 required
                             />
                         </div>
 
                         {/* Image Upload */}
-                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                            <label className="block text-sm font-semibold text-gray-700 mb-3">
+                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
+                            <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}> 
                                 Item Image
                             </label>
 
                             {/* Current Image Display */}
                             {currentImageUrl && !imagePreview && (
                                 <div className="mb-4">
-                                    <p className="text-sm text-gray-600 mb-2 font-medium">
+                                    <p className={`text-sm mb-2 font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}> 
                                         Current Image:
                                     </p>
                                     <img
                                         src={currentImageUrl}
                                         alt="Current item"
-                                        className="w-24 h-24 object-cover rounded-lg border-2 border-gray-300 shadow-sm"
+                                        className={`w-24 h-24 object-cover rounded-lg border-2 shadow-sm ${isDark ? 'border-gray-700' : 'border-gray-300'}`}
                                         onError={(e) => {
                                             e.target.style.display = 'none';
                                         }}
@@ -2331,13 +2331,13 @@ function DistributionEditModal({
                             {/* Image Preview */}
                             {imagePreview && (
                                 <div className="mb-4">
-                                    <p className="text-sm text-gray-600 mb-2 font-medium">
+                                    <p className={`text-sm mb-2 font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}> 
                                         New Image Preview:
                                     </p>
                                     <img
                                         src={imagePreview}
                                         alt="Preview"
-                                        className="w-24 h-24 object-cover rounded-lg border-2 border-green-300 shadow-sm"
+                                        className={`w-24 h-24 object-cover rounded-lg border-2 shadow-sm ${isDark ? 'border-green-700' : 'border-green-300'}`}
                                     />
                                 </div>
                             )}
@@ -2353,7 +2353,7 @@ function DistributionEditModal({
                                 />
                                 <label
                                     htmlFor="edit-image-upload"
-                                    className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg cursor-pointer hover:bg-green-700 transition-colors duration-200 text-sm font-medium shadow-sm"
+                                    className={`flex items-center px-4 py-2 rounded-lg cursor-pointer transition-colors duration-200 text-sm font-medium shadow-sm ${isDark ? 'bg-green-700 text-green-100 hover:bg-green-600' : 'bg-green-600 text-white hover:bg-green-700'}`}
                                 >
                                     <svg
                                         className="w-4 h-4 mr-2"
@@ -2376,7 +2376,7 @@ function DistributionEditModal({
                                     <button
                                         type="button"
                                         onClick={() => setShowImagePreview(true)}
-                                        className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium shadow-sm"
+                                        className={`flex items-center px-4 py-2 rounded-lg transition-colors duration-200 text-sm font-medium shadow-sm ${isDark ? 'bg-blue-700 text-blue-100 hover:bg-blue-600' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
                                     >
                                         <svg
                                             className="w-4 h-4 mr-2"
@@ -2404,14 +2404,14 @@ function DistributionEditModal({
                                     <button
                                         type="button"
                                         onClick={removeImage}
-                                        className="px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200 transition-colors duration-200 font-medium border border-red-200"
+                                        className={`px-4 py-2 rounded-lg text-sm transition-colors duration-200 font-medium border ${isDark ? 'bg-red-900 text-red-200 hover:bg-red-800 border-red-700' : 'bg-red-100 text-red-700 hover:bg-red-200 border-red-200'}`}
                                     >
                                         Remove
                                     </button>
                                 )}
                             </div>
 
-                            <p className="text-xs text-gray-500 mt-3">
+                            <p className={`text-xs mt-3 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}> 
                                 Optional. Supported formats: JPEG, PNG, GIF. Max
                                 size: 5MB.
                             </p>
@@ -2419,18 +2419,18 @@ function DistributionEditModal({
                     </div>
 
                     {/* Buttons */}
-                    <div className="border-t border-gray-200 px-6 py-4 bg-gray-50 -mx-6 -mb-6 rounded-b-xl">
+                    <div className={`px-6 py-4 -mx-6 -mb-6 rounded-b-xl border-t ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
                         <div className="flex flex-col sm:flex-row justify-end gap-3">
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="px-6 py-3 text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg transition-colors duration-200 font-medium focus:outline-none focus:ring-2 focus:ring-gray-300"
+                                className={`px-6 py-3 rounded-lg transition-colors duration-200 font-medium focus:outline-none focus:ring-2 ${isDark ? 'text-gray-200 bg-gray-900 border-gray-700 hover:bg-gray-800 focus:ring-gray-700' : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50 focus:ring-gray-300'}`}
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
-                                className="px-6 py-3 text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                                className={`px-6 py-3 rounded-lg transition-colors duration-200 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${isDark ? 'bg-green-700 text-green-100 hover:bg-green-600' : 'bg-green-600 text-white hover:bg-green-700'}`}
                             >
                                 Save Changes
                             </button>
@@ -2441,11 +2441,11 @@ function DistributionEditModal({
 
             {/* Image Preview Modal */}
             {showImagePreview && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 px-4">
-                    <div className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden">
+                <div className={`fixed inset-0 z-[60] flex items-center justify-center px-4 ${isDark ? 'bg-black/90' : 'bg-black/80'}`}>
+                    <div className={`relative max-w-4xl max-h-[90vh] rounded-lg overflow-hidden ${isDark ? 'bg-gray-900' : 'bg-white'}`}> 
                         <button
                             onClick={() => setShowImagePreview(false)}
-                            className="absolute top-4 right-4 z-10 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors duration-200"
+                            className={`absolute top-4 right-4 z-10 p-2 rounded-full transition-colors duration-200 ${isDark ? 'bg-gray-800 text-gray-200 hover:bg-gray-700' : 'bg-black/50 text-white hover:bg-black/70'}`}
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -2699,18 +2699,10 @@ function AddDistributionItemModal({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-            <div className={`rounded-xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto border ${
-                isDark 
-                    ? 'bg-gray-800 border-gray-700' 
-                    : 'bg-white border-gray-200'
-            }`}>
+        <div className={`fixed inset-0 flex items-center justify-center z-50 px-4 ${isDark ? 'bg-black/80' : 'bg-black/60'}`}> 
+            <div className={`rounded-xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto border ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}> 
                 {/* Header */}
-                <div className={`border-b px-6 py-4 ${
-                    isDark 
-                        ? 'bg-gray-700 border-gray-600' 
-                        : 'bg-gray-50 border-gray-200'
-                }`}>
+                <div className={`border-b px-6 py-4 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-600 rounded-lg">
@@ -2719,21 +2711,13 @@ function AddDistributionItemModal({
                                 </svg>
                             </div>
                             <div>
-                                <h3 className={`text-lg font-bold ${
-                                    isDark ? 'text-white' : 'text-gray-800'
-                                }`}>Add Distribution Item</h3>
-                                <p className={`text-sm ${
-                                    isDark ? 'text-gray-300' : 'text-gray-600'
-                                }`}>Add new item to distribution inventory</p>
+                                <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>Add Distribution Item</h3>
+                                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Add new item to distribution inventory</p>
                             </div>
                         </div>
                         <button
                             onClick={handleClose}
-                            className={`p-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 ${
-                                isDark 
-                                    ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-600 focus:ring-gray-500' 
-                                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:ring-gray-300'
-                            }`}
+                            className={`p-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 ${isDark ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-900 focus:ring-gray-700' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:ring-gray-300'}`}
                             aria-label="Close"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -2747,8 +2731,8 @@ function AddDistributionItemModal({
                 <form className="p-6" onSubmit={handleSubmit}>
                     <div className="space-y-6">
                         {/* Name Input with Dropdown */}
-                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 relative">
-                            <label className="block text-sm font-semibold text-gray-700 mb-3">
+                        <div className={`rounded-lg p-4 relative border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
+                            <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}> 
                                 Item Name
                             </label>
                             <input
@@ -2758,15 +2742,15 @@ function AddDistributionItemModal({
                                 onFocus={() => setShowDropdown(true)}
                                 onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
                                 placeholder="Enter or select item name"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                                 required
                             />
                             {showDropdown && filteredItems.length > 0 && (
-                                <div className="absolute top-full left-4 right-4 bg-white border border-gray-300 rounded-lg max-h-44 overflow-y-auto z-20 shadow-xl mt-1">
+                                <div className={`absolute top-full left-4 right-4 rounded-lg max-h-44 overflow-y-auto z-20 shadow-xl mt-1 border ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-300'}`}> 
                                     {filteredItems.map((item, index) => (
                                         <div
                                             key={item.id || index}
-                                            className="px-4 py-3 hover:bg-green-50 cursor-pointer text-sm border-b border-gray-100 last:border-b-0 transition-colors duration-200"
+                                            className={`px-4 py-3 cursor-pointer text-sm last:border-b-0 transition-colors duration-200 border-b ${isDark ? 'hover:bg-green-900 text-gray-200 border-gray-700' : 'hover:bg-green-50 text-gray-700 border-gray-100'}`}
                                             onClick={() => handleNameSelect(item.name)}
                                         >
                                             {item.name}
@@ -2775,8 +2759,8 @@ function AddDistributionItemModal({
                                 </div>
                             )}
                             {isNewItem && nameInput.trim() !== '' && (
-                                <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-                                    <p className="text-sm text-green-700 font-medium flex items-center gap-2">
+                                <div className={`mt-3 p-3 rounded-lg border ${isDark ? 'bg-green-900 border-green-700' : 'bg-green-50 border-green-200'}`}> 
+                                    <p className={`text-sm font-medium flex items-center gap-2 ${isDark ? 'text-green-200' : 'text-green-700'}`}> 
                                         <svg className='w-4 h-4 text-green-600' fill='none' stroke='currentColor' strokeWidth='2' viewBox='0 0 24 24'>
                                             <path d='M5 13l4 4L19 7' strokeLinecap='round' strokeLinejoin='round'/>
                                         </svg>
@@ -2787,8 +2771,8 @@ function AddDistributionItemModal({
                         </div>
 
                         {/* Quantity Input */}
-                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                            <label className="block text-sm font-semibold text-gray-700 mb-3">
+                        <div className={`rounded-lg p-4 mb-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
+                            <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}> 
                                 Quantity
                             </label>
                             <input
@@ -2797,18 +2781,19 @@ function AddDistributionItemModal({
                                 value={form.quantity}
                                 onChange={handleChange}
                                 placeholder="Enter quantity"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                                 min="1"
                                 required
                             />
+                            <div style={{paddingBottom: '0.75rem'}}></div>
                         </div>
 
                         {/* Conditional Fields - Only show if it's a new item */}
                         {isNewItem && (
                             <>
                                 {/* Description Input */}
-                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
+                                    <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}> 
                                         Description
                                     </label>
                                     <input
@@ -2817,20 +2802,20 @@ function AddDistributionItemModal({
                                         value={form.description}
                                         onChange={handleChange}
                                         placeholder="Enter item description"
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                        className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                                     />
                                 </div>
 
                                 {/* Category Dropdown */}
-                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
+                                    <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}> 
                                         Category
                                     </label>
                                     <select
                                         name="category"
                                         value={form.category}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                        className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                                     >
                                         {categories.map((cat) => (
                                             <option key={cat} value={cat}>
@@ -2841,8 +2826,8 @@ function AddDistributionItemModal({
                                 </div>
 
                                 {/* Image Upload */}
-                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
+                                    <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}> 
                                         Item Image (Optional)
                                     </label>
                                     <div className="flex flex-wrap items-center gap-3 mb-3">
@@ -2855,7 +2840,7 @@ function AddDistributionItemModal({
                                         />
                                         <label
                                             htmlFor="image-upload"
-                                            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg cursor-pointer hover:bg-green-700 transition-colors duration-200 text-sm font-medium shadow-sm"
+                                            className={`flex items-center px-4 py-2 rounded-lg cursor-pointer transition-colors duration-200 text-sm font-medium shadow-sm ${isDark ? 'bg-green-700 text-green-100 hover:bg-green-600' : 'bg-green-600 text-white hover:bg-green-700'}`}
                                         >
                                             <svg
                                                 className="w-4 h-4 mr-2"
@@ -2876,7 +2861,7 @@ function AddDistributionItemModal({
                                             <button
                                                 type="button"
                                                 onClick={removeImage}
-                                                className="px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200 transition-colors duration-200 font-medium border border-red-200"
+                                                className={`px-4 py-2 rounded-lg text-sm transition-colors duration-200 font-medium border ${isDark ? 'bg-red-900 text-red-200 hover:bg-red-800 border-red-700' : 'bg-red-100 text-red-700 hover:bg-red-200 border-red-200'}`}
                                             >
                                                 Remove
                                             </button>
@@ -2887,11 +2872,11 @@ function AddDistributionItemModal({
                                             <img
                                                 src={imagePreview}
                                                 alt="Preview"
-                                                className="w-24 h-24 object-cover rounded-lg border-2 border-green-300 shadow-sm"
+                                                className={`w-24 h-24 object-cover rounded-lg border-2 shadow-sm ${isDark ? 'border-green-700' : 'border-green-300'}`}
                                             />
                                         </div>
                                     )}
-                                    <p className="text-xs text-gray-500">
+                                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}> 
                                         Supported formats: JPEG, PNG, GIF. Max size: 5MB.
                                     </p>
                                 </div>
@@ -2900,18 +2885,18 @@ function AddDistributionItemModal({
                     </div>
 
                     {/* Buttons */}
-                    <div className="border-t border-gray-200 px-6 py-4 bg-gray-50 -mx-6 -mb-6 rounded-b-xl">
+                    <div className={`px-6 py-4 -mx-6 -mb-6 rounded-b-xl border-t ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
                         <div className="flex flex-col sm:flex-row justify-end gap-3">
                             <button
                                 type="button"
                                 onClick={handleClose}
-                                className="px-6 py-3 text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg transition-colors duration-200 font-medium focus:outline-none focus:ring-2 focus:ring-gray-300"
+                                className={`px-6 py-3 rounded-lg transition-colors duration-200 font-medium focus:outline-none focus:ring-2 ${isDark ? 'text-gray-200 bg-gray-900 border-gray-700 hover:bg-gray-800 focus:ring-gray-700' : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50 focus:ring-gray-300'}`}
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
-                                className="px-6 py-3 text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                                className={`px-6 py-3 rounded-lg transition-colors duration-200 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${isDark ? 'bg-green-700 text-green-100 hover:bg-green-600' : 'bg-green-600 text-white hover:bg-green-700'}`}
                             >
                                 Add Distribution Item
                             </button>

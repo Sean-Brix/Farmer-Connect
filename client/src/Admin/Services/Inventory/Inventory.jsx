@@ -1067,24 +1067,24 @@ function Content() {
                 </div>
 
                 {/* Professional Table Container */}
-                <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden backdrop-blur-sm">
-                    <div className="px-4 sm:px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white">
+                <div className={`rounded-2xl shadow-xl border overflow-hidden backdrop-blur-sm ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-100'}`}> 
+                    <div className={`px-4 sm:px-6 py-4 border-b bg-gradient-to-r ${isDark ? 'from-gray-800 to-gray-900 border-gray-700' : 'from-gray-50 to-white border-gray-200'}`}> 
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                             <div className="flex items-center gap-3">
-                                <div className="bg-green-600 rounded-lg p-2">
-                                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <div className={`rounded-lg p-2 ${isDark ? 'bg-green-800' : 'bg-green-600'}`}> 
+                                    <svg className={`w-5 h-5 ${isDark ? 'text-green-200' : 'text-white'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                         <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 </div>
-                                <h3 className="text-lg sm:text-xl font-bold text-gray-900">Inventory Items</h3>
+                                <h3 className={`text-lg sm:text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Inventory Items</h3>
                             </div>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                                <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full font-medium">
+                                <span className={`text-sm px-3 py-1 rounded-full font-medium ${isDark ? 'text-gray-300 bg-gray-800' : 'text-gray-600 bg-gray-100'}`}> 
                                     Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems} item{totalItems !== 1 ? 's' : ''}
                                 </span>
                                 <button
                                     onClick={handleSortToggle}
-                                    className="flex items-center gap-2 px-4 py-2 text-sm border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium"
+                                    className={`flex items-center gap-2 px-4 py-2 text-sm border-2 rounded-xl transition-all duration-200 font-medium ${isDark ? 'border-gray-700 hover:bg-gray-800 hover:border-gray-500 text-gray-200' : 'border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-gray-800'}`}
                                 >
                                     <span>Sort {sortOrder === 'asc' ? 'A-Z' : 'Z-A'}</span>
                                     <svg className={`w-4 h-4 transform transition-transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1094,11 +1094,11 @@ function Content() {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                    <div className={`rounded-lg shadow-sm border overflow-hidden ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}> 
                         <div className="overflow-x-auto">
                             <table className={`w-full table-auto ${sizeClasses[uiSize].table}`} style={{tableLayout: 'auto', wordWrap: 'break-word'}}>
                             <thead>
-                                <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200">
+                                <tr className={`bg-gradient-to-r border-b-2 ${isDark ? 'from-gray-800 to-gray-900 border-gray-700' : 'from-gray-50 to-gray-100 border-gray-200'}`}> 
                                     {showDelete && (
                                         <th className={`${sizeClasses[uiSize].padding} text-left`}>
                                             <input
@@ -1110,32 +1110,32 @@ function Content() {
                                             />
                                         </th>
                                     )}
-                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-bold text-gray-800 uppercase tracking-wider`}>
+                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-bold uppercase tracking-wider ${isDark ? 'text-gray-200' : 'text-gray-800'}`}> 
                                         Item Details
                                     </th>
-                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-bold text-gray-800 uppercase tracking-wider hidden sm:table-cell`}>
+                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-bold uppercase tracking-wider hidden sm:table-cell ${isDark ? 'text-gray-200' : 'text-gray-800'}`}> 
                                         Category
                                     </th>
-                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-bold text-gray-800 uppercase tracking-wider`}>
+                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-bold uppercase tracking-wider ${isDark ? 'text-gray-200' : 'text-gray-800'}`}> 
                                         Stock
                                     </th>
-                                    <th className={`${sizeClasses[uiSize].padding} text-right ${sizeClasses[uiSize].text} font-bold text-gray-800 uppercase tracking-wider`}>
+                                    <th className={`${sizeClasses[uiSize].padding} text-right ${sizeClasses[uiSize].text} font-bold uppercase tracking-wider ${isDark ? 'text-gray-200' : 'text-gray-800'}`}> 
                                         Actions
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-200 bg-white">
+                            <tbody className={`divide-y ${isDark ? 'divide-gray-700 bg-gray-900' : 'divide-gray-200 bg-white'}`}> 
                                 {paginatedItems.length === 0 ? (
                                     <tr>
-                                        <td colSpan={showDelete ? "5" : "4"} className="px-6 py-16 text-center">
-                                            <div className="flex flex-col items-center justify-center text-gray-400">
-                                                <div className="bg-gray-100 rounded-full p-4 mb-4">
-                                                    <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                                        <td colSpan={showDelete ? "5" : "4"} className={`px-6 py-16 text-center ${isDark ? 'bg-gray-900' : ''}`}> 
+                                            <div className={`flex flex-col items-center justify-center ${isDark ? 'text-gray-500' : 'text-gray-400'}`}> 
+                                                <div className={`rounded-full p-4 mb-4 ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}> 
+                                                    <svg className={`w-12 h-12 ${isDark ? 'text-gray-600' : 'text-gray-400'}`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                                                         <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
                                                     </svg>
                                                 </div>
-                                                <p className="text-xl font-semibold mb-2 text-gray-600">No items found</p>
-                                                <p className="text-sm text-gray-500">Try adjusting your search criteria or filters</p>
+                                                <p className={`text-xl font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>No items found</p>
+                                                <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Try adjusting your search criteria or filters</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -1144,40 +1144,40 @@ function Content() {
                                         <React.Fragment key={item.id}>
                                             {editItemId === item.id ? (
                                                 // Edit Form Row
-                                                <tr className="bg-gradient-to-r from-green-50 to-white border-l-4 border-green-400 shadow-sm">
+                                                <tr className={`bg-gradient-to-r border-l-4 shadow-sm ${isDark ? 'from-green-900 to-gray-900 border-green-700' : 'from-green-50 to-white border-green-400'}`}> 
                                                     {showDelete && <td className={sizeClasses[uiSize].padding}></td>}
                                                     <td className={sizeClasses[uiSize].padding} colSpan={showDelete ? "4" : "3"}>
                                                         <div className="space-y-2">
                                                             <div className="flex items-center gap-2 mb-2">
-                                                                <div className="bg-green-600 rounded p-1">
-                                                                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                <div className={`rounded p-1 ${isDark ? 'bg-green-800' : 'bg-green-600'}`}> 
+                                                                    <svg className={`w-3 h-3 ${isDark ? 'text-green-200' : 'text-white'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                                                         <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" />
                                                                     </svg>
                                                                 </div>
-                                                                <h4 className={`font-semibold text-gray-800 ${sizeClasses[uiSize].text}`}>Quick Edit</h4>
+                                                                <h4 className={`font-semibold ${sizeClasses[uiSize].text} ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>Quick Edit</h4>
                                                             </div>
                                                             <div className="flex items-end gap-4">
                                                                 {/* Form Fields */}
                                                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 flex-1">
                                                                     <div>
-                                                                        <label className={`block font-medium text-gray-700 mb-1 text-xs`}>Name</label>
+                                                                        <label className={`block font-medium mb-1 text-xs ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Name</label>
                                                                         <input
                                                                             type="text"
                                                                             name="name"
                                                                             value={editForm.name || ''}
                                                                             onChange={handleEditFormChange}
                                                                             onKeyDown={handleKeyPress}
-                                                                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400"
+                                                                            className={`w-full rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400 ${isDark ? 'bg-gray-900 border-gray-700 text-gray-100' : 'bg-white border-gray-300 text-gray-900'}`}
                                                                             autoFocus
                                                                         />
                                                                     </div>
                                                                     <div>
-                                                                        <label className={`block font-medium text-gray-700 mb-1 text-xs`}>Category</label>
+                                                                        <label className={`block font-medium mb-1 text-xs ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Category</label>
                                                                         <select
                                                                             name="category"
                                                                             value={editForm.category || ''}
                                                                             onChange={handleEditFormChange}
-                                                                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400"
+                                                                            className={`w-full rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400 ${isDark ? 'bg-gray-900 border-gray-700 text-gray-100' : 'bg-white border-gray-300 text-gray-900'}`}
                                                                         >
                                                                             <option value="">Select Category</option>
                                                                             {categories.map((category) => (
@@ -1188,14 +1188,14 @@ function Content() {
                                                                         </select>
                                                                     </div>
                                                                     <div>
-                                                                        <label className={`block font-medium text-gray-700 mb-1 text-xs`}>Description</label>
+                                                                        <label className={`block font-medium mb-1 text-xs ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Description</label>
                                                                         <input
                                                                             type="text"
                                                                             name="description"
                                                                             value={editForm.description || ''}
                                                                             onChange={handleEditFormChange}
                                                                             onKeyDown={handleKeyPress}
-                                                                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400"
+                                                                            className={`w-full rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400 ${isDark ? 'bg-gray-900 border-gray-700 text-gray-100' : 'bg-white border-gray-300 text-gray-900'}`}
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -1237,7 +1237,7 @@ function Content() {
                                                 </tr>
                                             ) : (
                                                 // Normal Item Row
-                                                <tr className={`hover:bg-gray-50 transition-all duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-25'}`}>
+                                                <tr className={`transition-all duration-200 ${isDark ? (index % 2 === 0 ? 'bg-gray-900 hover:bg-gray-800' : 'bg-gray-800 hover:bg-gray-700') : (index % 2 === 0 ? 'bg-white hover:bg-gray-50' : 'bg-gray-25 hover:bg-gray-50')}`}>
                                                     {showDelete && (
                                                         <td className={sizeClasses[uiSize].padding}>
                                                             <input
@@ -1250,20 +1250,20 @@ function Content() {
                                                     )}
                                                     <td className={sizeClasses[uiSize].padding}>
                                                         <div className="flex flex-col">
-                                                            <div className={`font-bold text-gray-900 ${sizeClasses[uiSize].text}`}>{item.name}</div>
-                                                            <div className={`text-gray-600 sm:hidden ${sizeClasses[uiSize].text}`}>{item.category?.name || 'Uncategorized'}</div>
+                                                            <div className={`font-bold ${sizeClasses[uiSize].text} ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>{item.name}</div>
+                                                            <div className={`sm:hidden ${sizeClasses[uiSize].text} ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{item.category?.name || 'Uncategorized'}</div>
                                                             {item.description && (
-                                                                <div className={`text-gray-500 mt-1 ${sizeClasses[uiSize].text === 'text-xs' ? 'text-xs' : sizeClasses[uiSize].text === 'text-sm' ? 'text-xs' : 'text-sm'}`}>{truncate(item.description, 40)}</div>
+                                                                <div className={`mt-1 ${sizeClasses[uiSize].text === 'text-xs' ? 'text-xs' : sizeClasses[uiSize].text === 'text-sm' ? 'text-xs' : 'text-sm'} ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{truncate(item.description, 40)}</div>
                                                             )}
                                                         </div>
                                                     </td>
                                                     <td className={`${sizeClasses[uiSize].padding} hidden sm:table-cell`}>
-                                                        <span className={`inline-flex items-center px-3 py-1 rounded-full font-semibold bg-gray-100 text-gray-800 border border-gray-200 ${sizeClasses[uiSize].text}`}>
+                                                        <span className={`inline-flex items-center px-3 py-1 rounded-full font-semibold border ${sizeClasses[uiSize].text} ${isDark ? 'bg-gray-800 text-gray-100 border-gray-700' : 'bg-gray-100 text-gray-800 border-gray-200'}`}>
                                                             {item.category?.name || 'Uncategorized'}
                                                         </span>
                                                     </td>
                                                     <td className={sizeClasses[uiSize].padding}>
-                                                        <div className={`font-bold text-gray-900 bg-green-100 px-3 py-1 rounded-full text-center inline-block ${sizeClasses[uiSize].text}`}>
+                                                        <div className={`font-bold px-3 py-1 rounded-full text-center inline-block ${sizeClasses[uiSize].text} ${isDark ? 'bg-green-900 text-green-200' : 'bg-green-100 text-gray-900'}`}> 
                                                             {item.totalQuantity || 0}
                                                         </div>
                                                     </td>
@@ -1271,7 +1271,7 @@ function Content() {
                                                         <div className="flex items-center justify-end">
                                                             <button
                                                                 onClick={() => handleViewStacks(item)}
-                                                                className={`inline-flex items-center px-3 py-2 border-2 border-green-200 shadow-sm font-semibold rounded-xl text-green-700 bg-green-100 hover:bg-green-200 hover:border-green-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300 transition-all duration-200 ${sizeClasses[uiSize].text}`}
+                                                                className={`inline-flex items-center px-3 py-2 border-2 shadow-sm font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${sizeClasses[uiSize].text} ${isDark ? 'border-green-900 text-green-200 bg-green-950 hover:bg-green-900 hover:border-green-700 focus:ring-green-900' : 'border-green-200 text-green-700 bg-green-100 hover:bg-green-200 hover:border-green-300 focus:ring-green-300'}`}
                                                             >
                                                                 {expandedStacks.has(item.id) ? (
                                                                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1291,7 +1291,7 @@ function Content() {
                                             {/* Expanded Stack Details Row */}
                                             {expandedStacks.has(item.id) && selectedItemStacks && selectedItemStacks.id === item.id && (
                                                 <tr>
-                                                    <td colSpan={showDelete ? "5" : "4"} className="px-3 sm:px-4 py-3 bg-gradient-to-r from-green-50 to-gray-50 border-l-4 border-green-400">
+                                                    <td colSpan={showDelete ? "5" : "4"} className={`px-3 sm:px-4 py-3 border-l-4 border-green-400 ${isDark ? 'bg-gradient-to-r from-green-950 to-gray-900' : 'bg-gradient-to-r from-green-50 to-gray-50'}`}> 
                                                         <div className="space-y-4">
                                                             <div className="flex items-center justify-between mb-4">
                                                                 <div className="flex items-center gap-2">
@@ -1300,11 +1300,11 @@ function Content() {
                                                                             <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
                                                                         </svg>
                                                                     </div>
-                                                                    <h4 className="text-lg font-semibold text-gray-800">Inventory Stacks for {item.name}</h4>
+                                                                    <h4 className={`text-lg font-semibold ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>Inventory Stacks for {item.name}</h4>
                                                                 </div>
                                                                 <button
                                                                     onClick={() => handleEdit(item)}
-                                                                    className="inline-flex items-center px-3 py-1.5 border border-gray-300 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-gray-400 transition-all duration-200 text-sm"
+                                                                    className={`inline-flex items-center px-3 py-1.5 font-medium rounded-lg transition-all duration-200 text-sm border focus:outline-none focus:ring-1 ${isDark ? 'border-gray-700 text-gray-200 bg-gray-900 hover:bg-gray-800 focus:ring-gray-700' : 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:ring-gray-400'}`}
                                                                 >
                                                                     <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                                                         <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" />
