@@ -68,11 +68,11 @@ export const submitSurveyResponse = async (req, res) => {
             data: {
                 surveyFormId,
                 userId,
-                metadata: metadata || null,
+                metadata: metadata ? JSON.stringify(metadata) : null,
                 answers: {
                     create: answers.map(answer => ({
                         fieldId: answer.fieldId,
-                        answer: answer.answer
+                        answer: JSON.stringify(answer.answer)
                     }))
                 }
             },

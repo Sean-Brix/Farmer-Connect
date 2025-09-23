@@ -4,12 +4,16 @@ import getUserInquiries from '../../Controller/Inquiry/getUserInquiries.js';
 import { resolveInquiry } from '../../Controller/Inquiry/resolveInquiry.js';
 import { getActiveInquiryForUser } from '../../Controller/Inquiry/getActiveInquiryForUser.js';
 import { getInquiriesByStatus } from '../../Controller/Inquiry/getInquiriesByStatus.js';
+import { createInquiry } from '../../Controller/Inquiry/createInquiry.js';
 import { cookieAuth } from '../../Middlewares/Auth/cookieAuth.js';
 import uploadInquiry from '../../Utils/multer_inquiry.js';
 import { uploadInquiryAttachment as uploadAttachmentHandler } from '../../Controller/Inquiry/uploadAttachment.js';
 import { getInquiryAttachment } from '../../Controller/Inquiry/getAttachment.js';
 
 const router = express.Router();
+
+// Create a new inquiry
+router.post('/', cookieAuth, createInquiry);
 
 // Get all active inquiries for admin chat interface
 router.get('/active', cookieAuth, getActiveInquiries);

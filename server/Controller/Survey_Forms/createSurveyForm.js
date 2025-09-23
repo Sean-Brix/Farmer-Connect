@@ -43,7 +43,7 @@ export const createSurveyForm = async (req, res) => {
                         label: field.label,
                         placeholder: field.placeholder,
                         required: field.required || false,
-                        options: field.options || null,
+                        options: field.options ? JSON.stringify(field.options) : null,
                         order: index + 1
                     })) || []
                 }

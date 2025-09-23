@@ -7,7 +7,7 @@ export const getSurveyAnalytics = async (req, res) => {
         const { surveyFormId } = req.params;
 
         // Check if survey form exists
-        const surveyForm = await prisma.surveyForm.findUnique({
+        const surveyFormRaw = await prisma.surveyForm.findUnique({
             where: { id: surveyFormId },
             include: {
                 fields: {
@@ -25,12 +25,32 @@ export const getSurveyAnalytics = async (req, res) => {
             }
         });
 
-        if (!surveyForm) {
+        if (!surveyFormRaw) {
             return res.status(404).json({
                 success: false,
                 message: 'Survey form not found'
             });
         }
+
+        const parseOptions = (opts) => {
+            if (opts == null) return null;
+            if (Array.isArray(opts)) return opts;
+            try { const p = JSON.parse(opts); return Array.isArray(p) ? p : null; } catch { return null; }
+        };
+        const parseAnswer = (ans) => {
+            if (ans == null) return null;
+            if (typeof ans !== 'string') return ans;
+            try { return JSON.parse(ans); } catch { return ans; }
+        };
+
+        const surveyForm = {
+            ...surveyFormRaw,
+            fields: (surveyFormRaw.fields || []).map(f => ({ ...f, options: parseOptions(f.options) })),
+            responses: (surveyFormRaw.responses || []).map(r => ({
+                ...r,
+                answers: (r.answers || []).map(a => ({ ...a, answer: parseAnswer(a.answer) }))
+            }))
+        };
 
         // Generate analytics for each field
         const fieldAnalytics = {};

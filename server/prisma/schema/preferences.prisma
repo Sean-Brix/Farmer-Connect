@@ -1,17 +1,12 @@
-// User preferences model for storing user settings like language, notifications, etc.
-
 model UserPreference {
   id        Int      @id @default(autoincrement())
-  userId    String   // Changed to String to match Account.id
-  key       String   // e.g., 'language', 'notification_email_seminar_updates'
-  value     String   // e.g., 'en', 'true', 'false'
+  userId    String
+  key       String
+  value     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  // Relations
   user      Account  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // Unique constraint on userId and key
+
   @@unique([userId, key])
   @@map("user_preferences")
 }

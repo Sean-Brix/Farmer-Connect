@@ -1,118 +1,111 @@
-//? ===================================== SURVEY FORMS SCHEMA ===================================== ?//
-
 model SurveyForm {
-    id          String            @id @default(cuid())
-    title       String
-    description String?           @db.Text
-    status      survey_status     @default(DRAFT)
-    category    String
-    createdById String
-    createdAt   DateTime          @default(now())
-    updatedAt   DateTime          @updatedAt
+  id          String            @id @default(cuid())
+  title       String
+  description String?           @db.Text
+  status      survey_status     @default(DRAFT)
+  category    String
+  createdById String
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  fields      SurveyField[]
+  creator     Account           @relation("SurveyFormsCreated", fields: [createdById], references: [id])
+  responses   SurveyResponse[]
+  statistics  SurveyStatistic[] @relation("SurveyStatistics")
 
-    // Relations
-    creator     Account           @relation("SurveyFormsCreated", fields: [createdById], references: [id])
-    fields      SurveyField[]
-    responses   SurveyResponse[]
-    statistics  SurveyStatistic[] @relation("SurveyStatistics")
-
-    @@map("survey_forms")
+  @@index([createdById], map: "survey_forms_createdById_fkey")
+  @@map("survey_forms")
 }
 
 model SurveyField {
-    id           String        @id @default(cuid())
-    surveyFormId String
-    type         field_type
-    label        String
-    placeholder  String?
-    required     Boolean       @default(false)
-    options      Json?         // For select, radio, checkbox fields
-    order        Int           // Field order in the form
-    createdAt    DateTime      @default(now())
-    updatedAt    DateTime      @updatedAt
+  id           String         @id @default(cuid())
+  surveyFormId String
+  type         field_type
+  label        String
+  placeholder  String?
+  required     Boolean        @default(false)
+  options      String?        @db.LongText
+  order        Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  answers      SurveyAnswer[]
+  surveyForm   SurveyForm     @relation(fields: [surveyFormId], references: [id], onDelete: Cascade)
 
-    // Relations
-    surveyForm   SurveyForm    @relation(fields: [surveyFormId], references: [id], onDelete: Cascade)
-    answers      SurveyAnswer[]
-
-    @@map("survey_fields")
+  @@index([surveyFormId], map: "survey_fields_surveyFormId_fkey")
+  @@map("survey_fields")
 }
 
 model SurveyResponse {
-    id           String         @id @default(cuid())
-    surveyFormId String
-    userId       String?        // Optional - can allow anonymous responses
-    submittedAt  DateTime       @default(now())
-    metadata     Json?          // Additional metadata like IP, browser, etc.
-    
-    // Relations
-    surveyForm   SurveyForm     @relation(fields: [surveyFormId], references: [id], onDelete: Cascade)
-    user         Account?       @relation("SurveyResponses", fields: [userId], references: [id])
-    answers      SurveyAnswer[]
+  id           String         @id @default(cuid())
+  surveyFormId String
+  userId       String?
+  submittedAt  DateTime       @default(now())
+  metadata     String?        @db.LongText
+  answers      SurveyAnswer[]
+  surveyForm   SurveyForm     @relation(fields: [surveyFormId], references: [id], onDelete: Cascade)
+  user         Account?       @relation("SurveyResponses", fields: [userId], references: [id])
 
-    @@map("survey_responses")
+  @@index([surveyFormId], map: "survey_responses_surveyFormId_fkey")
+  @@index([userId], map: "survey_responses_userId_fkey")
+  @@map("survey_responses")
 }
 
 model SurveyAnswer {
-    id         String         @id @default(cuid())
-    responseId String
-    fieldId    String
-    answer     Json           // Store answer as JSON to handle different types
-    createdAt  DateTime       @default(now())
+  id         String         @id @default(cuid())
+  responseId String
+  fieldId    String
+  answer     String         @db.LongText
+  createdAt  DateTime       @default(now())
+  field      SurveyField    @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  response   SurveyResponse @relation(fields: [responseId], references: [id], onDelete: Cascade)
 
-    // Relations
-    response   SurveyResponse @relation(fields: [responseId], references: [id], onDelete: Cascade)
-    field      SurveyField    @relation(fields: [fieldId], references: [id], onDelete: Cascade)
-
-    @@unique([responseId, fieldId]) // One answer per field per response
-    @@map("survey_answers")
+  @@unique([responseId, fieldId])
+  @@index([fieldId], map: "survey_answers_fieldId_fkey")
+  @@map("survey_answers")
 }
 
 model SurveyStatistic {
-    id           String      @id @default(cuid())
-    surveyFormId String
-    chartType    chart_type  // Type of chart (bar, pie, line, etc.)
-    title        String      // Chart title
-    description  String?     @db.Text
-    config       Json        // Chart configuration and data
-    createdById  String
-    createdAt    DateTime    @default(now())
-    updatedAt    DateTime    @updatedAt
+  id           String     @id @default(cuid())
+  surveyFormId String
+  chartType    chart_type
+  title        String
+  description  String?    @db.Text
+  config       String     @db.LongText
+  createdById  String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  creator      Account    @relation("SurveyStatisticsCreated", fields: [createdById], references: [id])
+  surveyForm   SurveyForm @relation("SurveyStatistics", fields: [surveyFormId], references: [id], onDelete: Cascade)
 
-    // Relations
-    surveyForm   SurveyForm  @relation("SurveyStatistics", fields: [surveyFormId], references: [id], onDelete: Cascade)
-    creator      Account     @relation("SurveyStatisticsCreated", fields: [createdById], references: [id])
-
-    @@map("survey_statistics")
+  @@index([createdById], map: "survey_statistics_createdById_fkey")
+  @@index([surveyFormId], map: "survey_statistics_surveyFormId_fkey")
+  @@map("survey_statistics")
 }
 
-//? ========================================== ENUMS ========================================== ?//
-
 enum survey_status {
-    DRAFT
-    ACTIVE
-    INACTIVE
-    ARCHIVED
+  DRAFT
+  ACTIVE
+  INACTIVE
+  ARCHIVED
 }
 
 enum field_type {
-    TEXT
-    TEXTAREA
-    EMAIL
-    NUMBER
-    DATE
-    SELECT
-    RADIO
-    CHECKBOX
-    FILE
+  TEXT
+  TEXTAREA
+  EMAIL
+  NUMBER
+  DATE
+  SELECT
+  RADIO
+  CHECKBOX
+  FILE
 }
 
 enum chart_type {
-    BAR
-    PIE
-    LINE
-    DOUGHNUT
-    AREA
-    COLUMN
-    SCATTER
+  BAR
+  PIE
+  LINE
+  DOUGHNUT
+  AREA
+  COLUMN
+  SCATTER
 }

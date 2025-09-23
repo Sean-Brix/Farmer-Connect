@@ -38,19 +38,19 @@ export const getAllSurveyForms = async (req, res) => {
             
             if (searchField === 'title' || searchField === 'all') {
                 where.OR.push({
-                    title: { contains: search, mode: 'insensitive' }
+                    title: { contains: search }
                 });
             }
             
             if (searchField === 'description' || searchField === 'all') {
                 where.OR.push({
-                    description: { contains: search, mode: 'insensitive' }
+                    description: { contains: search }
                 });
             }
             
             if (searchField === 'category' || searchField === 'all') {
                 where.OR.push({
-                    category: { contains: search, mode: 'insensitive' }
+                    category: { contains: search }
                 });
             }
 
@@ -91,7 +91,19 @@ export const getAllSurveyForms = async (req, res) => {
             }
         });
 
-        // Format response
+        // Helper to safely parse options JSON strings
+        const parseOptions = (opts) => {
+            if (opts == null) return null;
+            if (Array.isArray(opts)) return opts;
+            try {
+                const parsed = JSON.parse(opts);
+                return Array.isArray(parsed) ? parsed : null;
+            } catch {
+                return null;
+            }
+        };
+
+        // Format response with parsed field options to arrays
         const formattedSurveyForms = surveyForms.map(form => ({
             id: form.id,
             title: form.title,
@@ -103,19 +115,23 @@ export const getAllSurveyForms = async (req, res) => {
             creator: form.creator,
             fieldsCount: form._count.fields,
             responsesCount: form._count.responses,
-            fields: form.fields
+            fields: (form.fields || []).map(f => ({
+                ...f,
+                options: parseOptions(f.options)
+            }))
         }));
 
         // Calculate pagination info
         const totalPages = Math.ceil(total / take);
-        const hasNext = page < totalPages;
-        const hasPrev = page > 1;
+        const currentPageNum = parseInt(page);
+        const hasNext = currentPageNum < totalPages;
+        const hasPrev = currentPageNum > 1;
 
         res.status(200).json({
             success: true,
             data: formattedSurveyForms,
             pagination: {
-                currentPage: parseInt(page),
+                currentPage: currentPageNum,
                 totalPages,
                 totalItems: total,
                 itemsPerPage: take,

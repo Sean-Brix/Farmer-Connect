@@ -24,7 +24,14 @@ class BotService {
     async getWelcomeMessage() {
         try {
             const categories = await prisma.fAQCategory.findMany({
-                where: { isActive: true },
+                where: { 
+                    isActive: true,
+                    faqs: {
+                        some: {
+                            isActive: true
+                        }
+                    }
+                },
                 orderBy: { orderIndex: 'asc' },
                 select: {
                     id: true,

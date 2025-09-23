@@ -1,4 +1,54 @@
-//? ===================================== SEED TRACKING SCHEMA ===================================== ?//
+model RegisteredCrop {
+  id              String              @id @default(cuid())
+  userId          String
+  cropType        String
+  variety         String
+  plantingDate    DateTime
+  expectedHarvest DateTime?
+  area            Float?
+  status          CropStatus          @default(Active)
+  currentStage    GrowthStage         @default(Seedling)
+  expectedYield   Float?
+  notes           String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  reports         CropMonthlyReport[]
+  user            Account             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, cropType, status])
+  @@map("registered_crops")
+}
+
+model CropMonthlyReport {
+  id                    String         @id @default(cuid())
+  cropId                String
+  reportDate            DateTime
+  growthStage           GrowthStage
+  plantHeight           Float?
+  healthStatus          String?
+  estimatedYield        Float?
+  weatherImpact         String?
+  notes                 String?
+  pestsObserved         String?
+  diseasesObserved      String?
+  fertilizersApplied    String?
+  pesticideApplications String?
+  irrigationFrequency   String?
+  soilCondition         String?
+  majorActivities       String?
+  challenges            String?
+  plannedActions        String?
+  actualYield           Float?
+  costs                 String?        @db.LongText
+  submissionDate        DateTime       @default(now())
+  weatherSnapshot       String?        @db.LongText
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  crop                  RegisteredCrop @relation(fields: [cropId], references: [id], onDelete: Cascade)
+
+  @@index([cropId, reportDate])
+  @@map("crop_monthly_reports")
+}
 
 enum CropStatus {
   Active
@@ -14,60 +64,4 @@ enum GrowthStage {
   Fruiting
   Maturity
   Harvested
-}
-
-model RegisteredCrop {
-  id              String       @id @default(cuid())
-  userId          String
-  cropType        String
-  variety         String
-  plantingDate    DateTime
-  expectedHarvest DateTime?
-  area            Float?
-  status          CropStatus   @default(Active)
-  currentStage    GrowthStage  @default(Seedling)
-  expectedYield   Float?
-  notes           String?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-
-  // Relations
-  user    Account             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  reports CropMonthlyReport[]
-
-  @@index([userId, cropType, status])
-  @@map("registered_crops")
-}
-
-model CropMonthlyReport {
-  id                     String       @id @default(cuid())
-  cropId                 String
-  reportDate             DateTime
-  growthStage            GrowthStage
-  plantHeight            Float?
-  healthStatus           String?
-  estimatedYield         Float?
-  weatherImpact          String?
-  notes                  String?
-  pestsObserved          String?
-  diseasesObserved       String?
-  fertilizersApplied     String?
-  pesticideApplications  String?
-  irrigationFrequency    String?
-  soilCondition          String?
-  majorActivities        String?
-  challenges             String?
-  plannedActions         String?
-  actualYield            Float?
-  costs                  Json?
-  submissionDate         DateTime     @default(now())
-  weatherSnapshot        Json?
-  createdAt              DateTime     @default(now())
-  updatedAt              DateTime     @updatedAt
-
-  // Relations
-  crop RegisteredCrop @relation(fields: [cropId], references: [id], onDelete: Cascade)
-
-  @@index([cropId, reportDate])
-  @@map("crop_monthly_reports")
 }

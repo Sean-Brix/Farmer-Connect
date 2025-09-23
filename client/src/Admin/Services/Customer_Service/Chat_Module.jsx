@@ -124,15 +124,13 @@ function Chat_Module() {
   const upsertInquiry = (list, inquiryId, patch, newStatus) => {
     // Try to find the inquiry in any of the current lists
     const findInList = (searchList) => searchList.find(c => c.id === inquiryId || c.inquiryId === inquiryId);
-    const found = findInList(pending) || findInList(inProgress) || findInList(resolved) || 
-                  (selectedChat && (selectedChat.id === inquiryId || selectedChat.inquiryId === inquiryId) ? selectedChat : null);
-    
-    if (!found) {
-      console.log(`Admin: Could not find inquiry ${inquiryId} to move`);
-      return list;
-    }
-    
-    const updated = { ...found, id: inquiryId, status: newStatus, ...patch };
+    const currentSelected = selectedChatRef.current;
+    const found = findInList(pending) || findInList(inProgress) || findInList(resolved) ||
+                  (currentSelected && (currentSelected.id === inquiryId || currentSelected.inquiryId === inquiryId) ? currentSelected : null);
+
+    // Fallback: if not found anywhere, create a minimal placeholder so the item appears in the destination list
+    const base = found || { id: inquiryId, inquiryId };
+    const updated = { ...base, status: newStatus, ...patch };
     return upsert(list, updated);
   };
   const removeFrom = (list, id) => {

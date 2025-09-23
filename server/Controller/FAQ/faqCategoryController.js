@@ -27,7 +27,6 @@ export const getFAQCategories = async (req, res) => {
                 },
                 createdBy: {
                     select: {
-                        username: true,
                         firstName: true,
                         surname: true
                     }
@@ -133,13 +132,12 @@ export const createFAQCategory = async (req, res) => {
             });
         }
 
-        // Check if category with same name already exists
+        // Check if category with same name already exists (case-insensitive for MySQL)
         const existingCategory = await prisma.fAQCategory.findFirst({
             where: { 
-                name: { 
-                    equals: name.trim(), 
-                    mode: 'insensitive' 
-                } 
+                name: {
+                    equals: name.trim()
+                }
             }
         });
 
@@ -161,7 +159,6 @@ export const createFAQCategory = async (req, res) => {
             include: {
                 createdBy: {
                     select: {
-                        username: true,
                         firstName: true,
                         surname: true
                     }
@@ -210,9 +207,8 @@ export const updateFAQCategory = async (req, res) => {
         if (name && name.trim() !== existingCategory.name) {
             const duplicateCategory = await prisma.fAQCategory.findFirst({
                 where: { 
-                    name: { 
-                        equals: name.trim(), 
-                        mode: 'insensitive' 
+                    name: {
+                        equals: name.trim()
                     },
                     NOT: { id }
                 }

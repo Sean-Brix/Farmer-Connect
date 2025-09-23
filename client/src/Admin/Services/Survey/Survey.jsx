@@ -57,6 +57,14 @@ function Survey() {
     isActive: true
   });
 
+  // FAQ pagination and filtering states
+  const [faqCurrentPage, setFaqCurrentPage] = useState(1);
+  const [faqItemsPerPage] = useState(10);
+  const [faqSearchQuery, setFaqSearchQuery] = useState('');
+  const [faqCategoryFilter, setFaqCategoryFilter] = useState('');
+  const [faqStatusFilter, setFaqStatusFilter] = useState('');
+  const [categoryPanelCollapsed, setCategoryPanelCollapsed] = useState(false);
+
   // Category state
   const [categories, setCategories] = useState([]);
   const [categoryLoading, setCategoryLoading] = useState(false);
@@ -254,7 +262,11 @@ function Survey() {
         label: field.label,
         placeholder: field.placeholder || '',
         required: field.required,
-        options: field.options || null
+        options: Array.isArray(field.options)
+          ? field.options
+          : (typeof field.options === 'string'
+              ? (() => { try { const p = JSON.parse(field.options); return Array.isArray(p) ? p : null; } catch { return null; } })()
+              : null)
       }))
     });
     setActiveTab('create');
@@ -263,6 +275,13 @@ function Survey() {
   // Delete survey
   const deleteSurvey = async () => {
     if (!surveyToDelete) return;
+    // Client-side guard: prevent delete if there are existing responses
+    if (typeof surveyToDelete.responsesCount === 'number' && surveyToDelete.responsesCount > 0) {
+      setError('Cannot delete a survey form that has existing responses. Please archive it instead.');
+      setShowDeleteModal(false);
+      setSurveyToDelete(null);
+      return;
+    }
     
     try {
       await surveyFormsAPI.delete(surveyToDelete.id);
@@ -270,7 +289,8 @@ function Survey() {
       setSurveyToDelete(null);
       fetchSurveys(); // Refresh the list
     } catch (err) {
-      setError(err.message);
+      // Surface server-provided error message if available
+      setError(err?.message || 'Failed to delete survey form');
       console.error('Error deleting survey:', err);
     }
   };
@@ -498,6 +518,50 @@ function Survey() {
       loadCategories();
     }
   }, [activeTab]);
+
+  // Filter and paginate FAQs
+  const getFilteredFAQs = () => {
+    let filtered = faqs;
+
+    // Apply search filter
+    if (faqSearchQuery.trim()) {
+      const query = faqSearchQuery.toLowerCase();
+      filtered = filtered.filter(faq => 
+        faq.question.toLowerCase().includes(query) ||
+        faq.answer.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply category filter
+    if (faqCategoryFilter) {
+      filtered = filtered.filter(faq => faq.categoryId === faqCategoryFilter);
+    }
+
+    // Apply status filter
+    if (faqStatusFilter) {
+      const isActive = faqStatusFilter === 'active';
+      filtered = filtered.filter(faq => faq.isActive === isActive);
+    }
+
+    return filtered;
+  };
+
+  const getPaginatedFAQs = () => {
+    const filtered = getFilteredFAQs();
+    const startIndex = (faqCurrentPage - 1) * faqItemsPerPage;
+    const endIndex = startIndex + faqItemsPerPage;
+    return filtered.slice(startIndex, endIndex);
+  };
+
+  const getFAQTotalPages = () => {
+    const filtered = getFilteredFAQs();
+    return Math.ceil(filtered.length / faqItemsPerPage);
+  };
+
+  // Reset FAQ pagination when filters change
+  useEffect(() => {
+    setFaqCurrentPage(1);
+  }, [faqSearchQuery, faqCategoryFilter, faqStatusFilter]);
 
 
 
@@ -1569,35 +1633,51 @@ function Survey() {
               <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
                 FAQ & Category Management
               </h2>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowCategoryForm(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-                >
-                  <Plus size={16} />
-                  Add Category
-                </button>
-                <button
-                  onClick={() => setShowFaqForm(true)}
-                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-                >
-                  <Plus size={16} />
-                  Add FAQ
-                </button>
-              </div>
+              <button
+                onClick={() => setShowFaqForm(true)}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+              >
+                <Plus size={16} />
+                Add FAQ
+              </button>
             </div>
 
             {/* Categories Section */}
             <div className="mb-8">
-              <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                FAQ Categories
-              </h3>
-              {categoryLoading ? (
-                <div className="text-center py-4">
-                  <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-green-600"></div>
-                  <p className={`mt-2 text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Loading categories...</p>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setCategoryPanelCollapsed(!categoryPanelCollapsed)}
+                    className={`p-1 rounded hover:bg-gray-200 transition-colors ${isDark ? 'hover:bg-gray-700' : ''}`}
+                  >
+                    <svg 
+                      className={`w-4 h-4 transition-transform ${categoryPanelCollapsed ? 'rotate-0' : 'rotate-90'} ${isDark ? 'text-gray-300' : 'text-gray-600'}`} 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                  <h3 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                    FAQ Categories
+                  </h3>
                 </div>
-              ) : (
+                <button
+                  onClick={() => setShowCategoryForm(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg flex items-center gap-2 text-sm transition-colors"
+                >
+                  <Plus size={14} />
+                  Add Category
+                </button>
+              </div>
+              {!categoryPanelCollapsed && (
+                categoryLoading ? (
+                  <div className="text-center py-4">
+                    <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-green-600"></div>
+                    <p className={`mt-2 text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Loading categories...</p>
+                  </div>
+                ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {categories.map((category) => (
                     <div key={category.id} className={`p-4 rounded-lg border ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'}`}>
@@ -1645,7 +1725,85 @@ function Survey() {
                     </div>
                   )}
                 </div>
+                )
               )}
+            </div>
+
+            {/* FAQ Search and Filter Controls */}
+            <div className={`rounded-lg p-4 mb-6 ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+              <div className="flex flex-col md:flex-row gap-4">
+                {/* Search Input */}
+                <div className="flex-1">
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Search FAQs
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search questions or answers..."
+                      value={faqSearchQuery}
+                      onChange={(e) => setFaqSearchQuery(e.target.value)}
+                      className={`w-full pl-10 pr-4 py-2 border rounded-lg ${isDark ? 'bg-gray-600 border-gray-500 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'}`}
+                    />
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg className={`w-4 h-4 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Category Filter */}
+                <div className="md:w-48">
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Filter by Category
+                  </label>
+                  <select
+                    value={faqCategoryFilter}
+                    onChange={(e) => setFaqCategoryFilter(e.target.value)}
+                    className={`w-full px-3 py-2 border rounded-lg ${isDark ? 'bg-gray-600 border-gray-500 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+                  >
+                    <option value="">All Categories</option>
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Status Filter */}
+                <div className="md:w-36">
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Status
+                  </label>
+                  <select
+                    value={faqStatusFilter}
+                    onChange={(e) => setFaqStatusFilter(e.target.value)}
+                    className={`w-full px-3 py-2 border rounded-lg ${isDark ? 'bg-gray-600 border-gray-500 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+                  >
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                </div>
+
+                {/* Clear Filters */}
+                {(faqSearchQuery || faqCategoryFilter || faqStatusFilter) && (
+                  <div className="flex items-end">
+                    <button
+                      onClick={() => {
+                        setFaqSearchQuery('');
+                        setFaqCategoryFilter('');
+                        setFaqStatusFilter('');
+                      }}
+                      className={`px-4 py-2 text-sm rounded-lg ${isDark ? 'bg-gray-600 text-gray-300 hover:bg-gray-500' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                    >
+                      Clear Filters
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* FAQ List Table */}
@@ -1667,14 +1825,17 @@ function Survey() {
                     </tr>
                   </thead>
                   <tbody>
-                    {faqs.length === 0 ? (
+                    {getPaginatedFAQs().length === 0 ? (
                       <tr>
-                        <td colSpan="4" className={`text-center p-8 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                          No FAQs found. Click "Add FAQ" to create one.
+                        <td colSpan="5" className={`text-center p-8 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                          {getFilteredFAQs().length === 0 && faqs.length > 0 
+                            ? "No FAQs match your search criteria." 
+                            : "No FAQs found. Click \"Add FAQ\" to create one."
+                          }
                         </td>
                       </tr>
                     ) : (
-                      faqs.map((faq) => {
+                      getPaginatedFAQs().map((faq) => {
                         const category = categories.find(cat => cat.id === faq.categoryId);
                         return (
                           <tr key={faq.id} className={`border-t ${isDark ? 'border-gray-700 hover:bg-gray-750' : 'border-gray-200 hover:bg-gray-50'}`}>
@@ -1732,6 +1893,44 @@ function Survey() {
                     )}
                   </tbody>
                 </table>
+
+                {/* FAQ Pagination */}
+                {getFilteredFAQs().length > faqItemsPerPage && (
+                  <div className={`flex items-center justify-between px-4 py-3 border-t ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+                    <div className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                      Showing {Math.min((faqCurrentPage - 1) * faqItemsPerPage + 1, getFilteredFAQs().length)} to{' '}
+                      {Math.min(faqCurrentPage * faqItemsPerPage, getFilteredFAQs().length)} of{' '}
+                      {getFilteredFAQs().length} FAQs
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setFaqCurrentPage(prev => Math.max(prev - 1, 1))}
+                        disabled={faqCurrentPage === 1}
+                        className={`px-3 py-1 rounded border text-sm ${
+                          faqCurrentPage === 1
+                            ? isDark ? 'bg-gray-700 text-gray-500 border-gray-600' : 'bg-gray-100 text-gray-400 border-gray-300'
+                            : isDark ? 'bg-gray-600 text-gray-200 border-gray-500 hover:bg-gray-500' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        Previous
+                      </button>
+                      <span className={`px-3 py-1 text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Page {faqCurrentPage} of {getFAQTotalPages()}
+                      </span>
+                      <button
+                        onClick={() => setFaqCurrentPage(prev => Math.min(prev + 1, getFAQTotalPages()))}
+                        disabled={faqCurrentPage === getFAQTotalPages()}
+                        className={`px-3 py-1 rounded border text-sm ${
+                          faqCurrentPage === getFAQTotalPages()
+                            ? isDark ? 'bg-gray-700 text-gray-500 border-gray-600' : 'bg-gray-100 text-gray-400 border-gray-300'
+                            : isDark ? 'bg-gray-600 text-gray-200 border-gray-500 hover:bg-gray-500' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -1912,73 +2111,75 @@ function Survey() {
               </div>
             )}
 
-            {/* Category Form Modal */}
-            {showCategoryForm && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                <div className={`rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
-                  <h3 className={`text-xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                    {editingCategory ? 'Edit Category' : 'Add New Category'}
-                  </h3>
-                  
-                  <form onSubmit={handleCategorySubmit} className="space-y-4">
-                    <div>
-                      <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                        Name *
-                      </label>
-                      <input
-                        type="text"
-                        value={categoryFormData.name}
-                        onChange={(e) => setCategoryFormData({...categoryFormData, name: e.target.value})}
-                        className={`w-full p-3 border rounded-lg ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
-                        required
-                        placeholder="Enter category name (e.g., Medical & Health)"
-                      />
-                    </div>
 
-                    <div>
-                      <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                        Description
-                      </label>
-                      <textarea
-                        value={categoryFormData.description}
-                        onChange={(e) => setCategoryFormData({...categoryFormData, description: e.target.value})}
-                        className={`w-full p-3 border rounded-lg h-24 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
-                        placeholder="Describe what this category covers"
-                      />
-                    </div>
+          </div>
+        )}
 
-                    <div className="flex items-center gap-2">
-                      <label className={`flex items-center gap-2 cursor-pointer ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                        <input
-                          type="checkbox"
-                          checked={categoryFormData.isActive}
-                          onChange={(e) => setCategoryFormData({...categoryFormData, isActive: e.target.checked})}
-                          className="w-4 h-4 text-green-600 rounded focus:ring-green-500"
-                        />
-                        Active (visible to users)
-                      </label>
-                    </div>
-
-                    <div className="flex justify-end gap-3 pt-4">
-                      <button
-                        type="button"
-                        onClick={resetCategoryForm}
-                        className={`px-4 py-2 rounded-lg ${isDark ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        disabled={saving}
-                        className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg"
-                      >
-                        {saving ? 'Saving...' : (editingCategory ? 'Update Category' : 'Create Category')}
-                      </button>
-                    </div>
-                  </form>
+        {/* Category Form Modal */}
+        {showCategoryForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className={`rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+              <h3 className={`text-xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                {editingCategory ? 'Edit Category' : 'Add New Category'}
+              </h3>
+              
+              <form onSubmit={handleCategorySubmit} className="space-y-4">
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={categoryFormData.name}
+                    onChange={(e) => setCategoryFormData({...categoryFormData, name: e.target.value})}
+                    className={`w-full p-3 border rounded-lg ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                    required
+                    placeholder="Enter category name (e.g., Medical & Health)"
+                  />
                 </div>
-              </div>
-            )}
+
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Description
+                  </label>
+                  <textarea
+                    value={categoryFormData.description}
+                    onChange={(e) => setCategoryFormData({...categoryFormData, description: e.target.value})}
+                    className={`w-full p-3 border rounded-lg h-24 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                    placeholder="Describe what this category covers"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <label className={`flex items-center gap-2 cursor-pointer ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <input
+                      type="checkbox"
+                      checked={categoryFormData.isActive}
+                      onChange={(e) => setCategoryFormData({...categoryFormData, isActive: e.target.checked})}
+                      className="w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                    />
+                    Active (visible to users)
+                  </label>
+                </div>
+
+                <div className="flex justify-end gap-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={resetCategoryForm}
+                    className={`px-4 py-2 rounded-lg ${isDark ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg"
+                  >
+                    {saving ? 'Saving...' : (editingCategory ? 'Update Category' : 'Create Category')}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
 

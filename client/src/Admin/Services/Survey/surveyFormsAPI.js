@@ -1,5 +1,28 @@
 const API_BASE_URL = '/api/survey-forms';
 
+async function handleResponse(response, fallbackMessage) {
+  // Read body once as text, then try to parse
+  const raw = await response.text().catch(() => null);
+  if (response.ok) {
+    try {
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return raw ? { message: raw } : {};
+    }
+  }
+  // Error path: prefer server message
+  if (raw) {
+    try {
+      const data = JSON.parse(raw);
+      const msg = data?.message || data?.error || fallbackMessage;
+      throw new Error(msg);
+    } catch {
+      throw new Error(raw || fallbackMessage);
+    }
+  }
+  throw new Error(fallbackMessage);
+}
+
 // Survey Forms API
 export const surveyFormsAPI = {
   // Get all survey forms with filtering and pagination
@@ -15,16 +38,14 @@ export const surveyFormsAPI = {
     if (params.sortBy) queryParams.append('sortBy', params.sortBy);
     if (params.sortOrder) queryParams.append('sortOrder', params.sortOrder);
 
-    const response = await fetch(`${API_BASE_URL}/forms?${queryParams}`);
-    if (!response.ok) throw new Error('Failed to fetch survey forms');
-    return response.json();
+    const response = await fetch(`${API_BASE_URL}/forms?${queryParams}`, { credentials: 'include' });
+    return handleResponse(response, 'Failed to fetch survey forms');
   },
 
   // Get single survey form by ID
   getById: async (id) => {
-    const response = await fetch(`${API_BASE_URL}/forms/${id}`);
-    if (!response.ok) throw new Error('Failed to fetch survey form');
-    return response.json();
+    const response = await fetch(`${API_BASE_URL}/forms/${id}`, { credentials: 'include' });
+    return handleResponse(response, 'Failed to fetch survey form');
   },
 
   // Create new survey form
@@ -34,10 +55,10 @@ export const surveyFormsAPI = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(formData),
     });
-    if (!response.ok) throw new Error('Failed to create survey form');
-    return response.json();
+    return handleResponse(response, 'Failed to create survey form');
   },
 
   // Update survey form
@@ -47,19 +68,19 @@ export const surveyFormsAPI = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(formData),
     });
-    if (!response.ok) throw new Error('Failed to update survey form');
-    return response.json();
+    return handleResponse(response, 'Failed to update survey form');
   },
 
   // Delete survey form
   delete: async (id) => {
     const response = await fetch(`${API_BASE_URL}/forms/${id}`, {
       method: 'DELETE',
+      credentials: 'include',
     });
-    if (!response.ok) throw new Error('Failed to delete survey form');
-    return response.json();
+    return handleResponse(response, 'Failed to delete survey form');
   },
 
   // Get survey responses
@@ -71,9 +92,8 @@ export const surveyFormsAPI = {
     if (params.sortBy) queryParams.append('sortBy', params.sortBy);
     if (params.sortOrder) queryParams.append('sortOrder', params.sortOrder);
 
-    const response = await fetch(`${API_BASE_URL}/responses/${surveyFormId}?${queryParams}`);
-    if (!response.ok) throw new Error('Failed to fetch survey responses');
-    return response.json();
+    const response = await fetch(`${API_BASE_URL}/responses/${surveyFormId}?${queryParams}`, { credentials: 'include' });
+    return handleResponse(response, 'Failed to fetch survey responses');
   },
 
   // Submit survey response
@@ -83,24 +103,22 @@ export const surveyFormsAPI = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(responseData),
     });
-    if (!response.ok) throw new Error('Failed to submit survey response');
-    return response.json();
+    return handleResponse(response, 'Failed to submit survey response');
   },
 
   // Get survey analytics
   getAnalytics: async (surveyFormId) => {
-    const response = await fetch(`${API_BASE_URL}/analytics/${surveyFormId}`);
-    if (!response.ok) throw new Error('Failed to fetch survey analytics');
-    return response.json();
+    const response = await fetch(`${API_BASE_URL}/analytics/${surveyFormId}`, { credentials: 'include' });
+    return handleResponse(response, 'Failed to fetch survey analytics');
   },
 
   // Get survey statistics (custom charts)
   getStatistics: async (surveyFormId) => {
-    const response = await fetch(`${API_BASE_URL}/statistics/${surveyFormId}`);
-    if (!response.ok) throw new Error('Failed to fetch survey statistics');
-    return response.json();
+    const response = await fetch(`${API_BASE_URL}/statistics/${surveyFormId}`, { credentials: 'include' });
+    return handleResponse(response, 'Failed to fetch survey statistics');
   },
 
   // Create survey statistic
@@ -110,10 +128,10 @@ export const surveyFormsAPI = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(statisticData),
     });
-    if (!response.ok) throw new Error('Failed to create survey statistic');
-    return response.json();
+    return handleResponse(response, 'Failed to create survey statistic');
   },
 
   // Update survey statistic
@@ -123,18 +141,18 @@ export const surveyFormsAPI = {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(statisticData),
     });
-    if (!response.ok) throw new Error('Failed to update survey statistic');
-    return response.json();
+    return handleResponse(response, 'Failed to update survey statistic');
   },
 
   // Delete survey statistic
   deleteStatistic: async (statisticId) => {
     const response = await fetch(`${API_BASE_URL}/statistics/${statisticId}`, {
       method: 'DELETE',
+      credentials: 'include',
     });
-    if (!response.ok) throw new Error('Failed to delete survey statistic');
-    return response.json();
+    return handleResponse(response, 'Failed to delete survey statistic');
   }
 };

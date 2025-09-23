@@ -219,20 +219,27 @@ export default function Chat() {
         }
     };
 
-    const escalateToAgent = async () => {
-        setChatMode('admin');
-        setShowingCategories(false);
+    const handleBackToCategories = () => {
+        // Reset to category selection state
         setShowingFAQs(false);
+        setShowingCategories(true);
+        setCurrentCategory(null);
         
-        const systemMsg = {
-            from: 'system',
-            text: 'You\'re now being connected to a live support agent. Please describe your concern.',
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        };
-        setMessages(prev => [...prev, systemMsg]);
-        
-        // Create initial inquiry when escalating to admin
+        // Add a bot message showing categories again
+        if (botWelcomeMessage) {
+            const botMsg = {
+                from: 'bot',
+                text: "Let me show you the categories again. Please select the topic you need help with:",
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                botData: botWelcomeMessage
+            };
+            setMessages(prev => [...prev, botMsg]);
+        }
+    };
+
+    const escalateToAgent = async () => {
         try {
+            // First create the inquiry before switching modes
             const response = await fetch('/api/inquiries', {
                 method: 'POST',
                 headers: {
@@ -240,24 +247,59 @@ export default function Chat() {
                 },
                 credentials: 'include',
                 body: JSON.stringify({
-                    subject: 'Bot Escalation',
-                    message: 'User escalated from bot assistance to live agent.',
+                    subject: 'Bot Escalation - Live Agent Request',
+                    message: 'User requested live agent assistance from bot chat.',
                     priority: 'MEDIUM'
                 })
             });
             
             if (response.ok) {
                 const data = await response.json();
-                setActiveInquiry(data.data);
-                console.debug('[chat] Inquiry created for escalation:', data.data.id);
+                const inquiry = data.data;
+                setActiveInquiry(inquiry);
+                console.debug('[chat] Inquiry created for escalation:', inquiry.id);
+                
+                // Switch to admin mode
+                setChatMode('admin');
+                setShowingCategories(false);
+                setShowingFAQs(false);
+                
+                const systemMsg = {
+                    from: 'system',
+                    text: `Connected to live support agent. Your inquiry ID is #${inquiry.id}. Please describe your concern and an agent will respond shortly.`,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                setMessages(prev => [...prev, systemMsg]);
+                
+                // Join the inquiry room for real-time updates
+                if (socket && isConnected) {
+                    socket.emit('join_inquiry', { inquiryId: inquiry.id });
+                }
+                
+                // Initialize admin mode data
+                fetchPastInquiries();
+                
+            } else {
+                throw new Error('Failed to create inquiry');
             }
         } catch (error) {
             console.error('Error creating escalation inquiry:', error);
+            
+            // Fallback: still switch to admin mode but without active inquiry
+            setChatMode('admin');
+            setShowingCategories(false);
+            setShowingFAQs(false);
+            
+            const errorMsg = {
+                from: 'system',
+                text: 'Connected to live support. There was an issue creating your inquiry, but you can still send messages to our agents.',
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            setMessages(prev => [...prev, errorMsg]);
+            
+            fetchPastInquiries();
+            refreshActiveInquiry(); // Try to get any existing active inquiry
         }
-        
-        // Initialize admin mode
-        fetchPastInquiries();
-        refreshActiveInquiry();
     };
 
     // Toggle sidebar visibility
@@ -272,69 +314,81 @@ export default function Chat() {
 
         setSending(true);
 
-        // Handle bot mode - check if user wants to escalate immediately
+        // Handle bot mode - enforce proper flow
         if (chatMode === 'bot' && message.trim()) {
+            // Add user message first
+            const userMsg = {
+                from: 'user',
+                text: message,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            setMessages(prev => [...prev, userMsg]);
+            setMessage(''); // Clear message
+            setSending(false);
+
             try {
+                // Check if user wants to escalate directly to agent
                 const escalationCheck = await botAPI.shouldEscalate(message.trim());
                 if (escalationCheck && escalationCheck.escalate) {
-                    // User wants to talk to agent directly
-                    const userMsg = {
-                        from: 'user',
-                        text: message,
-                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                    };
-                    setMessages(prev => [...prev, userMsg]);
-                    setMessage(''); // Clear message
-                    setSending(false);
-                    
                     const botMsg = {
                         from: 'bot',
                         text: escalationCheck.data.message,
                         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                     };
                     setMessages(prev => [...prev, botMsg]);
-                    
                     setTimeout(() => escalateToAgent(), 1000);
                     return;
-                } else {
-                    // Show categories for any regular message in bot mode
-                    const userMsg = {
-                        from: 'user',
-                        text: message,
-                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                    };
-                    setMessages(prev => [...prev, userMsg]);
-                    setMessage(''); // Clear message
-                    setSending(false);
-                    
-                    // Always show categories when user sends a message in bot mode
-                    if (!showingCategories && !showingFAQs) {
-                        // Initialize bot categories
-                        const welcomeData = await botAPI.getWelcomeMessage();
-                        if (welcomeData) {
-                            setBotWelcomeMessage(welcomeData);
-                            const botMsg = {
-                                from: 'bot',
-                                text: "I can help you with these topics. Please select a category:",
-                                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                                botData: welcomeData
-                            };
-                            setMessages(prev => [...prev, botMsg]);
-                            setShowingCategories(true);
-                        }
+                }
+
+                // If user is not showing categories or FAQs, always show categories
+                if (!showingCategories && !showingFAQs) {
+                    const welcomeData = await botAPI.getWelcomeMessage();
+                    if (welcomeData) {
+                        setBotWelcomeMessage(welcomeData);
+                        const botMsg = {
+                            from: 'bot',
+                            text: "I can help you with these topics. Please select a category:",
+                            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                            botData: welcomeData
+                        };
+                        setMessages(prev => [...prev, botMsg]);
+                        setShowingCategories(true);
                     }
                     return;
                 }
+
+                // If categories are showing, remind user to select
+                if (showingCategories) {
+                    const botMsg = {
+                        from: 'bot',
+                        text: "Please select one of the categories above to get help with that topic, or click 'Chat with live agent' if you need direct assistance.",
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+                    setMessages(prev => [...prev, botMsg]);
+                    return;
+                }
+
+                // If FAQs are showing, guide user to use the interface
+                if (showingFAQs) {
+                    const botMsg = {
+                        from: 'bot',
+                        text: "Please click on the questions above to see the answers, or use the buttons to go back to categories or chat with a live agent.",
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+                    setMessages(prev => [...prev, botMsg]);
+                    return;
+                }
+
             } catch (error) {
-                console.error('Error checking escalation:', error);
+                console.error('Error in bot flow:', error);
                 escalateToAgent();
-                return;
             }
+            return;
         }
 
-        // Admin mode message handling - only create inquiry after bot escalation
+        // Admin mode message handling
         if (chatMode === 'admin') {
-            // 1) If there's text, optimistically append and emit it (creates inquiry if needed)
+            // 1) If there's text, optimistically append and emit it
             if (message.trim()) {
                 const userMsg = {
                     from: 'user',
@@ -343,14 +397,45 @@ export default function Chat() {
                 };
                 setMessages(prev => [...prev, userMsg]);
 
-                // Only emit socket message if we have an active inquiry (meaning user escalated from bot)
-                if (isConnected && socket && activeInquiry) {
-                    console.debug('[chat] emit chat_message', { len: message.length });
-                    socket.emit('chat_message', {
-                        message: message,
-                        timestamp: new Date(),
-                        mode: 'user'
-                    });
+                // If no active inquiry, create one first
+                if (!activeInquiry) {
+                    try {
+                        const response = await fetch('/api/inquiries', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            credentials: 'include',
+                            body: JSON.stringify({
+                                subject: 'Live Chat Support',
+                                message: message,
+                                priority: 'MEDIUM'
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            const inquiry = data.data;
+                            setActiveInquiry(inquiry);
+                            console.debug('[chat] New inquiry created:', inquiry.id);
+                            
+                            if (socket && isConnected) {
+                                socket.emit('join_inquiry', { inquiryId: inquiry.id });
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error creating inquiry:', error);
+                    }
+                } else {
+                    // Emit message for existing inquiry
+                    if (isConnected && socket) {
+                        console.debug('[chat] emit chat_message', { inquiryId: activeInquiry.id, len: message.length });
+                        socket.emit('chat_message', {
+                            message: message,
+                            timestamp: new Date(),
+                            mode: 'user'
+                        });
+                    }
                 }
             }
             // Continue with admin mode attachment and inquiry handling
@@ -588,17 +673,17 @@ export default function Chat() {
                 console.log('Client: API call successful, inquiry resolved');
                 // Refresh the inquiries list
                 await fetchPastInquiries();
-                // If current conversation was resolved, clear active state (do not auto-start a new inquiry)
-                if (activeInquiry?.id === inquiryId) {
-                    setActiveInquiry(null);
-                    setMessages([
-                        { 
-                            from: 'system', 
-                            text: 'Conversation resolved. Send a message to start a new inquiry.', 
-                            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
-                        }
-                    ]);
-                }
+
+                // Immediately reset to bot start state and show welcome/categories
+                setActiveInquiry(null);
+                setChatMode('bot');
+                setShowingCategories(false);
+                setShowingFAQs(false);
+                setCurrentCategory(null);
+                setAttachments([]);
+                setMessage('');
+                setSidebarOpen(false);
+                await initializeBotChat();
             }
         } catch (error) {
             console.error('Failed to mark as resolved:', error);
@@ -948,7 +1033,7 @@ export default function Chat() {
                                         <h3 className="text-xl font-bold tracking-tight">FITS - Tanza</h3>
                                         <div className="flex items-center gap-2 text-indigo-100 mt-1">
                                             <div className={`w-2.5 h-2.5 rounded-full ${isConnected ? 'bg-green-300 animate-pulse' : 'bg-gray-300'}`}></div>
-                                            <span className="text-sm font-medium">Connected to live agent</span>
+                                            <span className="text-sm font-medium">{chatMode === 'bot' ? 'Support Bot' : 'Connected to live agent'}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1049,6 +1134,7 @@ export default function Chat() {
                                                         onFAQHelpful={handleFAQHelpful}
                                                         onNotHelpful={handleFAQNotHelpful}
                                                         onEscalate={escalateToAgent}
+                                                        onBackToCategories={handleBackToCategories}
                                                     />
                                                 )}
                                             </div>

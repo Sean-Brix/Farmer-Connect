@@ -1,189 +1,128 @@
-// Inquiry System Schema for FITS-Tanza Chat Support
-// Supports: Client chat inquiries, Admin management, FAQ system, Real-time messaging
-
-
-//    !! REDO THE INQUIRY DATABASE SCHEMAS !!
-
 model Inquiry {
-  id          String      @id @default(cuid())
-  
-  // Basic Information
-  subject     String      // Inquiry title/subject
-  message     String      @db.LongText // Original inquiry message
-  status      InquiryStatus   @default(PENDING) // Current status
-  
-  // User Information (can be guest or registered user)
-  userId      String
-  user        Account?    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  guestName   String?     // Name for guest users
-  guestEmail  String?     // Email for guest users
-  
-  // Assignment & Resolution
-  assignedToId    String?  // Admin assigned to handle this inquiry
-  assignedTo      Account? @relation("AssignedInquiries", fields: [assignedToId], references: [id], onDelete: SetNull)
-  resolvedById    String?  // Admin who resolved the inquiry
-  resolvedBy      Account? @relation("ResolvedInquiries", fields: [resolvedById], references: [id], onDelete: SetNull)
-  resolvedAt      DateTime? // When inquiry was resolved
-  
-  // Timestamps
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  
-  // Relations
-  replies     InquiryReply[]
-  attachments InquiryAttachment[]
-  
-  // Indexes for performance
+  id           String              @id @default(cuid())
+  subject      String
+  message      String              @db.LongText
+  status       InquiryStatus       @default(PENDING)
+  userId       String
+  guestName    String?
+  guestEmail   String?
+  assignedToId String?
+  resolvedById String?
+  resolvedAt   DateTime?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  assignedTo   Account?            @relation("AssignedInquiries", fields: [assignedToId], references: [id])
+  resolvedBy   Account?            @relation("ResolvedInquiries", fields: [resolvedById], references: [id])
+  user         Account             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attachments  InquiryAttachment[]
+  replies      InquiryReply[]
+
   @@index([status])
   @@index([userId])
   @@index([assignedToId])
   @@index([createdAt])
-  
+  @@index([resolvedById], map: "inquiries_resolvedById_fkey")
   @@map("inquiries")
 }
 
 model InquiryReply {
-  id          String      @id @default(cuid())
-  
-  // Message Content
-  message     String      @db.LongText 
-  
-  // Sender Information
-  senderId    String?     // User/Admin who sent this reply
-  sender      Account?    @relation(fields: [senderId], references: [id], onDelete: SetNull)
-  senderType  SenderType  // USER, ADMIN, BOT
-  senderName  String?     // Display name (for guest users or admin display names)
-  
-  // Inquiry Relation
-  inquiryId   String      // Parent inquiry
-  inquiry     Inquiry     @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
-  
-  // Reply Threading (for future nested replies)
-  parentReplyId String?   // For threaded conversations
-  parentReply   InquiryReply? @relation("ReplyThread", fields: [parentReplyId], references: [id])
+  id            String         @id @default(cuid())
+  message       String         @db.LongText
+  senderId      String?
+  senderType    SenderType
+  senderName    String?
+  inquiryId     String
+  parentReplyId String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  readByUser    Boolean        @default(false)
+  readByAdmin   Boolean        @default(false)
+  readAt        DateTime?
+  inquiry       Inquiry        @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  parentReply   InquiryReply?  @relation("ReplyThread", fields: [parentReplyId], references: [id])
   childReplies  InquiryReply[] @relation("ReplyThread")
-  
-  // Timestamps
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  
-  // Read Status (for real-time notifications)
-  readByUser  Boolean     @default(false) // User has read this reply
-  readByAdmin Boolean     @default(false) // Admin has read this reply
-  readAt      DateTime?   // When marked as read
-  
-  // Indexes
+  sender        Account?       @relation(fields: [senderId], references: [id])
+
   @@index([inquiryId])
   @@index([senderId])
   @@index([createdAt])
   @@index([senderType])
-  
+  @@index([parentReplyId], map: "inquiry_replies_parentReplyId_fkey")
   @@map("inquiry_replies")
 }
 
 model InquiryAttachment {
-  id          String      @id @default(cuid())
-  
-  // File Information
-  filename    String      // Original filename
-  filepath    String?     // Stored file path (optional; legacy)
-  filesize    Int         // File size in bytes
-  mimetype    String      // MIME type
-  fileData    Bytes?      // Binary data (for inline serving like user profile photos)
-  
-  // Relations
-  inquiryId   String      // Parent inquiry
-  inquiry     Inquiry     @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
-  
-  uploadedById String?    // Who uploaded this file
-  uploadedBy   Account?   @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
-  
-  // Timestamps
-  createdAt   DateTime    @default(now())
-  
+  id           String   @id @default(cuid())
+  filename     String
+  filepath     String?
+  filesize     Int
+  mimetype     String
+  fileData     Bytes?
+  inquiryId    String
+  uploadedById String?
+  createdAt    DateTime @default(now())
+  inquiry      Inquiry  @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  uploadedBy   Account? @relation(fields: [uploadedById], references: [id])
+
   @@index([inquiryId])
-  
+  @@index([uploadedById], map: "inquiry_attachments_uploadedById_fkey")
   @@map("inquiry_attachments")
 }
 
 model FAQCategory {
-  id          String      @id @default(cuid())
-  
-  // Content
-  name        String      // Category name (e.g., "Medical", "Distribution")
-  description String?     // Optional category description
-  
-  // Management
-  isActive    Boolean     @default(true) // Whether category is publicly visible
-  orderIndex  Int         @default(0) // Display order
-  
-  // Relationships
-  faqs        FAQ[]       // FAQs in this category
-  
-  // Metadata
-  createdById String?     // Admin who created this category
-  createdBy   Account?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
-  
-  // Timestamps
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  
-  // Indexes
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  orderIndex  Int      @default(0)
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   Account? @relation(fields: [createdById], references: [id])
+  faqs        FAQ[]
+
   @@index([isActive])
   @@index([orderIndex])
+  @@index([createdById], map: "faq_categories_createdById_fkey")
   @@map("faq_categories")
 }
 
 model FAQ {
-  id          String      @id @default(cuid())
-  
-  // Content
-  question    String      // FAQ question
-  answer      String      @db.LongText // FAQ answer
-  
-  // Category relationship
-  categoryId  String?     // FAQ category
-  category    FAQCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  
-  // Management
-  isActive    Boolean     @default(true) // Whether FAQ is publicly visible
-  orderIndex  Int         @default(0) // Display order
-  
-  // Metadata
-  createdById String?     // Admin who created this FAQ
-  createdBy   Account?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
-  
-  // Analytics
-  viewCount   Int         @default(0) // How many times viewed
-  helpfulCount Int        @default(0) // How many found it helpful
-  
-  // Timestamps
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  
-  // Indexes
+  id           String       @id @default(cuid())
+  question     String
+  answer       String       @db.LongText
+  isActive     Boolean      @default(true)
+  orderIndex   Int          @default(0)
+  createdById  String?
+  viewCount    Int          @default(0)
+  helpfulCount Int          @default(0)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  categoryId   String?
+  category     FAQCategory? @relation(fields: [categoryId], references: [id])
+  createdBy    Account?     @relation(fields: [createdById], references: [id])
+
   @@index([isActive])
   @@index([orderIndex])
   @@index([categoryId])
-  
+  @@index([createdById], map: "faqs_createdById_fkey")
   @@map("faqs")
 }
 
 enum InquiryStatus {
-  PENDING     // New inquiry, not yet assigned
-  IN_PROGRESS // Being worked on by admin
-  WAITING_USER // Waiting for user response
-  RESOLVED    // Issue resolved
-  CANCELLED   // Cancelled by user
-  
+  PENDING
+  IN_PROGRESS
+  WAITING_USER
+  RESOLVED
+  CANCELLED
+
   @@map("inquiry_status")
 }
 
 enum SenderType {
-  USER        // Regular user or guest
-  ADMIN       // Admin/moderator
-  BOT         // Chatbot response
-  
+  USER
+  ADMIN
+  BOT
+
   @@map("sender_type")
 }
-

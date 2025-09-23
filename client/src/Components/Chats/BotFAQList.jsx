@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const BotFAQList = ({ categoryName, faqs, onFAQView, onFAQHelpful, onNotHelpful, onEscalate }) => {
+const BotFAQList = ({ categoryName, faqs, onFAQView, onFAQHelpful, onNotHelpful, onEscalate, onBackToCategories }) => {
     const [expandedFAQ, setExpandedFAQ] = useState(null);
     const [helpfulClicked, setHelpfulClicked] = useState(new Set());
 
@@ -86,6 +86,12 @@ const BotFAQList = ({ categoryName, faqs, onFAQView, onFAQHelpful, onNotHelpful,
                 </div>
                 
                 <div className="pt-3 border-t border-gray-200 space-y-2">
+                    <button
+                        onClick={onBackToCategories}
+                        className="w-full text-center p-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors duration-200"
+                    >
+                        ← Back to Categories
+                    </button>
                     <button
                         onClick={onEscalate}
                         className="w-full text-center p-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"

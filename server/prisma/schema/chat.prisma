@@ -1,166 +1,110 @@
-// Simple Chat System Schema - Facebook Messenger Style
-// Clean and simple real-time messaging
-
 model ChatRoom {
-  id          String      @id @default(cuid())
-  
-  // Room Information
-  name        String?     // Optional room name (for group chats)
-  isGroup     Boolean     @default(false) // false = direct message, true = group chat
-  roomType    RoomType    @default(DIRECT) // DIRECT or GROUP
-  
-  // Room Settings
-  isActive    Boolean     @default(true)
-  lastActivity DateTime   @default(now())
-  
-  // Timestamps
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  
-  // Relations
-  participants ChatParticipant[]
+  id           String            @id @default(cuid())
+  name         String?
+  isGroup      Boolean           @default(false)
+  roomType     RoomType          @default(DIRECT)
+  isActive     Boolean           @default(true)
+  lastActivity DateTime          @default(now())
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
   messages     ChatMessage[]
-  
-  // Indexes
+  participants ChatParticipant[]
+
   @@index([isActive])
   @@index([lastActivity])
   @@index([roomType])
-  
   @@map("chat_rooms")
 }
 
 model ChatParticipant {
-  id          String      @id @default(cuid())
-  
-  // Participant Information
+  id          String          @id @default(cuid())
   userId      String
-  user        Account     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // Room Relation
   roomId      String
-  room        ChatRoom    @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  
-  // Participant Settings
-  role        ParticipantRole @default(MEMBER) // ADMIN or MEMBER (for group chats)
-  isActive    Boolean     @default(true)
-  
-  // Last seen and notifications
-  lastSeen    DateTime    @default(now())
-  unreadCount Int         @default(0)
-  
-  // Timestamps
-  joinedAt    DateTime    @default(now())
-  
-  // Unique constraint - one participation per user per room
+  role        ParticipantRole @default(MEMBER)
+  isActive    Boolean         @default(true)
+  lastSeen    DateTime        @default(now())
+  unreadCount Int             @default(0)
+  joinedAt    DateTime        @default(now())
+  room        ChatRoom        @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user        Account         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, roomId])
   @@index([userId])
   @@index([roomId])
-  
   @@map("chat_participants")
 }
 
 model ChatMessage {
-  id          String      @id @default(cuid())
-  
-  // Message Content
-  content     String      @db.LongText
-  messageType MessageType @default(TEXT) // TEXT, IMAGE, FILE, etc.
-  
-  // Sender Information
-  senderId    String
-  sender      Account     @relation(fields: [senderId], references: [id], onDelete: Cascade)
-  
-  // Room Relation
-  roomId      String
-  room        ChatRoom    @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  
-  // Message Status
-  isEdited    Boolean     @default(false)
-  isDeleted   Boolean     @default(false)
-  
-  // Reply/Thread Support (optional)
-  replyToId   String?
-  replyTo     ChatMessage? @relation("MessageReply", fields: [replyToId], references: [id])
-  replies     ChatMessage[] @relation("MessageReply")
-  
-  // Timestamps
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  
-  // Relations
-  attachments ChatAttachment[]
+  id           String            @id @default(cuid())
+  content      String            @db.LongText
+  messageType  MessageType       @default(TEXT)
+  senderId     String
+  roomId       String
+  isEdited     Boolean           @default(false)
+  isDeleted    Boolean           @default(false)
+  replyToId    String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  attachments  ChatAttachment[]
+  replyTo      ChatMessage?      @relation("MessageReply", fields: [replyToId], references: [id])
+  replies      ChatMessage[]     @relation("MessageReply")
+  room         ChatRoom          @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  sender       Account           @relation(fields: [senderId], references: [id], onDelete: Cascade)
   readReceipts ChatReadReceipt[]
-  
-  // Indexes
+
   @@index([roomId])
   @@index([senderId])
   @@index([createdAt])
   @@index([isDeleted])
-  
+  @@index([replyToId], map: "chat_messages_replyToId_fkey")
   @@map("chat_messages")
 }
 
 model ChatAttachment {
-  id          String      @id @default(cuid())
-  
-  // File Information
-  filename    String
-  filepath    String
-  filesize    Int
-  mimetype    String
-  
-  // Message Relation
-  messageId   String
-  message     ChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
-  
-  // Uploader
+  id           String      @id @default(cuid())
+  filename     String
+  filepath     String
+  filesize     Int
+  mimetype     String
+  messageId    String
   uploadedById String
-  uploadedBy   Account    @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
-  
-  // Timestamps
-  createdAt   DateTime    @default(now())
-  
+  createdAt    DateTime    @default(now())
+  message      ChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  uploadedBy   Account     @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+
   @@index([messageId])
-  
+  @@index([uploadedById], map: "chat_attachments_uploadedById_fkey")
   @@map("chat_attachments")
 }
 
 model ChatReadReceipt {
-  id          String      @id @default(cuid())
-  
-  // Message and User
-  messageId   String
-  message     ChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
-  
-  userId      String
-  user        Account     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // Read Status
-  readAt      DateTime    @default(now())
-  
-  // Unique constraint - one read receipt per user per message
+  id        String      @id @default(cuid())
+  messageId String
+  userId    String
+  readAt    DateTime    @default(now())
+  message   ChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      Account     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([messageId, userId])
   @@index([messageId])
   @@index([userId])
-  
   @@map("chat_read_receipts")
 }
 
-// Enums
 enum RoomType {
-  DIRECT      // 1-on-1 chat
-  GROUP       // Group chat
-  SUPPORT     // Support chat (user + admin)
+  DIRECT
+  GROUP
+  SUPPORT
 }
 
 enum ParticipantRole {
-  ADMIN       // Can manage room settings
-  MEMBER      // Regular participant
+  ADMIN
+  MEMBER
 }
 
 enum MessageType {
-  TEXT        // Regular text message
-  IMAGE       // Image message
-  FILE        // File attachment
-  SYSTEM      // System message (user joined, left, etc.)
+  TEXT
+  IMAGE
+  FILE
+  SYSTEM
 }

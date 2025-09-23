@@ -38,7 +38,7 @@ export const getSurveyResponses = async (req, res) => {
         });
 
         // Get survey responses
-        const responses = await prisma.surveyResponse.findMany({
+        const responsesRaw = await prisma.surveyResponse.findMany({
             where: { surveyFormId },
             skip,
             take,
@@ -56,6 +56,26 @@ export const getSurveyResponses = async (req, res) => {
                 }
             }
         });
+
+        const parseOptions = (opts) => {
+            if (opts == null) return null;
+            if (Array.isArray(opts)) return opts;
+            try { const p = JSON.parse(opts); return Array.isArray(p) ? p : null; } catch { return null; }
+        };
+        const parseAnswer = (ans) => {
+            if (ans == null) return null;
+            if (typeof ans !== 'string') return ans;
+            try { return JSON.parse(ans); } catch { return ans; }
+        };
+
+        const responses = responsesRaw.map(r => ({
+            ...r,
+            answers: (r.answers || []).map(a => ({
+                ...a,
+                answer: parseAnswer(a.answer),
+                field: a.field ? { ...a.field, options: parseOptions(a.field.options) } : a.field
+            }))
+        }));
 
         // Calculate pagination info
         const totalPages = Math.ceil(total / take);

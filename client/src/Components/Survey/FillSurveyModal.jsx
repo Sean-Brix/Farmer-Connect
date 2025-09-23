@@ -4,6 +4,25 @@ const API_BASE = '/api/survey-forms';
 
 const Field = ({ field, value, onChange }) => {
   const common = 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200';
+  
+  // Safely parse options - handle case where options might be a JSON string
+  const getOptions = () => {
+    if (!field.options) return [];
+    if (Array.isArray(field.options)) return field.options;
+    if (typeof field.options === 'string') {
+      try {
+        const parsed = JSON.parse(field.options);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        // If it's not valid JSON, treat as comma-separated string
+        return field.options.split(',').map(opt => opt.trim()).filter(opt => opt);
+      }
+    }
+    return [];
+  };
+  
+  const options = getOptions();
+  
   switch (field.type) {
     case 'TEXT':
       return <input type="text" className={common} placeholder={field.placeholder} value={value || ''} onChange={e => onChange(e.target.value)} />;
@@ -19,13 +38,13 @@ const Field = ({ field, value, onChange }) => {
       return (
         <select className={common} value={value || ''} onChange={e => onChange(e.target.value)}>
           <option value="">Choose an option...</option>
-          {(field.options || []).map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
+          {options.map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
         </select>
       );
     case 'RADIO':
       return (
         <div className="space-y-3">
-          {(field.options || []).map((opt, i) => (
+          {options.map((opt, i) => (
             <label key={i} className="flex items-center gap-3 cursor-pointer">
               <input type="radio" name={`field-${field.id}`} value={opt} checked={value === opt} onChange={() => onChange(opt)} className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500" />
               <span className="text-gray-700">{opt}</span>
@@ -36,7 +55,7 @@ const Field = ({ field, value, onChange }) => {
     case 'CHECKBOX':
       return (
         <div className="space-y-3">
-          {(field.options || []).map((opt, i) => {
+          {options.map((opt, i) => {
             const arr = Array.isArray(value) ? value : [];
             const checked = arr.includes(opt);
             const toggle = () => {

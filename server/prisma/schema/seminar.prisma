@@ -1,60 +1,53 @@
-//? ===================================== SEMINARS SCHEMA ===================================== ?//
-
 model Seminar {
-    id                    String         @id @default(cuid())
-    title                 String
-    description           String         @db.Text
-    location              String
-    speaker               String
-    start_date            DateTime       @db.Date
-    end_date              DateTime       @db.Date
-    start_time            String
-    end_time              String
-    capacity              Int
-    registration_deadline DateTime       @db.Date
-    status                seminar_status @default(Upcoming)
-    picture               Bytes?
-    mimeType              String?
-    createdById           String
-    createdAt             DateTime       @default(now())
-    updatedAt             DateTime       @updatedAt
+  id                    String               @id @default(cuid())
+  title                 String
+  description           String               @db.Text
+  location              String
+  speaker               String
+  start_date            DateTime             @db.Date
+  end_date              DateTime             @db.Date
+  start_time            String
+  end_time              String
+  capacity              Int
+  registration_deadline DateTime             @db.Date
+  status                seminar_status       @default(Upcoming)
+  picture               Bytes?
+  mimeType              String?
+  createdById           String
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  participants          SeminarParticipant[]
+  creator               Account              @relation("SeminarsCreated", fields: [createdById], references: [id])
 
-    // Relations
-    participants SeminarParticipant[]
-    creator      Account              @relation("SeminarsCreated", fields: [createdById], references: [id])
-
-    @@map("seminars")
+  @@index([createdById], map: "seminars_createdById_fkey")
+  @@map("seminars")
 }
 
 model SeminarParticipant {
-    id         String             @id @default(cuid())
-    seminar_id String
-    account_id String
-    status     participant_status @default(Registered)
-    createdAt  DateTime           @default(now())
-    updatedAt  DateTime           @updatedAt
+  id         String             @id @default(cuid())
+  seminar_id String
+  account_id String
+  status     participant_status @default(Registered)
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @default(now()) @updatedAt
+  account    Account            @relation(fields: [account_id], references: [id])
+  seminar    Seminar            @relation(fields: [seminar_id], references: [id])
 
-    // Relations
-    seminar Seminar @relation(fields: [seminar_id], references: [id])
-    account Account @relation(fields: [account_id], references: [id])
-
-    @@unique([seminar_id, account_id])
-    @@map("seminar_participants")
+  @@unique([seminar_id, account_id])
+  @@index([account_id], map: "seminar_participants_account_id_fkey")
+  @@map("seminar_participants")
 }
 
-
-//? ========================================== ENUMS ========================================== ?//
-
 enum seminar_status {
-    Upcoming
-    Ongoing
-    Completed
-    Cancelled
+  Upcoming
+  Ongoing
+  Completed
+  Cancelled
 }
 
 enum participant_status {
-    Attended
-    Not_Attended @map("Not Attended")
-    Registered
-    Cancelled
+  Attended
+  Not_Attended @map("Not Attended")
+  Registered
+  Cancelled
 }

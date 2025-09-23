@@ -12,8 +12,8 @@ export const getFAQs = async (req, res) => {
             ...(categoryId && { categoryId }),
             ...(search && {
                 OR: [
-                    { question: { contains: search, mode: 'insensitive' } },
-                    { answer: { contains: search, mode: 'insensitive' } }
+                    { question: { contains: search } },
+                    { answer: { contains: search } }
                 ]
             })
         };
@@ -25,6 +25,12 @@ export const getFAQs = async (req, res) => {
                     select: {
                         id: true,
                         name: true
+                    }
+                },
+                createdBy: {
+                    select: {
+                        firstName: true,
+                        surname: true
                     }
                 }
             },
@@ -53,7 +59,7 @@ export const getFAQs = async (req, res) => {
     }
 };
 
-// Get FAQ categories with FAQ counts
+// Get FAQ categories with FAQ counts (public endpoint - uses real database data)
 export const getFAQCategories = async (req, res) => {
     try {
         const categories = await prisma.fAQCategory.findMany({
@@ -204,7 +210,6 @@ export const createFAQ = async (req, res) => {
                 },
                 createdBy: {
                     select: {
-                        username: true,
                         firstName: true,
                         surname: true
                     }
@@ -264,6 +269,12 @@ export const updateFAQ = async (req, res) => {
                         id: true,
                         name: true
                     }
+                },
+                createdBy: {
+                    select: {
+                        firstName: true,
+                        surname: true
+                    }
                 }
             }
         });
@@ -317,8 +328,8 @@ export const getAllFAQsAdmin = async (req, res) => {
             ...(typeof isActive === 'string' && { isActive: isActive === 'true' }),
             ...(search && {
                 OR: [
-                    { question: { contains: search, mode: 'insensitive' } },
-                    { answer: { contains: search, mode: 'insensitive' } }
+                    { question: { contains: search } },
+                    { answer: { contains: search } }
                 ]
             })
         };
@@ -326,9 +337,14 @@ export const getAllFAQsAdmin = async (req, res) => {
         const faqs = await prisma.fAQ.findMany({
             where: whereClause,
             include: {
+                category: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                },
                 createdBy: {
                     select: {
-                        username: true,
                         firstName: true,
                         surname: true
                     }
