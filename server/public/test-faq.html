@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ API Test</title>
+</head>
+<body>
+    <h1>FAQ API Test</h1>
+    <button onclick="testFAQAPI()">Test FAQ API</button>
+    <div id="results"></div>
+
+    <script>
+        async function testFAQAPI() {
+            const resultsDiv = document.getElementById('results');
+            
+            try {
+                // Test public FAQ endpoint
+                const response = await fetch('/api/faq');
+                const data = await response.json();
+                
+                resultsDiv.innerHTML = `
+                    <h2>FAQ API Response</h2>
+                    <p>Status: ${response.status}</p>
+                    <p>Success: ${data.success}</p>
+                    <p>FAQ Count: ${data.data ? data.data.length : 0}</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <h2>Error</h2>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

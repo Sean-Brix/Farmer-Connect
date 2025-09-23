@@ -28,6 +28,12 @@ router.use('/logs', logs);
 import inquiry from './inquiry.js';
 router.use('/inquiries', inquiry);
 
+import faq from './faq.js';
+router.use('/faq', faq);
+
+import bot from './bot.js';
+router.use('/bot', bot);
+
 import surveyForms from './Survey_Forms/index.js';
 router.use('/survey-forms', surveyForms);
 

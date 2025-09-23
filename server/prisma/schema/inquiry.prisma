@@ -106,12 +106,44 @@ model InquiryAttachment {
   @@map("inquiry_attachments")
 }
 
+model FAQCategory {
+  id          String      @id @default(cuid())
+  
+  // Content
+  name        String      // Category name (e.g., "Medical", "Distribution")
+  description String?     // Optional category description
+  
+  // Management
+  isActive    Boolean     @default(true) // Whether category is publicly visible
+  orderIndex  Int         @default(0) // Display order
+  
+  // Relationships
+  faqs        FAQ[]       // FAQs in this category
+  
+  // Metadata
+  createdById String?     // Admin who created this category
+  createdBy   Account?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  
+  // Timestamps
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Indexes
+  @@index([isActive])
+  @@index([orderIndex])
+  @@map("faq_categories")
+}
+
 model FAQ {
   id          String      @id @default(cuid())
   
   // Content
   question    String      // FAQ question
   answer      String      @db.LongText // FAQ answer
+  
+  // Category relationship
+  categoryId  String?     // FAQ category
+  category    FAQCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   
   // Management
   isActive    Boolean     @default(true) // Whether FAQ is publicly visible
@@ -132,6 +164,7 @@ model FAQ {
   // Indexes
   @@index([isActive])
   @@index([orderIndex])
+  @@index([categoryId])
   
   @@map("faqs")
 }

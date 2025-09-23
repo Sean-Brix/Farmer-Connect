@@ -392,25 +392,29 @@ function Chat_Module() {
     };
   }, [socket]);
 
-  // Auto-scroll to top when a new conversation is selected
+  // Auto-scroll messages container to bottom when a new conversation is selected
   useEffect(() => {
-    if (selectedChat) {
-      // Scroll the entire page/screen to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      
-      // Also scroll the messages container to top
-      if (messagesContainerRef.current) {
-        messagesContainerRef.current.scrollTop = 0;
-      }
+    if (selectedChat && messagesContainerRef.current) {
+      // Small delay to ensure messages are rendered first
+      setTimeout(() => {
+        if (messagesContainerRef.current) {
+          messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
+      }, 100);
     }
-  }, [selectedChat]);
+  }, [selectedChat?.id, selectedChat?.inquiryId]);
 
-  // Auto-scroll to bottom when replies change
+  // Auto-scroll to bottom when replies change (new messages)
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (selectedChat?.replies && messagesContainerRef.current) {
+      // Use setTimeout to ensure DOM updates first
+      setTimeout(() => {
+        if (messagesContainerRef.current) {
+          messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
+      }, 50);
     }
-  }, [selectedChat?.replies]);
+  }, [selectedChat?.replies?.length]);
 
   // Sync selectedChat with any list to prevent state inconsistencies
   useEffect(() => {

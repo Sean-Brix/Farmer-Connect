@@ -103,6 +103,7 @@ model Account {
   inquiryReplies      InquiryReply[]
   inquiryAttachments  InquiryAttachment[]
   createdFAQs         FAQ[]
+  createdFAQCategories FAQCategory[]
 
   // Chat System Relations
   chatParticipants    ChatParticipant[]

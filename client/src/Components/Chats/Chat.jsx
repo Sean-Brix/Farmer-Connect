@@ -7,25 +7,28 @@ import { useSocket } from '../../contexts/SocketContext.jsx';
 import { useTheme } from '../../contexts/ThemeContext.jsx';
 import ImageViewer from '../Common/ImageViewer.jsx';
 import FillSurveyModal from '../Survey/FillSurveyModal.jsx';
+import BotCategoryButtons from './BotCategoryButtons.jsx';
+import BotFAQList from './BotFAQList.jsx';
+import botAPI from '../../Services/botAPI.js';
 
 export default function Chat() {
     const { theme } = useTheme();
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
     const [sidebarOpen, setSidebarOpen] = useState(false); // Controls sidebar visibility
-    const [chatMode, setChatMode] = useState('admin'); // Direct to live agent
+    const [chatMode, setChatMode] = useState('bot'); // Start with bot assistance
     const [adminRequested, setAdminRequested] = useState(false);
     const [pastInquiries, setPastInquiries] = useState([]);
     const [activeInquiry, setActiveInquiry] = useState(null);
     const [isLoadingHistory, setIsLoadingHistory] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [messages, setMessages] = useState([
-        {
-            from: 'system',
-            text: 'You\'re connected to a live support agent. We\'ll respond shortly. Please describe your concern.',
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-    ]);
+    const [messages, setMessages] = useState([]);
+    
+    // Bot-specific state
+    const [botWelcomeMessage, setBotWelcomeMessage] = useState(null);
+    const [showingCategories, setShowingCategories] = useState(false);
+    const [showingFAQs, setShowingFAQs] = useState(false);
+    const [currentCategory, setCurrentCategory] = useState(null);
     const [toast, setToast] = useState(null); // { type: 'error'|'info' , title, message }
     const [sending, setSending] = useState(false);
     const [attachments, setAttachments] = useState([]); // File[] queued like Messenger
@@ -49,15 +52,20 @@ export default function Chat() {
         };
     }, [open]);
 
-    // Connect socket and notify admins when chat opens
+    // Connect socket and initialize chat when opens
     useEffect(() => {
         if (open) {
             if (!isConnected) {
                 connectSocket('User'); // Connect as User role
             }
-            // Fetch past inquiries and active inquiry on open
-            fetchPastInquiries();
-            refreshActiveInquiry();
+            // Initialize based on chat mode
+            if (chatMode === 'bot') {
+                initializeBotChat();
+            } else {
+                // Fetch past inquiries and active inquiry for admin mode
+                fetchPastInquiries();
+                refreshActiveInquiry();
+            }
         }
     }, [open, isConnected, socket]);
 
@@ -123,11 +131,134 @@ export default function Chat() {
         };
     }, [socket]);
 
-    // Quick questions and bot answers removed
+    // Bot Functions
+    const initializeBotChat = async () => {
+        try {
+            const welcomeData = await botAPI.getWelcomeMessage();
+            if (welcomeData) {
+                setBotWelcomeMessage(welcomeData);
+                const botMsg = {
+                    from: 'bot',
+                    text: welcomeData.message,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    botData: welcomeData
+                };
+                setMessages([botMsg]);
+                setShowingCategories(true);
+            }
+        } catch (error) {
+            console.error('Error initializing bot:', error);
+            // Fallback to admin mode
+            escalateToAgent();
+        }
+    };
 
-    // Removed automatic admin support request; new inquiry will be created on first user message
+    const handleCategorySelect = async (category) => {
+        try {
+            // Add user message showing category selection
+            const userMsg = {
+                from: 'user',
+                text: `I need help with ${category.name}`,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            setMessages(prev => [...prev, userMsg]);
 
-    // Bot mode is removed
+            // Get FAQs for this category
+            const faqData = await botAPI.getCategoryFAQs(category.id);
+            if (faqData) {
+                const botMsg = {
+                    from: 'bot',
+                    text: faqData.message,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    botData: faqData
+                };
+                setMessages(prev => [...prev, botMsg]);
+                setCurrentCategory(category);
+                setShowingCategories(false);
+                setShowingFAQs(true);
+
+                // If it should escalate immediately, do so
+                if (faqData.escalate) {
+                    setTimeout(() => escalateToAgent(), 1000);
+                }
+            }
+        } catch (error) {
+            console.error('Error handling category selection:', error);
+            escalateToAgent();
+        }
+    };
+
+    const handleFAQView = async (faqId) => {
+        await botAPI.trackFAQView(faqId);
+    };
+
+    const handleFAQHelpful = async (faqId) => {
+        await botAPI.markFAQHelpful(faqId);
+        setToast({
+            type: 'info',
+            title: 'Thanks for your feedback!',
+            message: 'Glad we could help you.'
+        });
+    };
+
+    const handleFAQNotHelpful = async () => {
+        try {
+            const escalationData = await botAPI.markFAQNotHelpful();
+            if (escalationData) {
+                const botMsg = {
+                    from: 'bot', 
+                    text: escalationData.message,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                setMessages(prev => [...prev, botMsg]);
+                setTimeout(() => escalateToAgent(), 1000);
+            }
+        } catch (error) {
+            console.error('Error handling not helpful:', error);
+            escalateToAgent();
+        }
+    };
+
+    const escalateToAgent = async () => {
+        setChatMode('admin');
+        setShowingCategories(false);
+        setShowingFAQs(false);
+        
+        const systemMsg = {
+            from: 'system',
+            text: 'You\'re now being connected to a live support agent. Please describe your concern.',
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        setMessages(prev => [...prev, systemMsg]);
+        
+        // Create initial inquiry when escalating to admin
+        try {
+            const response = await fetch('/api/inquiries', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    subject: 'Bot Escalation',
+                    message: 'User escalated from bot assistance to live agent.',
+                    priority: 'MEDIUM'
+                })
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                setActiveInquiry(data.data);
+                console.debug('[chat] Inquiry created for escalation:', data.data.id);
+            }
+        } catch (error) {
+            console.error('Error creating escalation inquiry:', error);
+        }
+        
+        // Initialize admin mode
+        fetchPastInquiries();
+        refreshActiveInquiry();
+    };
 
     // Toggle sidebar visibility
     const toggleSidebar = () => {
@@ -141,95 +272,162 @@ export default function Chat() {
 
         setSending(true);
 
-        // 1) If there's text, optimistically append and emit it (creates inquiry if needed)
-        if (message.trim()) {
-            const userMsg = {
-                from: 'user',
-                text: message,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            };
-            setMessages(prev => [...prev, userMsg]);
-
-            if (isConnected && socket) {
-                console.debug('[chat] emit chat_message', { len: message.length });
-                socket.emit('chat_message', {
-                    message: message,
-                    timestamp: new Date(),
-                    mode: 'user'
-                });
-            }
-        }
-
-        // 2) Ensure we have an active inquiry id (poll briefly if it was just created by message)
-        const wait = (ms) => new Promise(res => setTimeout(res, ms));
-        let inquiry = activeInquiry;
-        if (!inquiry?.id) {
-            // try a few times to wait for server to create the inquiry after first message
-            for (let i = 0; i < 5 && !inquiry?.id; i++) {
-                // eslint-disable-next-line no-await-in-loop
-                inquiry = await refreshActiveInquiry();
-                if (inquiry?.id) break;
-                // eslint-disable-next-line no-await-in-loop
-                await wait(300);
-            }
-        }
-
-        // 3) Upload queued attachments sequentially once we have an inquiry
-        if (attachments.length > 0) {
-            if (!inquiry?.id) {
-                // If still no inquiry and no message was sent, ask user to type a message
-                if (!message.trim()) {
-                    alert('Please enter a message before sending attachments.');
+        // Handle bot mode - check if user wants to escalate immediately
+        if (chatMode === 'bot' && message.trim()) {
+            try {
+                const escalationCheck = await botAPI.shouldEscalate(message.trim());
+                if (escalationCheck && escalationCheck.escalate) {
+                    // User wants to talk to agent directly
+                    const userMsg = {
+                        from: 'user',
+                        text: message,
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+                    setMessages(prev => [...prev, userMsg]);
+                    setMessage(''); // Clear message
                     setSending(false);
+                    
+                    const botMsg = {
+                        from: 'bot',
+                        text: escalationCheck.data.message,
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+                    setMessages(prev => [...prev, botMsg]);
+                    
+                    setTimeout(() => escalateToAgent(), 1000);
+                    return;
+                } else {
+                    // Show categories for any regular message in bot mode
+                    const userMsg = {
+                        from: 'user',
+                        text: message,
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+                    setMessages(prev => [...prev, userMsg]);
+                    setMessage(''); // Clear message
+                    setSending(false);
+                    
+                    // Always show categories when user sends a message in bot mode
+                    if (!showingCategories && !showingFAQs) {
+                        // Initialize bot categories
+                        const welcomeData = await botAPI.getWelcomeMessage();
+                        if (welcomeData) {
+                            setBotWelcomeMessage(welcomeData);
+                            const botMsg = {
+                                from: 'bot',
+                                text: "I can help you with these topics. Please select a category:",
+                                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                                botData: welcomeData
+                            };
+                            setMessages(prev => [...prev, botMsg]);
+                            setShowingCategories(true);
+                        }
+                    }
                     return;
                 }
-            } else {
-                for (let i = 0; i < attachments.length; i++) {
-                    const file = attachments[i];
-                    try {
-                        const form = new FormData();
-                        form.append('file', file);
-                        // eslint-disable-next-line no-await-in-loop
-                        const res = await fetch(`/api/inquiries/${inquiry.id}/attachments`, {
-                            method: 'POST',
-                            body: form,
-                            credentials: 'include',
-                        });
-                        if (!res.ok) {
-                            // eslint-disable-next-line no-await-in-loop
-                            const text = await res.text();
-                            throw new Error(text || 'Upload failed');
-                        }
-                        // eslint-disable-next-line no-await-in-loop
-                        const { data } = await res.json();
-                        const bubbleUrl = data.streamUrl || data.filepath;
-                        setMessages(prev => [
-                            ...prev,
-                            { from: 'user', text: bubbleUrl, mime: data.mimetype, filename: data.filename, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
-                        ]);
+            } catch (error) {
+                console.error('Error checking escalation:', error);
+                escalateToAgent();
+                return;
+            }
+        }
 
-                        if (socket && isConnected) {
-                            socket.emit('inquiry_attachment_uploaded', {
-                                inquiryId: inquiry.id,
-                                filename: data.filename,
-                                streamUrl: bubbleUrl,
-                                filesize: data.filesize,
-                                mimetype: data.mimetype,
+        // Admin mode message handling - only create inquiry after bot escalation
+        if (chatMode === 'admin') {
+            // 1) If there's text, optimistically append and emit it (creates inquiry if needed)
+            if (message.trim()) {
+                const userMsg = {
+                    from: 'user',
+                    text: message,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                setMessages(prev => [...prev, userMsg]);
+
+                // Only emit socket message if we have an active inquiry (meaning user escalated from bot)
+                if (isConnected && socket && activeInquiry) {
+                    console.debug('[chat] emit chat_message', { len: message.length });
+                    socket.emit('chat_message', {
+                        message: message,
+                        timestamp: new Date(),
+                        mode: 'user'
+                    });
+                }
+            }
+            // Continue with admin mode attachment and inquiry handling
+            
+            // 2) Ensure we have an active inquiry id (poll briefly if it was just created by message)
+            const wait = (ms) => new Promise(res => setTimeout(res, ms));
+            let inquiry = activeInquiry;
+            if (!inquiry?.id) {
+                // try a few times to wait for server to create the inquiry after first message
+                for (let i = 0; i < 5 && !inquiry?.id; i++) {
+                    // eslint-disable-next-line no-await-in-loop
+                    inquiry = await refreshActiveInquiry();
+                    if (inquiry?.id) break;
+                    // eslint-disable-next-line no-await-in-loop
+                    await wait(300);
+                }
+            }
+
+            // 3) Upload queued attachments sequentially once we have an inquiry
+            if (attachments.length > 0) {
+                if (!inquiry?.id) {
+                    // If still no inquiry and no message was sent, ask user to type a message
+                    if (!message.trim()) {
+                        alert('Please enter a message before sending attachments.');
+                        setSending(false);
+                        return;
+                    }
+                } else {
+                    for (let i = 0; i < attachments.length; i++) {
+                        const file = attachments[i];
+                        try {
+                            const form = new FormData();
+                            form.append('file', file);
+                            // eslint-disable-next-line no-await-in-loop
+                            const res = await fetch(`/api/inquiries/${inquiry.id}/attachments`, {
+                                method: 'POST',
+                                body: form,
+                                credentials: 'include',
                             });
+                            if (!res.ok) {
+                                // eslint-disable-next-line no-await-in-loop
+                                const text = await res.text();
+                                throw new Error(text || 'Upload failed');
+                            }
+                            // eslint-disable-next-line no-await-in-loop
+                            const { data } = await res.json();
+                            const bubbleUrl = data.streamUrl || data.filepath;
+                            setMessages(prev => [
+                                ...prev,
+                                { from: 'user', text: bubbleUrl, mime: data.mimetype, filename: data.filename, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+                            ]);
+
+                            if (socket && isConnected) {
+                                socket.emit('inquiry_attachment_uploaded', {
+                                    inquiryId: inquiry.id,
+                                    filename: data.filename,
+                                    streamUrl: bubbleUrl,
+                                    filesize: data.filesize,
+                                    mimetype: data.mimetype,
+                                });
+                            }
+                        } catch (err) {
+                            console.error('Attachment upload failed:', err);
+                            setToast({ type: 'error', title: 'Upload failed', message: err?.message || 'Attachment upload failed' });
+                            // continue with next file
                         }
-                    } catch (err) {
-                        console.error('Attachment upload failed:', err);
-                        setToast({ type: 'error', title: 'Upload failed', message: err?.message || 'Attachment upload failed' });
-                        // continue with next file
                     }
                 }
             }
+
+            // 4) Cleanup and refresh for admin mode
+            fetchPastInquiries();
         }
 
-        // 4) Cleanup and refresh
+        // Common cleanup
         setMessage('');
         setAttachments([]);
-    fetchPastInquiries();
         setSending(false);
     };
     // Helper: refresh active inquiry
@@ -840,16 +1038,22 @@ export default function Chat() {
                     key={msg.key || idx}
                                     className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'} items-end gap-2`}
                                 >
-                                    {(msg.from === 'admin' || msg.from === 'system') && (
+                                    {(msg.from === 'admin' || msg.from === 'system' || msg.from === 'bot') && (
                                         <div className="flex-shrink-0">
                                             <div className={`w-8 h-8 rounded-full p-0.5 ${
                                                 msg.from === 'admin' 
                                                     ? 'bg-gradient-to-br from-blue-400 to-blue-600' 
+                                                    : msg.from === 'bot'
+                                                    ? 'bg-gradient-to-br from-indigo-400 to-indigo-600'
                                                     : 'bg-gradient-to-br from-gray-400 to-gray-600'
                                             }`}>
                                                 {msg.from === 'admin' ? (
                                                     <div className="w-full h-full rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-semibold">
                                                         A
+                                                    </div>
+                                                ) : msg.from === 'bot' ? (
+                                                    <div className="w-full h-full rounded-full bg-indigo-500 flex items-center justify-center text-white text-xs">
+                                                        🤖
                                                     </div>
                                                 ) : (
                                                     <div className="w-full h-full rounded-full bg-gray-500 flex items-center justify-center text-white text-xs">
@@ -860,22 +1064,49 @@ export default function Chat() {
                                         </div>
                                     )}
                                     <div className={`flex flex-col ${msg.from === 'user' ? 'items-end' : 'items-start'} max-w-[80%]`}>
-                                        <div
-                                            className={`px-4 py-3 rounded-2xl text-sm shadow-sm transition-all duration-200 hover:shadow-md
-                                                ${msg.from === 'user'
-                                                    ? 'bg-gradient-to-r from-green-600 to-green-700 text-white rounded-br-md'
-                                                    : msg.from === 'admin'
-                                                    ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-blue-900 border border-blue-200 rounded-bl-md'
-                                                    : 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-800 border border-gray-200 rounded-bl-md'
-                                                }`}
-                                            style={{ wordBreak: 'break-word' }}
-                                        >
-                                            {msg.from === 'admin' && (
-                                                <div className="text-xs text-blue-600 font-semibold mb-1">Live Agent</div>
-                                            )}
-                                            {msg.from === 'system' && (
-                                                <div className="text-xs text-gray-600 font-semibold mb-1">System</div>
-                                            )}
+                                        {/* Handle bot-specific messages */}
+                                        {msg.from === 'bot' && msg.botData ? (
+                                            <div className="max-w-none">
+                                                {msg.botData.type === 'bot_welcome' && showingCategories && (
+                                                    <BotCategoryButtons
+                                                        categories={msg.botData.categories}
+                                                        onCategorySelect={handleCategorySelect}
+                                                        onEscalate={escalateToAgent}
+                                                    />
+                                                )}
+                                                {msg.botData.type === 'bot_faq_list' && showingFAQs && (
+                                                    <BotFAQList
+                                                        categoryName={msg.botData.categoryName}
+                                                        faqs={msg.botData.faqs}
+                                                        onFAQView={handleFAQView}
+                                                        onFAQHelpful={handleFAQHelpful}
+                                                        onNotHelpful={handleFAQNotHelpful}
+                                                        onEscalate={escalateToAgent}
+                                                    />
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <div
+                                                className={`px-4 py-3 rounded-2xl text-sm shadow-sm transition-all duration-200 hover:shadow-md
+                                                    ${msg.from === 'user'
+                                                        ? 'bg-gradient-to-r from-green-600 to-green-700 text-white rounded-br-md'
+                                                        : msg.from === 'admin'
+                                                        ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-blue-900 border border-blue-200 rounded-bl-md'
+                                                        : msg.from === 'bot'
+                                                        ? 'bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-900 border border-indigo-200 rounded-bl-md'
+                                                        : 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-800 border border-gray-200 rounded-bl-md'
+                                                    }`}
+                                                style={{ wordBreak: 'break-word' }}
+                                            >
+                                                {msg.from === 'admin' && (
+                                                    <div className="text-xs text-blue-600 font-semibold mb-1">Live Agent</div>
+                                                )}
+                                                {msg.from === 'bot' && (
+                                                    <div className="text-xs text-indigo-600 font-semibold mb-1">Support Bot</div>
+                                                )}
+                                                {msg.from === 'system' && (
+                                                    <div className="text-xs text-gray-600 font-semibold mb-1">System</div>
+                                                )}
                                             {(() => {
                                                 const text = msg.text;
                                                 const mime = msg.mime;
@@ -944,7 +1175,8 @@ export default function Chat() {
                                                 }
                                                 return text;
                                             })()}
-                                        </div>
+                                            </div>
+                                        )}
                                         <span className={`text-xs mt-1.5 px-2 ${msg.from === 'user' ? 'text-gray-500' : 'text-gray-400'}`}>
                                             {msg.time}
                                         </span>

@@ -5,11 +5,11 @@ const prisma = new PrismaClient();
 // Get all FAQs
 export const getFAQs = async (req, res) => {
     try {
-        const { category, search } = req.query;
+        const { search, categoryId } = req.query;
         
         const whereClause = {
             isActive: true,
-            ...(category && { category }),
+            ...(categoryId && { categoryId }),
             ...(search && {
                 OR: [
                     { question: { contains: search, mode: 'insensitive' } },
@@ -20,16 +20,16 @@ export const getFAQs = async (req, res) => {
 
         const faqs = await prisma.fAQ.findMany({
             where: whereClause,
-            select: {
-                id: true,
-                question: true,
-                answer: true,
-                category: true,
-                viewCount: true,
-                helpfulCount: true,
-                createdAt: true
+            include: {
+                category: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                }
             },
             orderBy: [
+                { orderIndex: 'asc' },
                 { viewCount: 'desc' },
                 { createdAt: 'desc' }
             ]
@@ -37,8 +37,10 @@ export const getFAQs = async (req, res) => {
 
         res.json({
             success: true,
+            faqs: faqs,
             data: faqs,
-            count: faqs.length
+            count: faqs.length,
+            total: faqs.length
         });
 
     } catch (error) {
@@ -51,20 +53,35 @@ export const getFAQs = async (req, res) => {
     }
 };
 
-// Get FAQ categories
+// Get FAQ categories with FAQ counts
 export const getFAQCategories = async (req, res) => {
     try {
-        const categories = await prisma.fAQ.findMany({
+        const categories = await prisma.fAQCategory.findMany({
             where: { isActive: true },
-            select: { category: true },
-            distinct: ['category']
+            include: {
+                faqs: {
+                    where: { isActive: true },
+                    select: { id: true }
+                }
+            },
+            orderBy: [
+                { orderIndex: 'asc' },
+                { createdAt: 'desc' }
+            ]
         });
 
-        const categoryList = categories.map(c => c.category).filter(Boolean);
+        const categoriesWithCount = categories.map(category => ({
+            id: category.id,
+            name: category.name,
+            description: category.description,
+            faqCount: category.faqs.length,
+            orderIndex: category.orderIndex
+        }));
 
         res.json({
             success: true,
-            data: categoryList
+            data: categoriesWithCount,
+            categories: categoriesWithCount
         });
 
     } catch (error) {
@@ -146,7 +163,7 @@ export const markFAQHelpful = async (req, res) => {
 // Admin: Create FAQ
 export const createFAQ = async (req, res) => {
     try {
-        const { question, answer, category } = req.body;
+        const { question, answer, categoryId, isActive, orderIndex } = req.body;
         
         if (!question || !answer) {
             return res.status(400).json({
@@ -155,20 +172,36 @@ export const createFAQ = async (req, res) => {
             });
         }
 
+        // Validate category if provided
+        if (categoryId) {
+            const categoryExists = await prisma.fAQCategory.findUnique({
+                where: { id: categoryId }
+            });
+            
+            if (!categoryExists) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid category ID'
+                });
+            }
+        }
+
         const faq = await prisma.fAQ.create({
             data: {
                 question,
                 answer,
-                category: category || 'General',
+                categoryId: categoryId || null,
+                isActive: isActive !== undefined ? isActive : true,
+                orderIndex: orderIndex || 0,
                 createdById: req.user.id
             },
-            select: {
-                id: true,
-                question: true,
-                answer: true,
-                category: true,
-                isActive: true,
-                createdAt: true,
+            include: {
+                category: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                },
                 createdBy: {
                     select: {
                         username: true,
@@ -199,25 +232,39 @@ export const createFAQ = async (req, res) => {
 export const updateFAQ = async (req, res) => {
     try {
         const { id } = req.params;
-        const { question, answer, category, isActive } = req.body;
+        const { question, answer, categoryId, isActive, orderIndex } = req.body;
+
+        // Validate category if provided
+        if (categoryId) {
+            const categoryExists = await prisma.fAQCategory.findUnique({
+                where: { id: categoryId }
+            });
+            
+            if (!categoryExists) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid category ID'
+                });
+            }
+        }
+
+        const updateData = {};
+        if (question !== undefined) updateData.question = question;
+        if (answer !== undefined) updateData.answer = answer;
+        if (categoryId !== undefined) updateData.categoryId = categoryId;
+        if (typeof isActive === 'boolean') updateData.isActive = isActive;
+        if (typeof orderIndex === 'number') updateData.orderIndex = orderIndex;
 
         const faq = await prisma.fAQ.update({
             where: { id },
-            data: {
-                ...(question && { question }),
-                ...(answer && { answer }),
-                ...(category && { category }),
-                ...(typeof isActive === 'boolean' && { isActive })
-            },
-            select: {
-                id: true,
-                question: true,
-                answer: true,
-                category: true,
-                isActive: true,
-                viewCount: true,
-                helpfulCount: true,
-                updatedAt: true
+            data: updateData,
+            include: {
+                category: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                }
             }
         });
 
@@ -264,10 +311,9 @@ export const deleteFAQ = async (req, res) => {
 // Admin: Get all FAQs (including inactive)
 export const getAllFAQsAdmin = async (req, res) => {
     try {
-        const { category, search, isActive } = req.query;
+        const { search, isActive } = req.query;
         
         const whereClause = {
-            ...(category && { category }),
             ...(typeof isActive === 'string' && { isActive: isActive === 'true' }),
             ...(search && {
                 OR: [
@@ -296,8 +342,10 @@ export const getAllFAQsAdmin = async (req, res) => {
 
         res.json({
             success: true,
+            faqs: faqs,
             data: faqs,
-            count: faqs.length
+            count: faqs.length,
+            total: faqs.length
         });
 
     } catch (error) {

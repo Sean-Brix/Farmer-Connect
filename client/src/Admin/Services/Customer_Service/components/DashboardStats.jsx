@@ -1,17 +1,20 @@
 import React from 'react';
 
-const DashboardStats = ({ activeChats }) => {
-  const pendingCount = activeChats.filter(chat => chat.status === 'PENDING').length;
-  const inProgressCount = activeChats.filter(chat => chat.status === 'IN_PROGRESS').length;
-  const totalMessages = activeChats.reduce((total, chat) => total + (chat.replies ? chat.replies.length : 0) + 1, 0);
+const DashboardStats = ({ pending = [], inProgress = [], resolved = [] }) => {
+  const pendingCount = pending.length;
+  const inProgressCount = inProgress.length;
+  const resolvedCount = resolved.length;
+  const totalChats = pendingCount + inProgressCount + resolvedCount;
+  const totalMessages = [...pending, ...inProgress, ...resolved].reduce((total, chat) => 
+    total + (chat.messages ? chat.messages.length : 0), 0);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-gray-600 text-sm font-semibold mb-1">Active Chats</p>
-            <p className="text-3xl font-bold text-gray-900">{activeChats.length}</p>
+            <p className="text-gray-600 text-sm font-semibold mb-1">Total Chats</p>
+            <p className="text-3xl font-bold text-gray-900">{totalChats}</p>
           </div>
           <div className="bg-green-100 rounded-full p-3 shadow-md">
             <svg className="w-6 h-6 text-green-700" fill="currentColor" viewBox="0 0 20 20">
@@ -38,13 +41,26 @@ const DashboardStats = ({ activeChats }) => {
       <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-gray-600 text-sm font-semibold mb-1">Total Messages</p>
-            <p className="text-3xl font-bold text-gray-900">{totalMessages}</p>
+            <p className="text-gray-600 text-sm font-semibold mb-1">In Progress</p>
+            <p className="text-3xl font-bold text-gray-900">{inProgressCount}</p>
           </div>
-          <div className="bg-gray-800 rounded-full p-3 shadow-md">
-            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+          <div className="bg-blue-100 rounded-full p-3 shadow-md">
+            <svg className="w-6 h-6 text-blue-700" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-gray-600 text-sm font-semibold mb-1">Resolved</p>
+            <p className="text-3xl font-bold text-gray-900">{resolvedCount}</p>
+          </div>
+          <div className="bg-green-100 rounded-full p-3 shadow-md">
+            <svg className="w-6 h-6 text-green-700" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
           </div>
         </div>

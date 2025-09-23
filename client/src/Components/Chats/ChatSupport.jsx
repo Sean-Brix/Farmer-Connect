@@ -3,6 +3,7 @@ import Navbar from '../../Client/Components/Navbar.jsx'
 import botAvatar from '../../Assets/default_picture.png';
 import userAvatar from '../../Assets/eic_default.png';
 import { useTheme } from '../../contexts/ThemeContext';
+import botAPI from '../../Services/botAPI.js';
 
 export default function ChatSupport() {
     const { theme, isDark } = useTheme();
@@ -18,39 +19,13 @@ export default function ChatSupport() {
     const [isBotTyping, setIsBotTyping] = useState(false);
     const messagesEndRef = useRef(null);
 
-    // Sample FAQ data
-    const [faqs] = useState([
-        {
-            id: 1,
-            question: "How do I register for a seminar?",
-            answer: "You can register for seminars by visiting the Seminar section in your dashboard and clicking on the 'Register' button for your desired seminar.",
-            category: "Seminar"
-        },
-        {
-            id: 2,
-            question: "How can I reset my password?",
-            answer: "To reset your password, click on 'Forgot Password' on the login page and follow the instructions sent to your email.",
-            category: "Account"
-        },
-        {
-            id: 3,
-            question: "What documents do I need for EIC registration?",
-            answer: "For EIC registration, you'll need: Valid ID, proof of address, and completed application form.",
-            category: "EIC"
-        },
-        {
-            id: 4,
-            question: "How do I track my distribution requests?",
-            answer: "You can track your distribution requests in the Distribution section of your dashboard under 'My Requests'.",
-            category: "Distribution"
-        },
-        {
-            id: 5,
-            question: "What are the seminar requirements?",
-            answer: "Seminar requirements vary by program. Check the specific seminar details for prerequisites and materials needed.",
-            category: "Seminar"
-        }
-    ]);
+    // FAQ and Categories state
+    const [categories, setCategories] = useState([]);
+    const [faqs, setFaqs] = useState([]);
+    const [faqsLoading, setFaqsLoading] = useState(false);
+    const [faqsError, setFaqsError] = useState(null);
+    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+    const [expandedFAQs, setExpandedFAQs] = useState(new Set());
 
     // Sample user inquiries data
     const [userInquiries] = useState([
@@ -133,6 +108,71 @@ export default function ChatSupport() {
             handleSendMessage();
         }
     };
+
+    // FAQ Loading Functions using Bot API
+    const loadFAQCategories = async () => {
+        try {
+            setFaqsLoading(true);
+            setFaqsError(null);
+            
+            // Get welcome message with categories
+            const welcomeData = await botAPI.getWelcomeMessage();
+            if (welcomeData && welcomeData.categories) {
+                setCategories(welcomeData.categories);
+                
+                // Load FAQs for all categories
+                const allFAQs = [];
+                for (const category of welcomeData.categories) {
+                    try {
+                        const categoryFAQs = await botAPI.getCategoryFAQs(category.id);
+                        if (categoryFAQs && categoryFAQs.faqs) {
+                            // Add category info to each FAQ
+                            const faqsWithCategory = categoryFAQs.faqs.map(faq => ({
+                                ...faq,
+                                categoryId: category.id,
+                                categoryName: category.name
+                            }));
+                            allFAQs.push(...faqsWithCategory);
+                        }
+                    } catch (error) {
+                        console.error(`Error loading FAQs for category ${category.name}:`, error);
+                    }
+                }
+                setFaqs(allFAQs);
+            } else {
+                setFaqsError('Failed to load FAQ categories from bot API');
+            }
+        } catch (error) {
+            console.error('Error loading FAQ data:', error);
+            setFaqsError('Failed to load FAQ data');
+        } finally {
+            setFaqsLoading(false);
+        }
+    };
+
+    const toggleFAQExpansion = (faqId) => {
+        setExpandedFAQs(prev => {
+            const newExpanded = new Set(prev);
+            if (newExpanded.has(faqId)) {
+                newExpanded.delete(faqId);
+            } else {
+                newExpanded.add(faqId);
+            }
+            return newExpanded;
+        });
+    };
+
+    const getFilteredFAQs = () => {
+        if (!selectedCategoryId) return faqs;
+        return faqs.filter(faq => faq.categoryId === selectedCategoryId);
+    };
+
+    // Load FAQ data when FAQ view is opened
+    useEffect(() => {
+        if (currentView === 'faq' && categories.length === 0) {
+            loadFAQCategories();
+        }
+    }, [currentView]);
 
     // Helper functions for styling
     const getCategoryColor = (category) => {
@@ -415,33 +455,134 @@ export default function ChatSupport() {
                                 </div>
                             )}
 
-                            {/* Enhanced FAQ View */}
+                            {/* Enhanced FAQ View with Categories */}
                             {currentView === 'faq' && (
                                 <div className="h-full overflow-y-auto p-8">
-                                    <div className="max-w-4xl mx-auto">
+                                    <div className="max-w-6xl mx-auto">
                                         <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center">Frequently Asked Questions</h2>
-                                        <div className="grid gap-6">
-                                            {faqs.map((faq) => (
-                                                <div key={faq.id} className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-                                                    <div className="flex items-start justify-between">
-                                                        <div className="flex-1">
-                                                            <h3 className="font-bold text-gray-900 mb-4 text-lg">{faq.question}</h3>
-                                                            <p className="text-gray-700 mb-4 leading-relaxed">{faq.answer}</p>
-                                                            <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold ${getCategoryColor(faq.category.toLowerCase())}`}>
-                                                                {faq.category}
-                                                            </span>
-                                                        </div>
-                                                        <div className="ml-6">
-                                                            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                                                                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                                </svg>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                        
+                                        {faqsLoading ? (
+                                            <div className="flex items-center justify-center py-12">
+                                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+                                                <span className="ml-3 text-gray-600">Loading FAQs...</span>
+                                            </div>
+                                        ) : faqsError ? (
+                                            <div className="text-center py-12">
+                                                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                    <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                                    </svg>
                                                 </div>
-                                            ))}
-                                        </div>
+                                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading FAQs</h3>
+                                                <p className="text-gray-600 mb-4">{faqsError}</p>
+                                                <button
+                                                    onClick={loadFAQCategories}
+                                                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
+                                                >
+                                                    Try Again
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                {/* Category Filter Buttons */}
+                                                <div className="flex flex-wrap gap-3 mb-8 justify-center">
+                                                    <button
+                                                        onClick={() => setSelectedCategoryId(null)}
+                                                        className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                                                            selectedCategoryId === null
+                                                                ? 'bg-green-600 text-white shadow-lg'
+                                                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                                        }`}
+                                                    >
+                                                        All Categories ({faqs.length})
+                                                    </button>
+                                                    {categories.map((category) => {
+                                                        const categoryFAQCount = faqs.filter(faq => faq.categoryId === category.id).length;
+                                                        return (
+                                                            <button
+                                                                key={category.id}
+                                                                onClick={() => setSelectedCategoryId(category.id)}
+                                                                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                                                                    selectedCategoryId === category.id
+                                                                        ? 'bg-green-600 text-white shadow-lg'
+                                                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                                                }`}
+                                                            >
+                                                                {category.name} ({categoryFAQCount})
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </div>
+
+                                                {/* FAQ List */}
+                                                {getFilteredFAQs().length === 0 ? (
+                                                    <div className="text-center py-12">
+                                                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                        </div>
+                                                        <h3 className="text-lg font-semibold text-gray-900 mb-2">No FAQs Available</h3>
+                                                        <p className="text-gray-600">
+                                                            {selectedCategoryId
+                                                                ? `No FAQs found in ${categories.find(c => c.id === selectedCategoryId)?.name || 'this category'}.`
+                                                                : 'No FAQs have been added yet.'
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                ) : (
+                                                    <div className="grid gap-6">
+                                                        {getFilteredFAQs().map((faq) => {
+                                                            const category = categories.find(c => c.id === faq.categoryId);
+                                                            const isExpanded = expandedFAQs.has(faq.id);
+                                                            
+                                                            return (
+                                                                <div key={faq.id} className="bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+                                                                    <div className="p-6">
+                                                                        <div className="flex items-start justify-between">
+                                                                            <div className="flex-1">
+                                                                                <div className="mb-2">
+                                                                                    <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                                                                                        {faq.categoryName || 'General'}
+                                                                                    </span>
+                                                                                </div>
+                                                                                <button
+                                                                                    onClick={() => toggleFAQExpansion(faq.id)}
+                                                                                    className="text-left w-full group"
+                                                                                >
+                                                                                    <h3 className="font-bold text-gray-900 mb-3 text-lg group-hover:text-green-600 transition-colors">
+                                                                                        {faq.question}
+                                                                                    </h3>
+                                                                                </button>
+                                                                                
+                                                                                {isExpanded && (
+                                                                                    <div className="mb-4">
+                                                                                        <p className="text-gray-700 leading-relaxed mb-4">{faq.answer}</p>
+                                                                                    </div>
+                                                                                )}
+                                                                            </div>
+                                                                            <div className="ml-6">
+                                                                                <button
+                                                                                    onClick={() => toggleFAQExpansion(faq.id)}
+                                                                                    className="w-10 h-10 bg-green-100 hover:bg-green-200 rounded-full flex items-center justify-center transition-colors"
+                                                                                >
+                                                                                    <svg 
+                                                                                        className={`w-5 h-5 text-green-600 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} 
+                                                                                        fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                                                    >
+                                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                                                    </svg>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                )}
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             )}

@@ -3,10 +3,12 @@ import { useTheme } from '../../../contexts/ThemeContext';
 import { surveyFormsAPI } from './surveyFormsAPI';
 import StatisticsModal from './StatisticsModal';
 import ResponsesModal from './ResponsesModal';
+import { faqService } from '../Customer_Service/services/faqService';
+import { Plus, Edit, Trash2 } from 'lucide-react';
 
 function Survey() {
   const { theme, isDark } = useTheme();
-  const [activeTab, setActiveTab] = useState('list'); // 'list', 'create', 'edit'
+  const [activeTab, setActiveTab] = useState('list'); // 'list', 'create', 'edit', 'faq'
   const [surveys, setSurveys] = useState([]);
   const [selectedSurvey, setSelectedSurvey] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -41,6 +43,29 @@ function Survey() {
     status: 'DRAFT',
     category: 'general',
     fields: []
+  });
+
+  // FAQ state
+  const [faqs, setFaqs] = useState([]);
+  const [faqLoading, setFaqLoading] = useState(false);
+  const [showFaqForm, setShowFaqForm] = useState(false);
+  const [editingFaq, setEditingFaq] = useState(null);
+  const [faqFormData, setFaqFormData] = useState({
+    question: '',
+    answer: '',
+    categoryId: '',
+    isActive: true
+  });
+
+  // Category state
+  const [categories, setCategories] = useState([]);
+  const [categoryLoading, setCategoryLoading] = useState(false);
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [categoryFormData, setCategoryFormData] = useState({
+    name: '',
+    description: '',
+    isActive: true
   });
 
   // Field type options
@@ -285,6 +310,197 @@ function Survey() {
     setShowStatisticsModal(true);
   };
 
+  // FAQ Functions
+  const loadFAQs = async () => {
+    try {
+      setFaqLoading(true);
+      const response = await faqService.getAllFAQs();
+      
+      if (response.success) {
+        setFaqs(response.data || []);
+        if (response.warning) {
+          console.info(response.warning);
+        }
+      } else {
+        setError(response.error || 'Failed to load FAQs');
+        setFaqs([]);
+      }
+    } catch (error) {
+      console.error('Error loading FAQs:', error);
+      setError('Failed to load FAQs');
+      setFaqs([]);
+    } finally {
+      setFaqLoading(false);
+    }
+  };
+
+  const handleFaqSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setSaving(true);
+      let response;
+      
+      if (editingFaq) {
+        response = await faqService.updateFAQ(editingFaq.id, faqFormData);
+      } else {
+        response = await faqService.createFAQ(faqFormData);
+      }
+      
+      if (response.success) {
+        await loadFAQs();
+        resetFaqForm();
+      } else {
+        setError(response.error || 'Failed to save FAQ');
+      }
+    } catch (error) {
+      console.error('Error saving FAQ:', error);
+      setError('Failed to save FAQ');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleEditFaq = (faq) => {
+    setEditingFaq(faq);
+    setFaqFormData({
+      question: faq.question,
+      answer: faq.answer,
+      categoryId: faq.categoryId || '',
+      isActive: faq.isActive !== false
+    });
+    setShowFaqForm(true);
+  };
+
+  const handleDeleteFaq = async (faqId) => {
+    if (!window.confirm('Are you sure you want to delete this FAQ?')) return;
+    try {
+      setSaving(true);
+      const response = await faqService.deleteFAQ(faqId);
+      
+      if (response.success) {
+        await loadFAQs();
+      } else {
+        setError(response.error || 'Failed to delete FAQ');
+      }
+    } catch (error) {
+      console.error('Error deleting FAQ:', error);
+      setError('Failed to delete FAQ');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const resetFaqForm = () => {
+    setFaqFormData({
+      question: '',
+      answer: '',
+      categoryId: '',
+      isActive: true
+    });
+    setEditingFaq(null);
+    setShowFaqForm(false);
+  };
+
+  // Category Management Functions
+  const loadCategories = async () => {
+    try {
+      setCategoryLoading(true);
+      const response = await faqService.getAllCategories();
+      
+      if (response.success) {
+        setCategories(response.data);
+      } else {
+        setError(response.error || 'Failed to load categories');
+        setCategories([]);
+      }
+    } catch (error) {
+      console.error('Error loading categories:', error);
+      setError('Failed to load categories');
+      setCategories([]);
+    } finally {
+      setCategoryLoading(false);
+    }
+  };
+
+  const handleCategorySubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setSaving(true);
+      let response;
+      
+      if (editingCategory) {
+        response = await faqService.updateCategory(editingCategory.id, categoryFormData);
+      } else {
+        response = await faqService.createCategory(categoryFormData);
+      }
+      
+      if (response.success) {
+        await loadCategories();
+        resetCategoryForm();
+      } else {
+        setError(response.error || 'Failed to save category');
+      }
+    } catch (error) {
+      console.error('Error saving category:', error);
+      setError('Failed to save category');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleEditCategory = (category) => {
+    setEditingCategory(category);
+    setCategoryFormData({
+      name: category.name,
+      description: category.description || '',
+      isActive: category.isActive !== false
+    });
+    setShowCategoryForm(true);
+  };
+
+  const handleDeleteCategory = async (categoryId) => {
+    if (!confirm('Are you sure you want to delete this category? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      setSaving(true);
+      const response = await faqService.deleteCategory(categoryId);
+      
+      if (response.success) {
+        await loadCategories();
+        setError(null);
+      } else {
+        setError(response.error || 'Failed to delete category');
+      }
+    } catch (error) {
+      console.error('Error deleting category:', error);
+      setError('Failed to delete category');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const resetCategoryForm = () => {
+    setCategoryFormData({
+      name: '',
+      description: '',
+      isActive: true
+    });
+    setEditingCategory(null);
+    setShowCategoryForm(false);
+  };
+
+  // Load FAQs and Categories when FAQ tab is active
+  useEffect(() => {
+    if (activeTab === 'faq') {
+      loadFAQs();
+      loadCategories();
+    }
+  }, [activeTab]);
+
+
+
   return (
        <div className={`min-h-screen p-4 mt-20 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
       <div className="max-w-7xl mx-auto">
@@ -331,6 +547,17 @@ function Survey() {
             >
               <span className="text-lg">✨</span>
               <span>Create Survey Form</span>
+            </button>
+            <button
+              onClick={() => { resetFaqForm(); setActiveTab('faq'); }}
+              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
+                activeTab === 'faq' 
+                  ? 'bg-green-600 text-white shadow-md transform scale-105' 
+                  : `${isDark ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} hover:shadow-md`
+              }`}
+            >
+              <span className="text-lg">❓</span>
+              <span>FAQ & Categories</span>
             </button>
           </div>
         </div>
@@ -1332,6 +1559,426 @@ function Survey() {
                 </button>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* FAQ Management Section */}
+        {activeTab === 'faq' && (
+          <div className={`rounded-xl shadow-lg p-6 max-w-5xl mx-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                FAQ & Category Management
+              </h2>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowCategoryForm(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                >
+                  <Plus size={16} />
+                  Add Category
+                </button>
+                <button
+                  onClick={() => setShowFaqForm(true)}
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                >
+                  <Plus size={16} />
+                  Add FAQ
+                </button>
+              </div>
+            </div>
+
+            {/* Categories Section */}
+            <div className="mb-8">
+              <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                FAQ Categories
+              </h3>
+              {categoryLoading ? (
+                <div className="text-center py-4">
+                  <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-green-600"></div>
+                  <p className={`mt-2 text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Loading categories...</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {categories.map((category) => (
+                    <div key={category.id} className={`p-4 rounded-lg border ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'}`}>
+                      <div className="flex justify-between items-start mb-2">
+                        <h4 className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                          {category.name}
+                        </h4>
+                        <div className="flex gap-1">
+                          <button
+                            onClick={() => handleEditCategory(category)}
+                            className="text-blue-600 hover:text-blue-800 p-1 rounded transition-colors"
+                            title="Edit Category"
+                          >
+                            <Edit size={14} />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteCategory(category.id)}
+                            className="text-red-600 hover:text-red-800 p-1 rounded transition-colors"
+                            title="Delete Category"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </div>
+                      <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                        {category.description || 'No description'}
+                      </p>
+                      <div className="flex justify-between items-center mt-3">
+                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                          category.isActive 
+                            ? 'bg-green-100 text-green-800' 
+                            : 'bg-red-100 text-red-800'
+                        }`}>
+                          {category.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                        <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                          {faqs.filter(faq => faq.categoryId === category.id).length} FAQs
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                  {categories.length === 0 && (
+                    <div className={`col-span-full text-center py-8 border-2 border-dashed rounded-lg ${isDark ? 'border-gray-600 text-gray-400' : 'border-gray-300 text-gray-500'}`}>
+                      <p>No categories found. Create a category to organize your FAQs.</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* FAQ List Table */}
+            {faqLoading ? (
+              <div className="text-center py-8">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                <p className={`mt-2 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Loading FAQs...</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className={`w-full border-collapse ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+                  <thead>
+                    <tr className={`${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                      <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Question</th>
+                      <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Category</th>
+                      <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Answer</th>
+                      <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Status</th>
+                      <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {faqs.length === 0 ? (
+                      <tr>
+                        <td colSpan="4" className={`text-center p-8 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                          No FAQs found. Click "Add FAQ" to create one.
+                        </td>
+                      </tr>
+                    ) : (
+                      faqs.map((faq) => {
+                        const category = categories.find(cat => cat.id === faq.categoryId);
+                        return (
+                          <tr key={faq.id} className={`border-t ${isDark ? 'border-gray-700 hover:bg-gray-750' : 'border-gray-200 hover:bg-gray-50'}`}>
+                            <td className={`p-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                              <div className="max-w-xs truncate" title={faq.question}>
+                                {faq.question}
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              {category ? (
+                                <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                  {category.name}
+                                </span>
+                              ) : (
+                                <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                  No category
+                                </span>
+                              )}
+                            </td>
+                            <td className={`p-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                              <div className="max-w-sm truncate" title={faq.answer}>
+                                {faq.answer}
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                faq.isActive 
+                                  ? 'bg-green-100 text-green-800' 
+                                  : 'bg-red-100 text-red-800'
+                              }`}>
+                                {faq.isActive ? 'Active' : 'Inactive'}
+                              </span>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => handleEditFaq(faq)}
+                                  className="text-blue-600 hover:text-blue-800 p-1 rounded transition-colors"
+                                  title="Edit FAQ"
+                                >
+                                  <Edit size={16} />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteFaq(faq.id)}
+                                  className="text-red-600 hover:text-red-800 p-1 rounded transition-colors"
+                                  title="Delete FAQ"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* FAQ Form Modal */}
+            {showFaqForm && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                <div className={`rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+                  <h3 className={`text-xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                    {editingFaq ? 'Edit FAQ' : 'Add New FAQ'}
+                  </h3>
+                  
+                  <form onSubmit={handleFaqSubmit} className="space-y-4">
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Question *
+                      </label>
+                      <input
+                        type="text"
+                        value={faqFormData.question}
+                        onChange={(e) => setFaqFormData({...faqFormData, question: e.target.value})}
+                        className={`w-full p-3 border rounded-lg ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                        required
+                        placeholder="Enter the frequently asked question"
+                      />
+                    </div>
+
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Category
+                      </label>
+                      <select
+                        value={faqFormData.categoryId || ''}
+                        onChange={(e) => setFaqFormData({...faqFormData, categoryId: e.target.value || null})}
+                        className={`w-full p-3 border rounded-lg ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                      >
+                        <option value="">Select Category (Optional)</option>
+                        {categories.map((category) => (
+                          <option key={category.id} value={category.id}>
+                            {category.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Answer *
+                      </label>
+                      <textarea
+                        value={faqFormData.answer}
+                        onChange={(e) => setFaqFormData({...faqFormData, answer: e.target.value})}
+                        className={`w-full p-3 border rounded-lg h-32 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                        required
+                        placeholder="Provide a detailed answer to the question"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <label className={`flex items-center gap-2 cursor-pointer ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                        <input
+                          type="checkbox"
+                          checked={faqFormData.isActive}
+                          onChange={(e) => setFaqFormData({...faqFormData, isActive: e.target.checked})}
+                          className="w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                        />
+                        Active (visible to users)
+                      </label>
+                    </div>
+
+                    <div className="flex justify-end gap-3 pt-4">
+                      <button
+                        type="button"
+                        onClick={resetFaqForm}
+                        className={`px-4 py-2 rounded-lg ${isDark ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={saving}
+                        className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg"
+                      >
+                        {saving ? 'Saving...' : (editingFaq ? 'Update FAQ' : 'Create FAQ')}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Category Management Section */}
+        {activeTab === 'categories' && (
+          <div className={`rounded-xl shadow-lg p-6 max-w-5xl mx-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                Category Management
+              </h2>
+              <button
+                onClick={() => setShowCategoryForm(true)}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+              >
+                <Plus size={16} />
+                Add Category
+              </button>
+            </div>
+
+            {/* Category List Table */}
+            {categoryLoading ? (
+              <div className="text-center py-8">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                <p className={`mt-2 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Loading categories...</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className={`w-full border-collapse ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+                  <thead>
+                    <tr className={`${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                      <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Name</th>
+                      <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Description</th>
+                      <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Status</th>
+                      <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Created</th>
+                      <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {categories.length === 0 ? (
+                      <tr>
+                        <td colSpan="5" className={`text-center p-8 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                          No categories found. Click "Add Category" to create one.
+                        </td>
+                      </tr>
+                    ) : (
+                      categories.map((category) => (
+                        <tr key={category.id} className={`border-t ${isDark ? 'border-gray-700 hover:bg-gray-750' : 'border-gray-200 hover:bg-gray-50'}`}>
+                          <td className={`p-4 font-medium ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
+                            {category.name}
+                          </td>
+                          <td className={`p-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                            {category.description || 'No description'}
+                          </td>
+                          <td className="p-4">
+                            <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                              category.isActive 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-red-100 text-red-800'
+                            }`}>
+                              {category.isActive ? 'Active' : 'Inactive'}
+                            </span>
+                          </td>
+                          <td className={`p-4 text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                            {category.createdAt ? new Date(category.createdAt).toLocaleDateString() : 'N/A'}
+                          </td>
+                          <td className="p-4">
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => handleEditCategory(category)}
+                                className="text-blue-600 hover:text-blue-800 p-1 rounded transition-colors"
+                                title="Edit Category"
+                              >
+                                <Edit size={16} />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteCategory(category.id)}
+                                className="text-red-600 hover:text-red-800 p-1 rounded transition-colors"
+                                title="Delete Category"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Category Form Modal */}
+            {showCategoryForm && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                <div className={`rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+                  <h3 className={`text-xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                    {editingCategory ? 'Edit Category' : 'Add New Category'}
+                  </h3>
+                  
+                  <form onSubmit={handleCategorySubmit} className="space-y-4">
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={categoryFormData.name}
+                        onChange={(e) => setCategoryFormData({...categoryFormData, name: e.target.value})}
+                        className={`w-full p-3 border rounded-lg ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                        required
+                        placeholder="Enter category name (e.g., Medical & Health)"
+                      />
+                    </div>
+
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Description
+                      </label>
+                      <textarea
+                        value={categoryFormData.description}
+                        onChange={(e) => setCategoryFormData({...categoryFormData, description: e.target.value})}
+                        className={`w-full p-3 border rounded-lg h-24 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                        placeholder="Describe what this category covers"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <label className={`flex items-center gap-2 cursor-pointer ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                        <input
+                          type="checkbox"
+                          checked={categoryFormData.isActive}
+                          onChange={(e) => setCategoryFormData({...categoryFormData, isActive: e.target.checked})}
+                          className="w-4 h-4 text-green-600 rounded focus:ring-green-500"
+                        />
+                        Active (visible to users)
+                      </label>
+                    </div>
+
+                    <div className="flex justify-end gap-3 pt-4">
+                      <button
+                        type="button"
+                        onClick={resetCategoryForm}
+                        className={`px-4 py-2 rounded-lg ${isDark ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={saving}
+                        className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg"
+                      >
+                        {saving ? 'Saving...' : (editingCategory ? 'Update Category' : 'Create Category')}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
