@@ -111,7 +111,7 @@ const AccountSettings = () => {
   ];
 
   return (
-    <div className="space-y-8 pb-8">
+  <div className="space-y-8 pb-8">
       {/* Success Message - Centered Popup */}
       {showSuccess && (
         <div className="fixed inset-0 h-full z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
@@ -192,14 +192,14 @@ const AccountSettings = () => {
 
       {/* Profile Information Section */}
       {activeSection === 'profile' && (
-        <div 
+        <div
           className="border border-gray-200 dark:border-gray-600 rounded-xl p-6"
-          style={{ backgroundColor: isDark ? '#1f2937' : '#ffffff' }}
+          style={{ backgroundColor: isDark ? '#1f2937' : '#f9fafb' }}
         >
           <form onSubmit={handleProfileUpdate} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label 
+                <label
                   className="block text-sm font-medium mb-2"
                   style={{ color: isDark ? '#d1d5db' : '#374151' }}
                 >
@@ -211,11 +211,11 @@ const AccountSettings = () => {
                   onChange={(e) => setUserInfo(prev => ({ ...prev, username: e.target.value }))}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder="Enter your username"
+                  style={{ backgroundColor: isDark ? undefined : '#fff', color: isDark ? undefined : '#111827' }}
                 />
               </div>
-              
               <div>
-                <label 
+                <label
                   className="block text-sm font-medium mb-2"
                   style={{ color: isDark ? '#d1d5db' : '#374151' }}
                 >
@@ -227,11 +227,11 @@ const AccountSettings = () => {
                   onChange={(e) => setUserInfo(prev => ({ ...prev, email: e.target.value }))}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder="Enter your email"
+                  style={{ backgroundColor: isDark ? undefined : '#fff', color: isDark ? undefined : '#111827' }}
                 />
               </div>
-              
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium mb-2" style={{ color: isDark ? '#d1d5db' : '#374151' }}>
                   Position
                 </label>
                 <input
@@ -240,11 +240,11 @@ const AccountSettings = () => {
                   onChange={(e) => setUserInfo(prev => ({ ...prev, position: e.target.value }))}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder="Enter your position"
+                  style={{ backgroundColor: isDark ? undefined : '#fff', color: isDark ? undefined : '#111827' }}
                 />
               </div>
-              
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium mb-2" style={{ color: isDark ? '#d1d5db' : '#374151' }}>
                   Phone
                 </label>
                 <input
@@ -253,10 +253,10 @@ const AccountSettings = () => {
                   onChange={(e) => setUserInfo(prev => ({ ...prev, phone: e.target.value }))}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder="Enter your phone number"
+                  style={{ backgroundColor: isDark ? undefined : '#fff', color: isDark ? undefined : '#111827' }}
                 />
               </div>
             </div>
-            
             <div className="flex justify-end">
               <button
                 type="submit"
@@ -274,11 +274,11 @@ const AccountSettings = () => {
 
       {/* Password Change Section */}
       {activeSection === 'password' && (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl p-6">
+        <div className="border border-gray-200 dark:border-gray-600 rounded-xl p-6" style={{ backgroundColor: isDark ? '#1f2937' : '#f9fafb' }}>
           <form onSubmit={handlePasswordChange} className="space-y-6">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium mb-2" style={{ color: isDark ? '#d1d5db' : '#374151' }}>
                   Current Password
                 </label>
                 <input
@@ -288,11 +288,11 @@ const AccountSettings = () => {
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder="Enter current password"
                   required
+                  style={{ backgroundColor: isDark ? undefined : '#fff', color: isDark ? undefined : '#111827' }}
                 />
               </div>
-              
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium mb-2" style={{ color: isDark ? '#d1d5db' : '#374151' }}>
                   New Password
                 </label>
                 <input
@@ -302,11 +302,11 @@ const AccountSettings = () => {
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder="Enter new password"
                   required
+                  style={{ backgroundColor: isDark ? undefined : '#fff', color: isDark ? undefined : '#111827' }}
                 />
               </div>
-              
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium mb-2" style={{ color: isDark ? '#d1d5db' : '#374151' }}>
                   Confirm New Password
                 </label>
                 <input
@@ -316,10 +316,10 @@ const AccountSettings = () => {
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder="Confirm new password"
                   required
+                  style={{ backgroundColor: isDark ? undefined : '#fff', color: isDark ? undefined : '#111827' }}
                 />
               </div>
             </div>
-            
             <div className="flex justify-end">
               <button
                 type="submit"
@@ -337,36 +337,34 @@ const AccountSettings = () => {
 
       {/* Privacy Settings Section */}
       {activeSection === 'privacy' && (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl p-6">
+        <div className="border border-gray-200 dark:border-gray-600 rounded-xl p-6" style={{ backgroundColor: isDark ? '#1f2937' : '#f9fafb' }}>
           <div className="space-y-6">
-            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <div className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: isDark ? '#374151' : '#f3f4f6' }}>
               <div>
-                <h4 className="font-medium text-gray-900 dark:text-white">Profile Visibility</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-300">Control who can see your profile information</p>
+                <h4 className="font-medium" style={{ color: isDark ? '#fff' : '#111827' }}>Profile Visibility</h4>
+                <p className="text-sm" style={{ color: isDark ? '#d1d5db' : '#6b7280' }}>Control who can see your profile information</p>
               </div>
-              <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+              <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500" style={{ backgroundColor: isDark ? '#374151' : '#fff', color: isDark ? '#fff' : '#111827' }}>
                 <option>Public</option>
                 <option>Private</option>
                 <option>Friends Only</option>
               </select>
             </div>
-            
-            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <div className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: isDark ? '#374151' : '#f3f4f6' }}>
               <div>
-                <h4 className="font-medium text-gray-900 dark:text-white">Data Collection</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-300">Allow collection of usage data for improvement</p>
+                <h4 className="font-medium" style={{ color: isDark ? '#fff' : '#111827' }}>Data Collection</h4>
+                <p className="text-sm" style={{ color: isDark ? '#d1d5db' : '#6b7280' }}>Allow collection of usage data for improvement</p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" className="sr-only peer" defaultChecked />
                 <div className="w-11 h-6 bg-gray-200 dark:bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 dark:peer-focus:ring-emerald-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
               </label>
             </div>
-            
             <div className="border-t border-gray-200 dark:border-gray-600 pt-6">
               <button className="px-6 py-3 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition-all duration-200">
                 {t('account.delete_account')}
               </button>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+              <p className="text-sm mt-2" style={{ color: isDark ? '#d1d5db' : '#6b7280' }}>
                 This action cannot be undone. All your data will be permanently deleted.
               </p>
             </div>
