@@ -593,34 +593,7 @@ export default function Distribution() {
                 </div>
             )}
 
-            {/* Header - Centered and Professional (EIC style) */}
-            <div className="relative mb-8 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
-              <span className="inline-flex items-center justify-center gap-3 w-full">
-                <span className={`rounded-full p-2 ${
-                    isDark ? 'bg-green-900' : 'bg-green-100'
-                }`}>
-                  <svg className={`w-9 h-9 ${
-                      isDark ? 'text-green-400' : 'text-green-500'
-                  }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-                <span className={`text-3xl md:text-4xl font-extrabold tracking-tight drop-shadow-sm ${
-                    isDark ? 'text-white' : 'text-gray-900'
-                }`}>
-                  {activeSection === 'items'
-                    ? 'Distribution Management'
-                    : 'Distribution Requests Management'}
-                </span>
-              </span>
-              <span className={`block text-base md:text-lg font-medium mt-1 ${
-                  isDark ? 'text-gray-400' : 'text-gray-500'
-              }`}>
-                {activeSection === 'items'
-                  ? 'Manage and monitor all distribution activities.'
-                  : 'Oversee and process all distribution requests efficiently.'}
-              </span>
-            </div>
+                        {/* Title section removed for minimal UI */}
            
 
             {activeSection === 'requests' ? (
@@ -749,145 +722,111 @@ export default function Distribution() {
                 </div>
             ) : (
                 <>
-                    {/* Divider between title and search/filters */}
-                    <hr className="border-t border-gray-300 my-6 w-full max-w-5xl mx-auto" />
+                    {/* Divider line removed for minimal UI */}
                     {/* Search Bar and Refresh Button - Same Row */}
-                    <div className="relative w-full max-w-5xl mx-auto px-2 md:px-6 mb-4">
-                        <div className="flex flex-col sm:flex-row items-stretch w-full gap-2 sm:gap-4">
-                            <div className="relative w-full sm:flex-1">
-                                <input
-                                    type="search"
-                                    placeholder="Search items, categories, descriptions..."
-                                    className={`block w-full pl-10 pr-3 py-2 text-base border rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all ${
-                                        isDark 
-                                            ? 'text-white bg-gray-800 border-gray-600 placeholder-gray-400' 
-                                            : 'text-gray-900 bg-gray-50 border-gray-200 placeholder-gray-400'
-                                    }`}
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                    aria-label="Search distribution items"
-                                />
-                                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg
-                                        className="w-5 h-5 text-green-400"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div className="flex-shrink-0 flex justify-end items-center w-full sm:w-auto">
-                                <button
-                                    onClick={refetchStacks}
-                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-600 hover:bg-green-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-green-300 shadow-sm"
-                                    style={{ minWidth: '120px' }}
-                                >
-                                    <svg
-                                        className="w-4 h-4 mr-2"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                    Refresh
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    {/* Search Bar - Separate Row */}
-                    {/* ...existing code... */}
-                    {/* Filters and Action Buttons - Separate Row */}
-                    <div className="relative w-full max-w-5xl mx-auto px-2 md:px-6 mb-8">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full">
-                            {/* Filters */}
-                            <div className="flex flex-row gap-2 flex-1">
-                                <select
-                                    className={`border-2 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
-                                        isDark 
-                                            ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
-                                            : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
-                                    }`}
-                                    value={searchFilter}
-                                    onChange={(e) => setSearchFilter(e.target.value)}
-                                    aria-label="Filter by"
-                                >
-                                    <option value="name">Item Name</option>
-                                    <option value="category">Category</option>
-                                    <option value="description">Description</option>
-                                </select>
-                                <select
-                                    className={`border-2 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
-                                        isDark 
-                                            ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
-                                            : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
-                                    }`}
-                                    value={sortBy}
-                                    onChange={(e) => setSortBy(e.target.value)}
-                                    aria-label="Sort by"
-                                >
-                                    <option value="default">Default Order</option>
-                                    <option value="name">Sort by Name</option>
-                                    <option value="category">Sort by Category</option>
-                                    <option value="quantity">Sort by Quantity</option>
-                                    <option value="date">Sort by Date</option>
-                                </select>
-                            </div>
-                            {/* Action Buttons */}
-                            <div className="flex flex-col sm:flex-row flex-wrap gap-2 justify-end flex-shrink-0 w-full sm:w-auto">
-                                <button
-                                    onClick={handleRequestsButtonClick}
-                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"
-                                >
-                                    <svg
-                                        className="w-4 h-4 mr-2"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                    Requests
-                                </button>
-                                <button
-                                    onClick={() => setShowAddModal(true)}
-                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-700 hover:bg-green-600 text-white transition-all focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-sm"
-                                >
-                                    <svg
-                                        className="w-4 h-4 mr-2"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            d="M12 4v16m8-8H4"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                    Add Item
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                                        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8 mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                            {/* Search bar */}
+                                            <div className="relative flex-1 min-w-0 w-full md:w-1/2 max-w-md">
+                                                <input
+                                                    type="search"
+                                                    placeholder="Search items, categories, descriptions..."
+                                                    className={`block w-full pl-10 pr-3 py-2 text-base border rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all ${
+                                                            isDark 
+                                                                    ? 'text-white bg-gray-800 border-gray-600 placeholder-gray-400' 
+                                                                    : 'text-gray-900 bg-gray-50 border-gray-200 placeholder-gray-400'
+                                                    }`}
+                                                    value={search}
+                                                    onChange={(e) => setSearch(e.target.value)}
+                                                    aria-label="Search distribution items"
+                                                />
+                                                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                    <svg
+                                                        className="w-5 h-5 text-green-400"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            {/* Filters and Controls */}
+                                            <div className="flex flex-row gap-2 w-full md:w-auto items-center">
+                                                <select
+                                                    className={`border-2 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full md:w-auto ${
+                                                        isDark 
+                                                            ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
+                                                            : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
+                                                    }`}
+                                                    value={searchFilter}
+                                                    onChange={(e) => setSearchFilter(e.target.value)}
+                                                    aria-label="Filter by"
+                                                >
+                                                    <option value="name">Item Name</option>
+                                                    <option value="category">Category</option>
+                                                    <option value="description">Description</option>
+                                                </select>
+                                                <select
+                                                    className={`border-2 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full md:w-auto ${
+                                                        isDark 
+                                                            ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
+                                                            : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
+                                                    }`}
+                                                    value={sortBy}
+                                                    onChange={(e) => setSortBy(e.target.value)}
+                                                    aria-label="Sort by"
+                                                >
+                                                    <option value="default">Default Order</option>
+                                                    <option value="name">Sort by Name</option>
+                                                    <option value="category">Sort by Category</option>
+                                                    <option value="quantity">Sort by Quantity</option>
+                                                    <option value="date">Sort by Date</option>
+                                                </select>
+                                                <button
+                                                    onClick={handleRequestsButtonClick}
+                                                    className="flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"
+                                                >
+                                                    <svg
+                                                        className="w-4 h-4 mr-2"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                    </svg>
+                                                    Requests
+                                                </button>
+                                                <button
+                                                    onClick={() => setShowAddModal(true)}
+                                                    className="flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-700 hover:bg-green-600 text-white transition-all focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-sm"
+                                                >
+                                                    <svg
+                                                        className="w-4 h-4 mr-2"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            d="M12 4v16m8-8H4"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                    </svg>
+                                                    Add Item
+                                                </button>
+                                            </div>
+                                        </div>
 
                     {/* TABLE LAYOUT - Clean and professional distribution management */}
                     <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8">
@@ -898,14 +837,14 @@ export default function Distribution() {
                                 <div className="overflow-x-auto">
                                     <table className="w-full">
                                     <thead className={`${
-                                        isDark ? 'bg-gradient-to-r from-green-700 to-green-800' : 'bg-gradient-to-r from-green-600 to-green-700'
+                                        isDark ? 'bg-gray-800' : 'bg-gray-100'
                                     }`}>
                                         <tr>
-                                            <th className="pl-6 pr-2 py-4 text-left text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12 rounded-tl-lg">Item</th>
-                                            <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12">Category</th>
-                                            <th className="pl-4 pr-4 py-4 text-center text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12">Quantity</th>
-                                            <th className="pl-4 pr-4 py-4 text-center text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12">Status</th>
-                                            <th className="px-4 py-4 text-center text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-4/12 rounded-tr-lg">Actions</th>
+                                            <th className="pl-6 pr-2 py-4 text-left text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12 rounded-tl-lg">Item</th>
+                                            <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12">Category</th>
+                                            <th className="pl-4 pr-4 py-4 text-center text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12">Quantity</th>
+                                            <th className="pl-4 pr-4 py-4 text-center text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12">Status</th>
+                                            <th className="px-4 py-4 text-center text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-4/12 rounded-tr-lg">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody className={`divide-y ${
@@ -940,10 +879,7 @@ export default function Distribution() {
                                                         </div>
                                                     </td>
                                                     <td className="pl-4 pr-4 py-4 w-2/12">
-                                                        <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-default bg-green-100 text-green-800">
-                                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                                                            </svg>
+                                                        <span className="text-sm font-semibold text-green-700">
                                                             {stack.item?.category?.replace('_', ' ') || 'N/A'}
                                                         </span>
                                                     </td>
@@ -962,10 +898,10 @@ export default function Distribution() {
                                                         </div>
                                                     </td>
                                                     <td className="pl-4 pr-4 py-4 text-center w-2/12">
-                                                        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-md ${
+                                                        <span className={`text-sm font-semibold ${
                                                             stack.quantity > 0
-                                                                ? 'bg-green-100 text-green-800'
-                                                                : 'bg-red-100 text-red-800'
+                                                                ? 'text-green-700'
+                                                                : 'text-red-700'
                                                         }`}>
                                                             {stack.quantity > 0 ? 'In Stock' : 'Out of Stock'}
                                                         </span>

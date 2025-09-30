@@ -66,90 +66,95 @@ export default function Profiles({ details }) {
         }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: 400 }}>
             <div className="w-full max-w-6xl mx-auto">
                 {/* HEADER removed as requested */}
-                {/* Register New User Button - Minimal green design */}
-                <div className="flex justify-end mt-2 md:mt-20">
-                    <button
-                        onClick={() => setShowRegisterModal(true)}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md border border-green-500 hover:border-green-400 transition-all duration-200"
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                        </svg>
-                        Register New User
-                    </button>
-                </div>
-
-                {/* FILTERS - Simplified like Analytics, with extra top margin for navbar */}
+                {/* Filters and Register New User Button - Inline alignment */}
                 <div className="mb-10 mt-3 md:mt-6">
-                    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-4">
-                        <div className="relative w-full md:w-auto">
-                            <input
-                                type="text"
-                                placeholder="Search profiles..."
-                                value={filter.search === 'none' ? '' : filter.search}
-                                onChange={e => setFilter({ ...filter, search: e.target.value || 'none' })}
-                                className={`appearance-none border rounded-lg pl-10 pr-10 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-base font-medium w-full ${
-                                    isDark 
-                                        ? 'bg-gray-700 border-gray-600 text-gray-200 hover:border-green-500' 
-                                        : 'bg-white border-gray-300 text-gray-700 hover:border-green-400'
-                                }`}
-                                style={{ minWidth: '0' }}
-                            />
-                            <span className="pointer-events-none absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                    <circle cx="11" cy="11" r="8" />
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                </svg>
-                            </span>
-                        </div>
-                        <div className="flex flex-col gap-3 w-full md:flex-row md:items-center md:space-x-4 md:w-auto">
-                            <div className="relative w-full md:w-auto">
-                                <select
-                                    className={`appearance-none border rounded-lg pl-4 pr-10 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-base font-medium w-full md:w-auto ${
+                    <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4 mt-10 md:mt-20">
+                        {/* Search and filters stack on mobile, row on desktop */}
+                        <div className="flex flex-col sm:flex-row w-full items-stretch sm:items-center gap-2 sm:gap-4">
+                            {/* Search bar */}
+                            <div className="relative w-full sm:max-w-xs mb-2 sm:mb-0">
+                                <input
+                                    type="text"
+                                    placeholder="Search profiles..."
+                                    value={filter.search === 'none' ? '' : filter.search}
+                                    onChange={e => setFilter({ ...filter, search: e.target.value || 'none' })}
+                                    className={`appearance-none border rounded-lg pl-10 pr-10 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-base font-medium w-full ${
                                         isDark 
                                             ? 'bg-gray-700 border-gray-600 text-gray-200 hover:border-green-500' 
                                             : 'bg-white border-gray-300 text-gray-700 hover:border-green-400'
                                     }`}
-                                    value={filter.roles}
-                                    onChange={e => setFilter({ ...filter, roles: e.target.value })}
-                                >
-                                    <option value="none">All Roles</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Super Admin">Super Admin</option>
-                                    <option value="User">User</option>
-                                </select>
-                                <span className="pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                    style={{ minWidth: '0' }}
+                                />
+                                <span className="pointer-events-none absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <circle cx="11" cy="11" r="8" />
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
                                     </svg>
                                 </span>
                             </div>
-                            <div className="relative w-full md:w-auto">
-                                <select
-                                    className={`appearance-none border rounded-lg pl-4 pr-10 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-base font-medium w-full md:w-auto ${
-                                        isDark 
-                                            ? 'bg-gray-700 border-gray-600 text-gray-200 hover:border-green-500' 
-                                            : 'bg-white border-gray-300 text-gray-700 hover:border-green-400'
-                                    }`}
-                                    value={filter.order}
-                                    onChange={e => setFilter({ ...filter, order: e.target.value })}
+                            {/* Filters beside search bar, stack on mobile */}
+                            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                                <div className="relative w-full sm:w-auto">
+                                    <select
+                                        className={`appearance-none border rounded-lg pl-4 pr-10 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-base font-medium w-full sm:w-auto ${
+                                            isDark 
+                                                ? 'bg-gray-700 border-gray-600 text-gray-200 hover:border-green-500' 
+                                                : 'bg-white border-gray-300 text-gray-700 hover:border-green-400'
+                                        }`}
+                                        value={filter.roles}
+                                        onChange={e => setFilter({ ...filter, roles: e.target.value })}
+                                    >
+                                        <option value="none">All Roles</option>
+                                        <option value="Admin">Admin</option>
+                                        <option value="Super Admin">Super Admin</option>
+                                        <option value="User">User</option>
+                                    </select>
+                                    <span className="pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div className="relative w-full sm:w-auto">
+                                    <select
+                                        className={`appearance-none border rounded-lg pl-4 pr-10 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-base font-medium w-full sm:w-auto ${
+                                            isDark 
+                                                ? 'bg-gray-700 border-gray-600 text-gray-200 hover:border-green-500' 
+                                                : 'bg-white border-gray-300 text-gray-700 hover:border-green-400'
+                                        }`}
+                                        value={filter.order}
+                                        onChange={e => setFilter({ ...filter, order: e.target.value })}
+                                    >
+                                        <option value="none">Sort by</option>
+                                        <option value="username">Username</option>
+                                        <option value="firstname">Firstname</option>
+                                        <option value="lastname">Lastname</option>
+                                        <option value="created_at">Date Created</option>
+                                        <option value="updated_at">Recently Updated</option>
+                                    </select>
+                                    <span className="pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </span>
+                                </div>
+                            </div>
+                            {/* Button stacks below on mobile, right on desktop */}
+                            <div className="w-full sm:w-auto mt-2 sm:mt-0 sm:ml-auto flex justify-start sm:justify-end">
+                                <button
+                                    onClick={() => setShowRegisterModal(true)}
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md border border-green-500 hover:border-green-400 transition-all duration-200 w-full sm:w-auto"
                                 >
-                                    <option value="none">Sort by</option>
-                                    <option value="username">Username</option>
-                                    <option value="firstname">Firstname</option>
-                                    <option value="lastname">Lastname</option>
-                                    <option value="created_at">Date Created</option>
-                                    <option value="updated_at">Recently Updated</option>
-                                </select>
-                                <span className="pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                                     </svg>
-                                </span>
+                                    Register New User
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+
 
                 {/* LIST - Clean table design */}
                 <div className={`rounded-xl shadow-lg border overflow-hidden ${
@@ -194,7 +199,7 @@ export default function Profiles({ details }) {
                                         <tr>
                                             <th className="px-5 py-3 text-left font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Username</th>
                                             <th className="px-5 py-3 text-left font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Name</th>
-                                            <th className="px-5 py-3 text-left font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Role</th>
+                                            <th className="px-5 py-3 text-center font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Role</th>
                                             <th className="px-5 py-3 text-left font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Client Profile</th>
                                             <th className="px-5 py-3 text-left font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Actions</th>
                                         </tr>

@@ -309,96 +309,76 @@ export default function Seminar() {
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div className={`min-h-screen pt-30 pb-8 px-2 md:px-6 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-            <div className="w-full max-w-[1400px] mx-auto">
-                {/* Header - Centered and Professional */}
-                <div className="relative mb-8 flex flex-col items-center justify-center max-w-[1400px] mx-auto gap-2 text-center">
-                  <span className="inline-flex items-center justify-center gap-3 w-full">
-                    <span className={`rounded-full p-2 ${isDark ? 'bg-green-900' : 'bg-green-100'}`}>
-                      <svg className="w-9 h-9" style={{ color: '#059669' }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path d="M12 3L2 9l10 6 10-6-10-6zm0 13v5m-7-7v2a2 2 0 002 2h10a2 2 0 002-2v-2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </span>
-                    <span className={`text-3xl md:text-4xl font-extrabold tracking-tight drop-shadow-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>Seminars & Programs</span>
-                  </span>
-                  <span className={`block text-base md:text-lg font-medium mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Empowering communities through knowledge and engagement</span>
-                </div>
+                <div className={`min-h-screen pt-30 pb-8 px-2 md:px-6 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
+                        <div className="w-full max-w-[1400px] mx-auto">
 
-                {/* Divider between title and search/filters */}
-                <hr className={`border-t my-6 w-full max-w-[1400px] mx-auto ${isDark ? 'border-gray-600' : 'border-gray-300'}`} />
-
-                {/* Modern Search, Filters, and Actions - EIC Style */}
-                <div className="relative mt-0 mb-8 w-full max-w-5xl mx-auto px-2 md:px-6">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 flex-wrap items-stretch w-full">
-                    {/* Search bar - Made longer */}
-                    <div className="relative flex-1 min-w-0 w-full sm:w-2/3">
-                      <input
-                        type="search"
-                        placeholder="Search seminars, speakers, locations..."
-                        className={`block w-full pl-10 pr-3 py-2 text-base border rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all placeholder-gray-400 ${
-                            isDark 
-                                ? 'bg-gray-700 border-gray-600 text-white' 
-                                : 'bg-gray-50 border-gray-200 text-gray-900'
-                        }`}
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        aria-label="Search seminars"
-                      />
-                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </div>
-                    </div>
-                    {/* Filters and Controls - Made narrower */}
-                    <div className="flex flex-row gap-2 w-full sm:w-1/3">
-                      <select
-                        className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto border-2 ${
-                          isDark 
-                            ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
-                            : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
-                        }`}
-                        value={searchFilter}
-                        onChange={(e) => setSearchFilter(e.target.value)}
-                        aria-label="Filter by"
-                      >
-                        <option value="title">Title</option>
-                        <option value="speaker">Speaker</option>
-                        <option value="location">Location</option>
-                      </select>
-                      <select
-                        className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto border-2 ${
-                          isDark 
-                            ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
-                            : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
-                        }`}
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        aria-label="Status filter"
-                      >
-                        <option value="all">All Statuses</option>
-                        <option value="Upcoming">Upcoming</option>
-                        <option value="Ongoing">Ongoing</option>
-                        <option value="Completed">Completed</option>
-                        <option value="Cancelled">Cancelled</option>
-                      </select>
-                    </div>
-                    {/* Action buttons: Only Add remains */}
-                    <div className="flex flex-row gap-2 w-full sm:w-auto items-center">
-                      <button
-                        className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-600 hover:bg-green-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-green-300 shadow-sm"
-                        onClick={() => setShowAdd(true)}
-                        aria-label="Add seminar"
-                        style={{ minWidth: '120px' }}
-                      >
-                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                        </svg>
-                        Add Seminar
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                                {/* Search, Filters, and Actions - Aligned to table */}
+                                <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8 mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                    {/* Search bar */}
+                                      <div className="relative flex-1 min-w-0 w-full md:w-1/2 max-w-md">
+                                        <input
+                                            type="search"
+                                            placeholder="Search seminars, speakers, locations..."
+                                            className={`block w-full pl-10 pr-3 py-2 text-base border rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all placeholder-gray-400 ${
+                                                    isDark 
+                                                            ? 'bg-gray-700 border-gray-600 text-white' 
+                                                            : 'bg-gray-50 border-gray-200 text-gray-900'
+                                            }`}
+                                            value={search}
+                                            onChange={(e) => setSearch(e.target.value)}
+                                            aria-label="Search seminars"
+                                        />
+                                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                            <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    {/* Filters and Controls */}
+                                    <div className="flex flex-row gap-2 w-full md:w-auto items-center">
+                                        <select
+                                            className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full md:w-auto border-2 ${
+                                                isDark 
+                                                    ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
+                                                    : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
+                                            }`}
+                                            value={searchFilter}
+                                            onChange={(e) => setSearchFilter(e.target.value)}
+                                            aria-label="Filter by"
+                                        >
+                                            <option value="title">Title</option>
+                                            <option value="speaker">Speaker</option>
+                                            <option value="location">Location</option>
+                                        </select>
+                                        <select
+                                            className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full md:w-auto border-2 ${
+                                                isDark 
+                                                    ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
+                                                    : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
+                                            }`}
+                                            value={statusFilter}
+                                            onChange={(e) => setStatusFilter(e.target.value)}
+                                            aria-label="Status filter"
+                                        >
+                                            <option value="all">All Statuses</option>
+                                            <option value="Upcoming">Upcoming</option>
+                                            <option value="Ongoing">Ongoing</option>
+                                            <option value="Completed">Completed</option>
+                                            <option value="Cancelled">Cancelled</option>
+                                        </select>
+                                        <button
+                                            className="flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-600 hover:bg-green-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-green-300 shadow-sm"
+                                            onClick={() => setShowAdd(true)}
+                                            aria-label="Add seminar"
+                                            style={{ minWidth: '120px' }}
+                                        >
+                                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            Add Seminar
+                                        </button>
+                                    </div>
+                                </div>
 
                 {showEdit && (
                     <Edit_Seminar
@@ -431,14 +411,14 @@ export default function Seminar() {
                             <div className="overflow-x-auto">
                                 <table className="w-full">
                                 <thead className={`${
-                                    isDark ? 'bg-gradient-to-r from-green-700 to-green-800' : 'bg-gradient-to-r from-green-600 to-green-700'
+                                    isDark ? 'bg-gray-800' : 'bg-gray-100'
                                 }`}>
                                     <tr>
-                                        <th className="pl-6 pr-2 py-4 text-left text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12 rounded-tl-lg">Title</th>
-                                        <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12">Speaker</th>
-                                        <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12">Location</th>
-                                        <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12">Status</th>
-                                        <th className="px-4 py-4 text-center text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-4/12 rounded-tr-lg">Actions</th>
+                                        <th className="pl-6 pr-2 py-4 text-left text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12 rounded-tl-lg">Title</th>
+                                        <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12">Speaker</th>
+                                        <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12">Location</th>
+                                        <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12">Status</th>
+                                        <th className="px-4 py-4 text-center text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-4/12 rounded-tr-lg">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className={`divide-y ${
@@ -487,19 +467,15 @@ export default function Seminar() {
                                                     </div>
                                                 </td>
                                                 <td className="pl-4 pr-4 py-4 whitespace-nowrap w-2/12">
-                                                    <span
-                                                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-md ${
-                                                            item.status === 'Ongoing'
-                                                                ? 'bg-yellow-100 text-yellow-800'
-                                                                : item.status === 'Completed'
-                                                                ? 'bg-green-100 text-green-800'
-                                                                : item.status === 'Cancelled'
-                                                                ? 'bg-red-100 text-red-800'
-                                                                : 'bg-gray-100 text-gray-800'
-                                                        }`}
-                                                    >
-                                                        {item.status}
-                                                    </span>
+                                                        <span className={`text-sm font-semibold ${
+                                                            item.status === 'Upcoming' ? 'text-blue-700' :
+                                                            item.status === 'Ongoing' ? 'text-yellow-700' :
+                                                            item.status === 'Completed' ? 'text-green-700' :
+                                                            item.status === 'Cancelled' ? 'text-red-700' :
+                                                            isDark ? 'text-gray-300' : 'text-gray-700'
+                                                        }`}>
+                                                            {item.status}
+                                                        </span>
                                                 </td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-center w-4/12">
                                                     <div className="flex justify-center space-x-2">

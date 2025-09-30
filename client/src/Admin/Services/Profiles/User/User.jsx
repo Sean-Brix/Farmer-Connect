@@ -137,12 +137,12 @@ export default function User({ user, details, refetchRow }) {
                     ? 'bg-gray-800 border-gray-700' 
                     : 'bg-white border-green-100'
             }`}>
-                <span className={`font-semibold px-2 py-0.5 rounded text-base align-middle ${
+                <span className={`font-semibold text-base align-middle ${
                     account?.access === 'Super Admin'
-                        ? 'text-red-600 bg-red-50 border border-red-200'
+                        ? 'text-red-600'
                         : account?.access === 'Admin'
-                        ? 'text-blue-600 bg-blue-50 border border-blue-200'
-                        : 'text-green-600 bg-green-50 border border-green-200'
+                        ? 'text-blue-600'
+                        : 'text-green-600'
                 }`} style={{letterSpacing: '0.03em'}}>
                     {account?.access}
                 </span>
