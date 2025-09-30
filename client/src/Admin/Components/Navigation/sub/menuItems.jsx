@@ -27,11 +27,6 @@ export const menuItems = [
         icon: <i className="fas fa-graduation-cap w-5 h-5"></i>,
     },
     {
-        key: 'eic',
-        label: 'EIC - Item Panel',
-        icon: <i className="fas fa-tags w-5 h-5"></i>,
-    },
-    {
         key: 'distribution',
         label: 'Distributions',
         icon: <i className="fas fa-truck w-5 h-5"></i>,
@@ -42,24 +37,30 @@ export const menuItems = [
         icon: <i className="fas fa-warehouse w-5 h-5"></i>,
     },
     {
-        key: 'audit',
-        label: 'Logs / Audit Trail',
-        icon: <i className="fas fa-history w-5 h-5"></i>,
-    },
-    {
         key: 'chat',
         label: 'Inquiries',
         icon: <i className="fas fa-question-circle w-5 h-5"></i>,
     },
     {
-        key: 'seed',
-        label: 'Seed Growth Tracking',
-        icon: <i className="fas fa-seedling w-5 h-5"></i>,
-    },
-    {
         key: 'survey',
         label: 'Survey Forms',
         icon: <i className="fas fa-clipboard-check w-5 h-5"></i>,
+    },
+    // Move long-label items to the bottom
+    {
+        key: 'eic',
+        label: 'EIC - Item Panel',
+        icon: <i className="fas fa-tags w-5 h-5"></i>,
+    },
+    {
+        key: 'audit',
+        label: 'Logs / Audit Trail',
+        icon: <i className="fas fa-history w-5 h-5"></i>,
+    },
+    {
+        key: 'seed',
+        label: 'Seed Growth Tracking',
+        icon: <i className="fas fa-seedling w-5 h-5"></i>,
     },
     {
         key: 'settings',

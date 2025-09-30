@@ -883,21 +883,10 @@ function Analytics() {
                     ? 'bg-gray-800/80 border-gray-600' 
                     : 'bg-white/80 border-gray-200'
             }`}>
-                {/* Header */}
+                {/* Header (title section removed as requested) */}
                 <div className="mb-10">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-                        <div>
-                            <h1 className={`text-3xl md:text-4xl font-extrabold tracking-tight mb-1 ${
-                                isDark ? 'text-white' : 'text-gray-900'
-                            }`}>
-                                Analytics Dashboard
-                            </h1>
-                            <p className={`text-base md:text-lg ${
-                                isDark ? 'text-gray-300' : 'text-gray-600'
-                            }`}>
-                                Comprehensive insights into your Farmer Connect platform
-                            </p>
-                        </div>
+                        {/* Title section removed */}
                         <div className="flex items-center space-x-2 md:space-x-4">
                             <div className="relative">
                                 <select
@@ -922,6 +911,8 @@ function Analytics() {
                                     </svg>
                                 </span>
                             </div>
+                        </div>
+                        <div className="flex items-center space-x-2 md:space-x-4 ml-auto">
                             <div className="flex items-center gap-2">
                                 <input type="date" value={from} onChange={(e) => setFrom(e.target.value)}
                                     className={`border rounded-lg px-3 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 outline-none ${

@@ -64,35 +64,10 @@ export default function Profiles({ details }) {
         <div className={`min-h-screen pt-6 px-2 sm:px-4 md:px-6 lg:px-0 ${
             isDark ? 'bg-gray-900' : 'bg-white'
         }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: 400 }}>
-            <div className="w-full max-w-4xl mx-auto">
-                {/* HEADER - Clean and simple */}
-                <div className="relative mb-8 sm:mt-20 mt-5 flex flex-col items-center justify-center max-w-4xl mx-auto gap-3 text-center">
-                    <span className="inline-flex items-center justify-center gap-4 w-full">
-                        <span className={`rounded-full p-3 shadow-lg ${
-                            isDark ? 'bg-gradient-to-br from-green-800 to-green-700' : 'bg-gradient-to-br from-green-200 to-green-300'
-                        }`}>
-                            <svg className={`w-10 h-10 ${
-                                isDark ? 'text-green-400' : 'text-green-700'
-                            }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" fill="none"/>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 20v-1a7 7 0 0 1 14 0v1" stroke="currentColor" strokeWidth="2" fill="none"/>
-                            </svg>
-                        </span>
-                        <span className={`text-3xl md:text-4xl font-bold tracking-tight ${
-                            isDark ? 'text-white' : 'text-gray-800'
-                        }`}>
-                            Account Management
-                        </span>
-                    </span>
-                    <span className={`block text-base md:text-lg font-medium mt-1 ${
-                        isDark ? 'text-gray-300' : 'text-gray-600'
-                    }`}>
-                        Manage and oversee all user accounts and profiles
-                    </span>
-                </div>
-
+            <div className="w-full max-w-6xl mx-auto">
+                {/* HEADER removed as requested */}
                 {/* Register New User Button - Minimal green design */}
-                <div className="flex justify-end mb-6">
+                <div className="flex justify-end mt-2 md:mt-20">
                     <button
                         onClick={() => setShowRegisterModal(true)}
                         className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md border border-green-500 hover:border-green-400 transition-all duration-200"
@@ -104,70 +79,75 @@ export default function Profiles({ details }) {
                     </button>
                 </div>
 
-                {/* FILTERS - Clean layout with consistent design */}
-                <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-stretch w-full mb-8">
-                    {/* Search and filter controls */}
-                    <div className="flex flex-col xs:flex-row sm:flex-row flex-1 gap-4 items-stretch w-full sm:w-auto">
-                        <div className="relative flex-grow min-w-[100px] sm:min-w-[120px] md:w-54 flex-shrink-0 w-full sm:w-auto">
+                {/* FILTERS - Simplified like Analytics, with extra top margin for navbar */}
+                <div className="mb-10 mt-3 md:mt-6">
+                    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-4">
+                        <div className="relative w-full md:w-auto">
                             <input
                                 type="text"
                                 placeholder="Search profiles..."
-                                className={`modern-search-input ${
-                                    isDark ? 'text-gray-200 bg-gray-800 border-gray-600' : 'text-gray-700 bg-white border-gray-300'
+                                value={filter.search === 'none' ? '' : filter.search}
+                                onChange={e => setFilter({ ...filter, search: e.target.value || 'none' })}
+                                className={`appearance-none border rounded-lg pl-10 pr-10 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-base font-medium w-full ${
+                                    isDark 
+                                        ? 'bg-gray-700 border-gray-600 text-gray-200 hover:border-green-500' 
+                                        : 'bg-white border-gray-300 text-gray-700 hover:border-green-400'
                                 }`}
-                                style={{ maxWidth: '280px' }}
-                                onChange={(e) => setFilter({ ...filter, search: e.target.value })}
+                                style={{ minWidth: '0' }}
                             />
-                            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                                <svg className="w-4 h-4 text-green-500 opacity-70" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-                                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
+                            <span className="pointer-events-none absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
                                 </svg>
+                            </span>
+                        </div>
+                        <div className="flex flex-col gap-3 w-full md:flex-row md:items-center md:space-x-4 md:w-auto">
+                            <div className="relative w-full md:w-auto">
+                                <select
+                                    className={`appearance-none border rounded-lg pl-4 pr-10 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-base font-medium w-full md:w-auto ${
+                                        isDark 
+                                            ? 'bg-gray-700 border-gray-600 text-gray-200 hover:border-green-500' 
+                                            : 'bg-white border-gray-300 text-gray-700 hover:border-green-400'
+                                    }`}
+                                    value={filter.roles}
+                                    onChange={e => setFilter({ ...filter, roles: e.target.value })}
+                                >
+                                    <option value="none">All Roles</option>
+                                    <option value="Admin">Admin</option>
+                                    <option value="Super Admin">Super Admin</option>
+                                    <option value="User">User</option>
+                                </select>
+                                <span className="pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div className="relative w-full md:w-auto">
+                                <select
+                                    className={`appearance-none border rounded-lg pl-4 pr-10 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-base font-medium w-full md:w-auto ${
+                                        isDark 
+                                            ? 'bg-gray-700 border-gray-600 text-gray-200 hover:border-green-500' 
+                                            : 'bg-white border-gray-300 text-gray-700 hover:border-green-400'
+                                    }`}
+                                    value={filter.order}
+                                    onChange={e => setFilter({ ...filter, order: e.target.value })}
+                                >
+                                    <option value="none">Sort by</option>
+                                    <option value="username">Username</option>
+                                    <option value="firstname">Firstname</option>
+                                    <option value="lastname">Lastname</option>
+                                    <option value="created_at">Date Created</option>
+                                    <option value="updated_at">Recently Updated</option>
+                                </select>
+                                <span className="pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </span>
                             </div>
                         </div>
-                        <select
-                            className={`custom-select w-full sm:w-auto ${
-                                isDark ? 'bg-gray-800 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
-                            }`}
-                            onChange={(e) => setFilter({ ...filter, roles: e.target.value })}
-                        >
-                            <option value="none">All Roles</option>
-                            <option value="Admin">Admin</option>
-                            <option value="Super Admin">Super Admin</option>
-                            <option value="User">User</option>
-                        </select>
-                        <select
-                            className={`custom-select w-full sm:w-auto ${
-                                isDark ? 'bg-gray-800 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
-                            }`}
-                            onChange={(e) => setFilter({ ...filter, client_profile: e.target.value })}
-                        >
-                            <option value="" disabled>Client Profile</option>
-                            <option value="none">All Profile</option>
-                            <option value="Fishfolk">Fishfolk</option>
-                            <option value="Rural Based Org">Rural Based Org</option>
-                            <option value="Student">Student</option>
-                            <option value="Agricultural/Fisheries Technician">Agricultural/Fisheries Tech.</option>
-                            <option value="Youth">Youth</option>
-                            <option value="Women">Women</option>
-                            <option value="Gov't Employee">Gov't Employee</option>
-                            <option value="PWD">PWD</option>
-                            <option value="Indigenous People">Indigenous People</option>
-                        </select>
-                    </div>
-                    <div className="flex-none ml-auto min-w-[110px] w-full sm:w-auto mt-2 sm:mt-0">
-                        <select
-                            className={`custom-select w-full sm:w-auto ${
-                                isDark ? 'bg-gray-800 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
-                            }`}
-                            onChange={(e) => setFilter({ ...filter, order: e.target.value })}
-                        >
-                            <option value="none">Sort by</option>
-                            <option value="username">Username</option>
-                            <option value="firstname">Firstname</option>
-                            <option value="lastname">Lastname</option>
-                            <option value="created_at">Date Created</option>
-                            <option value="updated_at">Recently Updated</option>
-                        </select>
                     </div>
                 </div>
 
@@ -209,16 +189,14 @@ export default function Profiles({ details }) {
                     ) : (
                         <>
                             <div className="overflow-x-auto">
-                                <table className="min-w-full text-sm">
-                                    <thead className={`text-white ${
-                                        isDark ? 'bg-gradient-to-r from-green-700 to-green-800' : 'bg-gradient-to-r from-green-600 to-green-700'
-                                    }`}>
+                                <table className="min-w-full text-base">
+                                    <thead className={`text-gray-900 bg-gray-100`}>
                                         <tr>
-                                            <th className="px-6 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap">Username</th>
-                                            <th className="px-6 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap">Name</th>
-                                            <th className="px-6 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap">Role</th>
-                                            <th className="px-6 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap">Client Profile</th>
-                                            <th className="px-6 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap">Actions</th>
+                                            <th className="px-5 py-3 text-left font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Username</th>
+                                            <th className="px-5 py-3 text-left font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Name</th>
+                                            <th className="px-5 py-3 text-left font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Role</th>
+                                            <th className="px-5 py-3 text-left font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Client Profile</th>
+                                            <th className="px-5 py-3 text-left font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody className={`divide-y ${

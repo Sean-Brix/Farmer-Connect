@@ -12,43 +12,26 @@ export default function Audit({ admin_navigate }) {
 
     // Modern soft neutral background
     return (
-        <div className="min-h-screen bg-white py-6 px-2 md:px-6">
-            {/* EIC-style Title Section */}
-            <div className="relative mt-5 sm:mb-6 sm:mt-20 p-5 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
-                <span className="inline-flex items-center justify-center gap-3 w-full">
-                    <span className="rounded-full bg-green-100 p-2">
-                        <svg className="w-9 h-9 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </span>
-                    <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
-                        Audit Trail
-                    </span>
-                </span>
-                <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">
-                    View and analyze all admin activities and system changes.
-                </span>
-            </div>
-
+    <div className="min-h-screen bg-white py-6 px-2 md:px-6 mt-16">
             {/* View Toggle */}
             <div className="flex items-center justify-center mb-8">
-                <div className="flex items-center space-x-1 bg-white p-1 rounded-lg border border-neutral-200 shadow-sm">
+                <div className="flex items-center space-x-3 bg-white p-1 rounded-xl border border-green-200 shadow-md">
                     <button
                         onClick={() => setActiveView('logs')}
-                        className={`px-5 py-2 rounded-md text-sm font-semibold transition-all ${
+                        className={`px-6 py-2 rounded-lg text-base font-semibold transition-all duration-200 tracking-wide shadow ${
                             activeView === 'logs'
-                                ? 'bg-green-50 text-green-700 border border-green-200 shadow'
-                                : 'text-neutral-500 hover:text-green-700 hover:bg-neutral-100'
+                                ? 'bg-green-100 text-green-700 border border-green-400 scale-105'
+                                : 'text-neutral-500 bg-gray-50 hover:text-green-700 hover:bg-green-50 border border-gray-200'
                         }`}
                     >
                         Activity Logs
                     </button>
                     <button
                         onClick={() => setActiveView('analytics')}
-                        className={`px-5 py-2 rounded-md text-sm font-semibold transition-all ${
+                        className={`px-6 py-2 rounded-lg text-base font-semibold transition-all duration-200 tracking-wide shadow ${
                             activeView === 'analytics'
-                                ? 'bg-green-50 text-green-700 border border-green-200 shadow'
-                                : 'text-neutral-500 hover:text-green-700 hover:bg-neutral-100'
+                                ? 'bg-green-100 text-green-700 border border-green-400 scale-105'
+                                : 'text-neutral-500 bg-gray-50 hover:text-green-700 hover:bg-green-50 border border-gray-200'
                         }`}
                     >
                         Analytics
@@ -275,8 +258,8 @@ function AuditLogsTable({ admin_navigate }) {
 
     return (
         <div className="max-w-6xl mx-auto">
-            {/* Filters Section - Enhanced Professional Layout */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 mb-8">
+            {/* Filters Section - Minimal Layout */}
+            <div className="mb-8">
                 {/* Search and Basic Controls */}
                 <div className="flex flex-row items-center justify-between gap-4 mb-6">
                     {/* Search Input - Enhanced Design */}
@@ -530,10 +513,10 @@ function AuditLogsTable({ admin_navigate }) {
             {/* Table */}
         <div className="overflow-x-auto rounded-xl border border-neutral-100 shadow-sm mt-4">
             <table className="w-full">
-                <thead className="bg-green-600 border-b border-neutral-100">
+                <thead className="bg-gray-100 border-b border-neutral-100">
                         <tr>
                             <th
-                                className="py-4 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
+                                className="py-4 px-4 text-left text-xs font-semibold text-green-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
                                 onClick={() => handleSort('createdAt')}
                             >
                                 <div className="flex items-center gap-1">
@@ -545,46 +528,10 @@ function AuditLogsTable({ admin_navigate }) {
                                     )}
                                 </div>
                             </th>
-                            <th
-                                className="py-4 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
-                                onClick={() => handleSort('admin')}
-                            >
-                                <div className="flex items-center gap-1">
-                                    Admin
-                                    {sortBy === 'admin' && (
-                                        <span className="text-green-500">
-                                            {sortOrder === 'asc' ? '▲' : '▼'}
-                                        </span>
-                                    )}
-                                </div>
-                            </th>
-                            <th
-                                className="py-4 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
-                                onClick={() => handleSort('action')}
-                            >
-                                <div className="flex items-center gap-1">
-                                    Action
-                                    {sortBy === 'action' && (
-                                        <span className="text-green-500">
-                                            {sortOrder === 'asc' ? '▲' : '▼'}
-                                        </span>
-                                    )}
-                                </div>
-                            </th>
-                            <th
-                                className="py-4 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
-                                onClick={() => handleSort('targetType')}
-                            >
-                                <div className="flex items-center gap-1">
-                                    Target
-                                    {sortBy === 'targetType' && (
-                                        <span className="text-green-500">
-                                            {sortOrder === 'asc' ? '▲' : '▼'}
-                                        </span>
-                                    )}
-                                </div>
-                            </th>
-                            <th className="py-4 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                            <th className="py-4 px-4 text-left text-xs font-semibold text-green-700 uppercase tracking-wider">Admin</th>
+                            <th className="py-4 px-4 text-left text-xs font-semibold text-green-700 uppercase tracking-wider">Action</th>
+                            <th className="py-4 px-4 text-left text-xs font-semibold text-green-700 uppercase tracking-wider">Target</th>
+                            <th className="py-4 px-4 text-left text-xs font-semibold text-green-700 uppercase tracking-wider">
                                 Details
                             </th>
                         </tr>
@@ -858,7 +805,7 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
     return (
         <div className="space-y-6">
             {/* Time Range Selector */}
-            <div className="flex items-center justify-between bg-white rounded-lg p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-2">
                 <h3 className="text-lg font-semibold text-gray-900">
                     Audit Analytics
                 </h3>

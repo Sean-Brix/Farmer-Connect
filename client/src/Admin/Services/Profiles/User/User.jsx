@@ -137,12 +137,12 @@ export default function User({ user, details, refetchRow }) {
                     ? 'bg-gray-800 border-gray-700' 
                     : 'bg-white border-green-100'
             }`}>
-                <span className={`font-bold px-3 py-1 rounded-full text-sm align-middle shadow-sm ${
+                <span className={`font-semibold px-2 py-0.5 rounded text-base align-middle ${
                     account?.access === 'Super Admin'
-                        ? 'bg-red-500 text-white border border-red-400'
+                        ? 'text-red-600 bg-red-50 border border-red-200'
                         : account?.access === 'Admin'
-                        ? 'bg-blue-500 text-white border border-blue-400'
-                        : 'bg-green-500 text-white border border-green-400'
+                        ? 'text-blue-600 bg-blue-50 border border-blue-200'
+                        : 'text-green-600 bg-green-50 border border-green-200'
                 }`} style={{letterSpacing: '0.03em'}}>
                     {account?.access}
                 </span>

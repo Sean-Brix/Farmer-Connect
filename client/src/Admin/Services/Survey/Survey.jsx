@@ -566,30 +566,12 @@ function Survey() {
 
 
   return (
-       <div className={`min-h-screen p-4 mt-20 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-      <div className="max-w-7xl mx-auto">
-        {/* Header - Professional Seed Track Style */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className={`flex items-center justify-center w-16 h-16 rounded-2xl border-2 shadow-lg ${
-              isDark ? 'bg-green-900 border-green-700' : 'bg-green-100 border-green-200'
-            }`}>
-              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <h1 className={`text-3xl md:text-4xl font-bold ${isDark ? 'text-white' : 'text-black'}`}>
-              Survey Forms Management
-            </h1>
-          </div>
-          <p className={`text-base md:text-lg font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-            Create and manage survey forms for data collection and feedback
-          </p>
-        </div>
+      <div className={`min-h-screen p-4 mt-20 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
+        <div className="max-w-7xl mx-auto">
+          {/* Header removed as requested */}
 
-        {/* Navigation Tabs */}
-        <div className={`rounded-xl shadow-lg p-4 mb-6 max-w-5xl mx-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          {/* Navigation Tabs */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
             <button
               onClick={() => { resetForm(); setActiveTab('list'); }}
               className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
@@ -624,74 +606,51 @@ function Survey() {
               <span>FAQ & Categories</span>
             </button>
           </div>
-        </div>
 
-        {/* Error Display */}
-        {error && (
-          <div className={`border rounded-lg p-4 mb-6 max-w-5xl mx-auto ${
-            isDark ? 'bg-red-900/20 border-red-700' : 'bg-red-50 border-red-200'
-          }`}>
-            <div className="flex items-center gap-2">
-              <span className="text-red-600">⚠️</span>
-              <span className={`font-medium ${isDark ? 'text-red-400' : 'text-red-800'}`}>Error</span>
-            </div>
-            <p className={`mt-1 ${isDark ? 'text-red-300' : 'text-red-700'}`}>{error}</p>
-          </div>
-        )}
 
         {/* Survey List */}
         {activeTab === 'list' && (
           <div className="space-y-6 max-w-5xl mx-auto">
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className={`rounded-xl p-4 shadow-lg border ${
-                isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-              }`}>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className={`text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Forms</p>
-                    <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{totalItems}</p>
-                  </div>
-                  <div className="text-2xl">📋</div>
+            <div className="flex flex-row flex-wrap justify-center items-stretch gap-3 mb-2">
+              {/* Total Forms */}
+              <div className={`flex items-center gap-3 rounded-xl border px-5 py-3 min-w-[170px] shadow-sm transition-all duration-200 bg-white/90 hover:shadow-lg ${isDark ? 'bg-gray-800 border-gray-600 hover:bg-gray-700' : 'bg-white border-gray-200 hover:bg-gray-50'}`}>
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-green-100 text-green-600 text-xl">
+                  📋
+                </div>
+                <div className="flex flex-col justify-center">
+                  <span className={`text-xs font-semibold uppercase tracking-wide ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Total Forms</span>
+                  <span className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{totalItems}</span>
                 </div>
               </div>
-              <div className={`rounded-xl p-4 shadow-lg border border-green-200 ${
-                isDark ? 'bg-gray-800 border-green-700' : 'bg-white border-green-200'
-              }`}>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-green-600">Active Forms</p>
-                    <p className="text-2xl font-bold text-green-700">
-                      {surveys.filter(s => s.status.toLowerCase() === 'active').length}
-                    </p>
-                  </div>
-                  <div className="text-2xl">✅</div>
+              {/* Active Forms */}
+              <div className={`flex items-center gap-3 rounded-xl border px-5 py-3 min-w-[170px] shadow-sm transition-all duration-200 bg-white/90 hover:shadow-lg ${isDark ? 'bg-gray-800 border-green-700 hover:bg-gray-700' : 'bg-white border-green-200 hover:bg-green-50'}`}>
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-green-50 text-green-700 text-xl">
+                  ✅
+                </div>
+                <div className="flex flex-col justify-center">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-green-600">Active Forms</span>
+                  <span className="text-lg font-bold text-green-700">{surveys.filter(s => s.status.toLowerCase() === 'active').length}</span>
                 </div>
               </div>
-              <div className={`rounded-xl p-4 shadow-lg border ${
-                isDark ? 'bg-gray-800 border-blue-700' : 'bg-white border-blue-200'
-              }`}>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-blue-600">Total Responses</p>
-                    <p className="text-2xl font-bold text-blue-700">
-                      {surveys.reduce((sum, s) => sum + (s.responsesCount || 0), 0)}
-                    </p>
-                  </div>
-                  <div className="text-2xl">📊</div>
+              {/* Total Responses */}
+              <div className={`flex items-center gap-3 rounded-xl border px-5 py-3 min-w-[170px] shadow-sm transition-all duration-200 bg-white/90 hover:shadow-lg ${isDark ? 'bg-gray-800 border-blue-700 hover:bg-gray-700' : 'bg-white border-blue-200 hover:bg-blue-50'}`}>
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-50 text-blue-700 text-xl">
+                  📊
+                </div>
+                <div className="flex flex-col justify-center">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-blue-600">Total Responses</span>
+                  <span className="text-lg font-bold text-blue-700">{surveys.reduce((sum, s) => sum + (s.responsesCount || 0), 0)}</span>
                 </div>
               </div>
-              <div className={`rounded-xl p-4 shadow-lg border ${
-                isDark ? 'bg-gray-800 border-purple-700' : 'bg-white border-purple-200'
-              }`}>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-purple-600">Draft Forms</p>
-                    <p className="text-2xl font-bold text-purple-700">
-                      {surveys.filter(s => s.status.toLowerCase() === 'draft').length}
-                    </p>
-                  </div>
-                  <div className="text-2xl">📝</div>
+              {/* Draft Forms */}
+              <div className={`flex items-center gap-3 rounded-xl border px-5 py-3 min-w-[170px] shadow-sm transition-all duration-200 bg-white/90 hover:shadow-lg ${isDark ? 'bg-gray-800 border-purple-700 hover:bg-gray-700' : 'bg-white border-purple-200 hover:bg-purple-50'}`}>
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-purple-50 text-purple-700 text-xl">
+                  📝
+                </div>
+                <div className="flex flex-col justify-center">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-purple-600">Draft Forms</span>
+                  <span className="text-lg font-bold text-purple-700">{surveys.filter(s => s.status.toLowerCase() === 'draft').length}</span>
                 </div>
               </div>
             </div>
@@ -753,9 +712,9 @@ function Survey() {
               )}
 
             {/* Search and Filters */}
-            <div className="mb-6 space-y-4">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
+            <div className="mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-end gap-4">
+                <div className="w-full sm:w-[600px]">
                   <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Search</label>
                   <input
                     type="text"
@@ -769,47 +728,45 @@ function Survey() {
                     placeholder="Search by title, description, or category..."
                   />
                 </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="min-w-[150px]">
-                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Status</label>
-                  <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${
-                      isDark 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                  >
-                    <option value="all">All Status</option>
-                    {uniqueStatuses.map(status => (
-                      <option key={status} value={status}>
-                        {status.charAt(0).toUpperCase() + status.slice(1)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="min-w-[150px]">
-                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Category</label>
-                  <select
-                    value={categoryFilter}
-                    onChange={(e) => setCategoryFilter(e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${
-                      isDark 
-                        ? 'bg-gray-700 border-gray-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                  >
-                    <option value="all">All Categories</option>
-                    {uniqueCategories.map(category => (
-                      <option key={category} value={category}>
-                        {category.charAt(0).toUpperCase() + category.slice(1)}
-                      </option>
-                    ))}
-                  </select>
+                <div className="flex gap-4 w-full sm:w-auto">
+                  <div className="min-w-[150px]">
+                    <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Status</label>
+                    <select
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${
+                        isDark 
+                          ? 'bg-gray-700 border-gray-600 text-white' 
+                          : 'bg-white border-gray-300 text-gray-900'
+                      }`}
+                    >
+                      <option value="all">All Status</option>
+                      {uniqueStatuses.map(status => (
+                        <option key={status} value={status}>
+                          {status.charAt(0).toUpperCase() + status.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="min-w-[150px]">
+                    <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Category</label>
+                    <select
+                      value={categoryFilter}
+                      onChange={(e) => setCategoryFilter(e.target.value)}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${
+                        isDark 
+                          ? 'bg-gray-700 border-gray-600 text-white' 
+                          : 'bg-white border-gray-300 text-gray-900'
+                      }`}
+                    >
+                      <option value="all">All Categories</option>
+                      {uniqueCategories.map(category => (
+                        <option key={category} value={category}>
+                          {category.charAt(0).toUpperCase() + category.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1936,17 +1893,12 @@ function Survey() {
 
             {/* FAQ Form Modal */}
             {showFaqForm && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                <div className={`rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
-                  <h3 className={`text-xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                    {editingFaq ? 'Edit FAQ' : 'Add New FAQ'}
-                  </h3>
-                  
+              <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-2 sm:p-4">
+                <div className={`w-full max-w-2xl max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl p-4 sm:p-8 flex flex-col gap-4`}>
+                  <h3 className={`text-xl font-bold mb-2 sm:mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>{editingFaq ? 'Edit FAQ' : 'Add New FAQ'}</h3>
                   <form onSubmit={handleFaqSubmit} className="space-y-4">
                     <div>
-                      <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                        Question *
-                      </label>
+                      <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Question *</label>
                       <input
                         type="text"
                         value={faqFormData.question}
@@ -1956,11 +1908,8 @@ function Survey() {
                         placeholder="Enter the frequently asked question"
                       />
                     </div>
-
                     <div>
-                      <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                        Category
-                      </label>
+                      <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Category</label>
                       <select
                         value={faqFormData.categoryId || ''}
                         onChange={(e) => setFaqFormData({...faqFormData, categoryId: e.target.value || null})}
@@ -1968,17 +1917,12 @@ function Survey() {
                       >
                         <option value="">Select Category (Optional)</option>
                         {categories.map((category) => (
-                          <option key={category.id} value={category.id}>
-                            {category.name}
-                          </option>
+                          <option key={category.id} value={category.id}>{category.name}</option>
                         ))}
                       </select>
                     </div>
-
                     <div>
-                      <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                        Answer *
-                      </label>
+                      <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Answer *</label>
                       <textarea
                         value={faqFormData.answer}
                         onChange={(e) => setFaqFormData({...faqFormData, answer: e.target.value})}
@@ -1987,9 +1931,8 @@ function Survey() {
                         placeholder="Provide a detailed answer to the question"
                       />
                     </div>
-
                     <div className="flex items-center gap-2">
-                      <label className={`flex items-center gap-2 cursor-pointer ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <label className={`flex items-center gap-2 cursor-pointer ${isDark ? 'text-gray-300' : 'text-gray-700'}`}> 
                         <input
                           type="checkbox"
                           checked={faqFormData.isActive}
@@ -1999,22 +1942,17 @@ function Survey() {
                         Active (visible to users)
                       </label>
                     </div>
-
-                    <div className="flex justify-end gap-3 pt-4">
+                    <div className="flex flex-col sm:flex-row justify-end gap-2 pt-4">
                       <button
                         type="button"
                         onClick={resetFaqForm}
                         className={`px-4 py-2 rounded-lg ${isDark ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-                      >
-                        Cancel
-                      </button>
+                      >Cancel</button>
                       <button
                         type="submit"
                         disabled={saving}
                         className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg"
-                      >
-                        {saving ? 'Saving...' : (editingFaq ? 'Update FAQ' : 'Create FAQ')}
-                      </button>
+                      >{saving ? 'Saving...' : (editingFaq ? 'Update FAQ' : 'Create FAQ')}</button>
                     </div>
                   </form>
                 </div>
@@ -2117,17 +2055,12 @@ function Survey() {
 
         {/* Category Form Modal */}
         {showCategoryForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className={`rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
-              <h3 className={`text-xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                {editingCategory ? 'Edit Category' : 'Add New Category'}
-              </h3>
-              
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-2 sm:p-4">
+            <div className={`w-full max-w-2xl max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl p-4 sm:p-8 flex flex-col gap-4`}>
+              <h3 className={`text-xl font-bold mb-2 sm:mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>{editingCategory ? 'Edit Category' : 'Add New Category'}</h3>
               <form onSubmit={handleCategorySubmit} className="space-y-4">
                 <div>
-                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Name *
-                  </label>
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Name *</label>
                   <input
                     type="text"
                     value={categoryFormData.name}
@@ -2137,11 +2070,8 @@ function Survey() {
                     placeholder="Enter category name (e.g., Medical & Health)"
                   />
                 </div>
-
                 <div>
-                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Description
-                  </label>
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Description</label>
                   <textarea
                     value={categoryFormData.description}
                     onChange={(e) => setCategoryFormData({...categoryFormData, description: e.target.value})}
@@ -2149,9 +2079,8 @@ function Survey() {
                     placeholder="Describe what this category covers"
                   />
                 </div>
-
                 <div className="flex items-center gap-2">
-                  <label className={`flex items-center gap-2 cursor-pointer ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <label className={`flex items-center gap-2 cursor-pointer ${isDark ? 'text-gray-300' : 'text-gray-700'}`}> 
                     <input
                       type="checkbox"
                       checked={categoryFormData.isActive}
@@ -2161,22 +2090,17 @@ function Survey() {
                     Active (visible to users)
                   </label>
                 </div>
-
-                <div className="flex justify-end gap-3 pt-4">
+                <div className="flex flex-col sm:flex-row justify-end gap-2 pt-4">
                   <button
                     type="button"
                     onClick={resetCategoryForm}
                     className={`px-4 py-2 rounded-lg ${isDark ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-                  >
-                    Cancel
-                  </button>
+                  >Cancel</button>
                   <button
                     type="submit"
                     disabled={saving}
                     className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg"
-                  >
-                    {saving ? 'Saving...' : (editingCategory ? 'Update Category' : 'Create Category')}
-                  </button>
+                  >{saving ? 'Saving...' : (editingCategory ? 'Update Category' : 'Create Category')}</button>
                 </div>
               </form>
             </div>

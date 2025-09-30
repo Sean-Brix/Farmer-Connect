@@ -449,15 +449,22 @@ export default function Dashboard() {
                             <div className="flex items-center gap-2">
                                 
                                      {/* Logo on mobile sidebar */}
-                            <img src={logo} alt="Logo" className="h-10 w-10 object-contain mr-2" />
-                                <h1
-                                    className={`text-lg md:text-2xl font-bold tracking-tight professional-navbar-title ${
-                                        isDark ? 'text-green-400' : 'text-green-900'
-                                    }`}
-                                    style={{ userSelect: 'none', letterSpacing: '-0.5px', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
-                                >
-                                   DASHBOARD
-                                </h1>
+                                {(() => {
+                                    const item = menuItems.find(i => i.key === currentPageKey);
+                                    return (
+                                        <h1
+                                            className={
+                                                'text-lg md:text-2xl font-bold tracking-tight professional-navbar-title text-green-600 md:text-green-600 dark:text-green-400'
+                                            }
+                                            style={{ userSelect: 'none', letterSpacing: '-0.5px', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', display: 'flex', alignItems: 'center', gap: '0.7rem' }}
+                                        >
+                                            {item && item.icon && (
+                                                <span style={{ fontSize: '1.15em', display: 'inline-flex', alignItems: 'flex-start', marginRight: '0.55em', position: 'relative', top: '-5px', lineHeight: 1, color: '#16a34a' }}>{item.icon}</span>
+                                            )}
+                                            <span style={{ verticalAlign: 'middle', lineHeight: 1 }}>{item ? item.label : 'Dashboard'}</span>
+                                        </h1>
+                                    );
+                                })()}
                             </div>
                         </div>
                         {/* Settings icon (right) and mobile menu */}
@@ -615,38 +622,155 @@ export default function Dashboard() {
                         <div className="flex-1 min-h-0 flex flex-col">
                             <nav className="mt-3 flex-1 overflow-y-auto minimalist-scrollbar">
                                 <ul className="space-y-2 px-6 py-4">
-                                    {menuItems.filter(item => item.key !== 'home').map((item) => (
-                                        <li
-                                            key={item.key}
-                                            className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer shadow-sm
-                                                ${
-                                                    currentPageKey === item.key
-                                                        ? isDark 
-                                                            ? 'bg-gradient-to-r from-green-900/50 to-green-800/50 text-green-300 ring-2 ring-green-500/30 shadow-lg'
-                                                            : 'bg-gradient-to-r from-green-200/80 to-green-100/80 text-green-800 ring-2 ring-green-400/30 shadow-lg'
-                                                        : isDark
-                                                            ? 'text-gray-300 hover:bg-green-900/30 hover:shadow-md'
-                                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
-                                                }
-                                            `}
-                                            style={{ minHeight: '3.2rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
-                                            onClick={() => {
-                                                if (item.to) {
-                                                    window.location.href = item.to;
-                                                } else {
-                                                    handleSetPage(item.key);
-                                                }
-                                                setMobileMenuOpen(false);
-                                            }}
-                                        >
-                                            <span className={`sidebar-icon flex items-center justify-center drop-shadow-sm ${
-                                                currentPageKey === item.key 
-                                                    ? isDark ? 'text-green-400' : 'text-green-700/90'
-                                                    : isDark ? 'text-green-500' : 'text-green-700/90'
-                                            }`}>{item.icon}</span>
-                                            <span className="sidebar-label font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '500' }}>{item.label}</span>
-                                        </li>
-                                    ))}
+                                    {(() => {
+                                        const filteredMenuItems = menuItems.filter(item => item.key !== 'home');
+                                        const beforeServices = filteredMenuItems.filter(item => !['distribution','enrollment','eic','seed','content'].includes(item.key) && !['settings','profile','logout'].includes(item.key));
+                                        const services = filteredMenuItems.filter(item => ['distribution','enrollment','eic','seed','content'].includes(item.key));
+                                        return (
+                                            <>
+                                                {/* Menu separator above Analytics */}
+                                                <li style={{ padding: 0, textAlign: 'left', width: '100%', lineHeight: 1, minHeight: 'unset', marginBottom: 0 }}>
+                                                    <div style={{display: 'flex', alignItems: 'center', width: '100%', minHeight: 'unset', lineHeight: 1}}>
+                                                        <span style={{display: 'inline-block', height: 1, width: 10, borderBottom: isDark ? '1.5px solid #6b7280' : '1.5px solid #d1d5db', opacity: 0.7, marginRight: 18, verticalAlign: 'middle'}}></span>
+                                                        <span style={{
+                                                            fontSize: '0.95rem',
+                                                            fontWeight: 700,
+                                                            color: isDark ? '#6ee7b7' : '#047857',
+                                                            letterSpacing: '0.08em',
+                                                            textTransform: 'uppercase',
+                                                            opacity: 0.85,
+                                                            padding: '0 0.5rem 0 0',
+                                                            whiteSpace: 'nowrap',
+                                                            minWidth: '70px',
+                                                            marginBottom: 0,
+                                                            lineHeight: 1.1,
+                                                            height: '1.2em',
+                                                            display: 'inline-block',
+                                                            verticalAlign: 'middle'
+                                                        }}>Menu</span>
+                                                        <span style={{display: 'inline-block', height: 1, width: '100%', maxWidth: 100, borderBottom: isDark ? '1.5px solid #6b7280' : '1.5px solid #d1d5db', opacity: 0.7, marginLeft: 8, verticalAlign: 'middle'}}></span>
+                                                    </div>
+                                                </li>
+                                                {beforeServices.map((item) => (
+                                                    <li
+                                                        key={item.key}
+                                                        className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer shadow-sm
+                                                            ${
+                                                                currentPageKey === item.key
+                                                                    ? isDark 
+                                                                        ? 'active-sidebar-link-dark'
+                                                                        : 'active-sidebar-link-light'
+                                                                    : isDark
+                                                                        ? 'text-gray-300 hover:bg-green-900/30 hover:shadow-md'
+                                                                        : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
+                                                            }
+                                                        `}
+                                                        style={{
+                                                            minHeight: '3.2rem',
+                                                            letterSpacing: '0.01em',
+                                                            fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif',
+                                                            borderRadius: '0.7rem',
+                                                            border: currentPageKey === item.key ? (isDark ? '1.5px solid #34d399' : '1.5px solid #22c55e') : 'none',
+                                                            boxShadow: currentPageKey === item.key ? (isDark ? '0 4px 16px 0 rgba(16,185,129,0.13)' : '0 4px 16px 0 rgba(34,197,94,0.10)') : 'none',
+                                                            fontWeight: currentPageKey === item.key ? 700 : 500,
+                                                            color: currentPageKey === item.key ? (isDark ? '#bbf7d0' : '#166534') : undefined,
+                                                            textShadow: currentPageKey === item.key ? (isDark ? '0 1px 2px #14532d44' : '0 1px 2px #bbf7d044') : 'none',
+                                                            backdropFilter: currentPageKey === item.key ? 'blur(6px)' : undefined,
+                                                            background: currentPageKey === item.key
+                                                                ? (isDark
+                                                                    ? 'linear-gradient(90deg, rgba(16,185,129,0.18) 0%, rgba(34,197,94,0.13) 100%)'
+                                                                    : 'linear-gradient(90deg, rgba(34,197,94,0.13) 0%, rgba(16,185,129,0.10) 100%)')
+                                                                : undefined,
+                                                            transition: 'background 0.2s, box-shadow 0.2s, border 0.2s',
+                                                        }}
+                                                        onClick={() => {
+                                                            if (item.to) {
+                                                                window.location.href = item.to;
+                                                            } else {
+                                                                handleSetPage(item.key);
+                                                            }
+                                                            setMobileMenuOpen(false);
+                                                        }}
+                                                    >
+                                                        <span className={`sidebar-icon flex items-center justify-center drop-shadow-sm ${
+                                                            currentPageKey === item.key 
+                                                                ? isDark ? 'text-green-400' : 'text-green-700/90'
+                                                                : isDark ? 'text-green-500' : 'text-green-700/90'
+                                                        }`}>{item.icon}</span>
+                                                        <span className="sidebar-label font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '500' }}>{item.label}</span>
+                                                    </li>
+                                                ))}
+                                                {/* Services separator */}
+                                                <li style={{margin: '1.2rem 0 0.05rem 0', padding: 0, textAlign: 'left', width: '100%'}}>
+                                                    <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+                                                        <span style={{display: 'inline-block', height: 1, width: 10, borderBottom: isDark ? '1.5px solid #6b7280' : '1.5px solid #d1d5db', opacity: 0.7, marginRight: 14}}></span>
+                                                        <span style={{
+                                                            fontSize: '0.95rem',
+                                                            fontWeight: 700,
+                                                            color: isDark ? '#6ee7b7' : '#047857',
+                                                            letterSpacing: '0.08em',
+                                                            textTransform: 'uppercase',
+                                                            opacity: 0.85,
+                                                            padding: '0 0.5rem 0 0',
+                                                            whiteSpace: 'nowrap',
+                                                            minWidth: '70px',
+                                                            marginBottom: '0.05rem'
+                                                        }}>Services</span>
+                                                        <span style={{display: 'inline-block', height: 1, width: '100%', maxWidth: 100, borderBottom: isDark ? '1.5px solid #6b7280' : '1.5px solid #d1d5db', opacity: 0.7, marginLeft: 8}}></span>
+                                                    </div>
+                                                </li>
+                                                {services.map((item) => (
+                                                    <li
+                                                        key={item.key}
+                                                        className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer shadow-sm
+                                                            ${
+                                                                currentPageKey === item.key
+                                                                    ? isDark 
+                                                                        ? 'active-sidebar-link-dark'
+                                                                        : 'active-sidebar-link-light'
+                                                                    : isDark
+                                                                        ? 'text-gray-300 hover:bg-green-900/30 hover:shadow-md'
+                                                                        : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
+                                                            }
+                                                        `}
+                                                        style={{
+                                                            minHeight: '3.2rem',
+                                                            letterSpacing: '0.01em',
+                                                            fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif',
+                                                            borderRadius: '0.7rem',
+                                                            border: currentPageKey === item.key ? (isDark ? '1.5px solid #34d399' : '1.5px solid #22c55e') : 'none',
+                                                            boxShadow: currentPageKey === item.key ? (isDark ? '0 4px 16px 0 rgba(16,185,129,0.13)' : '0 4px 16px 0 rgba(34,197,94,0.10)') : 'none',
+                                                            fontWeight: currentPageKey === item.key ? 700 : 500,
+                                                            color: currentPageKey === item.key ? (isDark ? '#bbf7d0' : '#166534') : undefined,
+                                                            textShadow: currentPageKey === item.key ? (isDark ? '0 1px 2px #14532d44' : '0 1px 2px #bbf7d044') : 'none',
+                                                            backdropFilter: currentPageKey === item.key ? 'blur(6px)' : undefined,
+                                                            background: currentPageKey === item.key
+                                                                ? (isDark
+                                                                    ? 'linear-gradient(90deg, rgba(16,185,129,0.18) 0%, rgba(34,197,94,0.13) 100%)'
+                                                                    : 'linear-gradient(90deg, rgba(34,197,94,0.13) 0%, rgba(16,185,129,0.10) 100%)')
+                                                                : undefined,
+                                                            transition: 'background 0.2s, box-shadow 0.2s, border 0.2s',
+                                                        }}
+                                                        onClick={() => {
+                                                            if (item.to) {
+                                                                window.location.href = item.to;
+                                                            } else {
+                                                                handleSetPage(item.key);
+                                                            }
+                                                            setMobileMenuOpen(false);
+                                                        }}
+                                                    >
+                                                        <span className={`sidebar-icon flex items-center justify-center drop-shadow-sm ${
+                                                            currentPageKey === item.key 
+                                                                ? isDark ? 'text-green-400' : 'text-green-700/90'
+                                                                : isDark ? 'text-green-500' : 'text-green-700/90'
+                                                        }`}>{item.icon}</span>
+                                                        <span className="sidebar-label font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '500' }}>{item.label}</span>
+                                                    </li>
+                                                ))}
+                                            </>
+                                        );
+                                    })()}
                                 </ul>
                             </nav>
                         </div>
@@ -709,6 +833,26 @@ export default function Dashboard() {
 
             {/* Mobile CSS for sidebar */}
             <style>{`
+                .active-sidebar-link-dark {
+                    background: linear-gradient(90deg, rgba(16,185,129,0.18) 0%, rgba(34,197,94,0.13) 100%) !important;
+                    border: 1.5px solid #34d399 !important;
+                    color: #bbf7d0 !important;
+                    box-shadow: 0 4px 16px 0 rgba(16,185,129,0.13) !important;
+                    font-weight: 700 !important;
+                    text-shadow: 0 1px 2px #14532d44 !important;
+                    backdrop-filter: blur(6px) !important;
+                    transition: background 0.2s, box-shadow 0.2s, border 0.2s !important;
+                }
+                .active-sidebar-link-light {
+                    background: linear-gradient(90deg, rgba(34,197,94,0.13) 0%, rgba(16,185,129,0.10) 100%) !important;
+                    border: 1.5px solid #22c55e !important;
+                    color: #166534 !important;
+                    box-shadow: 0 4px 16px 0 rgba(34,197,94,0.10) !important;
+                    font-weight: 700 !important;
+                    text-shadow: 0 1px 2px #bbf7d044 !important;
+                    backdrop-filter: blur(6px) !important;
+                    transition: background 0.2s, box-shadow 0.2s, border 0.2s !important;
+                }
                 /* Use Poppins font for sidebar with specific font weights */
                 .sidebar, .sidebar * {
                     font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;

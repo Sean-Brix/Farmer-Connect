@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSocket } from '../../../contexts/SocketContext.jsx';
 import { useTheme } from '../../../contexts/ThemeContext.jsx';
 import ChatWindow from './components/ChatWindow.jsx';
+import ConversationModal from './ConversationModal.jsx';
 import InquiryListItem from './components/InquiryListItem.jsx';
 import DashboardStats from './components/DashboardStats.jsx';
 
@@ -620,7 +621,7 @@ function Chat_Module() {
 
   return (
     <div className={`min-h-screen py-4 sm:mt-12 px-2 md:px-6 ${
-      isDark ? 'bg-gray-900' : 'bg-gray-50'
+      isDark ? 'bg-gray-900' : 'bg-white'
     }`}>
       {toast && (
         <div className={`fixed top-4 right-4 z-[100000] px-4 py-3 rounded-xl shadow-xl border ${toast.type==='info' ? 'bg-green-50 border-green-200 text-green-900' : 'bg-white border-gray-200 text-gray-800'}`}>
@@ -637,97 +638,76 @@ function Chat_Module() {
         </div>
       )}
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="relative mb-6 mt-2 sm:mt-8 flex flex-col items-center justify-center max-w-5xl mx-auto gap-3 text-center">
-          <span className="inline-flex items-center justify-center gap-4 w-full">
-            <span className="rounded-full bg-green-100 p-3 border border-green-200 shadow-sm">
-              <svg className="w-10 h-10 text-green-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-            <span className="text-2xl md:text-4xl font-bold text-gray-900 tracking-tight">Customer Support Chat</span>
-          </span>
-          <span className="block text-sm md:text-lg text-gray-600 font-medium">
-            Real-time messaging with customers • 
-            <span className={`ml-2 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${isConnected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-              <span className={`w-2 h-2 rounded-full mr-2 ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></span>
-              {isConnected ? 'Connected' : 'Disconnected'}
-            </span>
-          </span>
-        </div>
 
-        {/* Dashboard Stats */}
-        <DashboardStats activeChats={[...pending, ...inProgress]} />
-
-        {/* Main Chat Interface */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Chat List */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden h-[700px] flex flex-col">
-              {/* Tabs */}
+        {/* Unified container for stats and chat list */}
+        <div className="w-full flex flex-col items-center">
+          {/* Dashboard Stats aligned with chat list */}
+          <div className="w-full max-w-5xl mb-4">
+            <DashboardStats activeChats={[...pending, ...inProgress]} />
+          </div>
+          {/* Main Chat Interface - Slightly less wide Chat List */}
+          <div className="w-full max-w-5xl">
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 flex flex-col w-full">
+              {/* Status Filter Dropdown */}
               <div className="bg-gray-50 px-6 pt-6 pb-2 border-b border-gray-200 flex-shrink-0">
-                <div className="grid grid-cols-3 gap-3">
-                  {['PENDING','IN_PROGRESS','RESOLVED'].map(tab => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`relative text-sm px-4 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 ${
-                        activeTab===tab 
-                          ? 'bg-green-600 text-white shadow-lg' 
-                          : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
-                      }`}
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 w-full">
+                  <div className="flex items-center gap-3 w-full md:w-auto">
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Search conversations..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 pr-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 font-medium text-sm"
+                        style={{}}
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <label htmlFor="statusFilter" className="text-sm font-medium text-gray-700">Status:</label>
+                      <select
+                        id="statusFilter"
+                        value={activeTab}
+                        onChange={e => setActiveTab(e.target.value)}
+                        className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
+                      >
+                        <option value="PENDING">Pending ({pending.length})</option>
+                        <option value="IN_PROGRESS">In Progress ({inProgress.length})</option>
+                        <option value="RESOLVED">Resolved ({resolved.length})</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 md:ml-auto">
+                    <label htmlFor="itemsPerPage" className="text-sm font-medium text-gray-700">Rows:</label>
+                    <select
+                      id="itemsPerPage"
+                      value={itemsPerPage}
+                      onChange={e => {
+                        setItemsPerPage(Number(e.target.value));
+                        setPendingPage(1);
+                        setInProgressPage(1);
+                        setResolvedPage(1);
+                      }}
+                      className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
+                      aria-label="Rows per page"
                     >
-                      <span className="block">{tab.replace('_',' ')}</span>
-                      <span className={`absolute -top-2 -right-2 inline-flex items-center justify-center min-w-6 h-6 px-2 rounded-full text-xs font-bold ${
-                        activeTab===tab ? 'bg-white text-green-600' : 'bg-gray-900 text-white'
-                      }`}>
-                        {tab==='PENDING'? pending.length : tab==='IN_PROGRESS'? inProgress.length : resolved.length}
-                      </span>
-                    </button>
-                  ))}
+                      {[5, 8, 10, 20, 50].map(n => (
+                        <option key={n} value={n}>{n}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              {/* Search Bar */}
-              <div className="p-6 bg-white border-b border-gray-200 flex-shrink-0">
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Search conversations..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 font-medium"
-                  />
-                </div>
-              </div>
+              {/* Search Bar moved above, removed here */}
 
               {/* Active Chats */}
               <div className="flex-1 overflow-y-auto bg-white">
-                {/* Items per page selector, no outer box */}
-                <div className="flex justify-start items-center mt-4 pl-6">
-                  <label htmlFor="itemsPerPage" className="mr-2 text-sm font-medium text-gray-700">Items per page:</label>
-                  <select
-                    id="itemsPerPage"
-                    value={itemsPerPage}
-                    onChange={e => {
-                      setItemsPerPage(Number(e.target.value));
-                      setPendingPage(1);
-                      setInProgressPage(1);
-                      setResolvedPage(1);
-                    }}
-                    className="px-2 py-1 rounded border border-green-600 bg-green-50 text-green-700 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                  >
-                    {[5, 8, 10, 20, 50].map(n => (
-                      <option key={n} value={n}>{n}</option>
-                    ))}
-                  </select>
-                </div>
-                  <hr className="my-2 border-gray-300" />
+                {/* Items per page selector moved and redesigned above */}
                 {loading ? (
                   <div className="p-12 text-center text-gray-500">
                     <div className="w-20 h-20 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center shadow-sm">
@@ -780,18 +760,18 @@ function Chat_Module() {
             </div>
           </div>
 
-          {/* Chat Window */}
-          <div className="lg:col-span-1">
-            <ChatWindow
-              selectedChat={selectedChat}
-              getUserName={getUserName}
-              messagesEndRef={messagesEndRef}
-              messagesContainerRef={messagesContainerRef}
-              onSendMessage={handleSendMessage}
-              onSendAttachment={handleSendAttachment}
-              onError={setToast}
-            />
-          </div>
+          {/* Conversation Modal */}
+          <ConversationModal
+            open={!!selectedChat}
+            onClose={() => setSelectedChat(null)}
+            selectedChat={selectedChat}
+            getUserName={getUserName}
+            messagesEndRef={messagesEndRef}
+            messagesContainerRef={messagesContainerRef}
+            onSendMessage={handleSendMessage}
+            onSendAttachment={handleSendAttachment}
+            onError={setToast}
+          />
         </div>
       </div>
     </div>
