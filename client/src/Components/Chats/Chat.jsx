@@ -720,44 +720,52 @@ export default function Chat() {
 
     return (
     <>
-            {/* Chat Trigger Button - 60% Green */}
-            <div className="fixed bottom-8 right-8 z-[999999] group">
-                <div className="absolute inset-0 rounded-full bg-green-500 opacity-30 animate-ping"></div>
-                <div className="absolute inset-0 rounded-full bg-green-500 opacity-20 animate-pulse"></div>
+            {/* Professional Chat Trigger Button */}
+            <div className="fixed bottom-6 right-6 z-[999999] group">
                 <button
                     onClick={() => setOpen(true)}
-                    className="relative w-16 h-16 rounded-full text-white shadow-xl hover:shadow-2xl flex items-center justify-center cursor-pointer transition-all duration-300 focus:outline-none focus:ring-4 transform hover:scale-110 active:scale-95 bg-green-600 hover:bg-green-700 focus:ring-green-400/50 border-4 border-white"
+                    className="relative w-14 h-14 rounded-full text-white shadow-lg hover:shadow-xl flex items-center justify-center cursor-pointer transition-all duration-300 focus:outline-none focus:ring-4 transform hover:scale-105 active:scale-95"
+                    style={{ 
+                        backgroundColor: '#16a34a', 
+                        borderColor: '#15803d',
+                        border: '1px solid #15803d'
+                    }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#15803d'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = '#16a34a'}
                     aria-label="Open Support Chat"
                 >
-                    <svg className="w-7 h-7 transition-transform duration-300 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
-                    <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white bg-green-400 animate-pulse"></div>
+                    {/* Online indicator */}
+                    <div className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full border border-white bg-green-400"></div>
                 </button>
-                <div className="absolute bottom-full right-0 mb-4 px-4 py-2 rounded-xl shadow-xl text-base font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 pointer-events-none bg-gray-900 text-white border border-gray-800">
+                
+                {/* Tooltip */}
+                <div className="absolute bottom-full right-0 mb-3 px-3 py-2 rounded-lg shadow-lg text-sm font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 pointer-events-none bg-gray-900 text-white">
                     Need help? Chat with us
-                    <div className="absolute top-full right-6 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                    <div className="absolute top-full right-4 w-0 h-0 border-l-3 border-r-3 border-t-3 border-transparent border-t-gray-900"></div>
                 </div>
             </div>
 
-            {/* Modern Chat Modal with Enhanced Design */}
+            {/* Modern Chat Modal */}
             {open && (
                 <div
-                    className="fixed inset-0 flex items-center justify-center z-[9999999] transition-all p-2 sm:p-4 bg-black/70"
+                    className="fixed inset-0 flex items-center justify-center z-[9999999] transition-all p-4 bg-black/70"
                     onClick={() => setOpen(false)}
                 >
-                    {/* Enhanced Toast Notifications */}
+                    {/* Toast Notifications */}
                     {toast && (
-                        <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-[10000000] shadow-2xl rounded-2xl border backdrop-blur-md px-6 py-4 min-w-[300px] max-w-[90vw] transition-all duration-300 ${
+                        <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-[10000000] shadow-lg rounded-xl border backdrop-blur-sm px-5 py-3 min-w-[280px] max-w-[90vw] transition-all duration-300 ${
                             toast.type === 'error' 
                                 ? theme === 'dark'
-                                    ? 'bg-red-900/90 border-red-700 text-red-100' 
+                                    ? 'bg-red-900/95 border-red-700/50 text-red-100' 
                                     : 'bg-red-50/95 border-red-200 text-red-800'
                                 : theme === 'dark'
-                                    ? 'bg-blue-900/90 border-blue-700 text-blue-100'
-                                    : 'bg-blue-50/95 border-blue-200 text-blue-800'
+                                    ? 'bg-green-900/95 border-green-700/50 text-green-100'
+                                    : 'bg-green-50/95 border-green-200 text-green-800'
                         }`}>
-                            <div className="font-semibold text-sm flex items-center gap-2">
+                            <div className="font-medium text-sm flex items-center gap-2">
                                 {toast.type === 'error' ? (
                                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -769,145 +777,101 @@ export default function Chat() {
                                 )}
                                 {toast.title}
                             </div>
-                            {toast.message && <div className="text-xs mt-2 opacity-90">{toast.message}</div>}
+                            {toast.message && <div className="text-xs mt-1 opacity-90">{toast.message}</div>}
                         </div>
                     )}
                     
                     <div
-                        className="relative rounded-3xl shadow-2xl flex w-full h-full max-w-none max-h-none sm:w-[98vw] sm:h-[96vh] md:w-[85vw] md:h-[90vh] lg:w-[1200px] lg:h-[800px] xl:w-[1400px] xl:h-[900px] md:max-w-[95vw] md:max-h-[95vh] bg-white border border-gray-200"
+                        className="relative rounded-3xl shadow-2xl flex w-full h-full max-w-6xl max-h-[90vh] bg-white border border-gray-100 overflow-hidden"
                         onClick={e => e.stopPropagation()}
                     >
-                        {/* Enhanced Left Panel: Tabs with Inquiry History */}
-                        <div className={`${sidebarOpen ? 'w-80 lg:w-96' : 'w-0'} flex flex-col transition-all duration-300 overflow-hidden ${
-                            sidebarOpen ? 'bg-gray-50 border-r border-gray-200 rounded-l-3xl' : ''
-                        }`}>
-                                {/* Enhanced Modern Sidebar Header */}
-                                <div className={`p-6 border-b ${
-                                    theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
-                                }`}>
-                                    <div className={`px-6 py-5 rounded-2xl shadow-lg ${
-                                        theme === 'dark' 
-                                            ? 'bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 text-white' 
-                                            : 'bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white'
+                        {/* Sidebar: Chat History */}
+                        <div className={`${sidebarOpen ? 'w-80' : 'w-0'} flex flex-col transition-all duration-300 overflow-hidden border-r border-gray-100 bg-gradient-to-b from-green-50 to-green-100 rounded-l-3xl`}>
+                            {/* Sidebar Header */}
+                            <div className="p-4 border-b border-green-100 bg-white rounded-tl-3xl">
+                                <div className="flex items-center justify-between mb-3">
+                                    <h3 className="text-lg font-semibold text-green-800">Chat History</h3>
+                                    <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                        isConnected 
+                                            ? 'bg-green-100 text-green-700' 
+                                            : 'bg-red-100 text-red-700'
                                     }`}>
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                                                    theme === 'dark' ? 'bg-white/20' : 'bg-white/20'
-                                                }`}>
-                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                                        {isConnected ? 'Online' : 'Offline'}
+                                    </div>
+                                </div>
+                                <p className="text-sm text-green-600">
+                                    {searchQuery.trim() 
+                                        ? `${filteredInquiries.length} of ${pastInquiries.length} found`
+                                        : `${pastInquiries.length} ${pastInquiries.length === 1 ? 'conversation' : 'conversations'}`
+                                    }
+                                </p>
+                            </div>
+
+                            {/* Search Bar */}
+                            <div className="p-4 border-b border-green-100 bg-white">
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                        </svg>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Search conversations..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="w-full pl-10 pr-4 py-3 border border-green-200 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm transition-colors bg-green-50 placeholder-green-500"
+                                    />
+                                    {searchQuery && (
+                                        <button
+                                            onClick={() => setSearchQuery('')}
+                                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-green-400 hover:text-green-600"
+                                        >
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* History List */}
+                            <div className="flex-1 overflow-y-auto p-4">
+                                {isLoadingHistory ? (
+                                    <div className="flex flex-col items-center justify-center py-8">
+                                        <div className="w-6 h-6 border border-green-200 border-t-green-600 rounded-full animate-spin mb-2"></div>
+                                        <span className="text-green-600 text-sm">Loading...</span>
+                                    </div>
+                                ) : filteredInquiries.length === 0 ? (
+                                    <div className="flex flex-col items-center justify-center py-8 text-center">
+                                        {searchQuery.trim() ? (
+                                            <>
+                                                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-3">
+                                                    <svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                                     </svg>
                                                 </div>
-                                                <div>
-                                                    <h3 className="text-lg font-bold">Support Hub</h3>
-                                                    <p className={`text-sm mt-0.5 ${
-                                                        theme === 'dark' ? 'text-emerald-100' : 'text-indigo-100'
-                                                    }`}>
-                                                        {searchQuery.trim() 
-                                                            ? `${filteredInquiries.length} of ${pastInquiries.length} found`
-                                                            : `${pastInquiries.length} ${pastInquiries.length === 1 ? 'conversation' : 'conversations'}`
-                                                        }
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                                isConnected 
-                                                    ? 'bg-green-400/20 text-green-100' 
-                                                    : 'bg-red-400/20 text-red-100'
-                                            }`}>
-                                                {isConnected ? 'Online' : 'Offline'}
-                                            </div>
-                                        </div>
-                                        <div className="mt-4">
-                                            <h4 className="text-white text-sm font-medium">Message History</h4>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Enhanced Search Bar */}
-                                <div className={`p-4 border-b ${
-                                    theme === 'dark' 
-                                        ? 'border-gray-700 bg-gray-800' 
-                                        : 'border-gray-200 bg-white'
-                                }`}>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <svg className={`w-4 h-4 ${
-                                                theme === 'dark' ? 'text-gray-400' : 'text-gray-400'
-                                            }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                            </svg>
-                                        </div>
-                                        <input
-                                            type="text"
-                                            placeholder="Search conversations..."
-                                            value={searchQuery}
-                                            onChange={(e) => setSearchQuery(e.target.value)}
-                                            className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:outline-none text-sm transition-all duration-200 ${
-                                                theme === 'dark'
-                                                    ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-400 focus:ring-green-500/50 focus:border-green-500'
-                                                    : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-indigo-500/50 focus:border-indigo-500 focus:bg-white'
-                                            }`}
-                                        />
-                                        {searchQuery && (
-                                            <button
-                                                onClick={() => setSearchQuery('')}
-                                                className={`absolute inset-y-0 right-0 pr-3 flex items-center ${
-                                                    theme === 'dark' 
-                                                        ? 'text-gray-400 hover:text-gray-200' 
-                                                        : 'text-gray-400 hover:text-gray-600'
-                                                }`}
-                                            >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Enhanced Active or History List */}
-                                <div className={`flex-1 overflow-y-auto p-4 ${
-                                    theme === 'dark' 
-                                        ? 'bg-gradient-to-b from-gray-800 to-gray-900' 
-                                        : 'bg-gradient-to-b from-white to-gray-50'
-                                }`}>
-                                    {isLoadingHistory ? (
-                                        <div className="flex flex-col items-center justify-center py-12">
-                                            <div className="w-8 h-8 border-2 border-blue-300 border-t-blue-600 rounded-full animate-spin mb-3"></div>
-                                            <span className="text-gray-600 text-sm">Loading conversations...</span>
-                                        </div>
-                                    ) : filteredInquiries.length === 0 ? (
-                                        <div className="flex flex-col items-center justify-center py-12 text-center">
-                                            {searchQuery.trim() ? (
+                                                <p className="text-green-700 font-medium mb-1">No matches found</p>
+                                                <p className="text-green-600 text-sm mb-3">Try different keywords</p>
+                                                <button
+                                                    onClick={() => setSearchQuery('')}
+                                                    className="text-green-600 hover:text-green-700 text-sm font-medium"
+                                                >
+                                                    Clear search
+                                                </button>
+                                            </>
+                                        ) : (
                                                 <>
-                                                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                                                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                                        </svg>
-                                                    </div>
-                                                    <h4 className="text-gray-700 font-medium mb-2">No matches found</h4>
-                                                    <p className="text-gray-500 text-sm mb-4">Try searching with different keywords</p>
-                                                    <button
-                                                        onClick={() => setSearchQuery('')}
-                                                        className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-                                                    >
-                                                        Clear search
-                                                    </button>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                                                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                                        <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                                         </svg>
                                                     </div>
-                                                    <h4 className="text-gray-700 font-medium mb-2">No past inquiries</h4>
-                                                    <p className="text-gray-500 text-sm mb-4">Your previous inquiries will appear here</p>
+                                                    <h4 className="text-green-700 font-medium mb-2">No past inquiries</h4>
+                                                    <p className="text-green-600 text-sm mb-4">Your previous inquiries will appear here</p>
                                                     <button
                                                         onClick={startNewConversation}
-                                                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                                                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
                                                     >
                                                         Start New Message
                                                     </button>
@@ -919,10 +883,10 @@ export default function Chat() {
                                             {filteredInquiries.map((inquiry) => (
                                                 <div
                                                     key={inquiry.id}
-                                                    className={`w-full text-left p-4 rounded-xl border transition-all duration-200 shadow-sm hover:shadow-md ${
+                                                    className={`w-full text-left p-4 rounded-2xl border transition-all duration-200 shadow-sm hover:shadow-lg ${
                                                         activeInquiry?.id === inquiry.id
-                                                            ? 'bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-300 shadow-md'
-                                                            : 'bg-white border-slate-200 hover:border-indigo-200'
+                                                            ? 'bg-green-50 border-green-300 shadow-md'
+                                                            : 'bg-white border-slate-200 hover:border-green-200'
                                                     }`}
                                                 >
                                                     {/* Main conversation area - clickable */}
@@ -941,7 +905,7 @@ export default function Chat() {
                                                             </div>
                                                             <div className={`w-2 h-2 rounded-full mt-2 ${
                                                                 inquiry.status === 'PENDING' ? 'bg-amber-400' :
-                                                                inquiry.status === 'IN_PROGRESS' ? 'bg-indigo-400' :
+                                                                inquiry.status === 'IN_PROGRESS' ? 'bg-green-400' :
                                                                 inquiry.status === 'RESOLVED' ? 'bg-emerald-400' :
                                                                 'bg-slate-400'
                                                             }`}></div>
@@ -951,7 +915,7 @@ export default function Chat() {
                                                             <div className="flex items-center gap-2">
                                                                 <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                                                     inquiry.status === 'RESOLVED' ? 'bg-emerald-100 text-emerald-700' :
-                                                                    inquiry.status === 'IN_PROGRESS' ? 'bg-indigo-100 text-indigo-700' :
+                                                                    inquiry.status === 'IN_PROGRESS' ? 'bg-green-100 text-green-700' :
                                                                     inquiry.status === 'WAITING_USER' ? 'bg-amber-100 text-amber-700' :
                                                                     'bg-orange-100 text-orange-700'
                                                                 }`}>
@@ -980,7 +944,7 @@ export default function Chat() {
                                                     <div className="mt-3 pt-3 border-t border-slate-100 flex gap-2">
                                                         <button
                                                             onClick={() => loadInquiryConversation(inquiry)}
-                                                            className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 shadow-sm"
+                                                            className="flex-1 bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 shadow-sm"
                                                         >
                                                             Continue Chat
                                                         </button>
@@ -1006,7 +970,7 @@ export default function Chat() {
                                 <div className="p-4 border-t border-slate-200 bg-white">
                                     <button
                                         onClick={fetchPastInquiries}
-                                        className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-slate-600 hover:text-indigo-600 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 rounded-lg transition-all duration-200"
+                                        className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-slate-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all duration-200"
                                         disabled={isLoadingHistory}
                                     >
                                         <svg className={`w-4 h-4 ${isLoadingHistory ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1018,100 +982,102 @@ export default function Chat() {
                             </div>
 
                         {/* Main Chat Area */}
-                        <div className="flex-1 flex flex-col rounded-3xl bg-white">
-                        {/* Header - Professional, clean */}
-                        <div className="bg-white text-green-700 px-8 py-6 relative overflow-hidden rounded-3xl shadow-lg border-b border-gray-200">
-                            <div className="relative z-10 flex items-center justify-between">
-                                <div className="flex items-center gap-4">
+                        <div className="flex-1 flex flex-col bg-white rounded-r-3xl overflow-hidden">
+                            {/* Header */}
+                            <div className="bg-green-600 text-white px-6 py-4 flex items-center justify-between border-b border-gray-100">
+                                <div className="flex items-center gap-3">
                                     <div className="relative">
-                                        <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/30 flex items-center justify-center overflow-hidden">
-                                            <img src={appLogo} alt="FITS - Tanza" className="w-10 h-10 rounded-full object-contain bg-white" />
+                                        <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center overflow-hidden">
+                                            <img src={appLogo} alt="FITS - Tanza" className="w-8 h-8 rounded-full object-contain bg-white" />
                                         </div>
-                                        <div className={`absolute -bottom-1 -right-1 w-5 h-5 border-3 border-white rounded-full ${isConnected ? 'bg-green-400 animate-pulse' : 'bg-gray-400'}`}></div>
+                                        <div className={`absolute -bottom-1 -right-1 w-3 h-3 border border-white rounded-full ${
+                                            isConnected ? 'bg-green-400' : 'bg-gray-400'
+                                        }`}></div>
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-bold tracking-tight">FITS - Tanza</h3>
-                                        <div className="flex items-center gap-2 text-indigo-100 mt-1">
-                                            <div className={`w-2.5 h-2.5 rounded-full ${isConnected ? 'bg-green-300 animate-pulse' : 'bg-gray-300'}`}></div>
-                                            <span className="text-sm font-medium">{chatMode === 'bot' ? 'Support Bot' : 'Connected to live agent'}</span>
+                                        <h3 className="text-lg font-semibold">FITS - Tanza</h3>
+                                        <div className="flex items-center gap-2 text-green-100">
+                                            <div className={`w-2 h-2 rounded-full ${
+                                                isConnected ? 'bg-green-300' : 'bg-gray-300'
+                                            }`}></div>
+                                            <span className="text-sm">
+                                                {chatMode === 'bot' ? 'Support Bot' : 'Live Agent'}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <div className="flex items-center gap-2">
-                                    {/* History Toggle Button */}
+                                    {/* History Toggle */}
                                     <button
                                         onClick={toggleSidebar}
-                                        className="p-2.5 hover:bg-white/20 rounded-full transition-all duration-200 group"
+                                        className="p-2 hover:bg-white/10 rounded-lg transition-all duration-200"
                                         aria-label="Toggle history"
                                     >
-                                        <svg className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     </button>
                                     
-                                    {/* New Message Button */}
+                                    {/* New Message */}
                                     <button
                                         onClick={startNewConversation}
-                                        className="p-2.5 hover:bg-white/20 rounded-full transition-all duration-200 group"
-                                        aria-label="Start new message"
+                                        className="p-2 hover:bg-white/10 rounded-lg transition-all duration-200"
+                                        aria-label="New message"
                                     >
-                                        <svg className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
                                     </button>
+                                    
+                                    {/* Mark as Resolved */}
                                     {activeInquiry?.id && activeInquiry?.status !== 'RESOLVED' && (
                                         <button
                                             type="button"
                                             onClick={() => markAsResolved(activeInquiry.id)}
-                                            className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm"
+                                            className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium"
                                         >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>
-                                            Mark as Resolved
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
+                                            </svg>
+                                            Resolve
                                         </button>
                                     )}
+                                    
+                                    {/* Close */}
                                     <button
                                         onClick={() => setOpen(false)}
-                                        className="p-2.5 hover:bg-white/20 rounded-full transition-all duration-200 hover:rotate-90 group"
+                                        className="p-2 hover:bg-white/10 rounded-lg transition-all duration-200"
                                         aria-label="Close chat"
                                     >
-                                        <svg className="w-6 h-6 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                     </button>
                                 </div>
                             </div>
-                        </div>
                         
                         {/* Messages Area */}
-                        <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4 bg-gradient-to-b from-slate-50 to-white rounded-3xl">
-                {messages.map((msg, idx) => (
+                        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3 bg-gradient-to-b from-gray-50 to-white">
+                            {messages.map((msg, idx) => (
                                 <div
-                    key={msg.key || idx}
-                                    className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'} items-end gap-2`}
+                                    key={msg.key || idx}
+                                    className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'} items-end gap-3`}
                                 >
                                     {(msg.from === 'admin' || msg.from === 'system' || msg.from === 'bot') && (
                                         <div className="flex-shrink-0">
-                                            <div className={`w-8 h-8 rounded-full p-0.5 ${
+                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                                                 msg.from === 'admin' 
-                                                    ? 'bg-gradient-to-br from-blue-400 to-blue-600' 
+                                                    ? 'bg-green-500' 
                                                     : msg.from === 'bot'
-                                                    ? 'bg-gradient-to-br from-indigo-400 to-indigo-600'
-                                                    : 'bg-gradient-to-br from-gray-400 to-gray-600'
+                                                    ? 'bg-green-600'
+                                                    : 'bg-gray-500'
                                             }`}>
-                                                {msg.from === 'admin' ? (
-                                                    <div className="w-full h-full rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-semibold">
-                                                        A
-                                                    </div>
-                                                ) : msg.from === 'bot' ? (
-                                                    <div className="w-full h-full rounded-full bg-indigo-500 flex items-center justify-center text-white text-xs">
-                                                        🤖
-                                                    </div>
-                                                ) : (
-                                                    <div className="w-full h-full rounded-full bg-gray-500 flex items-center justify-center text-white text-xs">
-                                                        ⚙️
-                                                    </div>
-                                                )}
+                                                <img 
+                                                    src={msg.from === 'admin' || msg.from === 'system' ? userAvatar : botAvatar} 
+                                                    alt="Avatar" 
+                                                    className="w-6 h-6 rounded-full object-cover"
+                                                />
                                             </div>
                                         </div>
                                     )}
@@ -1140,22 +1106,22 @@ export default function Chat() {
                                             </div>
                                         ) : (
                                             <div
-                                                className={`px-4 py-3 rounded-2xl text-sm shadow-sm transition-all duration-200 hover:shadow-md
+                                                className={`px-4 py-3 rounded-3xl text-sm shadow-sm transition-all duration-200 hover:shadow-md
                                                     ${msg.from === 'user'
-                                                        ? 'bg-gradient-to-r from-green-600 to-green-700 text-white rounded-br-md'
+                                                        ? 'bg-green-600 text-white rounded-br-md'
                                                         : msg.from === 'admin'
-                                                        ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-blue-900 border border-blue-200 rounded-bl-md'
+                                                        ? 'bg-green-50 text-green-900 border border-green-200 rounded-bl-md'
                                                         : msg.from === 'bot'
-                                                        ? 'bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-900 border border-indigo-200 rounded-bl-md'
-                                                        : 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-800 border border-gray-200 rounded-bl-md'
+                                                        ? 'bg-green-100 text-green-900 border border-green-300 rounded-bl-md'
+                                                        : 'bg-gray-50 text-gray-800 border border-gray-200 rounded-bl-md'
                                                     }`}
                                                 style={{ wordBreak: 'break-word' }}
                                             >
                                                 {msg.from === 'admin' && (
-                                                    <div className="text-xs text-blue-600 font-semibold mb-1">Live Agent</div>
+                                                    <div className="text-xs text-green-600 font-semibold mb-1">Live Agent</div>
                                                 )}
                                                 {msg.from === 'bot' && (
-                                                    <div className="text-xs text-indigo-600 font-semibold mb-1">Support Bot</div>
+                                                    <div className="text-xs text-green-600 font-semibold mb-1">Support Bot</div>
                                                 )}
                                                 {msg.from === 'system' && (
                                                     <div className="text-xs text-gray-600 font-semibold mb-1">System</div>
@@ -1178,9 +1144,9 @@ export default function Chat() {
                                                 const isMedia = isPublic || isStream;
                                                 const isImg = (mime?.startsWith?.('image/')) || (isPublic && /\.(png|jpe?g|webp|gif)$/i.test(text));
                                                 const isVid = (mime?.startsWith?.('video/')) || (isPublic && /\.(mp4|webm)$/i.test(text));
-                                                if (isMedia && isImg) return <img src={text} alt="attachment" className="max-w-xs rounded-lg border cursor-zoom-in" onClick={() => setViewer({ open: true, src: text, filename: name || 'image' })} />;
+                                                if (isMedia && isImg) return <img src={text} alt="attachment" className="max-w-xs rounded-lg cursor-zoom-in" onClick={() => setViewer({ open: true, src: text, filename: name || 'image' })} />;
                                                 if (isMedia && isVid) return (
-                                                    <video className="max-w-xs rounded-lg border" controls>
+                                                    <video className="max-w-xs rounded-lg" controls>
                                                         <source src={text} />
                                                     </video>
                                                 );
@@ -1188,7 +1154,7 @@ export default function Chat() {
                                                     const n = (name || '').toLowerCase();
                                                     const bg =
                                                         mime === 'application/pdf' || n.endsWith('.pdf') ? 'bg-red-50 text-red-600' :
-                                                        (n.endsWith('.doc') || n.endsWith('.docx') || (mime || '').includes('word')) ? 'bg-blue-50 text-blue-700' :
+                                                        (n.endsWith('.doc') || n.endsWith('.docx') || (mime || '').includes('word')) ? 'bg-green-50 text-green-700' :
                                                         (n.endsWith('.xls') || n.endsWith('.xlsx') || (mime || '').includes('sheet')) ? 'bg-green-50 text-green-700' :
                                                         (n.endsWith('.ppt') || n.endsWith('.pptx') || (mime || '').includes('presentation')) ? 'bg-orange-50 text-orange-700' :
                                                         (n.endsWith('.txt')) ? 'bg-gray-50 text-gray-700' : 'bg-slate-50 text-slate-700';
@@ -1199,13 +1165,13 @@ export default function Chat() {
                                                         (n.endsWith('.ppt') || n.endsWith('.pptx') || (mime || '').includes('presentation')) ? 'PPT' :
                                                         (n.endsWith('.txt')) ? 'TXT' : 'FILE';
                                                     return (
-                                                        <a href={text} target="_blank" rel="noreferrer" className={`group w-64 border rounded-xl p-3 flex items-center gap-3 hover:shadow-sm transition ${msg.from==='user' ? 'bg-white border-gray-200' : 'bg-green-50 border-green-200'}`}>
+                                                        <a href={text} target="_blank" rel="noreferrer" className={`group w-64 border border-gray-50 rounded-xl p-3 flex items-center gap-3 hover:shadow-sm transition ${msg.from==='user' ? 'bg-white' : 'bg-green-50'}`}>
                                                             <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-xs font-bold ${bg}`}>{label}</div>
                                                             <div className="flex-1 min-w-0">
-                                                                <div className="text-sm font-medium truncate" title={name || 'Attachment'}>{name || 'Attachment'}</div>
-                                                                <div className="text-xs opacity-70">{mime}</div>
+                                                                <div className="text-sm font-medium text-gray-900 truncate" title={name || 'Attachment'}>{name || 'Attachment'}</div>
+                                                                <div className="text-xs text-gray-600">{mime}</div>
                                                             </div>
-                                                            <svg className="w-4 h-4 opacity-60 group-hover:opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12"/></svg>
+                                                            <svg className="w-4 h-4 text-gray-600 group-hover:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12"/></svg>
                                                         </a>
                                                     );
                                                 }
@@ -1236,7 +1202,7 @@ export default function Chat() {
                                     </div>
                                     {msg.from === 'user' && (
                                         <div className="flex-shrink-0">
-                                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 p-0.5">
+                                            <div className="w-8 h-8 rounded-full bg-green-600 p-0.5">
                                                 {activeInquiry?.userId && !myImgErr ? (
                                                     <img
                                                         src={`/api/account/picture/${activeInquiry.userId}?t=${activeInquiry?.updatedAt ? new Date(activeInquiry.updatedAt).getTime() : ''}`}
@@ -1256,41 +1222,43 @@ export default function Chat() {
                             
                             {/* Live agent indicator */}
                             <div className="flex justify-center">
-                                <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 text-center max-w-xs">
-                                    <div className="text-blue-600 text-sm font-medium mb-1">🔵 FITS - Tanza</div>
-                                    <div className="text-blue-700 text-xs">Your messages are sent directly to our support team</div>
+                                <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-center max-w-xs">
+                                    <div className="text-green-600 text-sm font-medium mb-1">� FITS - Tanza</div>
+                                    <div className="text-green-700 text-xs">Your messages are sent directly to our support team</div>
                                 </div>
                             </div>
                             <div ref={messagesEndRef} />
                         </div>
                         
                         {/* Input Area */}
-                        <div className="bg-white border-t border-slate-200 px-6 py-4 rounded-3xl">
+                        <div className="bg-white border-t border-gray-100 px-6 py-4 rounded-br-3xl">
                             <form
-                                className="flex items-center gap-4 rounded-3xl bg-white border-t border-gray-200"
+                                className="flex items-center gap-3"
                                 onSubmit={handleSend}
                                 autoComplete="off"
                             >
                                 <div className="flex-1">
-                                    {/* Attachment previews inside the input area */}
+                                    {/* Attachment previews */}
                                     {attachments.length > 0 && (
-                                        <div className="mb-2 flex flex-wrap gap-2">
+                                        <div className="mb-3 flex flex-wrap gap-2">
                                             {attachments.map((f, idx) => {
                                                 const isImg = f.type.startsWith('image/');
                                                 const url = isImg ? URL.createObjectURL(f) : null;
                                                 return (
-                                                    <div key={idx} className="relative group border border-slate-200 rounded-xl p-1 bg-slate-50">
-                                                        <div className="w-16 h-16 rounded-lg overflow-hidden flex items-center justify-center bg-white">
+                                                    <div key={idx} className="relative group border border-green-100 rounded-2xl p-2 bg-green-50">
+                                                        <div className="w-14 h-14 rounded-2xl overflow-hidden flex items-center justify-center bg-white border border-gray-100">
                                                             {isImg ? (
                                                                 <img src={url} alt={f.name} className="object-cover w-full h-full" onLoad={() => url && URL.revokeObjectURL(url)} />
                                                             ) : (
-                                                                <div className="text-xs text-slate-600 p-2 text-center">
-                                                                    <div className="font-medium truncate w-14" title={f.name}>{f.name}</div>
-                                                                    <div className="text-[10px] mt-1">{Math.ceil(f.size/1024)} KB</div>
+                                                                <div className="text-xs text-gray-700 p-1 text-center w-full">
+                                                                    <div className="font-medium truncate mb-1" title={f.name}>
+                                                                        {f.name.length > 8 ? f.name.substring(0, 8) + '...' : f.name}
+                                                                    </div>
+                                                                    <div className="text-[10px] text-gray-500">{Math.ceil(f.size/1024)} KB</div>
                                                                 </div>
                                                             )}
                                                         </div>
-                                                        <button type="button" onClick={() => removeAttachment(idx)} className="absolute -top-2 -right-2 bg-white border border-red-300 text-red-600 rounded-full w-6 h-6 shadow-sm hidden group-hover:flex items-center justify-center">
+                                                        <button type="button" onClick={() => removeAttachment(idx)} className="absolute -top-1 -right-1 bg-green-500 hover:bg-green-600 text-white rounded-full w-5 h-5 shadow-sm hidden group-hover:flex items-center justify-center text-xs transition-colors">
                                                             ×
                                                         </button>
                                                     </div>
@@ -1298,40 +1266,40 @@ export default function Chat() {
                                             })}
                                         </div>
                                     )}
-                                    <div className="relative">
+                                    <div className="relative flex-1">
                                         <input
                                             type="text"
-                                            placeholder={'Message live agent...'}
-                                            className="w-full rounded-2xl px-5 py-3 pr-12 border-2 border-black focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 bg-white text-sm transition-all duration-200 placeholder-gray-500"
+                                            placeholder="Message live agent..."
+                                            className="w-full rounded-2xl px-4 py-3 pr-12 border border-green-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-green-50 text-sm transition-all duration-200 placeholder-green-500"
                                             value={message}
                                             onChange={e => setMessage(e.target.value)}
                                             autoFocus
                                             maxLength={500}
                                             disabled={sending}
                                         />
-                                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-slate-400">
+                                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400">
                                             {message.length}/500
                                         </div>
                                     </div>
                                 </div>
                                 <div className="relative">
                                     <input id="chat_file" type="file" className="hidden" onChange={onPickFile} multiple accept="image/*,application/pdf" />
-                                    <label htmlFor="chat_file" className="cursor-pointer p-3 rounded-2xl border border-indigo-300 hover:bg-indigo-50 text-indigo-600 text-sm flex items-center gap-2 shadow-sm">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9"/></svg>
+                                    <label htmlFor="chat_file" className="cursor-pointer p-3 rounded-2xl border border-green-200 hover:bg-green-50 text-green-700 text-sm flex items-center gap-2 transition-colors bg-green-50">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9"/>
+                                        </svg>
                                         {attachments.length > 0 ? `${attachments.length} file${attachments.length>1?'s':''}` : 'Attach'}
                                     </label>
                                 </div>
                                 <button
                                     type="submit"
-                                    className="text-white rounded-2xl px-7 py-3 transition-all duration-200 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-xl hover:shadow-2xl flex items-center gap-2 bg-green-700 hover:bg-green-800 border-2 border-black"
+                                    className="text-white rounded-2xl px-6 py-3 transition-all duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center gap-2 bg-green-600 hover:bg-green-700"
                                     disabled={sending || (!message.trim() && attachments.length === 0)}
                                 >
-                                    <>
-                                        <span>{sending ? 'Sending…' : 'Send'}</span>
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                                        </svg>
-                                    </>
+                                    <span>{sending ? 'Sending…' : 'Send'}</span>
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                    </svg>
                                 </button>
                             </form>
                         </div>

@@ -122,7 +122,7 @@ export default function Add_Program({
                     style={{ minWidth: 320 }}
                 >
                     {/* Header */}
-                    <div className={`flex justify-between items-center border-b px-6 py-4 ${
+                    <div className={`flex justify-between items-center border-b px-6 py-4 rounded-t-xl ${
                         isDark 
                             ? 'border-gray-600 bg-gray-800' 
                             : 'border-gray-200 bg-gray-50'
@@ -154,27 +154,31 @@ export default function Add_Program({
                     </div>
 
                     {/* Content */}
-                    <div className="flex flex-col lg:flex-row gap-0 overflow-y-auto flex-1">
-                        {/* Left: Form Fields */}
-                        <div className="flex-1 p-6">
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                                {/* Basic Information */}
-                                <div className="lg:col-span-2">
-                                    <div className={`rounded-xl p-6 border ${
-                                        isDark 
-                                            ? 'bg-gray-800 border-gray-600' 
-                                            : 'bg-white border-gray-200'
-                                    }`}>
-                                        <div className="flex items-center gap-2 mb-4">
-                                            <div className="p-1.5 bg-green-600 rounded-lg">
-                                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                            </div>
-                                            <h3 className={`text-lg font-semibold ${
-                                                isDark ? 'text-gray-100' : 'text-gray-800'
-                                            }`}>Basic Information</h3>
-                                        </div>
+                    <div className="p-6 overflow-y-auto flex-1">
+                        {/* Combined Information Box */}
+                        <div className="mb-6">
+                            <div className={`rounded-xl p-6 border ${
+                                isDark 
+                                    ? 'bg-gray-800 border-gray-600' 
+                                    : 'bg-white border-gray-200'
+                            }`}>
+                                <div className="flex items-center gap-2 mb-6">
+                                    <div className="p-1.5 bg-green-600 rounded-lg">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <h3 className={`text-lg font-semibold ${
+                                        isDark ? 'text-gray-100' : 'text-gray-800'
+                                    }`}>Seminar Information</h3>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {/* Basic Information Section */}
+                                    <div className="lg:col-span-3">
+                                        <h4 className={`text-md font-medium mb-4 ${
+                                            isDark ? 'text-gray-200' : 'text-gray-700'
+                                        }`}>Basic Information</h4>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div className="md:col-span-2">
                                                 <label className={`block text-sm font-medium mb-2 ${
@@ -267,25 +271,12 @@ export default function Add_Program({
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                {/* Speaker Information */}
-                                <div>
-                                    <div className={`rounded-t-xl p-6 border h-full ${
-                                        isDark 
-                                            ? 'bg-gray-800 border-gray-600' 
-                                            : 'bg-white border-gray-200'
-                                    }`}>
-                                        <div className="flex items-center gap-2 mb-4">
-                                            <div className="p-1.5 bg-green-600 rounded-lg">
-                                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                </svg>
-                                            </div>
-                                            <h3 className={`text-lg font-semibold ${
-                                                isDark ? 'text-gray-100' : 'text-gray-800'
-                                            }`}>Speaker</h3>
-                                        </div>
+                                    {/* Speaker Section */}
+                                    <div className="lg:col-span-1">
+                                        <h4 className={`text-md font-medium mb-4 ${
+                                            isDark ? 'text-gray-200' : 'text-gray-700'
+                                        }`}>Speaker</h4>
                                         <div>
                                             <label className={`block text-sm font-medium mb-2 ${
                                                 isDark ? 'text-gray-200' : 'text-gray-800'
@@ -310,143 +301,126 @@ export default function Add_Program({
                                             />
                                         </div>
                                     </div>
-                                </div>
 
-                                {/* Schedule */}
-                                <div>
-                                    <div className={`rounded-t-xl p-6 border h-full ${
-                                        isDark 
-                                            ? 'bg-gray-800 border-gray-600' 
-                                            : 'bg-white border-gray-200'
-                                    }`}>
-                                        <div className="flex items-center gap-2 mb-4">
-                                            <div className="p-1.5 bg-green-600 rounded-lg">
-                                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                            </div>
-                                            <h3 className={`text-lg font-semibold ${
-                                                isDark ? 'text-gray-100' : 'text-gray-800'
-                                            }`}>Schedule</h3>
-                                        </div>
-                                        <div className="space-y-4">
-                                            <div className="grid grid-cols-2 gap-3">
-                                                <div>
-                                                    <label className={`block text-xs font-medium mb-1 ${
-                                                        isDark ? 'text-gray-300' : 'text-gray-800'
-                                                    }`}>Start Date</label>
-                                                    <input
-                                                        type="date"
-                                                        className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition text-sm ${
-                                                            isDark 
-                                                                ? 'border-gray-600 bg-gray-800 text-gray-100' 
-                                                                : 'border-green-300 bg-white text-gray-900'
-                                                        }`}
-                                                        value={newProgram.startDate}
-                                                        onChange={(e) =>
-                                                            setNewProgram({
-                                                                ...newProgram,
-                                                                startDate: e.target.value,
-                                                            })
-                                                        }
-                                                        required
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className={`block text-xs font-medium mb-1 ${
-                                                        isDark ? 'text-gray-300' : 'text-gray-800'
-                                                    }`}>End Date</label>
-                                                    <input
-                                                        type="date"
-                                                        className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition text-sm ${
-                                                            isDark 
-                                                                ? 'border-gray-600 bg-gray-800 text-gray-100' 
-                                                                : 'border-green-300 bg-white text-gray-900'
-                                                        }`}
-                                                        value={newProgram.endDate}
-                                                        onChange={(e) =>
-                                                            setNewProgram({
-                                                                ...newProgram,
-                                                                endDate: e.target.value,
-                                                            })
-                                                        }
-                                                        required
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-3">
-                                                <div>
-                                                    <label className={`block text-xs font-medium mb-1 ${
-                                                        isDark ? 'text-gray-300' : 'text-gray-800'
-                                                    }`}>Start Time</label>
-                                                    <input
-                                                        type="time"
-                                                        className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition text-sm ${
-                                                            isDark 
-                                                                ? 'border-gray-600 bg-gray-800 text-gray-100' 
-                                                                : 'border-green-300 bg-white text-gray-900'
-                                                        }`}
-                                                        value={newProgram.openTime}
-                                                        onChange={(e) =>
-                                                            setNewProgram({
-                                                                ...newProgram,
-                                                                openTime: e.target.value,
-                                                            })
-                                                        }
-                                                        required
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className={`block text-xs font-medium mb-1 ${
-                                                        isDark ? 'text-gray-300' : 'text-gray-800'
-                                                    }`}>End Time</label>
-                                                    <input
-                                                        type="time"
-                                                        className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition text-sm ${
-                                                            isDark 
-                                                                ? 'border-gray-600 bg-gray-800 text-gray-100' 
-                                                                : 'border-green-300 bg-white text-gray-900'
-                                                        }`}
-                                                        value={newProgram.closeTime}
-                                                        onChange={(e) =>
-                                                            setNewProgram({
-                                                                ...newProgram,
-                                                                closeTime: e.target.value,
-                                                            })
-                                                        }
-                                                        required
-                                                    />
-                                                </div>
-                                            </div>
+                                    {/* Schedule Section */}
+                                    <div className="lg:col-span-2">
+                                        <h4 className={`text-md font-medium mb-4 ${
+                                            isDark ? 'text-gray-200' : 'text-gray-700'
+                                        }`}>Schedule</h4>
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                                             <div>
-                                                <label className={`block text-sm font-medium mb-2 ${
+                                                <label className={`block text-xs font-medium mb-1 ${
                                                     isDark ? 'text-gray-300' : 'text-gray-800'
-                                                }`}>Registration Deadline</label>
+                                                }`}>Start Date</label>
                                                 <input
                                                     type="date"
-                                                    className={`w-full border rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition ${
+                                                    className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition text-sm ${
                                                         isDark 
                                                             ? 'border-gray-600 bg-gray-800 text-gray-100' 
                                                             : 'border-green-300 bg-white text-gray-900'
                                                     }`}
-                                                    value={newProgram.registrationDeadline}
+                                                    value={newProgram.startDate}
                                                     onChange={(e) =>
                                                         setNewProgram({
                                                             ...newProgram,
-                                                            registrationDeadline: e.target.value,
+                                                            startDate: e.target.value,
+                                                        })
+                                                    }
+                                                    required
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className={`block text-xs font-medium mb-1 ${
+                                                    isDark ? 'text-gray-300' : 'text-gray-800'
+                                                }`}>End Date</label>
+                                                <input
+                                                    type="date"
+                                                    className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition text-sm ${
+                                                        isDark 
+                                                            ? 'border-gray-600 bg-gray-800 text-gray-100' 
+                                                            : 'border-green-300 bg-white text-gray-900'
+                                                    }`}
+                                                    value={newProgram.endDate}
+                                                    onChange={(e) =>
+                                                        setNewProgram({
+                                                            ...newProgram,
+                                                            endDate: e.target.value,
+                                                        })
+                                                    }
+                                                    required
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className={`block text-xs font-medium mb-1 ${
+                                                    isDark ? 'text-gray-300' : 'text-gray-800'
+                                                }`}>Start Time</label>
+                                                <input
+                                                    type="time"
+                                                    className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition text-sm ${
+                                                        isDark 
+                                                            ? 'border-gray-600 bg-gray-800 text-gray-100' 
+                                                            : 'border-green-300 bg-white text-gray-900'
+                                                    }`}
+                                                    value={newProgram.openTime}
+                                                    onChange={(e) =>
+                                                        setNewProgram({
+                                                            ...newProgram,
+                                                            openTime: e.target.value,
+                                                        })
+                                                    }
+                                                    required
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className={`block text-xs font-medium mb-1 ${
+                                                    isDark ? 'text-gray-300' : 'text-gray-800'
+                                                }`}>End Time</label>
+                                                <input
+                                                    type="time"
+                                                    className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition text-sm ${
+                                                        isDark 
+                                                            ? 'border-gray-600 bg-gray-800 text-gray-100' 
+                                                            : 'border-green-300 bg-white text-gray-900'
+                                                    }`}
+                                                    value={newProgram.closeTime}
+                                                    onChange={(e) =>
+                                                        setNewProgram({
+                                                            ...newProgram,
+                                                            closeTime: e.target.value,
                                                         })
                                                     }
                                                     required
                                                 />
                                             </div>
                                         </div>
+                                        <div>
+                                            <label className={`block text-sm font-medium mb-2 ${
+                                                isDark ? 'text-gray-300' : 'text-gray-800'
+                                            }`}>Registration Deadline</label>
+                                            <input
+                                                type="date"
+                                                className={`w-full border rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition ${
+                                                    isDark 
+                                                        ? 'border-gray-600 bg-gray-800 text-gray-100' 
+                                                        : 'border-green-300 bg-white text-gray-900'
+                                                }`}
+                                                value={newProgram.registrationDeadline}
+                                                onChange={(e) =>
+                                                    setNewProgram({
+                                                        ...newProgram,
+                                                        registrationDeadline: e.target.value,
+                                                    })
+                                                }
+                                                required
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Right: Image Upload */}
-                        <div className={`w-full lg:w-80 border-l p-6 ${
+                        {/* Image Upload Section - Below */}
+                        <div className={`rounded-xl p-6 border ${
                             isDark 
                                 ? 'bg-gray-800 border-gray-600' 
                                 : 'bg-white border-gray-200'
@@ -461,7 +435,7 @@ export default function Add_Program({
                                     isDark ? 'text-gray-200' : 'text-gray-800'
                                 }`}>Seminar Image</h3>
                             </div>
-                            <div className="space-y-4 mb-8">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
                                 <div>
                                     <label className={`block text-sm font-medium mb-2 ${
                                         isDark ? 'text-gray-300' : 'text-gray-800'
@@ -479,7 +453,7 @@ export default function Add_Program({
                                         onChange={changeImage}
                                     />
                                 </div>
-                                <div className="space-y-3 flex flex-col items-center">
+                                <div className="flex flex-col items-center space-y-3">
                                     <img
                                         src={typeof newImage === 'string' ? newImage : URL.createObjectURL(newImage)}
                                         alt="Seminar Preview"
@@ -507,7 +481,7 @@ export default function Add_Program({
                     </div>
 
                     {/* Footer */}
-                    <div className={`border-t px-6 py-4 flex justify-end gap-3 ${
+                    <div className={`border-t px-6 py-4 flex justify-end gap-3 rounded-b-xl ${
                         isDark 
                             ? 'border-gray-600 bg-gray-700' 
                             : 'border-gray-200 bg-white'
