@@ -260,9 +260,9 @@ function AuditLogsTable({ admin_navigate }) {
         <div className="max-w-6xl mx-auto">
             {/* Filters Section - Minimal Layout */}
             <div className="mb-8">
-                {/* Search Input - Mobile First (Top) */}
-                <div className="mb-4">
-                    <div className="relative max-w-lg mx-auto md:mx-0">
+                {/* Search Input with all controls - responsive layout */}
+                <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="relative flex-1 max-w-lg">
                         <input
                             type="search"
                             placeholder="Search admins, actions, targets, or details..."
@@ -278,17 +278,14 @@ function AuditLogsTable({ admin_navigate }) {
                             </svg>
                         </span>
                     </div>
-                </div>
-
-                {/* Filter Controls - Below Search */}
-                <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-3">
-                    {/* Filters and Buttons */}
-                    <div className="flex flex-wrap items-center justify-center gap-3 w-full sm:w-auto">
+                    
+                    {/* Filter and Clear and Refresh buttons */}
+                    <div className="flex items-center justify-center sm:justify-end gap-3 flex-shrink-0">
                         <button
                             onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                            className={`flex items-center justify-center px-6 py-3 rounded-xl text-sm font-semibold border-2 transition-all duration-200 transform hover:scale-105 ${
+                            className={`flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold border transition-all duration-200 transform hover:scale-105 ${
                                 showAdvancedFilters || adminId || action || targetType || dateFrom || dateTo
-                                    ? 'bg-green-50 text-green-700 border-green-300 shadow-lg'
+                                    ? 'bg-green-50 text-green-700 border-green-300 shadow-md'
                                     : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
                             }`}
                         >
@@ -306,7 +303,7 @@ function AuditLogsTable({ admin_navigate }) {
 
                         <button
                             onClick={clearFilters}
-                            className="flex items-center justify-center px-6 py-3 rounded-xl text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 border-2 border-gray-200 hover:border-gray-300 transition-all duration-200 transform hover:scale-105"
+                            className="flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 hover:border-gray-300 transition-all duration-200 transform hover:scale-105"
                         >
                             <svg
                                 className="w-4 h-4 mr-2"
@@ -327,7 +324,7 @@ function AuditLogsTable({ admin_navigate }) {
                         <button
                             onClick={refreshLogs}
                             disabled={isFetching}
-                            className="flex items-center justify-center px-6 py-3 rounded-xl text-sm font-semibold bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 disabled:opacity-50 transition-all duration-200 transform hover:scale-105 shadow-lg border-2 border-green-600"
+                            className="flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 transition-all duration-200 transform hover:scale-105 shadow-md border border-green-600"
                         >
                             <svg
                                 className={`w-4 h-4 mr-2 ${
