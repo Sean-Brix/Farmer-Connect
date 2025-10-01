@@ -412,20 +412,27 @@ export default function Dashboard() {
                             ? 'bg-gray-800/90 border-gray-700' 
                             : 'bg-white/90 border-green-100'
                     }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
-                        {/* Mobile: Home button only (menu bar icon removed) */}
+                        {/* Mobile: Menu button on left (moved from right) */}
                         <div className="flex md:hidden items-center gap-2">
                             <button
-                                className={`flex items-center gap-2 px-4 py-2 border rounded-lg font-bold shadow transition ${
-                                    isDark 
-                                        ? 'bg-gray-700 border-gray-600 hover:bg-green-800 text-green-400' 
-                                        : 'bg-white border-gray-300 hover:bg-green-200 text-green-700'
-                                }`}
-                                onClick={() => navigate('/')}
-                                aria-label="Go to Landing Page"
-                                style={{ letterSpacing: '0.01em' }}
+                                className={`transition ${isDark ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-800'}`}
+                                onClick={() => setMobileMenuOpen(true)}
+                                aria-label="Open menu"
                             >
-                                <i className="fas fa-home text-xl"></i>
-                                <span className="hidden sm:inline">Home</span>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-8 w-8"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M4 6h16M4 12h16M4 18h9"
+                                    />
+                                </svg>
                             </button>
                         </div>
                         {/* Desktop: Home button first, then menu bar button (unchanged) */}
@@ -459,7 +466,7 @@ export default function Dashboard() {
                                             style={{ userSelect: 'none', letterSpacing: '-0.5px', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', display: 'flex', alignItems: 'center', gap: '0.7rem' }}
                                         >
                                             {item && item.icon && (
-                                                <span style={{ fontSize: '1.15em', display: 'inline-flex', alignItems: 'flex-start', marginRight: '0.55em', position: 'relative', top: '-5px', lineHeight: 1, color: '#16a34a' }}>{item.icon}</span>
+                                                <span className="md:-mt-1" style={{ fontSize: '1.15em', display: 'inline-flex', alignItems: 'center', marginRight: '0.55em', position: 'relative', top: '0px', lineHeight: 1, color: '#16a34a' }}>{item.icon}</span>
                                             )}
                                             <span style={{ verticalAlign: 'middle', lineHeight: 1 }}>{item ? item.label : 'Dashboard'}</span>
                                         </h1>
@@ -524,28 +531,17 @@ export default function Dashboard() {
                                 </div>
                             </div>
                             <button
-                                className={`md:hidden transition ml-2 ${
+                                className={`md:hidden flex items-center gap-2 px-4 py-2 border rounded-lg font-bold shadow transition ${
                                     isDark 
-                                        ? 'text-green-400 hover:text-green-300' 
-                                        : 'text-green-600 hover:text-green-800'
+                                        ? 'bg-gray-700 border-gray-600 hover:bg-green-800 text-green-400' 
+                                        : 'bg-white border-gray-300 hover:bg-green-200 text-green-700'
                                 }`}
-                                onClick={() => setMobileMenuOpen(true)}
-                                aria-label="Open menu"
+                                onClick={() => navigate('/')}
+                                aria-label="Go to Landing Page"
+                                style={{ letterSpacing: '0.01em' }}
                             >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-8 w-8"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16m-7 6h7"
-                                    />
-                                </svg>
+                                <i className="fas fa-home text-xl"></i>
+                                <span className="hidden sm:inline">Home</span>
                             </button>
                         </div>
                     </header>

@@ -551,7 +551,7 @@ export default function EIC() {
 
     return (
 
-        <div className={`min-h-screen py-8 sm:mt-20 px-2 md:px-6 ${
+        <div className={`min-h-screen py-8 sm:mt-20 px-2 md:px-6 pt-4 sm:pt-6 ${
             isDark 
                 ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
                 : 'bg-gradient-to-br from-white via-gray-50 to-gray-100'
@@ -567,47 +567,12 @@ export default function EIC() {
                 </div>
             )}
 
-            {/* Header - Centered and Professional (Seminar style) */}
-            <div className="relative mb-8 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
-              <span className="inline-flex items-center justify-center gap-3 w-full">
-                <span className={`rounded-full p-2 ${
-                    isDark ? 'bg-green-900' : 'bg-green-100'
-                }`}>
-                  <svg className="w-9 h-9 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-                <span className={`text-3xl md:text-4xl font-extrabold tracking-tight drop-shadow-sm ${
-                    isDark ? 'text-white' : 'text-gray-900'
-                }`}>
-                  {activeSection === 'items'
-                    ? 'Equipment in Circulation'
-                    : 'EIC Requests Management'}
-                </span>
-              </span>
-              <span className={`block text-base md:text-lg font-medium mt-1 ${
-                  isDark ? 'text-gray-400' : 'text-gray-500'
-              }`}>
-                {activeSection === 'items'
-                  ? 'Manage and monitor all equipment in circulation.'
-                  : 'Oversee and process all EIC requests efficiently.'}
-              </span>
-            </div>
-          
-            {/* Divider between title and search/filters */}
-            {activeSection !== 'requests' && (
-                <hr className={`border-t my-6 w-full max-w-5xl mx-auto ${
-                    isDark ? 'border-gray-600' : 'border-gray-300'
-                }`} />
-            )}
-
             {activeSection === 'requests' ? (
 
                 <div className="max-w-5xl mx-auto">
                     {/* Distribution-style Search/Filters/Buttons Layout for Requests */}
-                    <div className="relative w-full max-w-5xl mx-auto px-2 md:px-6 mb-4">
-                        <div className="flex flex-col sm:flex-row items-stretch w-full gap-2 sm:gap-4">
-                            <div className="relative w-full sm:flex-1">
+                        <div className="flex flex-col sm:flex-row items-stretch w-full gap-2 sm:gap-4 mb-4">
+                            <div className="relative w-full sm:w-1/2">
                                 <input
                                     type="search"
                                     placeholder="Search by item name, requestor, or note..."
@@ -679,10 +644,8 @@ export default function EIC() {
                                 </button>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="relative w-full max-w-5xl mx-auto px-2 md:px-6 mb-8">
-                        <div className="flex flex-row gap-2 flex-1">
+                    <div className="flex flex-row gap-2 flex-1 mb-8">
                             <select
                                 className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
                                     isDark 
@@ -719,7 +682,6 @@ export default function EIC() {
                                 <option value="client">Sort by Client</option>
                             </select>
                         </div>
-                    </div>
 
                     {/* Requests Table */}
                     <RequestsTable
@@ -733,9 +695,9 @@ export default function EIC() {
             ) : (
                 <>
                     {/* Distribution-style Search/Filters/Buttons Layout */}
-                    <div className="relative w-full max-w-5xl mx-auto px-2 md:px-6 mb-4">
+                    <div className="relative w-full max-w-7xl mx-auto px-2 md:px-8 mb-4">
                         <div className="flex flex-col sm:flex-row items-stretch w-full gap-2 sm:gap-4">
-                            <div className="relative w-full sm:flex-1">
+                            <div className="relative w-full sm:w-1/2">
                                 <input
                                     type="search"
                                     placeholder="Search items, categories, descriptions..."
@@ -764,11 +726,10 @@ export default function EIC() {
                                     </svg>
                                 </div>
                             </div>
-                            <div className="flex-shrink-0 flex justify-end items-center w-full sm:w-auto">
+                            <div className="flex justify-end items-center ml-auto">
                                 <button
                                     onClick={refetchStacks}
-                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-600 hover:bg-green-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-green-300 shadow-sm"
-                                    style={{ minWidth: '120px' }}
+                                    className="flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-600 hover:bg-green-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-green-300 shadow-sm"
                                 >
                                     <svg
                                         className="w-4 h-4 mr-2"
@@ -789,7 +750,7 @@ export default function EIC() {
                         </div>
                     </div>
 
-                    <div className="relative w-full max-w-5xl mx-auto px-2 md:px-6 mb-8">
+                    <div className="relative w-full max-w-7xl mx-auto px-2 md:px-8 mb-8">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full">
                             <div className="flex flex-row gap-2 flex-1">
                                 <select
@@ -873,14 +834,14 @@ export default function EIC() {
                         }`}>
                             {/* Table Header */}
                             <div className={`px-6 py-4 border-b ${
-                                isDark ? 'bg-green-800 border-green-700' : 'bg-green-600 border-green-700'
+                                isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-200 border-gray-300'
                             }`}>
                                 <div className="grid grid-cols-12 gap-4 items-center font-semibold text-sm uppercase">
-                                    <div className={`col-span-3 ${isDark ? 'text-green-100' : 'text-white'}`}>Item Name</div>
-                                    <div className={`col-span-2 ${isDark ? 'text-green-100' : 'text-white'}`}>Category</div>
-                                    <div className={`col-span-2 ${isDark ? 'text-green-100' : 'text-white'}`}>Quantity</div>
-                                    <div className={`col-span-2 ${isDark ? 'text-green-100' : 'text-white'}`}>Date Added</div>
-                                    <div className={`col-span-3 text-right ${isDark ? 'text-green-100' : 'text-white'}`}>Actions</div>
+                                    <div className="col-span-3 text-green-600">Item Name</div>
+                                    <div className="col-span-2 text-green-600">Category</div>
+                                    <div className="col-span-2 text-green-600">Quantity</div>
+                                    <div className="col-span-2 text-green-600">Date Added</div>
+                                    <div className="col-span-3 text-right text-green-600">Actions</div>
                                 </div>
                             </div>
 
@@ -1379,43 +1340,29 @@ function RequestsTable({
             {/* Desktop table layout */}
             <div className="hidden lg:block overflow-x-auto">
                 <table className="w-full">
-                    <thead className={`border-b ${
-                        isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                    <thead className={`${
+                        isDark ? 'bg-gray-700' : 'bg-gray-200'
                     }`}>
                         <tr>
-                            <th className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider ${
-                                isDark ? 'text-gray-300' : 'text-gray-700'
-                            }`}>
+                            <th className="pl-6 pr-2 py-4 text-left text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12 rounded-tl-lg">
                                 Item Details
                             </th>
-                            <th className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider ${
-                                isDark ? 'text-gray-300' : 'text-gray-700'
-                            }`}>
+                            <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12">
                                 Requestor
                             </th>
-                            <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
-                                isDark ? 'text-gray-300' : 'text-gray-700'
-                            }`}>
+                            <th className="px-6 py-4 text-center text-xs font-semibold text-green-600 uppercase tracking-wider">
                                 Qty
                             </th>
-                            <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
-                                isDark ? 'text-gray-300' : 'text-gray-700'
-                            }`}>
+                            <th className="pl-4 pr-4 py-4 text-center text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12">
                                 Stock
                             </th>
-                            <th className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider ${
-                                isDark ? 'text-gray-300' : 'text-gray-700'
-                            }`}>
+                            <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12">
                                 Dates
                             </th>
-                            <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
-                                isDark ? 'text-gray-300' : 'text-gray-700'
-                            }`}>
+                            <th className="pl-4 pr-4 py-4 text-center text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12">
                                 Status
                             </th>
-                            <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
-                                isDark ? 'text-gray-300' : 'text-gray-700'
-                            }`}>
+                            <th className="px-4 py-4 text-center text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-4/12 rounded-tr-lg">
                                 Actions
                             </th>
                         </tr>
@@ -1753,10 +1700,10 @@ function EICItemRow({ stack, onViewDetails, onEdit, imageUpdateTimestamp, isDark
 
                     {/* Category - Col 2 */}
                     <div className="col-span-2">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        <span className={`inline-flex items-center px-2 py-1 text-xs font-medium ${
                             isDark 
-                                ? 'bg-green-900/30 text-green-300' 
-                                : 'bg-green-100 text-green-800'
+                                ? 'text-green-300' 
+                                : 'text-green-800'
                         }`}>
                             {stack.item?.category?.replace('_', ' ') || 'N/A'}
                         </span>
@@ -1993,31 +1940,31 @@ function EICDetailModal({
                     <div className="flex flex-wrap gap-3 mb-6">
                         {/* CATEGORY */}
                         <span
-                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default
+                            className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium
                                 ${
                                     stack.item?.category === 'Farming Equipment'
-                                        ? isDark ? 'bg-green-800 text-green-200' : 'bg-green-100 text-green-800'
+                                        ? isDark ? 'text-green-300' : 'text-green-800'
                                         : stack.item?.category === 'Harvesting Tools'
-                                        ? isDark ? 'bg-pink-800 text-pink-200' : 'bg-pink-100 text-pink-800'
+                                        ? isDark ? 'text-pink-300' : 'text-pink-800'
                                         : stack.item?.category === 'Irrigation Systems'
-                                        ? isDark ? 'bg-purple-800 text-purple-200' : 'bg-purple-100 text-purple-800'
+                                        ? isDark ? 'text-purple-300' : 'text-purple-800'
                                         : stack.item?.category === 'Storage Equipment'
-                                        ? isDark ? 'bg-yellow-800 text-yellow-200' : 'bg-yellow-100 text-yellow-800'
+                                        ? isDark ? 'text-yellow-300' : 'text-yellow-800'
                                         : stack.item?.category === 'Processing Equipment'
-                                        ? isDark ? 'bg-green-800 text-green-200' : 'bg-green-100 text-green-800'
+                                        ? isDark ? 'text-green-300' : 'text-green-800'
                                         : stack.item?.category === 'Safety Gear'
-                                        ? isDark ? 'bg-red-800 text-red-200' : 'bg-red-100 text-red-800'
+                                        ? isDark ? 'text-red-300' : 'text-red-800'
                                         : stack.item?.category === 'Pest Control'
-                                        ? isDark ? 'bg-indigo-800 text-indigo-200' : 'bg-indigo-100 text-indigo-800'
+                                        ? isDark ? 'text-indigo-300' : 'text-indigo-800'
                                         : stack.item?.category === 'Livestock Equipment'
-                                        ? isDark ? 'bg-orange-800 text-orange-200' : 'bg-orange-100 text-orange-800'
+                                        ? isDark ? 'text-orange-300' : 'text-orange-800'
                                         : stack.item?.category === 'Measuring Tools'
-                                        ? isDark ? 'bg-teal-800 text-teal-200' : 'bg-teal-100 text-teal-800'
+                                        ? isDark ? 'text-teal-300' : 'text-teal-800'
                                         : stack.item?.category === 'Fisheries'
-                                        ? isDark ? 'bg-lime-800 text-lime-200' : 'bg-lime-100 text-lime-800'
+                                        ? isDark ? 'text-lime-300' : 'text-lime-800'
                                         : stack.item?.category === 'Machinery'
-                                        ? isDark ? 'bg-cyan-800 text-cyan-200' : 'bg-cyan-100 text-cyan-800'
-                                        : isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-800'
+                                        ? isDark ? 'text-cyan-300' : 'text-cyan-800'
+                                        : isDark ? 'text-gray-400' : 'text-gray-600'
                                 }`}
                             title="Category"
                         >

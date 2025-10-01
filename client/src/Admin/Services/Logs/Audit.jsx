@@ -12,26 +12,26 @@ export default function Audit({ admin_navigate }) {
 
     // Modern soft neutral background
     return (
-    <div className="min-h-screen bg-white py-6 px-2 md:px-6 mt-16">
+    <div className="min-h-screen bg-white py-4 sm:py-6 px-2 md:px-6 mt-8 sm:mt-16">
             {/* View Toggle */}
-            <div className="flex items-center justify-center mb-8">
-                <div className="flex items-center space-x-3 bg-white p-1 rounded-xl border border-green-200 shadow-md">
+            <div className="flex items-center justify-center mb-10">
+                <div className="flex items-center bg-gray-100 rounded-lg p-1">
                     <button
                         onClick={() => setActiveView('logs')}
-                        className={`px-6 py-2 rounded-lg text-base font-semibold transition-all duration-200 tracking-wide shadow ${
+                        className={`px-6 py-2.5 rounded-md text-sm font-medium transition-all duration-200 ${
                             activeView === 'logs'
-                                ? 'bg-green-100 text-green-700 border border-green-400 scale-105'
-                                : 'text-neutral-500 bg-gray-50 hover:text-green-700 hover:bg-green-50 border border-gray-200'
+                                ? 'bg-white text-gray-900 shadow-sm'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                         }`}
                     >
                         Activity Logs
                     </button>
                     <button
                         onClick={() => setActiveView('analytics')}
-                        className={`px-6 py-2 rounded-lg text-base font-semibold transition-all duration-200 tracking-wide shadow ${
+                        className={`px-6 py-2.5 rounded-md text-sm font-medium transition-all duration-200 ${
                             activeView === 'analytics'
-                                ? 'bg-green-100 text-green-700 border border-green-400 scale-105'
-                                : 'text-neutral-500 bg-gray-50 hover:text-green-700 hover:bg-green-50 border border-gray-200'
+                                ? 'bg-white text-gray-900 shadow-sm'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                         }`}
                     >
                         Analytics
@@ -260,36 +260,30 @@ function AuditLogsTable({ admin_navigate }) {
         <div className="max-w-6xl mx-auto">
             {/* Filters Section - Minimal Layout */}
             <div className="mb-8">
-                {/* Search and Basic Controls */}
-                <div className="flex flex-row items-center justify-between gap-4 mb-6">
-                    {/* Search Input - Enhanced Design */}
-                    <div className="relative flex-1 max-w-lg">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                            <svg
-                                className="w-5 h-5 text-green-500"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                />
-                            </svg>
-                        </div>
+                {/* Search Input - Mobile First (Top) */}
+                <div className="mb-4">
+                    <div className="relative max-w-lg mx-auto md:mx-0">
                         <input
                             type="search"
                             placeholder="Search admins, actions, targets, or details..."
-                            className="block w-full py-3 pl-12 pr-4 text-sm text-gray-900 bg-gray-50 border-2 border-green-200 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 focus:bg-white transition-all duration-200 hover:border-green-300"
                             value={search}
                             onChange={(e) => handleSearchChange(e.target.value)}
+                            className="appearance-none border rounded-lg pl-10 pr-10 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-base font-medium w-full bg-white border-gray-300 text-gray-700"
+                            style={{ minWidth: '0' }}
                         />
+                        <span className="pointer-events-none absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="m21 21-4.35-4.35" />
+                            </svg>
+                        </span>
                     </div>
+                </div>
 
-                    {/* Filters and Buttons - Right Side */}
-                    <div className="flex flex-row items-center gap-3">
+                {/* Filter Controls - Below Search */}
+                <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-3">
+                    {/* Filters and Buttons */}
+                    <div className="flex flex-wrap items-center justify-center gap-3 w-full sm:w-auto">
                         <button
                             onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
                             className={`flex items-center justify-center px-6 py-3 rounded-xl text-sm font-semibold border-2 transition-all duration-200 transform hover:scale-105 ${
@@ -511,27 +505,27 @@ function AuditLogsTable({ admin_navigate }) {
             </div>
 
             {/* Table */}
-        <div className="overflow-x-auto rounded-xl border border-neutral-100 shadow-sm mt-4">
+        <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm mt-6">
             <table className="w-full">
-                <thead className="bg-gray-100 border-b border-neutral-100">
+                <thead className="bg-gray-50">
                         <tr>
                             <th
-                                className="py-4 px-4 text-left text-xs font-semibold text-green-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
+                                className="py-4 px-6 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-100 transition-colors"
                                 onClick={() => handleSort('createdAt')}
                             >
-                                <div className="flex items-center gap-1">
+                                <div className="flex items-center gap-2">
                                     Time
                                     {sortBy === 'createdAt' && (
-                                        <span className="text-white">
-                                            {sortOrder === 'asc' ? '▲' : '▼'}
+                                        <span className="text-gray-500">
+                                            {sortOrder === 'asc' ? '↑' : '↓'}
                                         </span>
                                     )}
                                 </div>
                             </th>
-                            <th className="py-4 px-4 text-left text-xs font-semibold text-green-700 uppercase tracking-wider">Admin</th>
-                            <th className="py-4 px-4 text-left text-xs font-semibold text-green-700 uppercase tracking-wider">Action</th>
-                            <th className="py-4 px-4 text-left text-xs font-semibold text-green-700 uppercase tracking-wider">Target</th>
-                            <th className="py-4 px-4 text-left text-xs font-semibold text-green-700 uppercase tracking-wider">
+                            <th className="py-4 px-6 text-left text-sm font-semibold text-gray-900">Admin</th>
+                            <th className="py-4 px-6 text-left text-sm font-semibold text-gray-900">Action</th>
+                            <th className="py-4 px-6 text-left text-sm font-semibold text-gray-900">Target</th>
+                            <th className="py-4 px-6 text-left text-sm font-semibold text-gray-900">
                                 Details
                             </th>
                         </tr>
@@ -564,11 +558,11 @@ function AuditLogsTable({ admin_navigate }) {
                                     } hover:bg-green-50 transition-colors group`}
                                 >
                                     {/* Timestamp */}
-                                    <td className="py-4 px-4 border-l-4 border-transparent group-hover:border-green-200 transition-all">
-                                        <div className="text-sm text-gray-900 font-medium">
+                                    <td className="py-4 px-6">
+                                        <div className="text-sm font-medium text-gray-900">
                                             {formatTimestamp(log.createdAt)}
                                         </div>
-                                        <div className="text-xs text-gray-500">
+                                        <div className="text-xs text-gray-500 mt-1">
                                             {new Date(
                                                 log.createdAt
                                             ).toLocaleDateString('en-US', {
@@ -582,21 +576,21 @@ function AuditLogsTable({ admin_navigate }) {
                                     </td>
 
                                     {/* Admin */}
-                                    <td className="py-4 px-4">
+                                    <td className="py-4 px-6">
                                         <div className="flex items-center gap-3">
                                             {log.admin.hasPicture && (
                                                 <img
                                                     src={`/api/account/picture/${log.admin.id}`}
                                                     alt={log.admin.fullName}
-                                                    className="w-9 h-9 rounded-full object-cover border border-neutral-200 shadow-sm"
-                                                    style={{ minWidth: '2.25rem' }}
+                                                    className="w-8 h-8 rounded-full object-cover border border-gray-200"
+                                                    style={{ minWidth: '2rem' }}
                                                 />
                                             )}
                                             <div>
-                                                <div className="text-sm font-semibold text-neutral-900 tracking-tight leading-tight">
+                                                <div className="text-sm font-medium text-gray-900">
                                                     {log.admin.fullName}
                                                 </div>
-                                                <div className="text-xs text-neutral-500 mt-0.5">
+                                                <div className="text-xs text-gray-500">
                                                     @{log.admin.username}
                                                 </div>
                                             </div>
@@ -604,9 +598,9 @@ function AuditLogsTable({ admin_navigate }) {
                                     </td>
 
                                     {/* Action */}
-                                    <td className="py-4 px-4">
+                                    <td className="py-4 px-6">
                                         <span
-                                            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${getActionBadgeColor(
+                                            className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${getActionBadgeColor(
                                                 log.action
                                             )}`}
                                         >
@@ -615,19 +609,19 @@ function AuditLogsTable({ admin_navigate }) {
                                     </td>
 
                                     {/* Target */}
-                                    <td className="py-4 px-4">
-                                        <div className="text-sm text-gray-900">
+                                    <td className="py-4 px-6">
+                                        <div className="text-sm font-medium text-gray-900">
                                             {log.targetName || 'N/A'}
                                         </div>
                                         {log.targetType && (
-                                            <div className="text-xs text-gray-500">
+                                            <div className="text-xs text-gray-500 mt-1">
                                                 {log.targetType}
                                             </div>
                                         )}
                                     </td>
 
                                     {/* Details */}
-                                    <td className="py-4 px-4">
+                                    <td className="py-4 px-6">
                                         <div className="text-sm text-neutral-700">
                                             {(() => {
                                                 const details =
@@ -803,16 +797,16 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
     } = statsData || {};
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
             {/* Time Range Selector */}
-            <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-semibold text-gray-900">
-                    Audit Analytics
+            <div className="flex items-center justify-between">
+                <h3 className="text-xl font-semibold text-gray-900">
+                    Analytics Overview
                 </h3>
                 <select
                     value={timeRange}
                     onChange={(e) => setTimeRange(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm font-medium bg-white"
                 >
                     <option value="7d">Last 7 days</option>
                     <option value="30d">Last 30 days</option>
@@ -823,11 +817,11 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
 
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className="bg-white rounded-lg p-6 border border-gray-200">
                     <div className="flex items-center">
-                        <div className="p-3 rounded-lg bg-green-100 mr-4">
+                        <div className="p-2 rounded-md bg-gray-100 mr-4">
                             <svg
-                                className="w-6 h-6 text-green-600"
+                                className="w-5 h-5 text-gray-600"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"

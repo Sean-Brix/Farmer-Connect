@@ -1455,7 +1455,7 @@ function InternalRequestsTable({
                                         <div className="font-medium text-gray-900 text-sm">
                                             {request.itemName}
                                         </div>
-                                        <div className="text-xs text-gray-600 flex items-center">
+                                        <div className="text-sm text-blue-600 flex items-center">
                                             <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                                             </svg>
@@ -1478,25 +1478,25 @@ function InternalRequestsTable({
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-center">
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
                                         {request.quantity}
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-center">
                                     <div className="space-y-1">
                                         <div
-                                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                            className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
                                                 request.currentStock === 0
-                                                    ? 'bg-gray-100 text-gray-800'
+                                                    ? 'bg-red-100 text-red-800'
                                                     : request.currentStock < 5
-                                                    ? 'bg-yellow-100 text-yellow-800'
-                                                    : 'bg-green-100 text-green-800'
+                                                    ? 'bg-orange-100 text-orange-800'
+                                                    : 'bg-emerald-100 text-emerald-800'
                                             }`}
                                         >
                                             {request.currentStock || 0}
                                         </div>
                                         {request.quantity > request.currentStock && (
-                                            <div className="text-xs text-gray-600 font-medium">
+                                            <div className="text-sm text-red-600 font-semibold">
                                                 ⚠️ Insufficient
                                             </div>
                                         )}
@@ -1689,7 +1689,7 @@ function InternalDistributionItemCard({
                         e.target.src = default_image;
                     }}
                 />
-                <span className="absolute top-3 right-3 px-3 py-0.5 rounded-full text-xs font-semibold shadow-sm bg-green-50 text-green-700 border border-green-100">
+                <span className="absolute top-3 right-3 px-3 py-0.5 rounded-full text-sm font-medium shadow-sm bg-blue-50 text-blue-700 border border-blue-100">
                     Distribution
                 </span>
             </div>
@@ -1700,21 +1700,21 @@ function InternalDistributionItemCard({
                 <p className="text-gray-600 text-sm mb-2 flex-1 cursor-default line-clamp-3">
                     {truncatedDescription || 'No description available'}
                 </p>
-                <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3">
+                <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-600 mb-3">
                     <span>
-                        <span className="font-medium text-gray-700">
+                        <span className="font-semibold text-slate-700">
                             Quantity:
                         </span>{' '}
                         {stack.quantity}
                     </span>
                     <span>
-                        <span className="font-medium text-gray-700">
+                        <span className="font-semibold text-slate-700">
                             Category:
                         </span>{' '}
                         {stack.item?.category?.replace('_', ' ') || 'N/A'}
                     </span>
                     <span>
-                        <span className="font-medium text-gray-700">
+                        <span className="font-semibold text-slate-700">
                             Date Added:
                         </span>{' '}
                         {formatDate(stack.createdAt)}
@@ -1854,7 +1854,7 @@ function DistributionDetailModal({
                     <div className="flex flex-wrap gap-3 mb-6">
                         {/* CATEGORY */}
                         <span
-                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default ${isDark ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-800'}`}
+                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium cursor-default ${isDark ? 'bg-blue-900 text-blue-300' : 'bg-blue-100 text-blue-800'}`}
                             title="Category"
                         >
                             <svg
@@ -1877,7 +1877,7 @@ function DistributionDetailModal({
 
                         {/* QUANTITY */}
                         <span
-                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default ${isDark ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-800'}`}
+                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium cursor-default ${isDark ? 'bg-slate-900 text-slate-300' : 'bg-slate-100 text-slate-800'}`}
                             title="Available Quantity"
                         >
                             <svg
@@ -1905,7 +1905,7 @@ function DistributionDetailModal({
 
                         {/* STATUS */}
                         <span
-                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default ${isDark ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-800'}`}
+                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium cursor-default ${isDark ? 'bg-emerald-900 text-emerald-300' : 'bg-emerald-100 text-emerald-800'}`}
                             title="Distribution Status"
                         >
                             <svg

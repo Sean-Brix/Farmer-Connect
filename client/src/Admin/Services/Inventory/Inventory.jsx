@@ -844,11 +844,7 @@ function Content() {
     };
 
     return (
-        <div className={`min-h-screen overflow-x-hidden ${
-            isDark 
-                ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
-                : 'bg-gradient-to-br from-gray-50 via-white to-green-50'
-        }`}>
+        <div className={`min-h-screen overflow-x-hidden ${isDark ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-white'}`}>
             {/* Modern Alert */}
             {alert.show && (
                 <div
@@ -878,45 +874,15 @@ function Content() {
                 </div>
             )}
 
-            {/* Professional Header Section */}
-            <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 ${sizeClasses[uiSize].container}`}>
-                <div className="text-center mb-6 mt-20 sm:mb-8">
-                    <div className="flex items-center justify-center gap-3 mb-4">
-                        <div className={`inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-2xl shadow-lg ${
-                            isDark 
-                                ? 'bg-gradient-to-br from-green-800 to-green-700' 
-                                : 'bg-gradient-to-br from-green-100 to-green-200'
-                        }`}>
-                            <svg className={`w-6 h-6 sm:w-8 sm:h-8 ${
-                                isDark ? 'text-green-300' : 'text-green-700'
-                            }`} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                                <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </div>
-                        <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight ${
-                            isDark ? 'text-white' : 'text-gray-900'
-                        }`}>Inventory Management</h1>
-                    </div>
-                    <p className={`max-w-2xl mx-auto text-sm sm:text-base leading-relaxed ${
-                        isDark ? 'text-gray-400' : 'text-gray-600'
-                    }`}>
-                        Manage and monitor all inventory items and their stacks with complete control over stock levels and distribution.
-                    </p>
-                </div>
-
-                {/* Professional Controls Section */}
-                <div className={`rounded-2xl shadow-xl border p-4 sm:p-6 mb-6 sm:mb-8 backdrop-blur-sm ${
-                    isDark 
-                        ? 'bg-gray-800/80 border-gray-600' 
-                        : 'bg-white border-gray-100'
-                }`}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 items-end">
+            {/* Professional Controls Section */}
+            <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-6 sm:pb-8 ${sizeClasses[uiSize].container}`}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 items-end mb-6 sm:mb-8">
                         {/* Search Input */}
                         <div className="xl:col-span-2">
-                            <label className="block text-sm font-semibold text-gray-800 mb-2">Search Items</label>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Search Items</label>
                             <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+                                    <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
                                 </div>
@@ -925,19 +891,19 @@ function Content() {
                                     placeholder="Search by name, description..."
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+                                    className="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                                 />
                             </div>
                         </div>
 
                         {/* Category Filter */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-800 mb-2">Category</label>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Category</label>
                             <div className="relative z-10">
                                 <select
                                     value={categoryFilter}
                                     onChange={(e) => setCategoryFilter(e.target.value)}
-                                    className="w-full px-4 py-3 pr-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white appearance-none relative z-20"
+                                    className="w-full px-3 py-2 pr-8 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white appearance-none relative z-20"
                                 >
                                     <option value="All">All Categories</option>
                                     {categories.map((cat) => (
@@ -946,8 +912,8 @@ function Content() {
                                         </option>
                                     ))}
                                 </select>
-                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none z-30">
-                                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none z-30">
+                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </div>
@@ -956,12 +922,12 @@ function Content() {
 
                         {/* Status Filter */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-800 mb-2">Status</label>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
                             <div className="relative z-10">
                                 <select
                                     value={statusFilter}
                                     onChange={(e) => setStatusFilter(e.target.value)}
-                                    className="w-full px-4 py-3 pr-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white appearance-none relative z-20"
+                                    className="w-full px-3 py-2 pr-8 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white appearance-none relative z-20"
                                 >
                                     <option value="All">All Statuses</option>
                                     {statuses.map((status) => (
@@ -970,8 +936,8 @@ function Content() {
                                         </option>
                                     ))}
                                 </select>
-                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none z-30">
-                                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none z-30">
+                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </div>
@@ -982,22 +948,21 @@ function Content() {
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setShowModal(true)}
-                                className="flex-1 bg-gradient-to-r from-green-600 to-green-700  text-white font-semibold px-4 rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                                className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white font-medium px-3 py-2 text-sm rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 flex items-center justify-center gap-1 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                             >
-                                
                                 + Add
                             </button>
                             {!showDelete ? (
                                 <button
                                     onClick={() => setShowDelete(true)}
-                                    className="px-4 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+                                    className="px-3 py-2 text-sm border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
                                 >
                                     Manage
                                 </button>
                             ) : (
                                 <button
                                     onClick={() => setShowDelete(false)}
-                                    className="px-4 py-3 bg-gray-200 text-gray-800 font-semibold rounded-xl hover:bg-gray-300 transition-all duration-200"
+                                    className="px-3 py-2 text-sm bg-gray-200 text-gray-800 font-medium rounded-lg hover:bg-gray-300 transition-all duration-200"
                                 >
                                     Cancel
                                 </button>
@@ -1024,7 +989,7 @@ function Content() {
                                             setSelectAll(true);
                                             setSelectedItems(filteredItems.map((item) => item.id));
                                         }}
-                                        className="px-4 py-2 text-sm border-2 border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+                                        className="px-3 py-1.5 text-sm border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
                                     >
                                         Select All
                                     </button>
@@ -1033,14 +998,14 @@ function Content() {
                                             setSelectAll(false);
                                             setSelectedItems([]);
                                         }}
-                                        className="px-4 py-2 text-sm border-2 border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+                                        className="px-3 py-1.5 text-sm border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
                                     >
                                         Clear All
                                     </button>
                                     <button
                                         onClick={handleRemoveSelected}
                                         disabled={selectedItems.length === 0}
-                                        className={`px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:transform-none ${
+                                        className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:transform-none ${
                                             selectedItems.length > 0
                                                 ? 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800'
                                                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -1064,10 +1029,9 @@ function Content() {
                             </p>
                         </div>
                     )}
-                </div>
 
                 {/* Professional Table Container */}
-                <div className={`rounded-2xl shadow-xl border overflow-hidden backdrop-blur-sm ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-100'}`}> 
+                <div className={`rounded-2xl shadow-xl border overflow-hidden backdrop-blur-sm mt-6 sm:mt-8 ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-100'}`}> 
                     <div className={`px-4 sm:px-6 py-4 border-b bg-gradient-to-r ${isDark ? 'from-gray-800 to-gray-900 border-gray-700' : 'from-gray-50 to-white border-gray-200'}`}> 
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                             <div className="flex items-center gap-3">
@@ -1079,7 +1043,7 @@ function Content() {
                                 <h3 className={`text-lg sm:text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Inventory Items</h3>
                             </div>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                                <span className={`text-sm px-3 py-1 rounded-full font-medium ${isDark ? 'text-gray-300 bg-gray-800' : 'text-gray-600 bg-gray-100'}`}> 
+                                <span className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                                     Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems} item{totalItems !== 1 ? 's' : ''}
                                 </span>
                                 <button
@@ -1258,27 +1222,27 @@ function Content() {
                                                         </div>
                                                     </td>
                                                     <td className={`${sizeClasses[uiSize].padding} hidden sm:table-cell`}>
-                                                        <span className={`inline-flex items-center px-3 py-1 rounded-full font-semibold border ${sizeClasses[uiSize].text} ${isDark ? 'bg-gray-800 text-gray-100 border-gray-700' : 'bg-gray-100 text-gray-800 border-gray-200'}`}>
+                                                        <span className={`font-semibold ${sizeClasses[uiSize].text} ${isDark ? 'text-blue-300' : 'text-blue-600'}`}>
                                                             {item.category?.name || 'Uncategorized'}
                                                         </span>
                                                     </td>
                                                     <td className={sizeClasses[uiSize].padding}>
-                                                        <div className={`font-bold px-3 py-1 rounded-full text-center inline-block ${sizeClasses[uiSize].text} ${isDark ? 'bg-green-900 text-green-200' : 'bg-green-100 text-gray-900'}`}> 
+                                                        <span className={`font-bold ${sizeClasses[uiSize].text} ${isDark ? 'text-emerald-300' : 'text-emerald-600'}`}>
                                                             {item.totalQuantity || 0}
-                                                        </div>
+                                                        </span>
                                                     </td>
                                                     <td className={`${sizeClasses[uiSize].padding} text-right`}>
                                                         <div className="flex items-center justify-end">
                                                             <button
                                                                 onClick={() => handleViewStacks(item)}
-                                                                className={`inline-flex items-center px-3 py-2 border-2 shadow-sm font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${sizeClasses[uiSize].text} ${isDark ? 'border-green-900 text-green-200 bg-green-950 hover:bg-green-900 hover:border-green-700 focus:ring-green-900' : 'border-green-200 text-green-700 bg-green-100 hover:bg-green-200 hover:border-green-300 focus:ring-green-300'}`}
+                                                                className={`inline-flex items-center px-2 py-1.5 border shadow-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-offset-1 text-sm ${isDark ? 'border-green-700 text-green-200 bg-green-800 hover:bg-green-700 hover:border-green-600 focus:ring-green-700' : 'border-green-200 text-green-700 bg-green-50 hover:bg-green-100 hover:border-green-300 focus:ring-green-300'}`}
                                                             >
                                                                 {expandedStacks.has(item.id) ? (
-                                                                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                    <svg className="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                                                         <path d="M19 15l-7-7-7 7" strokeLinecap="round" strokeLinejoin="round" />
                                                                     </svg>
                                                                 ) : (
-                                                                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                    <svg className="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                                                         <path d="M5 9l7 7 7-7" strokeLinecap="round" strokeLinejoin="round" />
                                                                     </svg>
                                                                 )}

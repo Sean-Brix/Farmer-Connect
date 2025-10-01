@@ -244,14 +244,14 @@ export default function User_Details({ user, isEdit, refetchRow}) {
     const renderDisplayMode = () => (
         <div className="max-w-6xl mx-auto">
             {/* User Profile Header - Updated with green theme */}
-            <div className={`text-white py-8 rounded-2xl shadow-lg mb-6 ${
+            <div className={`text-white py-3 rounded-lg shadow-md mb-3 ${
                 isDark 
                     ? 'bg-gradient-to-r from-green-700 via-green-800 to-green-900' 
                     : 'bg-gradient-to-r from-green-600 via-green-700 to-green-800'
             }`}>
-                <div className="flex items-center justify-between px-8">
-                    <div className="flex items-center gap-6">
-                        <div className={`w-24 h-24 rounded-full p-1 shadow-xl ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+                <div className="flex items-center justify-between px-4">
+                    <div className="flex items-center gap-3">
+                        <div className={`w-12 h-12 rounded-full p-0.5 shadow-md ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
                             <img
                                 src={userDetail?.picture || `/api/account/all/picture/${userDetail?.id}?refresh=${new Date().getTime()}`}
                                 alt={`${userDetail?.username}'s profile`}
@@ -259,18 +259,18 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             />
                         </div>
                         <div>
-                            <h1 className="text-3xl font-bold mb-2 text-white">
+                            <h1 className="text-lg font-bold mb-0.5 text-white">
                                 {userDetail?.firstName} {userDetail?.middleName ? userDetail.middleName + ' ' : ''}{userDetail?.surname}
                                 {userDetail?.extensionName ? ' ' + userDetail.extensionName : ''}
                             </h1>
-                            <div className="flex flex-col gap-1">
-                                <span className="text-white">@{userDetail?.username}</span>
-                                <span className="text-white">{userDetail?.email}</span>
+                            <div className="flex flex-col">
+                                <span className="text-xs text-white">@{userDetail?.username}</span>
+                                <span className="text-xs text-white">{userDetail?.email}</span>
                             </div>
                         </div>
                     </div>
                     <div className="text-right">
-                        <span className={`inline-flex px-6 py-3 rounded-full text-lg font-bold shadow-lg border-2 ${
+                        <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold shadow-md border ${
                             userDetail?.access === 'Super_Admin'
                                 ? 'bg-red-600 text-white border-red-500'
                                 : userDetail?.access === 'Admin'
@@ -279,7 +279,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         }`}>
                             {userDetail?.access?.replace('_', ' ') || 'User'}
                         </span>
-                        <p className="text-sm text-white mt-2 font-semibold">ID: {userDetail?.id}</p>
+                        <p className="text-xs text-white mt-0.5 font-medium">ID: {userDetail?.id}</p>
                     </div>
                 </div>
             </div>
@@ -332,26 +332,32 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                     isDark ? 'text-white' : 'text-gray-900'
                                 }`}>Personal Information</h2>
                             </div>
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                {renderField('Username', userDetail?.username, 'username')}
-                                {renderField('First Name', userDetail?.firstName, 'firstName')}
-                                {renderField('Middle Name', userDetail?.middleName, 'middleName')}
-                                {renderField('Surname', userDetail?.surname, 'surname')}
-                                {renderField('Extension Name', userDetail?.extensionName, 'extensionName', 'select', [
-                                    { value: 'Jr.', label: 'Jr.' },
-                                    { value: 'Sr.', label: 'Sr.' },
-                                    { value: 'II', label: 'II' },
-                                    { value: 'III', label: 'III' },
-                                    { value: 'IV', label: 'IV' },
-                                    { value: 'V', label: 'V' }
-                                ])}
-                                {renderField('Sex', userDetail?.sex, 'sex', 'select', [
-                                    { value: 'Male', label: 'Male' },
-                                    { value: 'Female', label: 'Female' },
-                                    { value: 'Other', label: 'Other' }
-                                ])}
-                                {renderField('Date of Birth', userDetail?.dateOfBirth, 'dateOfBirth', 'date')}
-                                {renderField('Email Address', userDetail?.email, 'email', 'email')}
+                            <div className="grid grid-cols-1 gap-8">
+                                <div className="grid grid-cols-4 gap-4">
+                                    {renderField('First Name', userDetail?.firstName, 'firstName')}
+                                    {renderField('Middle Name', userDetail?.middleName, 'middleName')}
+                                    {renderField('Surname', userDetail?.surname, 'surname')}
+                                    {renderField('Extension Name', userDetail?.extensionName, 'extensionName', 'select', [
+                                        { value: 'Jr.', label: 'Jr.' },
+                                        { value: 'Sr.', label: 'Sr.' },
+                                        { value: 'II', label: 'II' },
+                                        { value: 'III', label: 'III' },
+                                        { value: 'IV', label: 'IV' },
+                                        { value: 'V', label: 'V' }
+                                    ])}
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {renderField('Username', userDetail?.username, 'username')}
+                                    {renderField('Email Address', userDetail?.email, 'email', 'email')}
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {renderField('Sex', userDetail?.sex, 'sex', 'select', [
+                                        { value: 'Male', label: 'Male' },
+                                        { value: 'Female', label: 'Female' },
+                                        { value: 'Other', label: 'Other' }
+                                    ])}
+                                    {renderField('Date of Birth', userDetail?.dateOfBirth, 'dateOfBirth', 'date')}
+                                </div>
                             </div>
                         </div>
                     )}
@@ -682,28 +688,34 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                     <i className="fa-solid fa-user text-green-600 text-xl"></i>
                                     <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Personal Information</h2>
                                 </div>
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                    {renderField('Username', editedUser?.username, 'username')}
-                                    {renderField('First Name', editedUser?.firstName, 'firstName')}
-                                    {renderField('Middle Name', editedUser?.middleName, 'middleName')}
-                                    {renderField('Surname', editedUser?.surname, 'surname')}
-                                    {renderField('Extension Name', editedUser?.extensionName, 'extensionName', 'select', [
-                                        { value: '', label: 'Select Extension' },
-                                        { value: 'Jr.', label: 'Jr.' },
-                                        { value: 'Sr.', label: 'Sr.' },
-                                        { value: 'II', label: 'II' },
-                                        { value: 'III', label: 'III' },
-                                        { value: 'IV', label: 'IV' },
-                                        { value: 'V', label: 'V' }
-                                    ])}
-                                    {renderField('Sex', editedUser?.sex, 'sex', 'select', [
-                                        { value: '', label: 'Select Sex' },
-                                        { value: 'Male', label: 'Male' },
-                                        { value: 'Female', label: 'Female' },
-                                        { value: 'Other', label: 'Other' }
-                                    ])}
-                                    {renderField('Date of Birth', editedUser?.dateOfBirth, 'dateOfBirth', 'date')}
-                                    {renderField('Email Address', editedUser?.email, 'email', 'email')}
+                                <div className="grid grid-cols-1 gap-8">
+                                    <div className="grid grid-cols-4 gap-4">
+                                        {renderField('First Name', editedUser?.firstName, 'firstName')}
+                                        {renderField('Middle Name', editedUser?.middleName, 'middleName')}
+                                        {renderField('Surname', editedUser?.surname, 'surname')}
+                                        {renderField('Extension Name', editedUser?.extensionName, 'extensionName', 'select', [
+                                            { value: '', label: 'Select Extension' },
+                                            { value: 'Jr.', label: 'Jr.' },
+                                            { value: 'Sr.', label: 'Sr.' },
+                                            { value: 'II', label: 'II' },
+                                            { value: 'III', label: 'III' },
+                                            { value: 'IV', label: 'IV' },
+                                            { value: 'V', label: 'V' }
+                                        ])}
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {renderField('Username', editedUser?.username, 'username')}
+                                        {renderField('Email Address', editedUser?.email, 'email', 'email')}
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {renderField('Sex', editedUser?.sex, 'sex', 'select', [
+                                            { value: '', label: 'Select Sex' },
+                                            { value: 'Male', label: 'Male' },
+                                            { value: 'Female', label: 'Female' },
+                                            { value: 'Other', label: 'Other' }
+                                        ])}
+                                        {renderField('Date of Birth', editedUser?.dateOfBirth, 'dateOfBirth', 'date')}
+                                    </div>
                                 </div>
                             </div>
                         )}

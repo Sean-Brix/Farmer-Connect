@@ -22,6 +22,10 @@ export default function Farmer_Report() {
   const [selectedCrop, setSelectedCrop] = useState(null);
   const [showCropDetail, setShowCropDetail] = useState(false);
   
+  // Pagination states for guidelines
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(6); // 6 items per page for guidelines
+  
   // Calendar states
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -209,6 +213,11 @@ export default function Farmer_Report() {
     const interval = setInterval(fetchWeatherData, 30 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
+
+  // Reset pagination when search term or category changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory]);
 
   // Derive farmer profile from account data (fallbacks provided)
   const farmerProfile = useMemo(() => ({
@@ -493,18 +502,10 @@ export default function Farmer_Report() {
                 Farmer Dashboard
               </span>
             </span>
-            <span className={`block text-base md:text-lg font-medium mt-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>
-              Monitor your crops and farming activities - {farmerProfile.name}
-            </span>
             <div className={`flex flex-col sm:flex-row items-center justify-center gap-2 mt-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
               <div className="flex items-center gap-1">
                 <span className="text-sm">📍</span>
                 <span className="font-medium">{farmerProfile.location}</span>
-              </div>
-              <span className={`hidden sm:inline ${theme === 'dark' ? 'text-gray-400' : 'text-gray-400'}`}>•</span>
-              <div className="flex items-center gap-1">
-                <span className="text-sm">🏞️</span>
-                <span className="font-medium">{farmerProfile.farmSize} hectares</span>
               </div>
             </div>
           </div>
@@ -550,45 +551,36 @@ export default function Farmer_Report() {
           {activeTab === 'crops' && (
             <div className="space-y-8">
               {/* Professional Crops Overview Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className={`rounded-xl shadow-lg border p-6 hover:shadow-xl transition-shadow duration-200 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
-                      <span className="text-xl">🌱</span>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <div className={`rounded border p-2 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs">🌱</span>
+                      <span className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Active</span>
                     </div>
-                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">ACTIVE</span>
-                  </div>
-                  <div>
-                    <p className={`text-sm font-medium uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Active Crops</p>
-                    <p className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{registeredCrops.filter(c => c.status === 'Active').length}</p>
+                    <span className={`text-sm font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{registeredCrops.filter(c => c.status === 'Active').length}</span>
                   </div>
                 </div>
                 
-                <div className={`rounded-xl shadow-lg border p-6 hover:shadow-xl transition-shadow duration-200 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
-                      <span className="text-xl">🏞️</span>
+                <div className={`rounded border p-2 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs">🏞️</span>
+                      <span className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Area</span>
                     </div>
-                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">TOTAL</span>
-                  </div>
-                  <div>
-                    <p className={`text-sm font-medium uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Total Area</p>
-                    <p className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{registeredCrops.reduce((sum, c) => sum + parseFloat(c.area || 0), 0).toFixed(1)}<span className={`text-lg ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}> ha</span></p>
+                    <span className={`text-sm font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{registeredCrops.reduce((sum, c) => sum + parseFloat(c.area || 0), 0).toFixed(1)} ha</span>
                   </div>
                 </div>
                 
-                <div className={`rounded-xl shadow-lg border p-6 hover:shadow-xl transition-shadow duration-200 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
-                      <span className="text-xl">🌤️</span>
+                <div className={`rounded border p-2 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs">🌤️</span>
+                      <span className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Weather</span>
                     </div>
-                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">LIVE</span>
-                  </div>
-                  <div>
-                    <p className={`text-sm font-medium uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Weather Status</p>
-                    <p className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                      {weatherData?.current ? `${Math.round(weatherData.current.temperature_2m)}°C` : 'Loading...'}
-                    </p>
+                    <span className={`text-sm font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                      {weatherData?.current ? `${Math.round(weatherData.current.temperature_2m)}°C` : '...'}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -918,62 +910,50 @@ export default function Farmer_Report() {
           {activeTab === 'reports' && (
             <div className="space-y-8">
               {/* Professional Reports Overview Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className={`rounded-xl shadow-xl border p-6 hover:shadow-2xl transition-shadow duration-300 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl shadow-sm">
-                      <span className="text-xl">⏰</span>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                <div className={`rounded border p-2 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs">⏰</span>
+                      <span className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Pending</span>
                     </div>
-                    <span className="text-xs font-semibold text-orange-600 bg-orange-100 px-2 py-1 rounded-full">PENDING</span>
-                  </div>
-                  <div>
-                    <p className={`text-sm font-medium uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Pending Reports</p>
-                    <p className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                    <span className={`text-sm font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                       {registeredCrops.filter(crop => getReportStatus(crop) === 'pending').length}
-                    </p>
+                    </span>
                   </div>
                 </div>
                 
-                <div className={`rounded-xl shadow-xl border p-6 hover:shadow-2xl transition-shadow duration-300 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-red-100 to-red-200 rounded-xl shadow-sm">
-                      <span className="text-xl">🚨</span>
+                <div className={`rounded border p-2 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs">🚨</span>
+                      <span className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Overdue</span>
                     </div>
-                    <span className="text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded-full">OVERDUE</span>
-                  </div>
-                  <div>
-                    <p className={`text-sm font-medium uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Overdue Reports</p>
-                    <p className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                    <span className={`text-sm font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                       {registeredCrops.filter(crop => getReportStatus(crop) === 'overdue').length}
-                    </p>
+                    </span>
                   </div>
                 </div>
                 
-                <div className={`rounded-xl shadow-xl border p-6 hover:shadow-2xl transition-shadow duration-300 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl shadow-sm">
-                      <span className="text-xl">✅</span>
+                <div className={`rounded border p-2 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs">✅</span>
+                      <span className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Submitted</span>
                     </div>
-                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">COMPLETED</span>
-                  </div>
-                  <div>
-                    <p className={`text-sm font-medium uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Submitted This Month</p>
-                    <p className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                    <span className={`text-sm font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                       {registeredCrops.filter(crop => getReportStatus(crop) === 'submitted').length}
-                    </p>
+                    </span>
                   </div>
                 </div>
                 
-                <div className={`rounded-xl shadow-xl border p-6 hover:shadow-2xl transition-shadow duration-300 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl shadow-sm">
-                      <span className="text-xl">📋</span>
+                <div className={`rounded border p-2 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs">📋</span>
+                      <span className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Total</span>
                     </div>
-                    <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">TOTAL</span>
-                  </div>
-                  <div>
-                    <p className={`text-sm font-medium uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Total Reports</p>
-                    <p className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{allReports.length}</p>
+                    <span className={`text-sm font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{allReports.length}</span>
                   </div>
                 </div>
               </div>
@@ -1454,138 +1434,218 @@ export default function Farmer_Report() {
           {activeTab === 'guidelines' && (
             <div className="space-y-6">
               {/* Search and Filter Controls */}
-              <div className={`border rounded-lg shadow-sm p-4 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                <div className="flex flex-col md:flex-row gap-4 mb-4">
-                  <div className="flex-1">
-                    <input
-                      type="text"
-                      placeholder="Search crops, varieties, or techniques..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300 bg-white text-gray-900'}`}
-                    />
-                  </div>
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className={`px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300 bg-white text-gray-900'}`}
-                  >
-                    <option value="all">All Categories</option>
-                    {Object.entries(cropGuidelinesData.cropCategories).map(([key, category]) => (
-                      <option key={key} value={key}>
-                        {category.icon} {category.name}
-                      </option>
-                    ))}
-                  </select>
+              <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
+                <div className="sm:w-96">
+                  <input
+                    type="text"
+                    placeholder="Search crops..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className={`w-full px-4 py-3 text-sm border-2 rounded-lg bg-transparent focus:outline-none focus:border-green-500 transition-colors ${theme === 'dark' ? 'border-gray-500 text-white placeholder-gray-400 focus:border-green-400' : 'border-gray-400 text-gray-900 placeholder-gray-500'}`}
+                  />
                 </div>
-
-                {/* Category Overview */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className={`px-4 py-3 text-sm border-2 rounded-lg bg-transparent focus:outline-none focus:border-green-500 transition-colors ${theme === 'dark' ? 'border-gray-500 text-white focus:border-green-400' : 'border-gray-400 text-gray-900'}`}
+                >
+                  <option value="all">All Categories</option>
                   {Object.entries(cropGuidelinesData.cropCategories).map(([key, category]) => (
-                    <button
-                      key={key}
-                      onClick={() => setSelectedCategory(selectedCategory === key ? 'all' : key)}
-                      className={`p-3 rounded-lg border transition-all duration-200 ${
-                        selectedCategory === key
-                          ? (theme === 'dark' ? 'bg-green-900 border-green-400 text-green-100' : 'bg-green-100 border-green-500 text-green-800')
-                          : (theme === 'dark' ? 'bg-gray-700 border-gray-600 hover:bg-gray-600 text-gray-200' : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700')
-                      }`}
-                    >
-                      <div className="text-2xl mb-1">{category.icon}</div>
-                      <div className="text-xs font-semibold">{category.name}</div>
-                    </button>
+                    <option key={key} value={key}>
+                      {category.icon} {category.name}
+                    </option>
                   ))}
-                </div>
+                </select>
               </div>
 
-              {/* Crops Library Grid - Equal Height Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
-                {cropGuidelinesData.crops
-                  .filter(crop => {
+              {/* Crops Library Grid - Equal Height Cards with Pagination */}
+              <div className="space-y-4">
+                {(() => {
+                  // Filter crops based on search and category
+                  const filteredCrops = cropGuidelinesData.crops.filter(crop => {
                     const matchesSearch = crop.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                                         crop.varieties.some(v => v.toLowerCase().includes(searchTerm.toLowerCase()));
                     const matchesCategory = selectedCategory === 'all' || crop.category === selectedCategory;
                     return matchesSearch && matchesCategory;
-                  })
-                  .map(crop => (
-                    <div key={crop.id} className={`border rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col h-full ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                      <div className="p-4 flex-1 flex flex-col">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex-1 min-w-0 mr-3">
-                            <h3 className={`font-semibold text-lg truncate ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{crop.name}</h3>
-                            <p className={`text-sm truncate ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                              {cropGuidelinesData.cropCategories[crop.category]?.icon} {cropGuidelinesData.cropCategories[crop.category]?.name}
-                            </p>
-                          </div>
-                          <div className="text-right flex-shrink-0">
-                            <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Growing Period</div>
-                            <div className={`text-sm font-semibold whitespace-nowrap ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>{crop.growingPeriod}</div>
-                          </div>
-                        </div>
+                  });
 
-                        <div className="space-y-2 text-sm flex-1">
-                          <div className="flex justify-between items-center">
-                            <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Expected Yield:</span>
-                            <span className={`font-semibold truncate ml-2 ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>{crop.expectedYield}</span>
+                  // Calculate pagination
+                  const totalItems = filteredCrops.length;
+                  const totalPages = Math.ceil(totalItems / itemsPerPage);
+                  const startIndex = (currentPage - 1) * itemsPerPage;
+                  const endIndex = startIndex + itemsPerPage;
+                  const currentItems = filteredCrops.slice(startIndex, endIndex);
+
+                  // Reset to page 1 if current page exceeds total pages
+                  if (currentPage > totalPages && totalPages > 0) {
+                    setCurrentPage(1);
+                  }
+
+                  return (
+                    <>
+                      {/* Results summary */}
+                      <div className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                        Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems} crops
+                        {totalPages > 1 && ` (Page ${currentPage} of ${totalPages})`}
+                      </div>
+
+                      {/* Grid */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
+                        {currentItems.map(crop => (
+                          <div key={crop.id} className={`border rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col h-full ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                            <div className="p-4 flex-1 flex flex-col">
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="flex-1 min-w-0 mr-3">
+                                  <h3 className={`font-semibold text-lg truncate ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{crop.name}</h3>
+                                  <p className={`text-sm truncate ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                                    {cropGuidelinesData.cropCategories[crop.category]?.icon} {cropGuidelinesData.cropCategories[crop.category]?.name}
+                                  </p>
+                                </div>
+                                <div className="text-right flex-shrink-0">
+                                  <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Growing Period</div>
+                                  <div className={`text-sm font-semibold whitespace-nowrap ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>{crop.growingPeriod}</div>
+                                </div>
+                              </div>
+
+                              <div className="space-y-2 text-sm flex-1">
+                                <div className="flex justify-between items-center">
+                                  <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Expected Yield:</span>
+                                  <span className={`font-semibold truncate ml-2 ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>{crop.expectedYield}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                  <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Water Requirements:</span>
+                                  <span 
+                                    className={`font-semibold truncate ml-2 cursor-help ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}
+                                    title={crop.waterRequirements}
+                                  >
+                                    {crop.waterRequirements.length > 20 ? 
+                                      `${crop.waterRequirements.substring(0, 20)}...` : 
+                                      crop.waterRequirements
+                                    }
+                                  </span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                  <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Difficulty:</span>
+                                  <span className={`font-semibold flex-shrink-0 ml-2 ${
+                                    crop.difficulty === 'Easy' ? (theme === 'dark' ? 'text-green-400' : 'text-green-600') :
+                                    crop.difficulty === 'Moderate' ? (theme === 'dark' ? 'text-yellow-400' : 'text-yellow-600') : 
+                                    (theme === 'dark' ? 'text-red-400' : 'text-red-600')
+                                  }`}>
+                                    {crop.difficulty}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                  <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Market Price:</span>
+                                  <span className={`font-semibold truncate ml-2 ${theme === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>{crop.marketPrice}</span>
+                                </div>
+                              </div>
+
+                              <div className={`mt-3 pt-3 border-t ${theme === 'dark' ? 'border-gray-600' : 'border-gray-200'}`}>
+                                <div className={`text-xs mb-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Key Varieties:</div>
+                                <div className="flex flex-wrap gap-1 min-h-[24px]">
+                                  {crop.varieties.slice(0, 3).map((variety, idx) => (
+                                    <span key={idx} className={`px-2 py-1 rounded text-xs truncate max-w-[80px] ${theme === 'dark' ? 'bg-gray-600 text-gray-200' : 'bg-gray-100 text-gray-700'}`}>
+                                      {variety}
+                                    </span>
+                                  ))}
+                                  {crop.varieties.length > 3 && (
+                                    <span className={`text-xs flex-shrink-0 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>+{crop.varieties.length - 3} more</span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* Fixed Position Button */}
+                            <div className="p-4 pt-0">
+                              <button
+                                onClick={() => {
+                                  setSelectedCrop(crop);
+                                  setShowCropDetail(true);
+                                }}
+                                className="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 text-sm font-semibold shadow-sm hover:shadow-md"
+                              >
+                                📖 View Full Guide
+                              </button>
+                            </div>
                           </div>
-                          <div className="flex justify-between items-center">
-                            <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Water Requirements:</span>
-                            <span 
-                              className={`font-semibold truncate ml-2 cursor-help ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}
-                              title={crop.waterRequirements}
-                            >
-                              {crop.waterRequirements.length > 20 ? 
-                                `${crop.waterRequirements.substring(0, 20)}...` : 
-                                crop.waterRequirements
+                        ))}
+                      </div>
+
+                      {/* Pagination Controls */}
+                      {totalPages > 1 && (
+                        <div className="flex items-center justify-center space-x-2 mt-6">
+                          <button
+                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
+                            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                              currentPage === 1 
+                                ? (theme === 'dark' ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-gray-100 text-gray-400 cursor-not-allowed')
+                                : (theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-200')
+                            }`}
+                          >
+                            ← Previous
+                          </button>
+                          
+                          {/* Page numbers */}
+                          <div className="flex space-x-1">
+                            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
+                              // Show current page, first, last, and pages around current
+                              const showPage = page === 1 || page === totalPages || 
+                                             (page >= currentPage - 1 && page <= currentPage + 1);
+                              
+                              if (!showPage) {
+                                // Show ellipsis for gaps
+                                if (page === currentPage - 2 || page === currentPage + 2) {
+                                  return (
+                                    <span key={page} className={`px-2 py-1 text-sm ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`}>
+                                      ...
+                                    </span>
+                                  );
+                                }
+                                return null;
                               }
-                            </span>
+                              
+                              return (
+                                <button
+                                  key={page}
+                                  onClick={() => setCurrentPage(page)}
+                                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                    currentPage === page
+                                      ? 'bg-green-600 text-white'
+                                      : (theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-200')
+                                  }`}
+                                >
+                                  {page}
+                                </button>
+                              );
+                            })}
                           </div>
-                          <div className="flex justify-between items-center">
-                            <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Difficulty:</span>
-                            <span className={`font-semibold flex-shrink-0 ml-2 ${
-                              crop.difficulty === 'Easy' ? (theme === 'dark' ? 'text-green-400' : 'text-green-600') :
-                              crop.difficulty === 'Moderate' ? (theme === 'dark' ? 'text-yellow-400' : 'text-yellow-600') : 
-                              (theme === 'dark' ? 'text-red-400' : 'text-red-600')
-                            }`}>
-                              {crop.difficulty}
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Market Price:</span>
-                            <span className={`font-semibold truncate ml-2 ${theme === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>{crop.marketPrice}</span>
-                          </div>
+                          
+                          <button
+                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                              currentPage === totalPages 
+                                ? (theme === 'dark' ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-gray-100 text-gray-400 cursor-not-allowed')
+                                : (theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-200')
+                            }`}
+                          >
+                            Next →
+                          </button>
                         </div>
+                      )}
 
-                        <div className={`mt-3 pt-3 border-t ${theme === 'dark' ? 'border-gray-600' : 'border-gray-200'}`}>
-                          <div className={`text-xs mb-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Key Varieties:</div>
-                          <div className="flex flex-wrap gap-1 min-h-[24px]">
-                            {crop.varieties.slice(0, 3).map((variety, idx) => (
-                              <span key={idx} className={`px-2 py-1 rounded text-xs truncate max-w-[80px] ${theme === 'dark' ? 'bg-gray-600 text-gray-200' : 'bg-gray-100 text-gray-700'}`}>
-                                {variety}
-                              </span>
-                            ))}
-                            {crop.varieties.length > 3 && (
-                              <span className={`text-xs flex-shrink-0 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>+{crop.varieties.length - 3} more</span>
-                            )}
-                          </div>
+                      {/* No results message */}
+                      {filteredCrops.length === 0 && (
+                        <div className={`text-center py-12 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                          <div className="text-4xl mb-2">🔍</div>
+                          <div className="text-lg font-medium mb-1">No crops found</div>
+                          <div className="text-sm">Try adjusting your search terms or category filter</div>
                         </div>
-                      </div>
-                      
-                      {/* Fixed Position Button */}
-                      <div className="p-4 pt-0">
-                        <button
-                          onClick={() => {
-                            setSelectedCrop(crop);
-                            setShowCropDetail(true);
-                          }}
-                          className="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 text-sm font-semibold shadow-sm hover:shadow-md"
-                        >
-                          📖 View Full Guide
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                }
+                      )}
+                    </>
+                  );
+                })()}
               </div>
 
               {/* Farming Calendar Reference */}

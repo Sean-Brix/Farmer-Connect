@@ -876,7 +876,7 @@ function Analytics() {
         <div className={`min-h-screen sm:mt-10 flex justify-center items-start py-12 px-4 sm:px-8 md:px-12 lg:px-16 ${
             isDark 
                 ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
-                : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'
+                : 'bg-white'
         }`}>
             <div className={`w-full max-w-4xl xl:max-w-6xl 2xl:max-w-6xl mx-auto rounded-2xl shadow-xl p-8 md:p-12 lg:p-14 border ${
                 isDark 
@@ -912,19 +912,19 @@ function Analytics() {
                                 </span>
                             </div>
                         </div>
-                        <div className="flex items-center space-x-2 md:space-x-4 ml-auto">
-                            <div className="flex items-center gap-2">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 md:space-x-4 w-full sm:w-auto sm:ml-auto">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
                                 <input type="date" value={from} onChange={(e) => setFrom(e.target.value)}
-                                    className={`border rounded-lg px-3 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 outline-none ${
+                                    className={`w-full sm:w-auto border rounded-lg px-3 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 outline-none ${
                                         isDark ? 'bg-gray-700 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
                                     }`} />
-                                <span className={isDark ? 'text-gray-300' : 'text-gray-600'}>to</span>
+                                <span className={`hidden sm:inline ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>to</span>
                                 <input type="date" value={to} onChange={(e) => setTo(e.target.value)}
-                                    className={`border rounded-lg px-3 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 outline-none ${
+                                    className={`w-full sm:w-auto border rounded-lg px-3 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 outline-none ${
                                         isDark ? 'bg-gray-700 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
                                     }`} />
                                 <button onClick={() => { setFrom(''); setTo(''); }}
-                                    className={`px-3 py-2 rounded-lg shadow transition-colors ${
+                                    className={`w-full sm:w-auto px-3 py-2 rounded-lg shadow transition-colors ${
                                         isDark 
                                             ? 'bg-gray-600 hover:bg-gray-500 text-gray-200' 
                                             : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
