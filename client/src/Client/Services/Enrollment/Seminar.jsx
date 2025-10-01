@@ -553,17 +553,16 @@ export default function Seminar() {
                                                     ...
                                                 </span>
                                             )}
-                                            {Array.from({ length: 3 }, (_, i) => {
-                                                const page = Math.max(
-                                                    2,
-                                                    Math.min(
-                                                        currentPage - 1 + i,
-                                                        totalPages - 2
-                                                    )
-                                                );
-                                                if (page <= 1 || page >= totalPages)
-                                                    return null;
-                                                return (
+                                            {(() => {
+                                                const start = Math.max(2, currentPage - 1);
+                                                const end = Math.min(totalPages - 1, currentPage + 1);
+                                                const pages = [];
+                                                for (let i = start; i <= end; i++) {
+                                                    if (i > 1 && i < totalPages) {
+                                                        pages.push(i);
+                                                    }
+                                                }
+                                                return pages.map(page => (
                                                     <button
                                                         key={page}
                                                         onClick={() => setCurrentPage(page)}
@@ -577,8 +576,8 @@ export default function Seminar() {
                                                     >
                                                         {page}
                                                     </button>
-                                                );
-                                            })}
+                                                ));
+                                            })()}
                                             {currentPage < totalPages - 2 && (
                                                 <span className={isDark ? 'px-1 text-gray-500' : 'px-1 text-gray-400'}>
                                                     ...
