@@ -125,23 +125,22 @@ export default function Distribution() {
     }, [showFilter]);
 
     const typeIcon = (type) => {
-        if (type === 'Seeds')
-            return <i className="fa-solid fa-seedling text-green-500"></i>;
-        if (type === 'Fertilizers')
-            return <i className="fa-solid fa-flask text-green-500"></i>;
-        if (type === 'Livestock')
-            return <i className="fa-solid fa-horse text-yellow-500"></i>;
-        if (type === 'Fish Fingerlings')
-            return <i className="fa-solid fa-fish text-green-500"></i>;
-        if (type === 'Organic Inputs')
-            return <i className="fa-solid fa-leaf text-green-700"></i>;
-        if (type === 'Tools')
-            return <i className="fa-solid fa-toolbox text-gray-500"></i>;
-        if (type === 'Plants')
-            return <i className="fa-solid fa-tree text-green-900"></i>;
-        if (type === 'Compost')
-            return <i className="fa-solid fa-recycle text-orange-500"></i>;
-        return <i className="fa-solid fa-question text-gray-500"></i>;
+        // return a fixed-size inline-flex container so icons align consistently
+        const icon = (className) => (
+            <span className="w-5 h-5 flex items-center justify-center">
+                <i className={`${className} text-base`} />
+            </span>
+        );
+
+        if (type === 'Seeds') return icon('fa-solid fa-seedling text-green-500');
+        if (type === 'Fertilizers') return icon('fa-solid fa-flask text-green-500');
+        if (type === 'Livestock') return icon('fa-solid fa-horse text-yellow-500');
+        if (type === 'Fish Fingerlings') return icon('fa-solid fa-fish text-green-500');
+        if (type === 'Organic Inputs') return icon('fa-solid fa-leaf text-green-700');
+        if (type === 'Tools') return icon('fa-solid fa-toolbox text-gray-500');
+        if (type === 'Plants') return icon('fa-solid fa-tree text-green-900');
+        if (type === 'Compost') return icon('fa-solid fa-recycle text-orange-500');
+        return icon('fa-solid fa-question text-gray-500');
     };
 
     useEffect(() => {
@@ -1139,7 +1138,7 @@ export default function Distribution() {
                             <div className={`mt-4 w-24 h-2 rounded-full opacity-90 shadow-lg ${isDark ? 'bg-gradient-to-r from-green-400 via-green-400 to-green-300' : 'bg-gradient-to-r from-green-600 via-green-500 to-green-400'}`}></div>
                         </header>
 
-                        <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 flex-wrap mx-auto">
+                        <div className="w-full flex flex-row flex-wrap justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 mx-auto">
                             <div className="w-full sm:w-auto flex justify-center order-2 sm:order-1">
                                 <button
                                     className={`flex items-center gap-2 px-5 py-2 rounded-lg ${isDark ? 'bg-green-600 hover:bg-green-700' : 'bg-green-600 hover:bg-green-700'} text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-green-400`}
@@ -1149,11 +1148,11 @@ export default function Distribution() {
                                     My Requests
                                 </button>
                             </div>
-                            <div className="flex gap-3 flex-wrap items-center justify-center w-full sm:w-auto order-1 sm:order-2">
-                                <div className="relative w-full sm:w-auto flex justify-center">
+                            <div className="flex items-center gap-3 flex-1 min-w-0 justify-center order-1 sm:order-2">
+                                <div className="relative flex-1 min-w-0">
                                     <input
                                         type="text"
-                                        className={`w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-gray-500 focus:ring-2 focus:ring-gray-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-900 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 placeholder:text-gray-400'} shadow transition font-medium`}
+                                        className={`flex-1 w-full max-w-full px-10 py-2 rounded-lg border ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-gray-500 focus:ring-2 focus:ring-gray-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-900 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 placeholder:text-gray-400'} shadow transition font-medium`}
                                         placeholder="Search by name, category, description..."
                                         value={search}
                                         onChange={(e) =>
@@ -1164,10 +1163,10 @@ export default function Distribution() {
                                         <i className="fa-solid fa-magnifying-glass"></i>
                                     </span>
                                 </div>
-                                <div className="relative flex justify-center w-full sm:w-auto">
+                                <div className="relative flex-shrink-0">
                                     <button
                                         id="modernFilterButton"
-                                        className={`flex items-center gap-2 px-4 py-2 rounded-lg ${isDark ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'} font-semibold border shadow transition focus:outline-none`}
+                                        className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap flex-shrink-0 ${isDark ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'} font-semibold border shadow transition focus:outline-none`}
                                         onClick={() => setShowFilter((f) => !f)}
                                         type="button"
                                         aria-label="Show filter options"

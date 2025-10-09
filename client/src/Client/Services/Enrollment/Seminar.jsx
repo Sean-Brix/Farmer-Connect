@@ -281,8 +281,8 @@ export default function Seminar() {
                             <div className={`mt-4 w-24 h-2 rounded-full shadow-lg ${isDark ? 'bg-green-400' : 'bg-green-500'}`}></div>
                         </header>
                         {/* Modernized: My Registered Seminars Button & Search/Filter Bar */}
-                        <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 flex-wrap mx-auto">
-                            <div className="w-full sm:w-auto flex justify-center order-2 sm:order-1">
+                        <div className="w-full flex flex-row sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-3 flex-wrap mx-auto">
+                            <div className="w-auto flex-shrink-0 flex justify-center order-2 sm:order-1">
                                 <button
                                     className="flex items-center gap-2 px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold shadow-md hover:shadow-lg transition border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
                                     onClick={() => setShowUserSeminarsModal(true)}
@@ -293,10 +293,10 @@ export default function Seminar() {
                             </div>
                             <div className="flex gap-3 flex-wrap items-center justify-center w-full sm:w-auto order-1 sm:order-2">
                                 {/* Search Bar */}
-                                <div className="relative w-full sm:w-auto flex justify-center">
+                                <div className="relative flex-1 min-w-0">
                                     <input
                                         type="text"
-                                        className={`w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border-2 focus:ring-2 shadow-sm transition font-medium ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-green-400 focus:ring-green-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-800 focus:border-green-500 focus:ring-green-200 placeholder:text-gray-500'}`}
+                                        className={`w-full sm:w-72 md:w-80 lg:w-96 max-w-full px-10 py-2 rounded-lg border-2 focus:ring-2 shadow-sm transition font-medium ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-green-400 focus:ring-green-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-800 focus:border-green-500 focus:ring-green-200 placeholder:text-gray-500'}`}
                                         placeholder={`Search by ${filterBy.toLowerCase()}...`}
                                         value={search}
                                         onChange={(e) => {
@@ -309,9 +309,9 @@ export default function Seminar() {
                                     </span>
                                 </div>
                                 {/* Filter Dropdown */}
-                                <div className="relative flex justify-center w-full sm:w-auto">
+                                <div className="relative flex-shrink-0 w-auto">
                                     <button
-                                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold border-2 shadow-sm hover:shadow-md transition focus:outline-none ${
+                                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold border-2 shadow-sm hover:shadow-md transition focus:outline-none whitespace-nowrap ${
                                             isDark 
                                                 ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' 
                                                 : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'
@@ -381,17 +381,19 @@ export default function Seminar() {
                                     return (
                                         <div
                                             key={program.id}
-                                            className={`relative flex flex-col border-2 hover:border-green-300 rounded-lg shadow-lg hover:shadow-xl transition-all overflow-hidden group w-full sm:w-auto mx-auto ${
+                                            className={`relative flex flex-col border-2 hover:border-green-300 rounded-lg shadow-lg hover:shadow-xl transition-all overflow-hidden group w-full max-w-md mx-auto ${
                                                 isDark 
                                                     ? 'bg-gray-800 border-gray-700' 
                                                     : 'bg-white border-gray-200'
                                             }`}
+                                            style={{ minWidth: 0 }}
                                         >
                                             <div className="relative">
                                                 <img
                                                     src={program.photo || default_seminar_pic}
                                                     alt={program.title}
                                                     className="w-full h-40 sm:h-48 object-cover transition-all duration-300 group-hover:scale-105"
+                                                    style={{ minWidth: 0 }}
                                                 />
                                                 <span
                                                     className={`absolute top-3 right-3 px-3 py-0.5 rounded-full text-xs font-semibold shadow-sm ${
@@ -407,7 +409,7 @@ export default function Seminar() {
                                                     {program.status}
                                                 </span>
                                             </div>
-                                            <div className="flex-1 flex flex-col p-5">
+                                                <div className="flex-1 flex flex-col p-5">
                                                 <h3 className={`text-lg font-semibold mb-1 truncate ${
                                                     isDark ? 'text-gray-200' : 'text-gray-800'
                                                 }`}>
