@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
 // Temporarily disabled server-side i18n to fix startup issues
 // import { initI18n, middleware as i18nMiddleware } from '../i18n.js';
 

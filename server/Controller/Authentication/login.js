@@ -36,7 +36,7 @@ async function login(req, res) {
         }
 
         // Generate JWT token with different expiration based on rememberMe
-        const tokenExpiration = rememberMe ? '30d' : '1h';
+        const tokenExpiration = rememberMe ? '30d' : '1d';
         const token = jwt.sign(
             { userId: user.id }, // PAYLOAD
             process.env.JWT_SECRET, // SECRET KEY

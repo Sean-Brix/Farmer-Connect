@@ -2,9 +2,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTheme } from '../../../contexts/ThemeContext';
 import { useMyCrops, useCreateCrop, useCreateReport } from './hooks/useFarmerSeedTrack.js';
+import { useCropGuidelines } from './hooks/useCropGuidelines.js';
 import Navbar from '../../Components/Navbar.jsx';
 
-// Import data files
+// Import data files (for category icons and farming calendar)
 import cropGuidelinesData from '../../../data/cropGuidelinesData.json';
 
 // Charts removed for farmer simplicity
@@ -113,6 +114,15 @@ export default function Farmer_Report() {
     
     return 'User'; // Default to User access
   }, [accountData]);
+
+  // Fetch crop guidelines from API
+  const { data: apiGuidelines, isLoading: guidelinesLoading, error: guidelinesError } = useCropGuidelines({
+    category: selectedCategory !== 'all' ? selectedCategory : undefined,
+    search: searchTerm
+  });
+
+  // Use API data if available, otherwise fall back to JSON for categories and calendar
+  const guidelinesCrops = apiGuidelines || [];
 
   // Weather state for Tanza, Cavite (14.4, 120.9)
   const [weatherData, setWeatherData] = useState(null);
@@ -1460,13 +1470,23 @@ export default function Farmer_Report() {
 
               {/* Crops Library Grid - Equal Height Cards with Pagination */}
               <div className="space-y-4">
-                {(() => {
-                  // Filter crops based on search and category
-                  const filteredCrops = cropGuidelinesData.crops.filter(crop => {
+                {guidelinesLoading ? (
+                  <div className={`text-center py-12 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
+                    Loading crop guidelines...
+                  </div>
+                ) : guidelinesError ? (
+                  <div className={`text-center py-12 ${theme === 'dark' ? 'text-red-400' : 'text-red-600'}`}>
+                    <p className="mb-2">⚠️ Failed to load crop guidelines</p>
+                    <p className="text-sm">{guidelinesError.message}</p>
+                  </div>
+                ) : (() => {
+                  // Filter is already done by the API hook, but we can do client-side filtering for varieties
+                  const filteredCrops = guidelinesCrops.filter(crop => {
+                    if (!searchTerm) return true;
                     const matchesSearch = crop.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                                         crop.varieties.some(v => v.toLowerCase().includes(searchTerm.toLowerCase()));
-                    const matchesCategory = selectedCategory === 'all' || crop.category === selectedCategory;
-                    return matchesSearch && matchesCategory;
+                    return matchesSearch;
                   });
 
                   // Calculate pagination

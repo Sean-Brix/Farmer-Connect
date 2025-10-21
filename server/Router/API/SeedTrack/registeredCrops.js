@@ -4,6 +4,47 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 const router = express.Router();
 
+// Helper function to parse JSON string fields in reports
+function parseReportJsonFields(report) {
+  if (!report) return report;
+  
+  const parsed = { ...report };
+  
+  // Parse costs JSON string
+  if (parsed.costs && typeof parsed.costs === 'string') {
+    try {
+      parsed.costs = JSON.parse(parsed.costs);
+    } catch (e) {
+      console.warn('Failed to parse costs JSON:', parsed.costs);
+      parsed.costs = null;
+    }
+  }
+  
+  // Parse weatherSnapshot JSON string
+  if (parsed.weatherSnapshot && typeof parsed.weatherSnapshot === 'string') {
+    try {
+      parsed.weatherSnapshot = JSON.parse(parsed.weatherSnapshot);
+    } catch (e) {
+      console.warn('Failed to parse weatherSnapshot JSON:', parsed.weatherSnapshot);
+      parsed.weatherSnapshot = null;
+    }
+  }
+  
+  return parsed;
+}
+
+// Helper function to parse reports array
+function parseReportsArray(crops) {
+  if (!Array.isArray(crops)) return crops;
+  
+  return crops.map(crop => {
+    if (crop.reports && Array.isArray(crop.reports)) {
+      crop.reports = crop.reports.map(parseReportJsonFields);
+    }
+    return crop;
+  });
+}
+
 // GET /api/seed-track/crops
 router.get('/', async (req, res) => {
   try {
@@ -27,7 +68,10 @@ router.get('/', async (req, res) => {
       include: { reports: includeReports === 'true' },
     });
 
-    res.json({ success: true, data: crops });
+    // Parse JSON fields in reports
+    const parsedCrops = parseReportsArray(crops);
+
+    res.json({ success: true, data: parsedCrops });
   } catch (error) {
     console.error('[SeedTrack][Crops][LIST] Error:', error);
     res.status(500).json({ success: false, message: 'Failed to list crops' });
@@ -42,6 +86,12 @@ router.get('/:id', async (req, res) => {
       include: { reports: true },
     });
     if (!crop) return res.status(404).json({ success: false, message: 'Crop not found' });
+    
+    // Parse JSON fields in reports
+    if (crop.reports && Array.isArray(crop.reports)) {
+      crop.reports = crop.reports.map(parseReportJsonFields);
+    }
+    
     res.json({ success: true, data: crop });
   } catch (error) {
     console.error('[SeedTrack][Crops][GET] Error:', error);
@@ -93,6 +143,43 @@ router.patch('/:id', async (req, res) => {
     console.error('[SeedTrack][Crops][UPDATE] Error:', error);
     if (error.code === 'P2025') return res.status(404).json({ success: false, message: 'Crop not found' });
     res.status(500).json({ success: false, message: 'Failed to update crop' });
+  }
+});
+
+// PATCH /api/seed-track/crops/:id/archive - Admin endpoint to archive a crop
+router.patch('/:id/archive', async (req, res) => {
+  try {
+    const { reason } = req.body;
+    const updated = await prisma.registeredCrop.update({
+      where: { id: req.params.id },
+      data: {
+        status: 'Archived',
+        notes: reason ? `Archived: ${reason}` : 'Archived by admin',
+      },
+    });
+    res.json({ success: true, data: updated, message: 'Crop archived successfully' });
+  } catch (error) {
+    console.error('[SeedTrack][Crops][ARCHIVE] Error:', error);
+    if (error.code === 'P2025') return res.status(404).json({ success: false, message: 'Crop not found' });
+    res.status(500).json({ success: false, message: 'Failed to archive crop' });
+  }
+});
+
+// PATCH /api/seed-track/crops/:id/complete - Mark crop as completed (harvested)
+router.patch('/:id/complete', async (req, res) => {
+  try {
+    const updated = await prisma.registeredCrop.update({
+      where: { id: req.params.id },
+      data: {
+        status: 'Completed',
+        currentStage: 'Harvested',
+      },
+    });
+    res.json({ success: true, data: updated, message: 'Crop marked as completed' });
+  } catch (error) {
+    console.error('[SeedTrack][Crops][COMPLETE] Error:', error);
+    if (error.code === 'P2025') return res.status(404).json({ success: false, message: 'Crop not found' });
+    res.status(500).json({ success: false, message: 'Failed to complete crop' });
   }
 });
 

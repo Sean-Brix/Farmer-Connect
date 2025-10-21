@@ -4,6 +4,52 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 const router = express.Router();
 
+// Helper function to parse JSON string fields
+function parseReportJsonFields(report) {
+  if (!report) return report;
+  
+  const parsed = { ...report };
+  
+  // Parse costs JSON string
+  if (parsed.costs && typeof parsed.costs === 'string') {
+    try {
+      parsed.costs = JSON.parse(parsed.costs);
+    } catch (e) {
+      console.warn('Failed to parse costs JSON:', parsed.costs);
+      parsed.costs = null;
+    }
+  }
+  
+  // Parse weatherSnapshot JSON string
+  if (parsed.weatherSnapshot && typeof parsed.weatherSnapshot === 'string') {
+    try {
+      parsed.weatherSnapshot = JSON.parse(parsed.weatherSnapshot);
+    } catch (e) {
+      console.warn('Failed to parse weatherSnapshot JSON:', parsed.weatherSnapshot);
+      parsed.weatherSnapshot = null;
+    }
+  }
+  
+  return parsed;
+}
+
+// Helper function to stringify JSON fields for database storage
+function stringifyReportJsonFields(data) {
+  const stringified = { ...data };
+  
+  // Stringify costs if it's an object
+  if (stringified.costs && typeof stringified.costs === 'object') {
+    stringified.costs = JSON.stringify(stringified.costs);
+  }
+  
+  // Stringify weatherSnapshot if it's an object
+  if (stringified.weatherSnapshot && typeof stringified.weatherSnapshot === 'object') {
+    stringified.weatherSnapshot = JSON.stringify(stringified.weatherSnapshot);
+  }
+  
+  return stringified;
+}
+
 // GET /api/seed-track/reports
 router.get('/', async (req, res) => {
   try {
@@ -32,7 +78,10 @@ router.get('/', async (req, res) => {
       reports = reports.filter(r => r.crop.userId === userId);
     }
 
-    res.json({ success: true, data: reports });
+    // Parse JSON fields before sending response
+    const parsedReports = reports.map(parseReportJsonFields);
+
+    res.json({ success: true, data: parsedReports });
   } catch (error) {
     console.error('[SeedTrack][Reports][LIST] Error:', error);
     res.status(500).json({ success: false, message: 'Failed to list reports' });
@@ -44,7 +93,11 @@ router.get('/:id', async (req, res) => {
   try {
     const report = await prisma.cropMonthlyReport.findUnique({ where: { id: req.params.id } });
     if (!report) return res.status(404).json({ success: false, message: 'Report not found' });
-    res.json({ success: true, data: report });
+    
+    // Parse JSON fields before sending response
+    const parsedReport = parseReportJsonFields(report);
+    
+    res.json({ success: true, data: parsedReport });
   } catch (error) {
     console.error('[SeedTrack][Reports][GET] Error:', error);
     res.status(500).json({ success: false, message: 'Failed to get report' });
@@ -82,7 +135,10 @@ router.post('/', async (req, res) => {
       weatherSnapshot: weatherSnapshot || null,
     };
 
-    const created = await prisma.cropMonthlyReport.create({ data });
+    // Stringify JSON fields for database storage
+    const stringifiedData = stringifyReportJsonFields(data);
+
+    const created = await prisma.cropMonthlyReport.create({ data: stringifiedData });
 
     // Optionally update crop stage
     if (growthStage) {
@@ -92,7 +148,10 @@ router.post('/', async (req, res) => {
       }).catch(() => {});
     }
 
-    res.status(201).json({ success: true, data: created });
+    // Parse JSON fields back for response
+    const parsedCreated = parseReportJsonFields(created);
+
+    res.status(201).json({ success: true, data: parsedCreated });
   } catch (error) {
     console.error('[SeedTrack][Reports][CREATE] Error:', error);
     res.status(500).json({ success: false, message: 'Failed to create report' });
@@ -111,8 +170,16 @@ router.patch('/:id', async (req, res) => {
         else data[key] = req.body[key];
       }
     }
-    const updated = await prisma.cropMonthlyReport.update({ where: { id: req.params.id }, data });
-    res.json({ success: true, data: updated });
+    
+    // Stringify JSON fields for database storage
+    const stringifiedData = stringifyReportJsonFields(data);
+    
+    const updated = await prisma.cropMonthlyReport.update({ where: { id: req.params.id }, data: stringifiedData });
+    
+    // Parse JSON fields back for response
+    const parsedUpdated = parseReportJsonFields(updated);
+    
+    res.json({ success: true, data: parsedUpdated });
   } catch (error) {
     console.error('[SeedTrack][Reports][UPDATE] Error:', error);
     if (error.code === 'P2025') return res.status(404).json({ success: false, message: 'Report not found' });

@@ -36,7 +36,7 @@ export function useAdminSeedTrack() {
   const { data: accounts = [], isLoading: accountsLoading, error: accountsError } = useAccounts();
   const { data: crops = [], isLoading: cropsLoading, error: cropsError } = useCropsWithReports();
 
-  const { farmers, reports } = useMemo(() => {
+  const { farmers, reports, cropsByUser } = useMemo(() => {
     // Build a quick index of crops by userId and flattened reports
     const cropsByUser = new Map();
     const flatReports = [];
@@ -47,23 +47,56 @@ export function useAdminSeedTrack() {
 
       const cropReports = Array.isArray(crop.reports) ? crop.reports : [];
       for (const r of cropReports) {
+        // JSON fields (costs and weatherSnapshot) are already parsed by the backend
         flatReports.push({
-          // Map to Admin sampleSeedTrackingData shape
+          // Map all fields from the farmer's submitted report
           id: r.id,
           farmerId: crop.userId,
+          cropId: crop.id,
           crop: crop.cropType,
           variety: crop.variety,
           plantingDate: crop.plantingDate,
           expectedHarvest: crop.expectedHarvest,
           area: crop.area,
+          
+          // Report details - all fields the farmer fills
           reportDate: r.reportDate,
           growthStage: r.growthStage,
           plantHeight: r.plantHeight,
           healthStatus: r.healthStatus || 'Healthy',
           estimatedYield: r.estimatedYield,
-          pestsAndDiseases: r.pestsObserved,
+          actualYield: r.actualYield,
+          soilCondition: r.soilCondition,
+          
+          // Pest & Disease Management
+          pestsObserved: r.pestsObserved,
+          diseasesObserved: r.diseasesObserved,
+          pestsAndDiseases: r.pestsObserved, // Legacy compatibility
+          
+          // Farm Management Activities
+          fertilizersApplied: r.fertilizersApplied,
+          pesticideApplications: r.pesticideApplications,
+          irrigationFrequency: r.irrigationFrequency,
+          majorActivities: r.majorActivities,
+          
+          // Planning & Challenges
+          challenges: r.challenges,
+          plannedActions: r.plannedActions,
+          
+          // Weather & Environment
           weatherImpact: r.weatherImpact,
+          weatherSnapshot: r.weatherSnapshot, // Already parsed object with temp, humidity, etc.
+          
+          // Financial Data
+          costs: r.costs, // Already parsed object with seeds, fertilizer, pesticides, labor, etc.
+          
+          // Additional Notes
           notes: r.notes,
+          
+          // Timestamps
+          submissionDate: r.submissionDate || r.createdAt,
+          createdAt: r.createdAt,
+          updatedAt: r.updatedAt,
         });
       }
     }
@@ -88,12 +121,13 @@ export function useAdminSeedTrack() {
       };
     });
 
-    return { farmers, reports: flatReports };
+    return { farmers, reports: flatReports, cropsByUser };
   }, [accounts, crops]);
 
   return {
     farmers,
     reports,
+    cropsByUser,
     isLoading: accountsLoading || cropsLoading,
     error: accountsError || cropsError,
   };

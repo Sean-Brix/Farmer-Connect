@@ -1,6 +1,7 @@
 model RegisteredCrop {
   id              String              @id @default(cuid())
   userId          String
+  guidelineId     String? // Reference to CropGuideline
   cropType        String
   variety         String
   plantingDate    DateTime
@@ -10,12 +11,15 @@ model RegisteredCrop {
   currentStage    GrowthStage         @default(Seedling)
   expectedYield   Float?
   notes           String?
+  archiveReason   String? // Reason for archiving
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
   reports         CropMonthlyReport[]
   user            Account             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guideline       CropGuideline?      @relation(fields: [guidelineId], references: [id], onDelete: SetNull)
 
   @@index([userId, cropType, status])
+  @@index([guidelineId])
   @@map("registered_crops")
 }
 

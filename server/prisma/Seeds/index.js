@@ -9,6 +9,7 @@ import { seedAuditLogs } from './audit.seed.js';
 import { seedDataAccounts, seedDataInventoryItems, seedDataSeminars, seedDataFAQsAndInquiries } from './data-import.seed.js';
 import { seedAccountImages, seedSeminarImages } from './images.seed.js';
 import { seedUserPreferences, seedRegisteredCrops } from './preferences-and-crops.seed.js';
+import seedCropGuidelines from './seedCropGuidelines.js';
 
 const prisma = new PrismaClient();
 
@@ -79,6 +80,7 @@ async function main() {
   await runStep('Chat', () => seedChat(prisma, { rooms: 40, maxParticipants: 7, maxMessages: 80 }));
     await runStep('AuditLogs', () => seedAuditLogs(prisma, { count: 600 }));
 
+  await runStep('CropGuidelines', () => seedCropGuidelines());
   await runStep('UserPreferences', () => seedUserPreferences(prisma, { perUser: 3 }));
   await runStep('RegisteredCrops', () => seedRegisteredCrops(prisma, { perUserMax: 3 }));
 

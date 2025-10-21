@@ -13,6 +13,14 @@ import {
   ArcElement,
 } from 'chart.js';
 import { useAdminSeedTrack } from './hooks/useSeedTrackQueries';
+import { 
+  useCropGuidelines, 
+  useCreateCropGuideline, 
+  useUpdateCropGuideline, 
+  useDeleteCropGuideline 
+} from './hooks/useCropGuidelines';
+import GuidelinesList from './Components/GuidelinesList';
+import GuidelineModal from './Components/GuidelineModal';
 
 ChartJS.register(
   CategoryScale,
@@ -28,7 +36,13 @@ ChartJS.register(
 
 function Seed_Track() {
   // Data from backend
-  const { farmers = [], reports: sampleSeedTrackingData = [], isLoading: seedLoading, error: seedError } = useAdminSeedTrack();
+  const { farmers = [], reports: sampleSeedTrackingData = [], cropsByUser = new Map(), isLoading: seedLoading, error: seedError } = useAdminSeedTrack();
+
+  // Crop Guidelines API hooks
+  const { data: apiGuidelines, isLoading: guidelinesLoading, error: guidelinesError } = useCropGuidelines({});
+  const createGuideline = useCreateCropGuideline();
+  const updateGuideline = useUpdateCropGuideline();
+  const deleteGuideline = useDeleteCropGuideline();
 
   // UI state
   const [activeTab, setActiveTab] = useState('overview');
@@ -37,11 +51,16 @@ function Seed_Track() {
   const [selectedFarmerTab, setSelectedFarmerTab] = useState('reports');
   const [showCropReportsModal, setShowCropReportsModal] = useState(false);
   const [selectedCrop, setSelectedCrop] = useState(null);
+  const [showDetailedReportModal, setShowDetailedReportModal] = useState(false);
+  const [selectedReport, setSelectedReport] = useState(null);
 
   // Pagination and filters
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [filters, setFilters] = useState({ search: '', status: 'all', location: 'all' });
+  
+  // Crop view toggle (active vs archived)
+  const [showArchivedCrops, setShowArchivedCrops] = useState(false);
 
   // Alerts
   const [alert, setAlert] = useState({ show: false, message: '', type: 'success' });
@@ -50,29 +69,13 @@ function Seed_Track() {
     setTimeout(() => setAlert({ show: false, message: '', type: '' }), 3000);
   };
 
-  // Crop Guidelines state (local-only admin tool)
-  const [cropGuidelines, setCropGuidelines] = useState([]);
+  // Crop Guidelines state (using API)
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showGuidelineModal, setShowGuidelineModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [guidelineToDelete, setGuidelineToDelete] = useState(null);
   const [editingGuideline, setEditingGuideline] = useState(null);
-  const [newGuideline, setNewGuideline] = useState({
-    id: '',
-    cropName: '',
-    category: '',
-    description: '',
-    plantingTips: [''],
-    careInstructions: [''],
-    harvestingTips: [''],
-    commonPests: [''],
-    diseases: [''],
-    seasonality: '',
-    soilRequirements: '',
-    waterRequirements: '',
-    fertilizers: ['']
-  });
 
   // Seed tracking helpers mapping to existing UI expectations
   const getBBCHStages = (cropType) => {
@@ -108,27 +111,60 @@ function Seed_Track() {
   const getCurrentFarmer = () => openFarmerTabs.find((t) => t.farmerId === activeFarmerId);
 
   // Helper function to get farmer's crops with reports
-  const getFarmerCrops = (farmerId) => {
-    const farmerReports = sampleSeedTrackingData.filter(report => report.farmerId === farmerId);
+  const getFarmerCrops = (farmerId, includeArchived = false) => {
+    const userCrops = cropsByUser.get(farmerId) || [];
     
-    // Group reports by crop and variety
-    const cropsMap = {};
-    farmerReports.forEach(report => {
-      const key = `${report.crop}-${report.variety}`;
-      if (!cropsMap[key]) {
-        cropsMap[key] = {
-          cropType: report.crop,
-          variety: report.variety,
-          plantingDate: report.plantingDate,
-          expectedHarvest: report.expectedHarvest,
-          area: report.area,
-          reports: []
-        };
-      }
-      cropsMap[key].reports.push(report);
-    });
-    
-    return Object.values(cropsMap);
+    // Filter by status based on includeArchived flag
+    if (includeArchived) {
+      // Return only archived/completed crops
+      return userCrops.filter(crop => 
+        crop.status === 'Archived' || 
+        crop.status === 'Completed' ||
+        (crop.expectedHarvest && new Date(crop.expectedHarvest) < new Date())
+      );
+    } else {
+      // Return only active crops
+      return userCrops.filter(crop => crop.status === 'Active');
+    }
+  };
+  
+  // Helper function to archive a crop
+  const archiveCrop = async (cropId, reason) => {
+    try {
+      const res = await fetch(`/api/seed-track/crops/${cropId}/archive`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reason }),
+      });
+      
+      if (!res.ok) throw new Error('Failed to archive crop');
+      
+      showAlert('Crop archived successfully', 'success');
+      // Refresh data
+      window.location.reload();
+    } catch (error) {
+      console.error('Archive error:', error);
+      showAlert('Failed to archive crop', 'error');
+    }
+  };
+  
+  // Helper function to mark crop as completed
+  const completeCrop = async (cropId) => {
+    try {
+      const res = await fetch(`/api/seed-track/crops/${cropId}/complete`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      if (!res.ok) throw new Error('Failed to complete crop');
+      
+      showAlert('Crop marked as completed', 'success');
+      // Refresh data
+      window.location.reload();
+    } catch (error) {
+      console.error('Complete error:', error);
+      showAlert('Failed to complete crop', 'error');
+    }
   };
 
   // Function to get expected report months
@@ -291,143 +327,63 @@ function Seed_Track() {
 
   // Crop guidelines helpers
   const categoryOptions = [
-    { value: 'cereals', label: 'Cereals & Grains', icon: '🌾' },
-    { value: 'vegetables', label: 'Vegetables', icon: '🥬' },
-    { value: 'fruits', label: 'Fruits', icon: '🍎' },
-    { value: 'legumes', label: 'Legumes', icon: '🫘' },
-    { value: 'root_crops', label: 'Root Crops', icon: '🥔' },
-    { value: 'herbs_spices', label: 'Herbs & Spices', icon: '🌿' },
+    { value: 'Cereals', label: 'Cereals & Grains', icon: '🌾' },
+    { value: 'Vegetables', label: 'Vegetables', icon: '🥬' },
+    { value: 'Fruits', label: 'Fruits', icon: '🍎' },
+    { value: 'Legumes', label: 'Legumes', icon: '🫘' },
+    { value: 'Root_Crops', label: 'Root Crops', icon: '🥔' },
+    { value: 'Herbs_Spices', label: 'Herbs & Spices', icon: '🌿' },
   ];
 
-  const filteredGuidelines = cropGuidelines.filter((g) => {
+  const filteredGuidelines = (apiGuidelines || []).filter((g) => {
     const matchesCategory = selectedCategory === 'all' || g.category === selectedCategory;
-    const name = (g.name || g.cropName || '').toLowerCase();
+    const name = (g.name || '').toLowerCase();
     const term = searchTerm.toLowerCase();
     const varieties = Array.isArray(g.varieties) ? g.varieties : [];
     const matchesSearch = !term || name.includes(term) || varieties.some((v) => String(v).toLowerCase().includes(term));
     return matchesCategory && matchesSearch;
   });
 
-  const resetGuidelineForm = () => {
-    setNewGuideline({
-      id: '',
-      cropName: '',
-      category: '',
-      description: '',
-      plantingTips: [''],
-      careInstructions: [''],
-      harvestingTips: [''],
-      commonPests: [''],
-      diseases: [''],
-      seasonality: '',
-      soilRequirements: '',
-      waterRequirements: '',
-      fertilizers: [''],
-    });
-  };
-
-  const addArrayField = (field) => setNewGuideline((prev) => ({ ...prev, [field]: [...(prev[field] || []), ''] }));
-  const updateArrayField = (field, index, value) => setNewGuideline((prev) => ({ ...prev, [field]: (prev[field] || []).map((v, i) => (i === index ? value : v)) }));
-  const removeArrayField = (field, index) => setNewGuideline((prev) => ({ ...prev, [field]: (prev[field] || []).filter((_, i) => i !== index) }));
-
-  const handleAddGuideline = () => {
-    if (!newGuideline.cropName) {
-      showAlert('Please fill in required fields', 'error');
-      return;
+  // Guideline CRUD handlers
+  const handleSaveGuideline = async (guidelineData) => {
+    try {
+      if (editingGuideline) {
+        // Update existing guideline
+        await updateGuideline.mutateAsync({
+          id: editingGuideline.id,
+          data: guidelineData
+        });
+        showAlert('Guideline updated successfully!', 'success');
+      } else {
+        // Create new guideline
+        await createGuideline.mutateAsync(guidelineData);
+        showAlert('Guideline created successfully!', 'success');
+      }
+      setShowGuidelineModal(false);
+      setEditingGuideline(null);
+    } catch (error) {
+      console.error('Save guideline error:', error);
+      showAlert(error.message || 'Failed to save guideline', 'error');
     }
-    const guideline = {
-      id: Date.now(),
-      name: newGuideline.cropName,
-      category: newGuideline.category,
-      varieties: [],
-      plantingSeasons: [],
-      growingPeriod: '',
-      waterRequirements: newGuideline.waterRequirements,
-      expectedYield: '',
-      soilType: newGuideline.soilRequirements,
-      climate: '',
-      spacing: '',
-      fertilizer: '',
-      plantingTips: newGuideline.plantingTips,
-      careInstructions: newGuideline.careInstructions,
-      harvestingTips: newGuideline.harvestingTips,
-      keyTips: [],
-      commonPests: newGuideline.commonPests,
-      diseases: newGuideline.diseases,
-      fertilizers: newGuideline.fertilizers,
-      stages: [],
-      marketPrice: '',
-      profitability: 'Moderate',
-      difficulty: 'Easy',
-      createdAt: new Date().toISOString().split('T')[0],
-      updatedAt: new Date().toISOString().split('T')[0],
-    };
-    setCropGuidelines((prev) => [guideline, ...prev]);
-    resetGuidelineForm();
-    setShowCreateModal(false);
-    setEditingGuideline(null);
-    showAlert('Crop guideline added successfully!', 'success');
   };
 
   const handleEditGuideline = (guideline) => {
-    setNewGuideline({
-      id: guideline.id,
-      cropName: guideline.name || '',
-      category: guideline.category || '',
-      description: '',
-      plantingTips: guideline.plantingTips || [''],
-      careInstructions: guideline.careInstructions || [''],
-      harvestingTips: guideline.harvestingTips || [''],
-      commonPests: guideline.commonPests || [''],
-      diseases: guideline.diseases || [''],
-      seasonality: '',
-      soilRequirements: guideline.soilType || '',
-      waterRequirements: guideline.waterRequirements || '',
-      fertilizers: guideline.fertilizers || [''],
-    });
     setEditingGuideline(guideline);
-    setShowCreateModal(true);
+    setShowGuidelineModal(true);
   };
 
-  const handleUpdateGuideline = () => {
-    if (!editingGuideline) return;
-    setCropGuidelines((prev) =>
-      prev.map((g) =>
-        g.id === editingGuideline.id
-          ? {
-              ...g,
-              name: newGuideline.cropName,
-              category: newGuideline.category,
-              plantingTips: newGuideline.plantingTips,
-              careInstructions: newGuideline.careInstructions,
-              harvestingTips: newGuideline.harvestingTips,
-              commonPests: newGuideline.commonPests,
-              diseases: newGuideline.diseases,
-              soilType: newGuideline.soilRequirements,
-              waterRequirements: newGuideline.waterRequirements,
-              fertilizers: newGuideline.fertilizers,
-              updatedAt: new Date().toISOString().split('T')[0],
-            }
-          : g
-      )
-    );
-    resetGuidelineForm();
-    setShowCreateModal(false);
-    setEditingGuideline(null);
-    showAlert('Crop guideline updated successfully!', 'success');
-  };
-
-  const handleDeleteGuideline = (id) => {
-    setCropGuidelines((prev) => prev.filter((g) => g.id !== id));
-    setShowDeleteModal(false);
-    setGuidelineToDelete(null);
-    showAlert('Crop guideline deleted successfully!', 'success');
-  };
-
-  // Confirm deletion from modal
-  const confirmDeleteGuideline = () => {
-    if (!guidelineToDelete) return setShowDeleteModal(false);
-    handleDeleteGuideline(guidelineToDelete.id);
+  const handleDeleteGuideline = async () => {
+    if (!guidelineToDelete) return;
+    
+    try {
+      await deleteGuideline.mutateAsync(guidelineToDelete.id);
+      showAlert('Guideline deleted successfully!', 'success');
+      setShowDeleteModal(false);
+      setGuidelineToDelete(null);
+    } catch (error) {
+      console.error('Delete guideline error:', error);
+      showAlert(error.message || 'Failed to delete guideline', 'error');
+    }
   };
 
   // Loading and error states
@@ -1135,9 +1091,8 @@ function Seed_Track() {
               </div>
               <button
                 onClick={() => {
-                  resetGuidelineForm();
                   setEditingGuideline(null);
-                  setShowCreateModal(true);
+                  setShowGuidelineModal(true);
                 }}
                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
               >
@@ -1184,136 +1139,24 @@ function Seed_Track() {
               </div>
             </div>
 
-            {/* Guidelines Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredGuidelines.map((guideline) => (
-                <div key={guideline.id} className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col h-full min-h-[500px]">
-                  {/* Card Header */}
-                  <div className="p-6 border-b border-gray-100">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-green-100 rounded-lg">
-                          <span className="text-lg">
-                            {categoryOptions.find(cat => cat.value === guideline.category)?.icon || '🌱'}
-                          </span>
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-semibold text-gray-800">{guideline.name}</h3>
-                          <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">
-                            {categoryOptions.find(cat => cat.value === guideline.category)?.label}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={() => handleEditGuideline(guideline)}
-                          className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
-                          title="Edit guideline"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={() => {
-                            setGuidelineToDelete(guideline);
-                            setShowDeleteModal(true);
-                          }}
-                          className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
-                          title="Delete guideline"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                    
-                    {/* Key Info */}
-                    <div className="grid grid-cols-2 gap-3 text-sm">
-                      <div>
-                        <span className="text-gray-600">Growing Period:</span>
-                        <div className="font-medium text-gray-800">{guideline.growingPeriod}</div>
-                      </div>
-                      <div>
-                        <span className="text-gray-600">Expected Yield:</span>
-                        <div className="font-medium text-gray-800">{guideline.expectedYield}</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card Content */}
-                  <div className="p-6 flex-1">
-                    {/* Varieties */}
-                    <div className="mb-4">
-                      <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Varieties</label>
-                      <div className="flex flex-wrap gap-1 mt-1 min-h-[32px] content-start">
-                        {guideline.varieties.slice(0, 3).map((variety, idx) => (
-                          <span key={idx} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
-                            {variety}
-                          </span>
-                        ))}
-                        {guideline.varieties.length > 3 && (
-                          <span className="text-xs text-gray-500">+{guideline.varieties.length - 3} more</span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Quick Stats */}
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-gray-600">Market Price:</span>
-                        <div className="font-medium text-green-700">{guideline.marketPrice}</div>
-                      </div>
-                      <div>
-                        <span className="text-gray-600">Difficulty:</span>
-                        <div className={`font-medium ${
-                          guideline.difficulty === 'Easy' ? 'text-green-600' :
-                          guideline.difficulty === 'Moderate' ? 'text-yellow-600' :
-                          'text-red-600'
-                        }`}>
-                          {guideline.difficulty}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Key Tips Preview */}
-                    <div className="mt-4">
-                      <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Key Tips</label>
-                      <div className="mt-1 text-sm text-gray-700 min-h-[60px]">
-                        {guideline.keyTips.slice(0, 2).map((tip, idx) => (
-                          <div key={idx} className="flex items-start gap-2 mb-1">
-                            <span className="text-green-500 mt-0.5">•</span>
-                            <span className="text-xs">{tip}</span>
-                          </div>
-                        ))}
-                        {guideline.keyTips.length > 2 && (
-                          <div className="text-xs text-gray-500">+{guideline.keyTips.length - 2} more tips</div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card Footer */}
-                  <div className="px-6 py-3 bg-gray-50 border-t border-gray-100 rounded-b-xl">
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span>Updated: {guideline.updatedAt}</span>
-                      <span className={`px-2 py-1 rounded-full font-medium ${
-                        guideline.profitability === 'Very High' ? 'bg-green-100 text-green-700' :
-                        guideline.profitability === 'High' ? 'bg-green-100 text-green-600' :
-                        guideline.profitability === 'Moderate' ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-gray-100 text-gray-700'
-                      }`}>
-                        {guideline.profitability} Profitability
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            {/* Guidelines List Component */}
+            <GuidelinesList
+              guidelines={filteredGuidelines}
+              isLoading={guidelinesLoading}
+              error={guidelinesError}
+              onEdit={handleEditGuideline}
+              onDelete={(guideline) => {
+                setGuidelineToDelete(guideline);
+                setShowDeleteModal(true);
+              }}
+              onViewDetails={(guideline) => {
+                // Optional: Implement view details functionality
+                handleEditGuideline(guideline);
+              }}
+            />
 
             {/* Empty State */}
-            {filteredGuidelines.length === 0 && (
+            {!guidelinesLoading && filteredGuidelines.length === 0 && (
               <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
                 <div className="text-6xl mb-4 opacity-30">📚</div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No guidelines found</h3>
@@ -1328,9 +1171,8 @@ function Seed_Track() {
                       setSearchTerm('');
                       setSelectedCategory('all');
                     } else {
-                      resetGuidelineForm();
                       setEditingGuideline(null);
-                      setShowCreateModal(true);
+                      setShowGuidelineModal(true);
                     }
                   }}
                   className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold shadow-md hover:shadow-lg"
@@ -1370,7 +1212,7 @@ function Seed_Track() {
 
                 {/* Enhanced Sub Navigation */}
                 <div className="mt-6">
-                  <nav className="flex flex-wrap gap-2 sm:gap-8">
+                  <nav className="flex flex-wrap gap-2 sm:gap-6">
                     <button
                       onClick={() => setSelectedFarmerTab('reports')}
                       className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
@@ -1382,8 +1224,21 @@ function Seed_Track() {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
-                      <span className="hidden sm:inline">Reports & Crops</span>
-                      <span className="sm:hidden">Reports</span>
+                      <span className="hidden sm:inline">Current Crops</span>
+                      <span className="sm:hidden">Current</span>
+                    </button>
+                    <button
+                      onClick={() => setSelectedFarmerTab('archive')}
+                      className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
+                        selectedFarmerTab === 'archive'
+                          ? 'border-green-500 text-gray-900'
+                          : 'border-transparent text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      <span className="hidden sm:inline">Archive</span>
                     </button>
                     <button
                       onClick={() => setSelectedFarmerTab('analytics')}
@@ -1404,7 +1259,7 @@ function Seed_Track() {
 
               {/* Enhanced Tab Content */}
               <div className="p-4 sm:p-6">
-                {/* Reports Tab */}
+                {/* Current Crops Tab */}
                 {selectedFarmerTab === 'reports' && (
                   <div>
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -1412,29 +1267,41 @@ function Seed_Track() {
                         <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        Farmer's Crops & Reports
+                        Current Crops
                       </h4>
                       <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
-                        {getFarmerCrops(currentFarmer.id).length} active crops
+                        {getFarmerCrops(currentFarmer.id, false).length} active
                       </span>
                     </div>
                     
                     <div className="space-y-6">
-                      {getFarmerCrops(currentFarmer.id).map((crop, index) => {
+                      {getFarmerCrops(currentFarmer.id, false).map((crop, index) => {
                         const expectedMonths = getExpectedReportMonths(crop.plantingDate, crop.expectedHarvest);
-                        const latestReport = crop.reports[crop.reports.length - 1];
+                        const latestReport = crop.reports && crop.reports.length > 0 ? crop.reports[crop.reports.length - 1] : null;
+                        
+                        // Format dates for display
+                        const plantingDateFormatted = new Date(crop.plantingDate).toLocaleDateString('en-US', { 
+                          year: 'numeric', 
+                          month: 'long', 
+                          day: 'numeric' 
+                        });
+                        const harvestDateFormatted = crop.expectedHarvest ? new Date(crop.expectedHarvest).toLocaleDateString('en-US', { 
+                          year: 'numeric', 
+                          month: 'long', 
+                          day: 'numeric' 
+                        }) : 'N/A';
                         
                         return (
-                          <div key={index} className="border border-gray-200 rounded-lg overflow-hidden">
+                          <div key={crop.id} className="border border-gray-200 rounded-lg overflow-hidden">
                             {/* Crop Header */}
                             <div className="bg-white px-6 py-4 border-b border-gray-200">
                               <div className="flex items-center justify-between">
                                 <div>
-                                  <h5 className="text-xl font-bold text-gray-800">{crop.cropType}</h5>
-                                  <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
-                                    <span>Planted: {crop.plantingDate}</span>
-                                    <span>Expected Harvest: {crop.expectedHarvest}</span>
-                                    <span>Area: {crop.area} hectares</span>
+                                  <h5 className="text-xl font-bold text-gray-800">{crop.cropType} - {crop.variety}</h5>
+                                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-sm text-gray-600">
+                                    <span>🌱 Planted: {plantingDateFormatted}</span>
+                                    <span>🌾 Expected Harvest: {harvestDateFormatted}</span>
+                                    <span>📏 Area: {crop.area} hectares</span>
                                   </div>
                                 </div>
                                 <div className="text-right">
@@ -1446,7 +1313,7 @@ function Seed_Track() {
                                   }`}>
                                     {latestReport?.healthStatus || 'No Status'}
                                   </div>
-                                  <div className="mt-2">
+                                  <div className="mt-2 flex gap-2">
                                     <button
                                       onClick={() => {
                                         setSelectedCrop({
@@ -1460,6 +1327,29 @@ function Seed_Track() {
                                       className="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                                     >
                                       View All Reports →
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        if (window.confirm('Mark this crop as completed/harvested?')) {
+                                          completeCrop(crop.id);
+                                        }
+                                      }}
+                                      className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded-lg shadow transition-colors"
+                                      title="Mark as completed/harvested"
+                                    >
+                                      ✓ Complete
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        const reason = window.prompt('Reason for archiving this crop (optional):');
+                                        if (reason !== null) {
+                                          archiveCrop(crop.id, reason);
+                                        }
+                                      }}
+                                      className="bg-gray-600 hover:bg-gray-700 text-white text-xs px-3 py-2 rounded-lg shadow transition-colors"
+                                      title="Archive this crop"
+                                    >
+                                      📦 Archive
                                     </button>
                                   </div>
                                 </div>
@@ -1507,11 +1397,17 @@ function Seed_Track() {
                               
                               <div className="flex flex-wrap gap-2">
                                 {expectedMonths.map((month, monthIndex) => {
-                                  const hasReport = crop.reports.some(report => 
-                                    report.reportDate.startsWith(month)
-                                  );
-                                  const isCurrentMonth = month === new Date().toISOString().slice(0, 7);
-                                  const isPastMonth = month < new Date().toISOString().slice(0, 7);
+                                  // Check if there's a report for this month
+                                  const hasReport = Array.isArray(crop.reports) && crop.reports.some(report => {
+                                    if (!report || !report.reportDate) return false;
+                                    // Extract YYYY-MM from reportDate (handles both "YYYY-MM-DD" and "YYYY-MM-DDTHH:mm:ss.sssZ" formats)
+                                    const reportMonth = String(report.reportDate).substring(0, 7);
+                                    return reportMonth === month;
+                                  });
+                                  
+                                  const currentDate = new Date().toISOString().slice(0, 7); // Current YYYY-MM
+                                  const isCurrentMonth = month === currentDate;
+                                  const isPastMonth = month < currentDate;
                                   
                                   return (
                                     <div 
@@ -1547,7 +1443,7 @@ function Seed_Track() {
                         );
                       })}
 
-                      {getFarmerCrops(currentFarmer.id).length === 0 && (
+                      {getFarmerCrops(currentFarmer.id, false).length === 0 && (
                         <div className="text-center py-12 text-gray-500">
                           <span className="text-6xl">🌱</span>
                           <p className="mt-4 text-xl">No active crops</p>
@@ -1555,6 +1451,94 @@ function Seed_Track() {
                         </div>
                       )}
                     </div>
+                  </div>
+                )}
+
+                {/* Archive Tab */}
+                {selectedFarmerTab === 'archive' && (
+                  <div>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                      <h4 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                        <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        Archived Crops
+                      </h4>
+                      <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                        {getFarmerCrops(currentFarmer.id, true).length} archived
+                      </span>
+                    </div>
+
+                    {getFarmerCrops(currentFarmer.id, true).length > 0 ? (
+                      <div className="space-y-4">
+                        {getFarmerCrops(currentFarmer.id, true).map((crop) => {
+                          const plantingDateFormatted = new Date(crop.plantingDate).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                          });
+                          const harvestDateFormatted = crop.expectedHarvest ? new Date(crop.expectedHarvest).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                          }) : 'N/A';
+
+                          return (
+                            <div key={crop.id} className="bg-white border border-gray-300 rounded-lg p-6 opacity-90">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-3 mb-2">
+                                    <h5 className="text-lg font-semibold text-gray-800">{crop.cropType} - {crop.variety}</h5>
+                                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                      crop.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                                      crop.status === 'Archived' ? 'bg-gray-200 text-gray-700' :
+                                      'bg-gray-100 text-gray-600'
+                                    }`}>
+                                      {crop.status}
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600">
+                                    <span>🌱 Planted: {plantingDateFormatted}</span>
+                                    <span>🌾 Expected Harvest: {harvestDateFormatted}</span>
+                                    <span>📏 Area: {crop.area} hectares</span>
+                                  </div>
+                                  {crop.notes && (
+                                    <div className="mt-2 text-sm text-gray-500 italic">
+                                      Note: {crop.notes}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="text-right ml-4">
+                                  <div className="text-sm font-medium text-gray-700">
+                                    {crop.reports?.length || 0} reports
+                                  </div>
+                                  <button
+                                    onClick={() => {
+                                      const expectedMonths = getExpectedReportMonths(crop.plantingDate, crop.expectedHarvest);
+                                      setSelectedCrop({
+                                        ...crop,
+                                        expectedMonths,
+                                        farmerId: currentFarmer.id
+                                      });
+                                      setShowCropReportsModal(true);
+                                    }}
+                                    className="mt-2 text-xs text-blue-600 hover:text-blue-800 underline"
+                                  >
+                                    View Reports
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="text-center py-12 text-gray-500">
+                        <span className="text-6xl">📦</span>
+                        <p className="mt-4 text-xl">No archived crops</p>
+                        <p className="text-sm">Completed or archived crops will appear here</p>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -1784,7 +1768,15 @@ function Seed_Track() {
                     <div>
                       <h2 className="text-xl font-semibold">{selectedCrop.cropType} - {selectedCrop.variety}</h2>
                       <p className="text-green-100 mt-1 text-sm">
-                        Planted: {selectedCrop.plantingDate} • Expected Harvest: {selectedCrop.expectedHarvest} • Area: {selectedCrop.area} hectares
+                        🌱 Planted: {new Date(selectedCrop.plantingDate).toLocaleDateString('en-US', { 
+                          year: 'numeric', 
+                          month: 'long', 
+                          day: 'numeric' 
+                        })} • 🌾 Expected Harvest: {selectedCrop.expectedHarvest ? new Date(selectedCrop.expectedHarvest).toLocaleDateString('en-US', { 
+                          year: 'numeric', 
+                          month: 'long', 
+                          day: 'numeric' 
+                        }) : 'N/A'} • 📏 Area: {selectedCrop.area} hectares
                       </p>
                     </div>
                   </div>
@@ -1811,11 +1803,17 @@ function Seed_Track() {
                   <div className="bg-white rounded-lg p-4 border border-gray-200">
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                       {selectedCrop.expectedMonths.map((month, index) => {
-                        const hasReport = selectedCrop.reports?.some(report => 
-                          report.reportDate.startsWith(month)
-                        );
-                        const isCurrentMonth = month === new Date().toISOString().slice(0, 7);
-                        const isPastMonth = month < new Date().toISOString().slice(0, 7);
+                        // Check if there's a report for this month
+                        const hasReport = Array.isArray(selectedCrop.reports) && selectedCrop.reports.some(report => {
+                          if (!report || !report.reportDate) return false;
+                          // Extract YYYY-MM from reportDate (handles both "YYYY-MM-DD" and "YYYY-MM-DDTHH:mm:ss.sssZ" formats)
+                          const reportMonth = String(report.reportDate).substring(0, 7);
+                          return reportMonth === month;
+                        });
+                        
+                        const currentDate = new Date().toISOString().slice(0, 7); // Current YYYY-MM
+                        const isCurrentMonth = month === currentDate;
+                        const isPastMonth = month < currentDate;
                         
                         return (
                           <div 
@@ -1894,7 +1892,11 @@ function Seed_Track() {
                                 <span className="w-6 h-6 bg-white rounded flex items-center justify-center mr-2 text-xs font-medium text-gray-600">
                                   #{selectedCrop.reports.length - index}
                                 </span>
-                                Report - {report.reportDate}
+                                Report - {new Date(report.reportDate).toLocaleDateString('en-US', { 
+                                  year: 'numeric', 
+                                  month: 'long', 
+                                  day: 'numeric' 
+                                })}
                               </h4>
                               <div className="flex items-center space-x-3">
                                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -1965,6 +1967,23 @@ function Seed_Track() {
                               </div>
                             </div>
                           )}
+                          
+                          {/* View Full Report Button */}
+                          <div className="px-4 py-3 bg-white border-t border-gray-200">
+                            <button
+                              onClick={() => {
+                                setSelectedReport(report);
+                                setShowDetailedReportModal(true);
+                              }}
+                              className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center space-x-2"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                              <span>View Full Report Details</span>
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -1982,480 +2001,361 @@ function Seed_Track() {
             </div>
           </div>
         )}
-        </div>
-        
-    {/* Crop Guidelines Modal */}
-  {showCreateModal && (
-      <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
-        <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[95vh] overflow-y-auto border border-gray-200 my-4">
-          {/* Modal Header */}
-          <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-xl">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900">
-                    {editingGuideline ? 'Edit Crop Guideline' : 'Add New Crop Guideline'}
-                  </h3>
-                  <p className="text-sm text-gray-500 mt-1">
-                    {editingGuideline ? 'Update the crop growing information' : 'Create a comprehensive guide for farmers'}
-                  </p>
+
+        {/* Detailed Report View Modal */}
+        {showDetailedReportModal && selectedReport && (
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60] p-4">
+            <div className="bg-white rounded-xl max-w-7xl w-full max-h-[95vh] overflow-hidden shadow-2xl border border-gray-300">
+              {/* Modal Header */}
+              <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-6 border-b border-green-800">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                      <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold">Complete Monthly Report</h2>
+                      <p className="text-green-100 mt-1 flex items-center space-x-2">
+                        <span>📅 {new Date(selectedReport.reportDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                        <span>•</span>
+                        <span className="px-2 py-0.5 bg-white/20 rounded">{selectedReport.growthStage}</span>
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShowDetailedReportModal(false);
+                      setSelectedReport(null);
+                    }}
+                    className="text-white hover:bg-white/20 text-2xl w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
+                  >
+                    ×
+                  </button>
                 </div>
               </div>
-              <button
-                onClick={() => {
-                  setShowCreateModal(false);
-                  setEditingGuideline(null);
-                  setNewGuideline({
-                    id: '',
-                    cropName: '',
-                    category: '',
-                    description: '',
-                    plantingTips: [''],
-                    careInstructions: [''],
-                    harvestingTips: [''],
-                    commonPests: [''],
-                    diseases: [''],
-                    seasonality: '',
-                    soilRequirements: '',
-                    waterRequirements: '',
-                    fertilizers: ['']
-                  });
-                }}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+
+              {/* Modal Body - Scrollable */}
+              <div className="p-6 max-h-[calc(95vh-120px)] overflow-y-auto bg-gray-50">
+                <div className="space-y-6">
+                  
+                  {/* Weather Conditions */}
+                  {selectedReport.weatherSnapshot && (
+                    <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <span className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                        🌤️ Weather Conditions at Time of Report
+                      </h3>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {selectedReport.weatherSnapshot.temp && (
+                          <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
+                            <p className="text-sm text-orange-700 font-medium">Temperature</p>
+                            <p className="text-2xl font-bold text-orange-900 mt-1">{selectedReport.weatherSnapshot.temp.toFixed(1)}°C</p>
+                          </div>
+                        )}
+                        {selectedReport.weatherSnapshot.humidity && (
+                          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+                            <p className="text-sm text-blue-700 font-medium">Humidity</p>
+                            <p className="text-2xl font-bold text-blue-900 mt-1">{selectedReport.weatherSnapshot.humidity.toFixed(0)}%</p>
+                          </div>
+                        )}
+                        {selectedReport.weatherSnapshot.precipitation !== undefined && (
+                          <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-lg p-4 border border-cyan-200">
+                            <p className="text-sm text-cyan-700 font-medium">Precipitation</p>
+                            <p className="text-2xl font-bold text-cyan-900 mt-1">{selectedReport.weatherSnapshot.precipitation} mm</p>
+                          </div>
+                        )}
+                        {selectedReport.weatherSnapshot.windSpeed && (
+                          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-4 border border-gray-200">
+                            <p className="text-sm text-gray-700 font-medium">Wind Speed</p>
+                            <p className="text-2xl font-bold text-gray-900 mt-1">{selectedReport.weatherSnapshot.windSpeed} km/h</p>
+                          </div>
+                        )}
+                      </div>
+                      {selectedReport.weatherImpact && (
+                        <div className="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+                          <p className="text-sm font-medium text-yellow-800">Weather Impact: {selectedReport.weatherImpact}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Basic Plantation Information */}
+                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                      <span className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M7 21l3-9 9-3-3 9-9 3z" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
+                      🌱 Basic Plantation Information
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <p className="text-sm font-medium text-gray-600 mb-2">Growth Stage</p>
+                        <p className="text-lg font-semibold text-gray-900">{selectedReport.growthStage}</p>
+                      </div>
+                      {selectedReport.plantHeight && (
+                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                          <p className="text-sm font-medium text-gray-600 mb-2">Plant Height</p>
+                          <p className="text-lg font-semibold text-gray-900">~{selectedReport.plantHeight} cm</p>
+                        </div>
+                      )}
+                      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <p className="text-sm font-medium text-gray-600 mb-2">Health Status</p>
+                        <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
+                          selectedReport.healthStatus === 'Healthy' ? 'bg-green-100 text-green-800' :
+                          selectedReport.healthStatus === 'Warning' ? 'bg-yellow-100 text-yellow-800' :
+                          selectedReport.healthStatus === 'Critical' ? 'bg-red-100 text-red-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {selectedReport.healthStatus || 'Not Specified'}
+                        </span>
+                      </div>
+                      {selectedReport.estimatedYield && (
+                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                          <p className="text-sm font-medium text-gray-600 mb-2">Estimated Yield</p>
+                          <p className="text-lg font-semibold text-gray-900">~{selectedReport.estimatedYield} kg</p>
+                        </div>
+                      )}
+                      {selectedReport.actualYield && (
+                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                          <p className="text-sm font-medium text-gray-600 mb-2">Actual Yield</p>
+                          <p className="text-lg font-semibold text-green-700">{selectedReport.actualYield} kg</p>
+                        </div>
+                      )}
+                      {selectedReport.soilCondition && (
+                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                          <p className="text-sm font-medium text-gray-600 mb-2">Soil Condition</p>
+                          <p className="text-lg font-semibold text-gray-900">{selectedReport.soilCondition}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Pest & Disease Management */}
+                  {(selectedReport.pestsObserved || selectedReport.diseasesObserved) && (
+                    <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <span className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                        🐛 Pest & Disease Management
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {selectedReport.pestsObserved && (
+                          <div className="bg-red-50 rounded-lg p-4 border border-red-200">
+                            <p className="text-sm font-semibold text-red-800 mb-2">Pests Observed</p>
+                            <p className="text-gray-700">{selectedReport.pestsObserved}</p>
+                          </div>
+                        )}
+                        {selectedReport.diseasesObserved && (
+                          <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
+                            <p className="text-sm font-semibold text-orange-800 mb-2">Diseases Observed</p>
+                            <p className="text-gray-700">{selectedReport.diseasesObserved}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Farm Management Activities */}
+                  {(selectedReport.fertilizersApplied || selectedReport.pesticideApplications || selectedReport.irrigationFrequency || selectedReport.majorActivities) && (
+                    <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <span className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                        🛠️ Management Activities
+                      </h3>
+                      <div className="space-y-4">
+                        {selectedReport.fertilizersApplied && (
+                          <div className="flex items-start space-x-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                            <span className="text-green-600 font-semibold mt-0.5">💊</span>
+                            <div>
+                              <p className="text-sm font-semibold text-green-800">Fertilizers Applied</p>
+                              <p className="text-gray-700 mt-1">{selectedReport.fertilizersApplied}</p>
+                            </div>
+                          </div>
+                        )}
+                        {selectedReport.pesticideApplications && (
+                          <div className="flex items-start space-x-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                            <span className="text-yellow-600 font-semibold mt-0.5">🧪</span>
+                            <div>
+                              <p className="text-sm font-semibold text-yellow-800">Pesticide Applications</p>
+                              <p className="text-gray-700 mt-1">{selectedReport.pesticideApplications}</p>
+                            </div>
+                          </div>
+                        )}
+                        {selectedReport.irrigationFrequency && (
+                          <div className="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                            <span className="text-blue-600 font-semibold mt-0.5">💧</span>
+                            <div>
+                              <p className="text-sm font-semibold text-blue-800">Irrigation Frequency</p>
+                              <p className="text-gray-700 mt-1">{selectedReport.irrigationFrequency}</p>
+                            </div>
+                          </div>
+                        )}
+                        {selectedReport.majorActivities && (
+                          <div className="flex items-start space-x-3 p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                            <span className="text-indigo-600 font-semibold mt-0.5">📋</span>
+                            <div>
+                              <p className="text-sm font-semibold text-indigo-800">Major Activities This Month</p>
+                              <p className="text-gray-700 mt-1">{selectedReport.majorActivities}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Challenges & Planning */}
+                  {(selectedReport.challenges || selectedReport.plannedActions) && (
+                    <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <span className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                        📋 Challenges & Future Planning
+                      </h3>
+                      <div className="space-y-4">
+                        {selectedReport.challenges && (
+                          <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                            <p className="text-sm font-semibold text-amber-900 mb-2">⚠️ Challenges Faced</p>
+                            <p className="text-gray-700">{selectedReport.challenges}</p>
+                          </div>
+                        )}
+                        {selectedReport.plannedActions && (
+                          <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                            <p className="text-sm font-semibold text-emerald-900 mb-2">🎯 Planned Actions for Next Month</p>
+                            <p className="text-gray-700">{selectedReport.plannedActions}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Monthly Costs */}
+                  {selectedReport.costs && (
+                    <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <span className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                        💰 Monthly Costs (₱)
+                      </h3>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {selectedReport.costs.seeds && (
+                          <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg p-4 border border-amber-200">
+                            <p className="text-xs text-amber-700 font-medium">Seeds</p>
+                            <p className="text-xl font-bold text-amber-900 mt-1">₱{parseFloat(selectedReport.costs.seeds).toLocaleString()}</p>
+                          </div>
+                        )}
+                        {selectedReport.costs.fertilizer && (
+                          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
+                            <p className="text-xs text-green-700 font-medium">Fertilizer</p>
+                            <p className="text-xl font-bold text-green-900 mt-1">₱{parseFloat(selectedReport.costs.fertilizer).toLocaleString()}</p>
+                          </div>
+                        )}
+                        {selectedReport.costs.pesticides && (
+                          <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-4 border border-yellow-200">
+                            <p className="text-xs text-yellow-700 font-medium">Pesticides</p>
+                            <p className="text-xl font-bold text-yellow-900 mt-1">₱{parseFloat(selectedReport.costs.pesticides).toLocaleString()}</p>
+                          </div>
+                        )}
+                        {selectedReport.costs.labor && (
+                          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+                            <p className="text-xs text-blue-700 font-medium">Labor</p>
+                            <p className="text-xl font-bold text-blue-900 mt-1">₱{parseFloat(selectedReport.costs.labor).toLocaleString()}</p>
+                          </div>
+                        )}
+                        {selectedReport.costs.irrigation && (
+                          <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-lg p-4 border border-cyan-200">
+                            <p className="text-xs text-cyan-700 font-medium">Irrigation</p>
+                            <p className="text-xl font-bold text-cyan-900 mt-1">₱{parseFloat(selectedReport.costs.irrigation).toLocaleString()}</p>
+                          </div>
+                        )}
+                        {selectedReport.costs.equipment && (
+                          <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
+                            <p className="text-xs text-purple-700 font-medium">Equipment</p>
+                            <p className="text-xl font-bold text-purple-900 mt-1">₱{parseFloat(selectedReport.costs.equipment).toLocaleString()}</p>
+                          </div>
+                        )}
+                        {selectedReport.costs.others && (
+                          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-4 border border-gray-200">
+                            <p className="text-xs text-gray-700 font-medium">Others</p>
+                            <p className="text-xl font-bold text-gray-900 mt-1">₱{parseFloat(selectedReport.costs.others).toLocaleString()}</p>
+                          </div>
+                        )}
+                      </div>
+                      {/* Total Cost */}
+                      <div className="mt-4 p-4 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg">
+                        <div className="flex items-center justify-between text-white">
+                          <span className="font-semibold text-lg">Total Monthly Cost</span>
+                          <span className="font-bold text-2xl">
+                            ₱{Object.values(selectedReport.costs).reduce((sum, val) => sum + (parseFloat(val) || 0), 0).toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Additional Notes */}
+                  {selectedReport.notes && (
+                    <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <span className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                        📝 Additional Notes
+                      </h3>
+                      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <p className="text-gray-700 leading-relaxed">{selectedReport.notes}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Submission Info */}
+                  <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg p-4 border border-gray-300">
+                    <p className="text-sm text-gray-600 text-center">
+                      📅 Report submitted on {selectedReport.submissionDate ? new Date(selectedReport.submissionDate).toLocaleString() : 'N/A'}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          
-          {/* Modal Body */}
-          <div className="px-6 py-4">
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              editingGuideline ? handleUpdateGuideline() : handleAddGuideline();
-            }} className="space-y-8">
-              
-              {/* Basic Information Section */}
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <svg className="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Basic Information
-                </h4>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Crop Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={newGuideline.cropName}
-                      onChange={(e) => setNewGuideline({...newGuideline, cropName: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-                      placeholder="Enter crop name"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Category <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      required
-                      value={newGuideline.category}
-                      onChange={(e) => setNewGuideline({...newGuideline, category: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-                    >
-                      <option value="">Select Category</option>
-                      <option value="Vegetables">Vegetables</option>
-                      <option value="Fruits">Fruits</option>
-                      <option value="Grains">Grains</option>
-                      <option value="Legumes">Legumes</option>
-                      <option value="Herbs">Herbs</option>
-                      <option value="Root Crops">Root Crops</option>
-                      <option value="Leafy Greens">Leafy Greens</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="mt-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                  <textarea
-                    value={newGuideline.description}
-                    onChange={(e) => setNewGuideline({...newGuideline, description: e.target.value})}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-                    rows="3"
-                    placeholder="Brief description of the crop and its characteristics"
-                  />
-                </div>
-              </div>
-
-              {/* Growing Instructions Section */}
-              <div className="bg-green-50 rounded-lg p-6">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <svg className="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                  Growing Instructions
-                </h4>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Planting Tips */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">Planting Tips</label>
-                    <div className="space-y-2">
-                      {(newGuideline.plantingTips || []).map((tip, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                          <div className="flex-1 relative">
-                            <input
-                              type="text"
-                              value={tip}
-                              onChange={(e) => updateArrayField('plantingTips', index, e.target.value)}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all pr-10"
-                              placeholder="Enter planting tip"
-                            />
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => removeArrayField('plantingTips', index)}
-                            className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                            title="Remove tip"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => addArrayField('plantingTips')}
-                        className="flex items-center text-green-600 hover:text-green-700 text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-50 transition-colors"
-                      >
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        Add Planting Tip
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Care Instructions */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">Care Instructions</label>
-                    <div className="space-y-2">
-                      {(newGuideline.careInstructions || []).map((instruction, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                          <div className="flex-1 relative">
-                            <input
-                              type="text"
-                              value={instruction}
-                              onChange={(e) => updateArrayField('careInstructions', index, e.target.value)}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all pr-10"
-                              placeholder="Enter care instruction"
-                            />
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => removeArrayField('careInstructions', index)}
-                            className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                            title="Remove instruction"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => addArrayField('careInstructions')}
-                        className="flex items-center text-green-600 hover:text-green-700 text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-50 transition-colors"
-                      >
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        Add Care Instruction
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-3">Harvesting Tips</label>
-                  <div className="space-y-2">
-                    {(newGuideline.harvestingTips || []).map((tip, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <div className="flex-1 relative">
-                          <input
-                            type="text"
-                            value={tip}
-                            onChange={(e) => updateArrayField('harvestingTips', index, e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all pr-10"
-                            placeholder="Enter harvesting tip"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeArrayField('harvestingTips', index)}
-                          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Remove tip"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      type="button"
-                      onClick={() => addArrayField('harvestingTips')}
-                      className="flex items-center text-green-600 hover:text-green-700 text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-50 transition-colors"
-                    >
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                      </svg>
-                      Add Harvesting Tip
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Health & Protection Section */}
-              <div className="bg-amber-50 rounded-lg p-6">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <svg className="w-5 h-5 text-amber-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                  </svg>
-                  Health & Protection
-                </h4>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Common Pests */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">Common Pests</label>
-                    <div className="space-y-2">
-                      {(newGuideline.commonPests || []).map((pest, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                          <div className="flex-1 relative">
-                            <input
-                              type="text"
-                              value={pest}
-                              onChange={(e) => updateArrayField('commonPests', index, e.target.value)}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all pr-10"
-                              placeholder="Enter common pest"
-                            />
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => removeArrayField('commonPests', index)}
-                            className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                            title="Remove pest"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => addArrayField('commonPests')}
-                        className="flex items-center text-green-600 hover:text-green-700 text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-50 transition-colors"
-                      >
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        Add Common Pest
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Diseases */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">Common Diseases</label>
-                    <div className="space-y-2">
-                      {(newGuideline.diseases || []).map((disease, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                          <div className="flex-1 relative">
-                            <input
-                              type="text"
-                              value={disease}
-                              onChange={(e) => updateArrayField('diseases', index, e.target.value)}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all pr-10"
-                              placeholder="Enter common disease"
-                            />
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => removeArrayField('diseases', index)}
-                            className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                            title="Remove disease"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => addArrayField('diseases')}
-                        className="flex items-center text-green-600 hover:text-green-700 text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-50 transition-colors"
-                      >
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        Add Common Disease
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Environmental Requirements Section */}
-              <div className="bg-blue-50 rounded-lg p-6">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <svg className="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-                  </svg>
-                  Environmental Requirements
-                </h4>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Seasonality</label>
-                    <input
-                      type="text"
-                      value={newGuideline.seasonality}
-                      onChange={(e) => setNewGuideline({...newGuideline, seasonality: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-                      placeholder="e.g., Spring, Summer"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Soil Requirements</label>
-                    <input
-                      type="text"
-                      value={newGuideline.soilRequirements}
-                      onChange={(e) => setNewGuideline({...newGuideline, soilRequirements: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-                      placeholder="Soil type and pH"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Water Requirements</label>
-                    <input
-                      type="text"
-                      value={newGuideline.waterRequirements}
-                      onChange={(e) => setNewGuideline({...newGuideline, waterRequirements: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-                      placeholder="Frequency and amount"
-                    />
-                  </div>
-                </div>
-
-                {/* Fertilizers */}
-                <div className="mt-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-3">Recommended Fertilizers</label>
-                  <div className="space-y-2">
-                    {(newGuideline.fertilizers || []).map((fertilizer, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <div className="flex-1 relative">
-                          <input
-                            type="text"
-                            value={fertilizer}
-                            onChange={(e) => updateArrayField('fertilizers', index, e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all pr-10"
-                            placeholder="Enter fertilizer recommendation"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeArrayField('fertilizers', index)}
-                          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Remove fertilizer"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      type="button"
-                      onClick={() => addArrayField('fertilizers')}
-                      className="flex items-center text-green-600 hover:text-green-700 text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-50 transition-colors"
-                    >
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                      </svg>
-                      Add Fertilizer
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Modal Footer */}
-              <div className="sticky bottom-0 bg-white border-t border-gray-200 px-6 py-4 -mx-6 -mb-4 rounded-b-xl">
-                <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowCreateModal(false);
-                      setEditingGuideline(null);
-                      setNewGuideline({
-                        id: '',
-                        cropName: '',
-                        category: '',
-                        description: '',
-                        plantingTips: [''],
-                        careInstructions: [''],
-                        harvestingTips: [''],
-                        commonPests: [''],
-                        diseases: [''],
-                        seasonality: '',
-                        soilRequirements: '',
-                        waterRequirements: '',
-                        fertilizers: ['']
-                      });
-                    }}
-                    className="w-full sm:w-auto px-6 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all font-medium"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all font-medium shadow-md hover:shadow-lg"
-                  >
-                    <span className="flex items-center justify-center">
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {editingGuideline ? 'Update Guideline' : 'Create Guideline'}
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
+        )}
         </div>
-      </div>
-    )}
+        
+    {/* Guideline Create/Edit Modal */}
+    <GuidelineModal
+      isOpen={showGuidelineModal}
+      onClose={() => {
+        setShowGuidelineModal(false);
+        setEditingGuideline(null);
+      }}
+      guideline={editingGuideline}
+      onSave={handleSaveGuideline}
+      isLoading={createGuideline.isPending || updateGuideline.isPending}
+    />
 
-  {/* Delete Confirmation Modal */}
+    {/* Delete Confirmation Modal */}
   {showDeleteModal && (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -2467,7 +2367,7 @@ function Seed_Track() {
           </div>
           
           <p className="text-gray-600 mb-6">
-            Are you sure you want to delete the guideline for "{guidelineToDelete?.cropName}"? This action cannot be undone.
+            Are you sure you want to delete the guideline for "{guidelineToDelete?.name}"? This action cannot be undone.
           </p>
           
           <div className="flex justify-end space-x-3">
@@ -2481,15 +2381,16 @@ function Seed_Track() {
               Cancel
             </button>
             <button
-              onClick={confirmDeleteGuideline}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              onClick={handleDeleteGuideline}
+              disabled={deleteGuideline.isPending}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50"
             >
-              Delete
+              {deleteGuideline.isPending ? 'Deleting...' : 'Delete'}
             </button>
           </div>
         </div>
-          </div>
-        )}
+      </div>
+    )}
         </div>
       </div>
     </div>
