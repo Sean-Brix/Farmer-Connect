@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { seedAccounts } from './accounts.seed.js';
 import { seedSeminars, seedSeminarParticipants } from './seminars.seed.js';
 import { seedInventoryItems, seedItemStacks, seedItemTransactions } from './inventory.seed.js';
-import { seedFAQs, seedInquiries } from './inquiries.seed.js';
+import { seedFAQCategories, seedFAQs, seedInquiries } from './inquiries.seed.js';
 import { seedSurveyForms, seedSurveyResponses, seedSurveyStatistics } from './surveys.seed.js';
 import { seedChat } from './chat.seed.js';
 import { seedAuditLogs } from './audit.seed.js';
@@ -67,6 +67,7 @@ async function main() {
   await runStep('DataSeminars', () => seedDataSeminars(prisma));
   await runStep('AccountImages', () => seedAccountImages(prisma));
   await runStep('SeminarImages', () => seedSeminarImages(prisma));
+  await runStep('FAQCategories', () => seedFAQCategories(prisma));
   await runStep('FAQs', () => seedFAQs(prisma, { count: 40 }));
   await runStep('DataFAQs&Inquiries', () => seedDataFAQsAndInquiries(prisma));
   await runStep('Inquiries', () => seedInquiries(prisma, { count: 200 }));
@@ -80,6 +81,15 @@ async function main() {
 
   await runStep('UserPreferences', () => seedUserPreferences(prisma, { perUser: 3 }));
   await runStep('RegisteredCrops', () => seedRegisteredCrops(prisma, { perUserMax: 3 }));
+
+    // Fix existing FAQs without categories - assign them to "General"
+    const generalCat = await prisma.fAQCategory.findFirst({ where: { name: 'General' } });
+    if (generalCat) {
+      await prisma.fAQ.updateMany({
+        where: { categoryId: null },
+        data: { categoryId: generalCat.id },
+      });
+    }
 
     // Final summary
     const [accounts, seminars, stacks, items, txs, inquiries, faqs] = await Promise.all([

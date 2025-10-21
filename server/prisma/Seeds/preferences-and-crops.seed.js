@@ -46,6 +46,11 @@ export async function seedRegisteredCrops(prisma, { perUserMax = 3 } = {}) {
       const months = rnd.number.int({ min: 2, max: 8 });
       for (let m = 0; m < months; m++) {
         const reportDate = randomDateBetweenDaysAgo(360, 0);
+        
+        // Prepare JSON fields
+        const costsObj = { seeds: Math.random() * 1000, labor: Math.random() * 3000 };
+        const weatherSnapshotObj = { temp: 30 + Math.random() * 5, humidity: 60 + Math.random() * 20 };
+        
         await prisma.cropMonthlyReport.create({
           data: {
             cropId: crop.id,
@@ -66,8 +71,8 @@ export async function seedRegisteredCrops(prisma, { perUserMax = 3 } = {}) {
             challenges: Math.random() < 0.3 ? 'Labor shortage' : null,
             plannedActions: Math.random() < 0.3 ? 'Apply bio-fertilizer' : null,
             actualYield: Math.random() < 0.2 ? parseFloat((Math.random() * 500).toFixed(2)) : null,
-            costs: { seeds: Math.random() * 1000, labor: Math.random() * 3000 },
-            weatherSnapshot: { temp: 30 + Math.random() * 5, humidity: 60 + Math.random() * 20 },
+            costs: JSON.stringify(costsObj),
+            weatherSnapshot: JSON.stringify(weatherSnapshotObj),
             createdAt: randomDateBetweenDaysAgo(360, 0),
           },
         });

@@ -25,6 +25,12 @@ export async function seedAuditLogs(prisma, { count = 400 } = {}) {
     const targetType = pick(targets);
     const createdAt = randomDateBetweenDaysAgo(720, 0);
 
+    // Generate metadata object and stringify it (DB expects JSON string)
+    const metadataObj = { 
+      ip: `${rnd.number.int({min:10,max:255})}.${rnd.number.int({min:0,max:255})}.${rnd.number.int({min:0,max:255})}.${rnd.number.int({min:0,max:255})}`,
+      changes: Math.random() < 0.5 ? ['field1', 'field2'] : undefined
+    };
+
     await prisma.auditLog.create({
       data: {
         adminId: admin.id,
@@ -33,7 +39,7 @@ export async function seedAuditLogs(prisma, { count = 400 } = {}) {
         targetId: rnd.string.alphanumeric(8),
         targetName: rnd.lorem.words(3),
         details: Math.random() < 0.5 ? rnd.lorem.sentence() : null,
-        metadata: { ip: `${rnd.number.int({min:10,max:255})}.${rnd.number.int({min:0,max:255})}.${rnd.number.int({min:0,max:255})}.${rnd.number.int({min:0,max:255})}` },
+        metadata: JSON.stringify(metadataObj),
         ipAddress: `${rnd.number.int({min:10,max:255})}.${rnd.number.int({min:0,max:255})}.${rnd.number.int({min:0,max:255})}.${rnd.number.int({min:0,max:255})}`,
         userAgent: pick(['Mozilla/5.0','Chrome/119.0','Edge/120.0','Safari/17.0']),
         createdAt,

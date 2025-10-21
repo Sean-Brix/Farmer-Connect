@@ -22,6 +22,13 @@ export async function seedDataAccounts(prisma) {
   let created = 0;
   for (const a of data) {
     try {
+      // Stringify JSON array fields (DB expects JSON strings for these LongText fields)
+      const livelihoodProfile = Array.isArray(a.livelihoodProfile) ? JSON.stringify(a.livelihoodProfile) : a.livelihoodProfile ?? null;
+      const farmingActivities = Array.isArray(a.farmingActivities) ? JSON.stringify(a.farmingActivities) : a.farmingActivities ?? null;
+      const fishingActivities = Array.isArray(a.fishingActivities) ? JSON.stringify(a.fishingActivities) : a.fishingActivities ?? null;
+      const farmworkActivities = Array.isArray(a.farmworkActivities) ? JSON.stringify(a.farmworkActivities) : a.farmworkActivities ?? null;
+      const youthActivities = Array.isArray(a.youthActivities) ? JSON.stringify(a.youthActivities) : a.youthActivities ?? null;
+
       await prisma.account.upsert({
         where: { username: a.username },
         update: {},
@@ -62,11 +69,11 @@ export async function seedDataAccounts(prisma) {
           education: a.education ?? null,
           isPWD: a.isPWD ?? null,
           disabilityType: a.disabilityType ?? null,
-          livelihoodProfile: a.livelihoodProfile ?? null,
-          farmingActivities: a.farmingActivities ?? null,
-          fishingActivities: a.fishingActivities ?? null,
-          farmworkActivities: a.farmworkActivities ?? null,
-          youthActivities: a.youthActivities ?? null,
+          livelihoodProfile,
+          farmingActivities,
+          fishingActivities,
+          farmworkActivities,
+          youthActivities,
           otherCropsSpecify: a.otherCropsSpecify ?? null,
           livestockSpecify: a.livestockSpecify ?? null,
           fishingOthersSpecify: a.fishingOthersSpecify ?? null,
@@ -145,9 +152,33 @@ export async function seedDataFAQsAndInquiries(prisma) {
   let faqCount = 0, inqCount = 0;
 
   if (Array.isArray(data.faqs)) {
+    // Ensure "General" category exists as default
+    let generalCategory = await prisma.fAQCategory.findFirst({ where: { name: 'General' } });
+    if (!generalCategory) {
+      const admins = await prisma.account.findMany({ where: { access: { in: ['Admin','Super_Admin'] } }, select: { id: true }, take: 1 });
+      generalCategory = await prisma.fAQCategory.create({
+        data: {
+          name: 'General',
+          description: 'General questions and information',
+          orderIndex: 1,
+          isActive: true,
+          createdById: admins.length > 0 ? admins[0].id : undefined,
+        },
+      });
+    }
+    
     for (const f of data.faqs) {
       try {
-        await prisma.fAQ.create({ data: { question: f.question, answer: f.answer, isActive: f.isActive ?? true, orderIndex: faqCount + 1, createdAt: randomDateBetweenDaysAgo(360, 0) } });
+        await prisma.fAQ.create({ 
+          data: { 
+            question: f.question, 
+            answer: f.answer, 
+            isActive: f.isActive ?? true, 
+            orderIndex: faqCount + 1,
+            categoryId: generalCategory.id, // Assign General category to all imported FAQs
+            createdAt: randomDateBetweenDaysAgo(360, 0) 
+          } 
+        });
         faqCount++;
       } catch {}
     }
