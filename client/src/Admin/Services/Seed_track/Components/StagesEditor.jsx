@@ -1,11 +1,51 @@
 import React from 'react';
 
-export default function StagesEditor({ stages, onChange }) {
+export default function StagesEditor({ stages, onChange, growingPeriod }) {
+  
+  // Calculate total duration in days from stages
+  const calculateTotalDays = () => {
+    let totalDays = 0;
+    stages.forEach(stage => {
+      if (stage.durationValue && stage.durationUnit) {
+        const value = parseInt(stage.durationValue);
+        switch(stage.durationUnit) {
+          case 'days': totalDays += value; break;
+          case 'weeks': totalDays += value * 7; break;
+          case 'months': totalDays += value * 30; break;
+          default: break;
+        }
+      }
+    });
+    return totalDays;
+  };
+
+  // Calculate expected days from growing period
+  const calculateExpectedDays = () => {
+    if (!growingPeriod || !growingPeriod.min || !growingPeriod.unit) return { min: 0, max: 0 };
+    
+    const min = parseInt(growingPeriod.min);
+    const max = parseInt(growingPeriod.max || growingPeriod.min);
+    
+    let multiplier = 1;
+    switch(growingPeriod.unit) {
+      case 'weeks': multiplier = 7; break;
+      case 'months': multiplier = 30; break;
+      default: multiplier = 1; break;
+    }
+    
+    return { min: min * multiplier, max: max * multiplier };
+  };
+
+  const expectedDays = calculateExpectedDays();
+  const totalDays = calculateTotalDays();
+  const isValid = totalDays >= expectedDays.min && totalDays <= expectedDays.max;
   
   const addStage = () => {
     const newStages = [...stages, {
       stageName: '',
-      duration: '',
+      durationValue: '',
+      durationUnit: 'days',
+      duration: '', // This will be computed
       description: '',
       activities: ['']
     }];
@@ -20,6 +60,15 @@ export default function StagesEditor({ stages, onChange }) {
   const updateStage = (index, field, value) => {
     const newStages = [...stages];
     newStages[index] = { ...newStages[index], [field]: value };
+    
+    // Update computed duration field when durationValue or durationUnit changes
+    if (field === 'durationValue' || field === 'durationUnit') {
+      const stage = newStages[index];
+      if (stage.durationValue && stage.durationUnit) {
+        newStages[index].duration = `${stage.durationValue} ${stage.durationUnit}`;
+      }
+    }
+    
     onChange(newStages);
   };
 
@@ -61,8 +110,14 @@ export default function StagesEditor({ stages, onChange }) {
         <div>
           <h4 className="text-sm font-semibold text-gray-800">Growth Stages</h4>
           <p className="text-xs text-gray-500 mt-1">
-            Define stages with durations (e.g., "2-3 weeks", "45-60 days"). Report schedules will be based on these stages.
+            Stages must total {expectedDays.min}-{expectedDays.max} days to match the growing period.
           </p>
+          {stages.length > 0 && (
+            <div className={`text-xs mt-2 font-medium ${isValid ? 'text-green-600' : 'text-red-600'}`}>
+              {isValid ? '✓' : '⚠'} Current total: {totalDays} days 
+              {!isValid && ` (Need: ${expectedDays.min}-${expectedDays.max} days)`}
+            </div>
+          )}
         </div>
         <button
           type="button"
@@ -157,14 +212,26 @@ export default function StagesEditor({ stages, onChange }) {
                   <label className="block text-xs font-medium text-gray-700 mb-1">
                     Duration <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
-                    value={stage.duration || ''}
-                    onChange={(e) => updateStage(stageIndex, 'duration', e.target.value)}
-                    placeholder="e.g., 2-3 weeks, 45-60 days"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                    required
-                  />
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="number"
+                      value={stage.durationValue || ''}
+                      onChange={(e) => updateStage(stageIndex, 'durationValue', e.target.value)}
+                      placeholder="Number"
+                      min="1"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      required
+                    />
+                    <select
+                      value={stage.durationUnit || 'days'}
+                      onChange={(e) => updateStage(stageIndex, 'durationUnit', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    >
+                      <option value="days">Days</option>
+                      <option value="weeks">Weeks</option>
+                      <option value="months">Months</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 

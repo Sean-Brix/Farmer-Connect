@@ -32,17 +32,17 @@ export default function GuidelineModal({ isOpen, onClose, guideline, onSave, isL
     category: 'Vegetables',
     varieties: [''],
     plantingSeasons: [''],
-    growingPeriod: '',
+    growingPeriod: { min: '', max: '', unit: 'days' },
     waterRequirements: '',
-    expectedYield: '',
+    expectedYield: { min: '', max: '', unit: 'tons/ha' },
     soilType: '',
     climate: '',
-    spacing: '',
+    spacing: { width: '', height: '', unit: 'cm' },
     fertilizer: '',
     keyTips: [''],
     commonPests: [{ name: '', control: '' }],
     diseases: [{ name: '', symptoms: '' }],
-    marketPrice: '',
+    marketPrice: { min: '', max: '', currency: '₱', unit: 'kg' },
     profitability: 'Moderate',
     difficulty: 'Moderate',
     stages: []
@@ -52,27 +52,83 @@ export default function GuidelineModal({ isOpen, onClose, guideline, onSave, isL
 
   useEffect(() => {
     if (guideline) {
+      // Parse existing data for edit mode
+      const parseGrowingPeriod = (str) => {
+        if (!str) return { min: '', max: '', unit: 'days' };
+        const match = str.match(/(\d+)(?:-(\d+))?\s*(days?|weeks?|months?)/i);
+        if (match) {
+          return { min: match[1], max: match[2] || match[1], unit: match[3].toLowerCase().replace(/s$/, '') + 's' };
+        }
+        return { min: '', max: '', unit: 'days' };
+      };
+
+      const parseYield = (str) => {
+        if (!str) return { min: '', max: '', unit: 'tons/ha' };
+        const match = str.match(/(\d+(?:\.\d+)?)(?:-(\d+(?:\.\d+)?))?\s*(tons?\/ha|kg\/ha|kg|tons?)/i);
+        if (match) {
+          return { min: match[1], max: match[2] || match[1], unit: match[3] || 'tons/ha' };
+        }
+        return { min: '', max: '', unit: 'tons/ha' };
+      };
+
+      const parseSpacing = (str) => {
+        if (!str) return { width: '', height: '', unit: 'cm' };
+        const match = str.match(/(\d+)\s*x\s*(\d+)\s*(cm|m)/i);
+        if (match) {
+          return { width: match[1], height: match[2], unit: match[3] };
+        }
+        return { width: '', height: '', unit: 'cm' };
+      };
+
+      const parseMarketPrice = (str) => {
+        if (!str) return { min: '', max: '', currency: '₱', unit: 'kg' };
+        const match = str.match(/([₱$])?\s*(\d+(?:\.\d+)?)(?:-(\d+(?:\.\d+)?))?\s*\/?\s*(kg|lb|piece)/i);
+        if (match) {
+          return { 
+            min: match[2], 
+            max: match[3] || match[2], 
+            currency: match[1] || '₱', 
+            unit: match[4] || 'kg' 
+          };
+        }
+        return { min: '', max: '', currency: '₱', unit: 'kg' };
+      };
+
+      const parseStageDuration = (durationStr) => {
+        if (!durationStr) return { durationValue: '', durationUnit: 'days', duration: '' };
+        const match = durationStr.match(/(\d+)\s*(days?|weeks?|months?)/i);
+        if (match) {
+          const unit = match[2].toLowerCase().replace(/s$/, '') + 's';
+          return { 
+            durationValue: match[1], 
+            durationUnit: unit,
+            duration: durationStr 
+          };
+        }
+        return { durationValue: '', durationUnit: 'days', duration: durationStr };
+      };
+
       setFormData({
         name: guideline.name || '',
         category: guideline.category || 'Vegetables',
         varieties: guideline.varieties?.length > 0 ? guideline.varieties : [''],
         plantingSeasons: guideline.plantingSeasons?.length > 0 ? guideline.plantingSeasons : [''],
-        growingPeriod: guideline.growingPeriod || '',
+        growingPeriod: parseGrowingPeriod(guideline.growingPeriod),
         waterRequirements: guideline.waterRequirements || '',
-        expectedYield: guideline.expectedYield || '',
+        expectedYield: parseYield(guideline.expectedYield),
         soilType: guideline.soilType || '',
         climate: guideline.climate || '',
-        spacing: guideline.spacing || '',
+        spacing: parseSpacing(guideline.spacing),
         fertilizer: guideline.fertilizer || '',
         keyTips: guideline.keyTips?.length > 0 ? guideline.keyTips : [''],
         commonPests: guideline.commonPests?.length > 0 ? guideline.commonPests : [{ name: '', control: '' }],
         diseases: guideline.diseases?.length > 0 ? guideline.diseases : [{ name: '', symptoms: '' }],
-        marketPrice: guideline.marketPrice || '',
+        marketPrice: parseMarketPrice(guideline.marketPrice),
         profitability: guideline.profitability || 'Moderate',
         difficulty: guideline.difficulty || 'Moderate',
         stages: guideline.stages?.map(s => ({
           stageName: s.stageName || '',
-          duration: s.duration || '',
+          ...parseStageDuration(s.duration),
           description: s.description || '',
           activities: s.activities?.length > 0 ? s.activities : ['']
         })) || []
@@ -84,17 +140,17 @@ export default function GuidelineModal({ isOpen, onClose, guideline, onSave, isL
         category: 'Vegetables',
         varieties: [''],
         plantingSeasons: [''],
-        growingPeriod: '',
+        growingPeriod: { min: '', max: '', unit: 'days' },
         waterRequirements: '',
-        expectedYield: '',
+        expectedYield: { min: '', max: '', unit: 'tons/ha' },
         soilType: '',
         climate: '',
-        spacing: '',
+        spacing: { width: '', height: '', unit: 'cm' },
         fertilizer: '',
         keyTips: [''],
         commonPests: [{ name: '', control: '' }],
         diseases: [{ name: '', symptoms: '' }],
-        marketPrice: '',
+        marketPrice: { min: '', max: '', currency: '₱', unit: 'kg' },
         profitability: 'Moderate',
         difficulty: 'Moderate',
         stages: []
@@ -141,20 +197,59 @@ export default function GuidelineModal({ isOpen, onClose, guideline, onSave, isL
     }));
   };
 
+  const updateNestedField = (field, key, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: { ...prev[field], [key]: value }
+    }));
+  };
+
   const validate = () => {
     const newErrors = {};
 
     if (!formData.name.trim()) newErrors.name = 'Crop name is required';
-    if (!formData.growingPeriod.trim()) newErrors.growingPeriod = 'Growing period is required';
+    if (!formData.growingPeriod.min || !formData.growingPeriod.max) {
+      newErrors.growingPeriod = 'Growing period range is required';
+    }
     if (formData.varieties.filter(v => v.trim()).length === 0) newErrors.varieties = 'At least one variety is required';
     if (formData.stages.length === 0) newErrors.stages = 'At least one stage is required';
     
-    // Validate stages
+    // Calculate total stage duration
+    let totalDays = 0;
     formData.stages.forEach((stage, index) => {
       if (!stage.stageName.trim()) newErrors[`stage_${index}_name`] = `Stage ${index + 1} name is required`;
-      if (!stage.duration.trim()) newErrors[`stage_${index}_duration`] = `Stage ${index + 1} duration is required`;
+      if (!stage.durationValue) newErrors[`stage_${index}_duration`] = `Stage ${index + 1} duration is required`;
       if (!stage.description.trim()) newErrors[`stage_${index}_description`] = `Stage ${index + 1} description is required`;
+      
+      // Calculate days
+      if (stage.durationValue && stage.durationUnit) {
+        const value = parseInt(stage.durationValue);
+        switch(stage.durationUnit) {
+          case 'days': totalDays += value; break;
+          case 'weeks': totalDays += value * 7; break;
+          case 'months': totalDays += value * 30; break;
+          default: break;
+        }
+      }
     });
+
+    // Validate stages match growing period
+    if (formData.growingPeriod.min && formData.growingPeriod.max && formData.stages.length > 0) {
+      const min = parseInt(formData.growingPeriod.min);
+      const max = parseInt(formData.growingPeriod.max);
+      let multiplier = 1;
+      switch(formData.growingPeriod.unit) {
+        case 'weeks': multiplier = 7; break;
+        case 'months': multiplier = 30; break;
+        default: multiplier = 1; break;
+      }
+      const expectedMin = min * multiplier;
+      const expectedMax = max * multiplier;
+      
+      if (totalDays < expectedMin || totalDays > expectedMax) {
+        newErrors.stages = `Stages must total ${expectedMin}-${expectedMax} days to match growing period. Current total: ${totalDays} days`;
+      }
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -167,9 +262,36 @@ export default function GuidelineModal({ isOpen, onClose, guideline, onSave, isL
       return;
     }
 
+    // Format structured data back to string format for database
+    const formatGrowingPeriod = (data) => {
+      if (data.min === data.max) return `${data.min} ${data.unit}`;
+      return `${data.min}-${data.max} ${data.unit}`;
+    };
+
+    const formatYield = (data) => {
+      if (!data.min && !data.max) return '';
+      if (data.min === data.max) return `${data.min} ${data.unit}`;
+      return `${data.min}-${data.max} ${data.unit}`;
+    };
+
+    const formatSpacing = (data) => {
+      if (!data.width || !data.height) return '';
+      return `${data.width}x${data.height} ${data.unit}`;
+    };
+
+    const formatMarketPrice = (data) => {
+      if (!data.min && !data.max) return '';
+      const range = data.min === data.max ? data.min : `${data.min}-${data.max}`;
+      return `${data.currency}${range}/${data.unit}`;
+    };
+
     // Clean up data before submitting
     const cleanedData = {
       ...formData,
+      growingPeriod: formatGrowingPeriod(formData.growingPeriod),
+      expectedYield: formatYield(formData.expectedYield),
+      spacing: formatSpacing(formData.spacing),
+      marketPrice: formatMarketPrice(formData.marketPrice),
       varieties: formData.varieties.filter(v => v.trim()),
       plantingSeasons: formData.plantingSeasons.filter(s => s.trim()),
       keyTips: formData.keyTips.filter(t => t.trim()),
@@ -177,6 +299,8 @@ export default function GuidelineModal({ isOpen, onClose, guideline, onSave, isL
       diseases: formData.diseases.filter(d => d.name && d.name.trim()),
       stages: formData.stages.map((stage, index) => ({
         ...stage,
+        // Ensure computed duration field is included
+        duration: stage.duration || (stage.durationValue && stage.durationUnit ? `${stage.durationValue} ${stage.durationUnit}` : ''),
         activities: stage.activities.filter(a => a.trim()),
         sequenceOrder: index + 1
       }))
@@ -253,13 +377,33 @@ export default function GuidelineModal({ isOpen, onClose, guideline, onSave, isL
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Growing Period <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
-                    value={formData.growingPeriod}
-                    onChange={(e) => updateField('growingPeriod', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                    placeholder="e.g., 90-120 days"
-                  />
+                  <div className="grid grid-cols-3 gap-2">
+                    <input
+                      type="number"
+                      value={formData.growingPeriod.min}
+                      onChange={(e) => updateNestedField('growingPeriod', 'min', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      placeholder="Min"
+                      min="0"
+                    />
+                    <input
+                      type="number"
+                      value={formData.growingPeriod.max}
+                      onChange={(e) => updateNestedField('growingPeriod', 'max', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      placeholder="Max"
+                      min="0"
+                    />
+                    <select
+                      value={formData.growingPeriod.unit}
+                      onChange={(e) => updateNestedField('growingPeriod', 'unit', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    >
+                      <option value="days">Days</option>
+                      <option value="weeks">Weeks</option>
+                      <option value="months">Months</option>
+                    </select>
+                  </div>
                   {errors.growingPeriod && <p className="text-red-500 text-xs mt-1">{errors.growingPeriod}</p>}
                 </div>
 
@@ -267,13 +411,36 @@ export default function GuidelineModal({ isOpen, onClose, guideline, onSave, isL
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Expected Yield
                   </label>
-                  <input
-                    type="text"
-                    value={formData.expectedYield}
-                    onChange={(e) => updateField('expectedYield', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                    placeholder="e.g., 4-5 tons/ha"
-                  />
+                  <div className="grid grid-cols-3 gap-2">
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={formData.expectedYield.min}
+                      onChange={(e) => updateNestedField('expectedYield', 'min', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      placeholder="Min"
+                      min="0"
+                    />
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={formData.expectedYield.max}
+                      onChange={(e) => updateNestedField('expectedYield', 'max', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      placeholder="Max"
+                      min="0"
+                    />
+                    <select
+                      value={formData.expectedYield.unit}
+                      onChange={(e) => updateNestedField('expectedYield', 'unit', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    >
+                      <option value="tons/ha">tons/ha</option>
+                      <option value="kg/ha">kg/ha</option>
+                      <option value="kg">kg</option>
+                      <option value="tons">tons</option>
+                    </select>
+                  </div>
                 </div>
 
                 <div>
@@ -308,15 +475,37 @@ export default function GuidelineModal({ isOpen, onClose, guideline, onSave, isL
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Market Price
+                    Market Price (₱)
                   </label>
-                  <input
-                    type="text"
-                    value={formData.marketPrice}
-                    onChange={(e) => updateField('marketPrice', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                    placeholder="e.g., ₱20-25/kg"
-                  />
+                  <div className="grid grid-cols-3 gap-2">
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={formData.marketPrice.min}
+                      onChange={(e) => updateNestedField('marketPrice', 'min', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      placeholder="Min"
+                      min="0"
+                    />
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={formData.marketPrice.max}
+                      onChange={(e) => updateNestedField('marketPrice', 'max', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      placeholder="Max"
+                      min="0"
+                    />
+                    <select
+                      value={formData.marketPrice.unit}
+                      onChange={(e) => updateNestedField('marketPrice', 'unit', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    >
+                      <option value="kg">per kg</option>
+                      <option value="lb">per lb</option>
+                      <option value="piece">per piece</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -449,13 +638,34 @@ export default function GuidelineModal({ isOpen, onClose, guideline, onSave, isL
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Spacing
                   </label>
-                  <input
-                    type="text"
-                    value={formData.spacing}
-                    onChange={(e) => updateField('spacing', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                    placeholder="e.g., 20x20 cm"
-                  />
+                  <div className="grid grid-cols-3 gap-2">
+                    <input
+                      type="number"
+                      value={formData.spacing.width}
+                      onChange={(e) => updateNestedField('spacing', 'width', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      placeholder="Width"
+                      min="0"
+                    />
+                    <input
+                      type="number"
+                      value={formData.spacing.height}
+                      onChange={(e) => updateNestedField('spacing', 'height', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      placeholder="Height"
+                      min="0"
+                    />
+                    <select
+                      value={formData.spacing.unit}
+                      onChange={(e) => updateNestedField('spacing', 'unit', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    >
+                      <option value="cm">cm</option>
+                      <option value="m">m</option>
+                      <option value="in">inches</option>
+                      <option value="ft">feet</option>
+                    </select>
+                  </div>
                 </div>
 
                 <div className="md:col-span-2">
@@ -617,6 +827,7 @@ export default function GuidelineModal({ isOpen, onClose, guideline, onSave, isL
               <StagesEditor 
                 stages={formData.stages}
                 onChange={(stages) => updateField('stages', stages)}
+                growingPeriod={formData.growingPeriod}
               />
               {errors.stages && <p className="text-red-500 text-sm mt-2">{errors.stages}</p>}
             </div>

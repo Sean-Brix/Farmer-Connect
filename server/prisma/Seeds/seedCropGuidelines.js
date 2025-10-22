@@ -11,17 +11,11 @@ const cropGuidelinesData = JSON.parse(
   readFileSync(join(__dirname, '../../../client/src/data/cropGuidelinesData.json'), 'utf-8')
 );
 
-const prisma = new PrismaClient();
-
-const seedCropGuidelines = async () => {
-  console.log('🌱 Seeding crop guidelines...');
-
+const seedCropGuidelines = async (prisma) => {
   try {
     // Clear existing guidelines
     await prisma.cropGuidelineStage.deleteMany({});
     await prisma.cropGuideline.deleteMany({});
-
-    console.log('   Cleared existing crop guidelines');
 
     // Map category names from JSON to database enum values
     const categoryMap = {
@@ -83,10 +77,9 @@ const seedCropGuidelines = async () => {
         }
       });
 
-      console.log(`   ✓ Created guideline for ${guideline.name}`);
     }
 
-    console.log(`✓ [CropGuidelines] DONE - Seeded ${cropGuidelinesData.crops.length} guidelines`);
+    return cropGuidelinesData.crops.length;
   } catch (error) {
     console.error('Error seeding crop guidelines:', error);
     throw error;
@@ -94,26 +87,3 @@ const seedCropGuidelines = async () => {
 };
 
 export default seedCropGuidelines;
-
-// Run if this file is executed directly
-const metaUrl = import.meta.url.replace(/\\/g, '/');
-const argvPath = `file:///${process.argv[1].replace(/\\/g, '/')}`;
-
-console.log('Meta URL:', metaUrl);
-console.log('Argv path:', argvPath);
-console.log('Match:', metaUrl === argvPath);
-
-if (metaUrl.includes('seedCropGuidelines.js')) {
-  console.log('Running seed...');
-  seedCropGuidelines()
-    .then(() => {
-      console.log('Crop guidelines seeding complete!');
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error('Error seeding crop guidelines:', error);
-      process.exit(1);
-    });
-} else {
-  console.log('Not running as main module');
-}

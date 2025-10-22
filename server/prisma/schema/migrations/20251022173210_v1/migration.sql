@@ -37,11 +37,11 @@ CREATE TABLE `accounts` (
     `education` ENUM('No formal education', 'Kinder', 'Elementary level', 'Elementary graduate', 'High school level', 'High school graduate', 'Senior high school level', 'Senior high school graduate', 'College level', 'College graduate', 'Post-graduate studies', 'Vocational/Technical') NULL,
     `isPWD` BOOLEAN NULL,
     `disabilityType` VARCHAR(191) NULL,
-    `livelihoodProfile` JSON NULL,
-    `farmingActivities` JSON NULL,
-    `fishingActivities` JSON NULL,
-    `farmworkActivities` JSON NULL,
-    `youthActivities` JSON NULL,
+    `livelihoodProfile` LONGTEXT NULL,
+    `farmingActivities` LONGTEXT NULL,
+    `fishingActivities` LONGTEXT NULL,
+    `farmworkActivities` LONGTEXT NULL,
+    `youthActivities` LONGTEXT NULL,
     `otherCropsSpecify` VARCHAR(191) NULL,
     `livestockSpecify` VARCHAR(191) NULL,
     `fishingOthersSpecify` VARCHAR(191) NULL,
@@ -72,11 +72,12 @@ CREATE TABLE `audit_logs` (
     `targetId` VARCHAR(191) NULL,
     `targetName` VARCHAR(191) NULL,
     `details` TEXT NULL,
-    `metadata` JSON NULL,
+    `metadata` LONGTEXT NULL,
     `ipAddress` VARCHAR(191) NULL,
     `userAgent` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    INDEX `audit_logs_adminId_fkey`(`adminId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -131,6 +132,7 @@ CREATE TABLE `chat_messages` (
     INDEX `chat_messages_senderId_idx`(`senderId`),
     INDEX `chat_messages_createdAt_idx`(`createdAt`),
     INDEX `chat_messages_isDeleted_idx`(`isDeleted`),
+    INDEX `chat_messages_replyToId_fkey`(`replyToId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -146,6 +148,7 @@ CREATE TABLE `chat_attachments` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     INDEX `chat_attachments_messageId_idx`(`messageId`),
+    INDEX `chat_attachments_uploadedById_fkey`(`uploadedById`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -159,6 +162,51 @@ CREATE TABLE `chat_read_receipts` (
     INDEX `chat_read_receipts_messageId_idx`(`messageId`),
     INDEX `chat_read_receipts_userId_idx`(`userId`),
     UNIQUE INDEX `chat_read_receipts_messageId_userId_key`(`messageId`, `userId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `crop_guidelines` (
+    `id` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `category` ENUM('Cereals', 'Vegetables', 'Fruits', 'Legumes', 'Root_Crops', 'Herbs_Spices') NOT NULL,
+    `varieties` LONGTEXT NOT NULL,
+    `plantingSeasons` LONGTEXT NOT NULL,
+    `growingPeriod` VARCHAR(191) NOT NULL,
+    `waterRequirements` VARCHAR(191) NOT NULL,
+    `expectedYield` VARCHAR(191) NOT NULL,
+    `soilType` VARCHAR(191) NOT NULL,
+    `climate` VARCHAR(191) NOT NULL,
+    `spacing` VARCHAR(191) NOT NULL,
+    `fertilizer` VARCHAR(191) NOT NULL,
+    `keyTips` LONGTEXT NOT NULL,
+    `commonPests` LONGTEXT NOT NULL,
+    `diseases` LONGTEXT NOT NULL,
+    `marketPrice` VARCHAR(191) NOT NULL,
+    `profitability` ENUM('Low', 'Moderate', 'High', 'Very_High') NOT NULL,
+    `difficulty` ENUM('Easy', 'Moderate', 'Moderate_High', 'High') NOT NULL,
+    `isActive` BOOLEAN NOT NULL DEFAULT true,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `crop_guidelines_name_key`(`name`),
+    INDEX `crop_guidelines_category_isActive_idx`(`category`, `isActive`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `crop_guideline_stages` (
+    `id` VARCHAR(191) NOT NULL,
+    `guidelineId` VARCHAR(191) NOT NULL,
+    `stageName` VARCHAR(191) NOT NULL,
+    `duration` VARCHAR(191) NOT NULL,
+    `description` TEXT NOT NULL,
+    `activities` LONGTEXT NOT NULL,
+    `sequenceOrder` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    INDEX `crop_guideline_stages_guidelineId_sequenceOrder_idx`(`guidelineId`, `sequenceOrder`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -181,6 +229,7 @@ CREATE TABLE `inquiries` (
     INDEX `inquiries_userId_idx`(`userId`),
     INDEX `inquiries_assignedToId_idx`(`assignedToId`),
     INDEX `inquiries_createdAt_idx`(`createdAt`),
+    INDEX `inquiries_resolvedById_fkey`(`resolvedById`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -203,6 +252,7 @@ CREATE TABLE `inquiry_replies` (
     INDEX `inquiry_replies_senderId_idx`(`senderId`),
     INDEX `inquiry_replies_createdAt_idx`(`createdAt`),
     INDEX `inquiry_replies_senderType_idx`(`senderType`),
+    INDEX `inquiry_replies_parentReplyId_fkey`(`parentReplyId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -219,6 +269,24 @@ CREATE TABLE `inquiry_attachments` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     INDEX `inquiry_attachments_inquiryId_idx`(`inquiryId`),
+    INDEX `inquiry_attachments_uploadedById_fkey`(`uploadedById`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `faq_categories` (
+    `id` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `description` VARCHAR(191) NULL,
+    `isActive` BOOLEAN NOT NULL DEFAULT true,
+    `orderIndex` INTEGER NOT NULL DEFAULT 0,
+    `createdById` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    INDEX `faq_categories_isActive_idx`(`isActive`),
+    INDEX `faq_categories_orderIndex_idx`(`orderIndex`),
+    INDEX `faq_categories_createdById_fkey`(`createdById`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -234,9 +302,12 @@ CREATE TABLE `faqs` (
     `helpfulCount` INTEGER NOT NULL DEFAULT 0,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `categoryId` VARCHAR(191) NULL,
 
     INDEX `faqs_isActive_idx`(`isActive`),
     INDEX `faqs_orderIndex_idx`(`orderIndex`),
+    INDEX `faqs_categoryId_idx`(`categoryId`),
+    INDEX `faqs_createdById_fkey`(`createdById`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -264,6 +335,7 @@ CREATE TABLE `item_stacks` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
+    INDEX `item_stacks_itemId_fkey`(`itemId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -281,6 +353,9 @@ CREATE TABLE `item_transactions` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
+    INDEX `item_transactions_accountId_fkey`(`accountId`),
+    INDEX `item_transactions_adminId_fkey`(`adminId`),
+    INDEX `item_transactions_itemStackId_fkey`(`itemStackId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -301,6 +376,7 @@ CREATE TABLE `user_preferences` (
 CREATE TABLE `registered_crops` (
     `id` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(191) NOT NULL,
+    `guidelineId` VARCHAR(191) NULL,
     `cropType` VARCHAR(191) NOT NULL,
     `variety` VARCHAR(191) NOT NULL,
     `plantingDate` DATETIME(3) NOT NULL,
@@ -310,10 +386,12 @@ CREATE TABLE `registered_crops` (
     `currentStage` ENUM('Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Maturity', 'Harvested') NOT NULL DEFAULT 'Seedling',
     `expectedYield` DOUBLE NULL,
     `notes` VARCHAR(191) NULL,
+    `archiveReason` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
     INDEX `registered_crops_userId_cropType_status_idx`(`userId`, `cropType`, `status`),
+    INDEX `registered_crops_guidelineId_idx`(`guidelineId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -338,9 +416,9 @@ CREATE TABLE `crop_monthly_reports` (
     `challenges` VARCHAR(191) NULL,
     `plannedActions` VARCHAR(191) NULL,
     `actualYield` DOUBLE NULL,
-    `costs` JSON NULL,
+    `costs` LONGTEXT NULL,
     `submissionDate` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `weatherSnapshot` JSON NULL,
+    `weatherSnapshot` LONGTEXT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -368,6 +446,7 @@ CREATE TABLE `seminars` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
+    INDEX `seminars_createdById_fkey`(`createdById`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -380,6 +459,7 @@ CREATE TABLE `seminar_participants` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    INDEX `seminar_participants_account_id_fkey`(`account_id`),
     UNIQUE INDEX `seminar_participants_seminar_id_account_id_key`(`seminar_id`, `account_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -395,6 +475,7 @@ CREATE TABLE `survey_forms` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
+    INDEX `survey_forms_createdById_fkey`(`createdById`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -406,11 +487,12 @@ CREATE TABLE `survey_fields` (
     `label` VARCHAR(191) NOT NULL,
     `placeholder` VARCHAR(191) NULL,
     `required` BOOLEAN NOT NULL DEFAULT false,
-    `options` JSON NULL,
+    `options` LONGTEXT NULL,
     `order` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
+    INDEX `survey_fields_surveyFormId_fkey`(`surveyFormId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -420,8 +502,10 @@ CREATE TABLE `survey_responses` (
     `surveyFormId` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(191) NULL,
     `submittedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `metadata` JSON NULL,
+    `metadata` LONGTEXT NULL,
 
+    INDEX `survey_responses_surveyFormId_fkey`(`surveyFormId`),
+    INDEX `survey_responses_userId_fkey`(`userId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -430,9 +514,10 @@ CREATE TABLE `survey_answers` (
     `id` VARCHAR(191) NOT NULL,
     `responseId` VARCHAR(191) NOT NULL,
     `fieldId` VARCHAR(191) NOT NULL,
-    `answer` JSON NOT NULL,
+    `answer` LONGTEXT NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    INDEX `survey_answers_fieldId_fkey`(`fieldId`),
     UNIQUE INDEX `survey_answers_responseId_fieldId_key`(`responseId`, `fieldId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -444,11 +529,13 @@ CREATE TABLE `survey_statistics` (
     `chartType` ENUM('BAR', 'PIE', 'LINE', 'DOUGHNUT', 'AREA', 'COLUMN', 'SCATTER') NOT NULL,
     `title` VARCHAR(191) NOT NULL,
     `description` TEXT NULL,
-    `config` JSON NOT NULL,
+    `config` LONGTEXT NOT NULL,
     `createdById` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
+    INDEX `survey_statistics_createdById_fkey`(`createdById`),
+    INDEX `survey_statistics_surveyFormId_fkey`(`surveyFormId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -456,19 +543,19 @@ CREATE TABLE `survey_statistics` (
 ALTER TABLE `audit_logs` ADD CONSTRAINT `audit_logs_adminId_fkey` FOREIGN KEY (`adminId`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `chat_participants` ADD CONSTRAINT `chat_participants_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `chat_participants` ADD CONSTRAINT `chat_participants_roomId_fkey` FOREIGN KEY (`roomId`) REFERENCES `chat_rooms`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `chat_messages` ADD CONSTRAINT `chat_messages_senderId_fkey` FOREIGN KEY (`senderId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `chat_participants` ADD CONSTRAINT `chat_participants_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `chat_messages` ADD CONSTRAINT `chat_messages_replyToId_fkey` FOREIGN KEY (`replyToId`) REFERENCES `chat_messages`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `chat_messages` ADD CONSTRAINT `chat_messages_roomId_fkey` FOREIGN KEY (`roomId`) REFERENCES `chat_rooms`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `chat_messages` ADD CONSTRAINT `chat_messages_replyToId_fkey` FOREIGN KEY (`replyToId`) REFERENCES `chat_messages`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `chat_messages` ADD CONSTRAINT `chat_messages_senderId_fkey` FOREIGN KEY (`senderId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `chat_attachments` ADD CONSTRAINT `chat_attachments_messageId_fkey` FOREIGN KEY (`messageId`) REFERENCES `chat_messages`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -483,7 +570,7 @@ ALTER TABLE `chat_read_receipts` ADD CONSTRAINT `chat_read_receipts_messageId_fk
 ALTER TABLE `chat_read_receipts` ADD CONSTRAINT `chat_read_receipts_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `inquiries` ADD CONSTRAINT `inquiries_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `crop_guideline_stages` ADD CONSTRAINT `crop_guideline_stages_guidelineId_fkey` FOREIGN KEY (`guidelineId`) REFERENCES `crop_guidelines`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `inquiries` ADD CONSTRAINT `inquiries_assignedToId_fkey` FOREIGN KEY (`assignedToId`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -492,7 +579,7 @@ ALTER TABLE `inquiries` ADD CONSTRAINT `inquiries_assignedToId_fkey` FOREIGN KEY
 ALTER TABLE `inquiries` ADD CONSTRAINT `inquiries_resolvedById_fkey` FOREIGN KEY (`resolvedById`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `inquiry_replies` ADD CONSTRAINT `inquiry_replies_senderId_fkey` FOREIGN KEY (`senderId`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `inquiries` ADD CONSTRAINT `inquiries_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `inquiry_replies` ADD CONSTRAINT `inquiry_replies_inquiryId_fkey` FOREIGN KEY (`inquiryId`) REFERENCES `inquiries`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -501,10 +588,19 @@ ALTER TABLE `inquiry_replies` ADD CONSTRAINT `inquiry_replies_inquiryId_fkey` FO
 ALTER TABLE `inquiry_replies` ADD CONSTRAINT `inquiry_replies_parentReplyId_fkey` FOREIGN KEY (`parentReplyId`) REFERENCES `inquiry_replies`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `inquiry_replies` ADD CONSTRAINT `inquiry_replies_senderId_fkey` FOREIGN KEY (`senderId`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `inquiry_attachments` ADD CONSTRAINT `inquiry_attachments_inquiryId_fkey` FOREIGN KEY (`inquiryId`) REFERENCES `inquiries`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `inquiry_attachments` ADD CONSTRAINT `inquiry_attachments_uploadedById_fkey` FOREIGN KEY (`uploadedById`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `faq_categories` ADD CONSTRAINT `faq_categories_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `faqs` ADD CONSTRAINT `faqs_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `faq_categories`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `faqs` ADD CONSTRAINT `faqs_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -513,13 +609,13 @@ ALTER TABLE `faqs` ADD CONSTRAINT `faqs_createdById_fkey` FOREIGN KEY (`createdB
 ALTER TABLE `item_stacks` ADD CONSTRAINT `item_stacks_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `inventory_items`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `item_transactions` ADD CONSTRAINT `item_transactions_itemStackId_fkey` FOREIGN KEY (`itemStackId`) REFERENCES `item_stacks`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `item_transactions` ADD CONSTRAINT `item_transactions_accountId_fkey` FOREIGN KEY (`accountId`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `item_transactions` ADD CONSTRAINT `item_transactions_adminId_fkey` FOREIGN KEY (`adminId`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `item_transactions` ADD CONSTRAINT `item_transactions_itemStackId_fkey` FOREIGN KEY (`itemStackId`) REFERENCES `item_stacks`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `user_preferences` ADD CONSTRAINT `user_preferences_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -528,16 +624,19 @@ ALTER TABLE `user_preferences` ADD CONSTRAINT `user_preferences_userId_fkey` FOR
 ALTER TABLE `registered_crops` ADD CONSTRAINT `registered_crops_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `registered_crops` ADD CONSTRAINT `registered_crops_guidelineId_fkey` FOREIGN KEY (`guidelineId`) REFERENCES `crop_guidelines`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `crop_monthly_reports` ADD CONSTRAINT `crop_monthly_reports_cropId_fkey` FOREIGN KEY (`cropId`) REFERENCES `registered_crops`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `seminars` ADD CONSTRAINT `seminars_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `seminar_participants` ADD CONSTRAINT `seminar_participants_seminar_id_fkey` FOREIGN KEY (`seminar_id`) REFERENCES `seminars`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `seminar_participants` ADD CONSTRAINT `seminar_participants_account_id_fkey` FOREIGN KEY (`account_id`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `seminar_participants` ADD CONSTRAINT `seminar_participants_account_id_fkey` FOREIGN KEY (`account_id`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `seminar_participants` ADD CONSTRAINT `seminar_participants_seminar_id_fkey` FOREIGN KEY (`seminar_id`) REFERENCES `seminars`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `survey_forms` ADD CONSTRAINT `survey_forms_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -552,13 +651,13 @@ ALTER TABLE `survey_responses` ADD CONSTRAINT `survey_responses_surveyFormId_fke
 ALTER TABLE `survey_responses` ADD CONSTRAINT `survey_responses_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `survey_answers` ADD CONSTRAINT `survey_answers_responseId_fkey` FOREIGN KEY (`responseId`) REFERENCES `survey_responses`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `survey_answers` ADD CONSTRAINT `survey_answers_fieldId_fkey` FOREIGN KEY (`fieldId`) REFERENCES `survey_fields`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `survey_statistics` ADD CONSTRAINT `survey_statistics_surveyFormId_fkey` FOREIGN KEY (`surveyFormId`) REFERENCES `survey_forms`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `survey_answers` ADD CONSTRAINT `survey_answers_responseId_fkey` FOREIGN KEY (`responseId`) REFERENCES `survey_responses`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `survey_statistics` ADD CONSTRAINT `survey_statistics_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `survey_statistics` ADD CONSTRAINT `survey_statistics_surveyFormId_fkey` FOREIGN KEY (`surveyFormId`) REFERENCES `survey_forms`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

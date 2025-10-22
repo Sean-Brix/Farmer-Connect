@@ -2543,22 +2543,36 @@ export default function Farmer_Report() {
 
                     <div>
                       <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>🐛 Common Pests</h4>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="space-y-2">
                         {selectedCrop.commonPests.map((pest, idx) => (
-                          <span key={idx} className={`px-2 py-1 rounded text-sm ${theme === 'dark' ? 'bg-red-900 text-red-100' : 'bg-red-100 text-red-800'}`}>
-                            {pest}
-                          </span>
+                          <div key={idx} className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-red-900/30 border border-red-800' : 'bg-red-50 border border-red-200'}`}>
+                            <div className={`font-semibold mb-1 ${theme === 'dark' ? 'text-red-300' : 'text-red-800'}`}>
+                              {typeof pest === 'string' ? pest : pest.name}
+                            </div>
+                            {typeof pest === 'object' && pest.control && (
+                              <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                <span className="font-medium">Control: </span>{pest.control}
+                              </div>
+                            )}
+                          </div>
                         ))}
                       </div>
                     </div>
 
                     <div>
                       <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>🦠 Common Diseases</h4>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="space-y-2">
                         {selectedCrop.diseases.map((disease, idx) => (
-                          <span key={idx} className={`px-2 py-1 rounded text-sm ${theme === 'dark' ? 'bg-orange-900 text-orange-100' : 'bg-orange-100 text-orange-800'}`}>
-                            {disease}
-                          </span>
+                          <div key={idx} className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-orange-900/30 border border-orange-800' : 'bg-orange-50 border border-orange-200'}`}>
+                            <div className={`font-semibold mb-1 ${theme === 'dark' ? 'text-orange-300' : 'text-orange-800'}`}>
+                              {typeof disease === 'string' ? disease : disease.name}
+                            </div>
+                            {typeof disease === 'object' && disease.symptoms && (
+                              <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                <span className="font-medium">Symptoms: </span>{disease.symptoms}
+                              </div>
+                            )}
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -2592,17 +2606,29 @@ export default function Farmer_Report() {
                       <tbody>
                         {selectedCrop.stages.map((stage, idx) => (
                           <tr key={idx} className={`border-t ${theme === 'dark' ? 'border-gray-600 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'}`}>
-                            <td className={`px-4 py-3 font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{stage.stage}</td>
-                            <td className={`px-4 py-3 text-center font-semibold ${theme === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>{stage.duration}</td>
-                            <td className={`px-4 py-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{stage.description}</td>
+                            <td className={`px-4 py-3 font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                              {stage.stageName || stage.stage || 'N/A'}
+                            </td>
+                            <td className={`px-4 py-3 text-center font-semibold ${theme === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>
+                              {stage.duration || 'N/A'}
+                            </td>
+                            <td className={`px-4 py-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                              {stage.description || 'N/A'}
+                            </td>
                             <td className="px-4 py-3">
                               <ul className="space-y-1">
-                                {stage.activities.map((activity, actIdx) => (
-                                  <li key={actIdx} className="flex items-start gap-2 text-sm">
-                                    <span className={theme === 'dark' ? 'text-green-400 mt-1' : 'text-green-600 mt-1'}>•</span>
-                                    <span className={theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}>{activity}</span>
+                                {(stage.activities && stage.activities.length > 0) ? (
+                                  stage.activities.map((activity, actIdx) => (
+                                    <li key={actIdx} className="flex items-start gap-2 text-sm">
+                                      <span className={theme === 'dark' ? 'text-green-400 mt-1' : 'text-green-600 mt-1'}>•</span>
+                                      <span className={theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}>{activity}</span>
+                                    </li>
+                                  ))
+                                ) : (
+                                  <li className={`text-sm italic ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`}>
+                                    No activities listed
                                   </li>
-                                ))}
+                                )}
                               </ul>
                             </td>
                           </tr>
