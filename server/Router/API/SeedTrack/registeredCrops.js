@@ -65,7 +65,16 @@ router.get('/', async (req, res) => {
     const crops = await prisma.registeredCrop.findMany({
       where,
       orderBy: { createdAt: 'desc' },
-      include: { reports: includeReports === 'true' },
+      include: { 
+        reports: includeReports === 'true',
+        guideline: {
+          include: {
+            stages: {
+              orderBy: { sequenceOrder: 'asc' }
+            }
+          }
+        }
+      },
     });
 
     // Parse JSON fields in reports
@@ -83,7 +92,16 @@ router.get('/:id', async (req, res) => {
   try {
     const crop = await prisma.registeredCrop.findUnique({
       where: { id: req.params.id },
-      include: { reports: true },
+      include: { 
+        reports: true,
+        guideline: {
+          include: {
+            stages: {
+              orderBy: { sequenceOrder: 'asc' }
+            }
+          }
+        }
+      },
     });
     if (!crop) return res.status(404).json({ success: false, message: 'Crop not found' });
     
@@ -102,12 +120,13 @@ router.get('/:id', async (req, res) => {
 // POST /api/seed-track/crops
 router.post('/', async (req, res) => {
   try {
-    const { userId, cropType, variety, plantingDate, expectedHarvest, area, expectedYield, currentStage, notes } = req.body || {};
+    const { userId, guidelineId, cropType, variety, plantingDate, expectedHarvest, area, expectedYield, currentStage, notes } = req.body || {};
     if (!userId || !cropType || !variety || !plantingDate) {
       return res.status(400).json({ success: false, message: 'userId, cropType, variety, plantingDate are required' });
     }
     const data = {
       userId,
+      guidelineId: guidelineId || null,
       cropType,
       variety,
       plantingDate: new Date(plantingDate),
@@ -115,6 +134,7 @@ router.post('/', async (req, res) => {
       area: area != null ? Number(area) : null,
       expectedYield: expectedYield != null ? Number(expectedYield) : null,
       currentStage: currentStage || 'Seedling',
+      currentStageIndex: guidelineId ? 0 : null, // Start at first stage if guideline is selected
       notes: notes || null,
     };
     const created = await prisma.registeredCrop.create({ data });
@@ -128,12 +148,13 @@ router.post('/', async (req, res) => {
 // PATCH /api/seed-track/crops/:id
 router.patch('/:id', async (req, res) => {
   try {
-    const updatable = ['cropType', 'variety', 'plantingDate', 'expectedHarvest', 'area', 'expectedYield', 'status', 'currentStage', 'notes'];
+    const updatable = ['guidelineId', 'cropType', 'variety', 'plantingDate', 'expectedHarvest', 'area', 'expectedYield', 'status', 'currentStage', 'currentStageIndex', 'notes'];
     const data = {};
     for (const key of updatable) {
       if (req.body[key] !== undefined) {
         if (['plantingDate', 'expectedHarvest'].includes(key)) data[key] = req.body[key] ? new Date(req.body[key]) : null;
         else if (['area', 'expectedYield'].includes(key)) data[key] = req.body[key] != null ? Number(req.body[key]) : null;
+        else if (key === 'currentStageIndex') data[key] = req.body[key] != null ? Number(req.body[key]) : null;
         else data[key] = req.body[key];
       }
     }

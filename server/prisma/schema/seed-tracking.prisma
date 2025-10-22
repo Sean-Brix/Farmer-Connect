@@ -1,22 +1,23 @@
 model RegisteredCrop {
-  id              String              @id @default(cuid())
-  userId          String
-  guidelineId     String? // Reference to CropGuideline
-  cropType        String
-  variety         String
-  plantingDate    DateTime
-  expectedHarvest DateTime?
-  area            Float?
-  status          CropStatus          @default(Active)
-  currentStage    GrowthStage         @default(Seedling)
-  expectedYield   Float?
-  notes           String?
-  archiveReason   String? // Reason for archiving
-  createdAt       DateTime            @default(now())
-  updatedAt       DateTime            @updatedAt
-  reports         CropMonthlyReport[]
-  user            Account             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  guideline       CropGuideline?      @relation(fields: [guidelineId], references: [id], onDelete: SetNull)
+  id                 String              @id @default(cuid())
+  userId             String
+  guidelineId        String? // Reference to CropGuideline
+  cropType           String
+  variety            String
+  plantingDate       DateTime
+  expectedHarvest    DateTime?
+  area               Float?
+  status             CropStatus          @default(Active)
+  currentStage       GrowthStage         @default(Seedling)
+  currentStageIndex  Int?                @default(0) // Track which guideline stage (0-based index)
+  expectedYield      Float?
+  notes              String?
+  archiveReason      String? // Reason for archiving
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  reports            CropMonthlyReport[]
+  user               Account             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guideline          CropGuideline?      @relation(fields: [guidelineId], references: [id], onDelete: SetNull)
 
   @@index([userId, cropType, status])
   @@index([guidelineId])
