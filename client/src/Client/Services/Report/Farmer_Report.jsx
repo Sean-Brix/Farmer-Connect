@@ -883,29 +883,70 @@ export default function Farmer_Report() {
                             theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                           }`}>
                             Planted: {selectedCropInSidebar.plantingDate} • Area: {selectedCropInSidebar.area} ha
+                            {selectedCropInSidebar.status !== 'Active' && (
+                              <span className={`ml-2 px-2 py-0.5 rounded text-xs font-semibold ${
+                                theme === 'dark' ? 'bg-gray-600 text-gray-300' : 'bg-gray-200 text-gray-700'
+                              }`}>
+                                {selectedCropInSidebar.status}
+                              </span>
+                            )}
                           </p>
                         </div>
-                        <div className={`px-4 py-2 rounded-lg text-sm font-semibold ${
-                          theme === 'dark' ? 'bg-green-900 text-green-200' : 'bg-green-100 text-green-700'
-                        }`}>
-                          Stage {selectedCropInSidebar.currentStageIndex + 1} of {selectedCropInSidebar.guideline.stages.length}
-                        </div>
+                        {selectedCropInSidebar.guideline?.stages && (
+                          <div className={`px-4 py-2 rounded-lg text-sm font-semibold ${
+                            theme === 'dark' ? 'bg-green-900 text-green-200' : 'bg-green-100 text-green-700'
+                          }`}>
+                            Stage {(selectedCropInSidebar.currentStageIndex || 0) + 1} of {selectedCropInSidebar.guideline.stages.length}
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {/* Stage Progression Component */}
+                    {/* Stage Progression Component or Archived Crop Details */}
                     <div className="p-6">
-                      <StageProgressionUI 
-                        crop={selectedCropInSidebar}
-                        theme={theme}
-                        onSubmitReport={(selectedCrop) => {
-                          setSelectedCropForReport(selectedCrop);
-                          setShowDetailedReportModal(true);
-                        }}
-                        onStageClick={(stageIndex) => {
-                          setSelectedStageView(stageIndex);
-                        }}
-                      />
+                      {selectedCropInSidebar.guideline ? (
+                        <StageProgressionUI 
+                          crop={selectedCropInSidebar}
+                          theme={theme}
+                          onSubmitReport={(selectedCrop) => {
+                            setSelectedCropForReport(selectedCrop);
+                            setShowDetailedReportModal(true);
+                          }}
+                          onStageClick={(stageIndex) => {
+                            setSelectedStageView(stageIndex);
+                          }}
+                        />
+                      ) : (
+                        /* Archived Crop Without Guideline */
+                        <div className={`text-center py-12 ${
+                          theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                        }`}>
+                          <div className="text-5xl mb-4">📦</div>
+                          <h4 className={`text-lg font-semibold mb-2 ${
+                            theme === 'dark' ? 'text-white' : 'text-gray-900'
+                          }`}>
+                            Archived Crop
+                          </h4>
+                          <p className="text-sm mb-4">
+                            This crop was registered without a guideline or has been archived.
+                          </p>
+                          <div className={`inline-block text-left p-4 rounded-lg ${
+                            theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'
+                          }`}>
+                            <div className="space-y-2 text-sm">
+                              <div><strong>Status:</strong> {selectedCropInSidebar.status}</div>
+                              <div><strong>Planting Date:</strong> {selectedCropInSidebar.plantingDate}</div>
+                              {selectedCropInSidebar.expectedHarvest && (
+                                <div><strong>Expected Harvest:</strong> {selectedCropInSidebar.expectedHarvest}</div>
+                              )}
+                              <div><strong>Area:</strong> {selectedCropInSidebar.area} hectares</div>
+                              {selectedCropInSidebar.currentStage && (
+                                <div><strong>Last Stage:</strong> {selectedCropInSidebar.currentStage}</div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ) : (
