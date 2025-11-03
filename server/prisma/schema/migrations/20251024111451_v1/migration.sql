@@ -384,6 +384,7 @@ CREATE TABLE `registered_crops` (
     `area` DOUBLE NULL,
     `status` ENUM('Active', 'Inactive', 'Completed', 'Archived') NOT NULL DEFAULT 'Active',
     `currentStage` ENUM('Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Maturity', 'Harvested') NOT NULL DEFAULT 'Seedling',
+    `currentStageIndex` INTEGER NULL DEFAULT 0,
     `expectedYield` DOUBLE NULL,
     `notes` VARCHAR(191) NULL,
     `archiveReason` VARCHAR(191) NULL,
