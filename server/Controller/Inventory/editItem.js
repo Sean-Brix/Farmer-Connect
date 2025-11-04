@@ -6,6 +6,15 @@ async function editItem(req, res) {
     try {
         const { id, name, description, category } = req.body;
 
+        console.log('✏️ [Edit Item API] Received data:', {
+            id,
+            name,
+            description,
+            category,
+            categoryType: typeof category,
+            fullBody: req.body
+        });
+
         // Validate required fields
         if (!id) {
             return res.status(400).json({
@@ -39,6 +48,13 @@ async function editItem(req, res) {
 
         // Convert frontend category format to database enum format
         const categoryEnum = category ? category.replace(/\s+/g, '_') : 'Other';
+
+        console.log('✏️ [Edit Item API] Category conversion:', {
+            originalCategory: category,
+            convertedEnum: categoryEnum,
+            isValid: validCategories.includes(categoryEnum),
+            validCategories
+        });
 
         if (!validCategories.includes(categoryEnum)) {
             return res.status(400).json({
@@ -88,6 +104,9 @@ async function editItem(req, res) {
             },
         });
 
+        // Convert category back to display format for frontend
+        const displayCategory = updatedItem.category ? updatedItem.category.replace(/_/g, ' ') : 'Other';
+        
         // Track what fields were updated for audit log
         const updatedFields = [];
         if (existingItem.name !== name.trim()) updatedFields.push('name');
@@ -128,7 +147,10 @@ async function editItem(req, res) {
         return res.status(200).json({
             success: true,
             message: 'Item updated successfully',
-            data: updatedItem,
+            data: {
+                ...updatedItem,
+                category: displayCategory, // Return display format to frontend
+            },
         });
     } catch (error) {
         console.error('Error updating item:', error);

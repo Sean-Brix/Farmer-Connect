@@ -100,6 +100,9 @@ async function addItem(req, res) {
                 },
             });
 
+            // Convert category to display format for frontend
+            const displayCategory = updatedItem.category ? updatedItem.category.replace(/_/g, ' ') : 'Other';
+
             // Log the inventory update action
             await auditLogger.log({
                 adminId: req.user?.id, // Admin ID from auth middleware
@@ -123,7 +126,10 @@ async function addItem(req, res) {
 
             return res.status(200).json({
                 message: 'Quantity added to existing item stack successfully',
-                item: updatedItem,
+                item: {
+                    ...updatedItem,
+                    category: displayCategory, // Return display format to frontend
+                },
             });
         } else {
             // Create new item with stacks for all statuses
@@ -198,9 +204,15 @@ async function addItem(req, res) {
                 req: req,
             });
 
+            // Convert category to display format for frontend
+            const displayCategory = newItem.category ? newItem.category.replace(/_/g, ' ') : 'Other';
+
             return res.status(201).json({
                 message: 'Item created successfully with all status stacks',
-                item: newItem,
+                item: {
+                    ...newItem,
+                    category: displayCategory, // Return display format to frontend
+                },
             });
         }
     } catch (error) {

@@ -26,7 +26,6 @@ function Content() {
     const [showModal, setShowModal] = useState(false);
     const [search, setSearch] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('All');
-    const [statusFilter, setStatusFilter] = useState('All');
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
@@ -86,14 +85,20 @@ function Content() {
 
     const fetchItems = async () => {
         try {
+            console.log('📦 [Inventory] Fetching items from API...');
             const response = await fetch('/api/inventory/all/items');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
+            console.log('📦 [Inventory] Received data from API:', data);
+            console.log('📦 [Inventory] First item sample:', data[0]);
+            if (data[0]) {
+                console.log('📦 [Inventory] Category of first item:', data[0].category, 'Type:', typeof data[0].category);
+            }
             setItems(data || []);
         } catch (error) {
-            console.error('Failed to fetch inventory:', error);
+            console.error('❌ [Inventory] Failed to fetch inventory:', error);
             setItems([]);
         }
     };
@@ -138,8 +143,18 @@ function Content() {
     };
 
     const handleEdit = (item) => {
+        console.log('✏️ [Edit Item] Opening edit for item:', item);
+        console.log('✏️ [Edit Item] Category value:', item.category, 'Type:', typeof item.category);
+        console.log('✏️ [Edit Item] Category.name:', item.category?.name);
+        
         setEditItemId(item.id);
         setEditForm({
+            name: item.name,
+            description: item.description,
+            category: item.category?.name || item.category || '',
+        });
+        
+        console.log('✏️ [Edit Item] Edit form set to:', {
             name: item.name,
             description: item.description,
             category: item.category?.name || item.category || '',
@@ -167,6 +182,11 @@ function Content() {
             return;
         }
 
+        console.log('💾 [Save Edit] Saving item with data:', {
+            id: editItemId,
+            ...editForm,
+        });
+
         try {
             const response = await fetch(`/api/inventory/item/edit`, {
                 method: 'POST',
@@ -183,12 +203,15 @@ function Content() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
+            const responseData = await response.json();
+            console.log('✅ [Save Edit] Server response:', responseData);
+
             setEditItemId(null);
             setEditForm({});
             fetchItems();
             showAlert('Item updated successfully', 'success');
         } catch (error) {
-            console.error('Failed to update item:', error);
+            console.error('❌ [Save Edit] Failed to update item:', error);
             showAlert('Failed to update item', 'error');
         }
     };
@@ -207,14 +230,24 @@ function Content() {
                 (item.description || '')
                     .toLowerCase()
                     .includes((search || '').toLowerCase());
+            
+            const itemCategory = item.category?.name || item.category;
             const matchesCategoryFilter =
                 categoryFilter === 'All' || 
-                (item.category?.name || item.category) === categoryFilter;
-            const matchesStatusFilter =
-                statusFilter === 'All' ||
-                (item.stacks &&
-                    item.stacks.some((stack) => stack.status === statusFilter));
-            return matchesSearch && matchesCategoryFilter && matchesStatusFilter;
+                itemCategory === categoryFilter;
+            
+            // Debug logging for category filtering
+            if (categoryFilter !== 'All') {
+                console.log('🔍 [Category Filter]', {
+                    itemName: item.name,
+                    itemCategory: itemCategory,
+                    categoryFilter: categoryFilter,
+                    matches: matchesCategoryFilter,
+                    rawCategory: item.category
+                });
+            }
+            
+            return matchesSearch && matchesCategoryFilter;
         })
         .sort((a, b) => {
             // Sort by name (case-insensitive)
@@ -224,6 +257,8 @@ function Content() {
                 return (b.name || '').localeCompare(a.name || '', undefined, { sensitivity: 'base' });
             }
         });
+
+    console.log('📊 [Filtered Items] Total after filter:', filteredItems.length, 'Category Filter:', categoryFilter);
 
     // Pagination logic
     const totalItems = filteredItems.length;
@@ -235,7 +270,7 @@ function Content() {
     // Reset to first page when filters change
     useEffect(() => {
         setCurrentPage(1);
-    }, [search, categoryFilter, statusFilter]);
+    }, [search, categoryFilter]);
 
     // Reset to first page when items per page changes or exceeds total items
     useEffect(() => {
@@ -920,30 +955,6 @@ function Content() {
                             </div>
                         </div>
 
-                        {/* Status Filter */}
-                        <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
-                            <div className="relative z-10">
-                                <select
-                                    value={statusFilter}
-                                    onChange={(e) => setStatusFilter(e.target.value)}
-                                    className="w-full px-3 py-2 pr-8 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white appearance-none relative z-20"
-                                >
-                                    <option value="All">All Statuses</option>
-                                    {statuses.map((status) => (
-                                        <option key={status} value={status}>
-                                            {status}
-                                        </option>
-                                    ))}
-                                </select>
-                                <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none z-30">
-                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-
                         {/* Action Buttons */}
                         <div className="flex gap-2">
                             <button
@@ -1215,7 +1226,7 @@ function Content() {
                                                     <td className={sizeClasses[uiSize].padding}>
                                                         <div className="flex flex-col">
                                                             <div className={`font-bold ${sizeClasses[uiSize].text} ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>{item.name}</div>
-                                                            <div className={`sm:hidden ${sizeClasses[uiSize].text} ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{item.category?.name || 'Uncategorized'}</div>
+                                                            <div className={`sm:hidden ${sizeClasses[uiSize].text} ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{item.category || 'Uncategorized'}</div>
                                                             {item.description && (
                                                                 <div className={`mt-1 ${sizeClasses[uiSize].text === 'text-xs' ? 'text-xs' : sizeClasses[uiSize].text === 'text-sm' ? 'text-xs' : 'text-sm'} ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{truncate(item.description, 40)}</div>
                                                             )}
@@ -1223,7 +1234,7 @@ function Content() {
                                                     </td>
                                                     <td className={`${sizeClasses[uiSize].padding} hidden sm:table-cell`}>
                                                         <span className={`font-semibold ${sizeClasses[uiSize].text} ${isDark ? 'text-blue-300' : 'text-blue-600'}`}>
-                                                            {item.category?.name || 'Uncategorized'}
+                                                            {item.category || 'Uncategorized'}
                                                         </span>
                                                     </td>
                                                     <td className={sizeClasses[uiSize].padding}>
