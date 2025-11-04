@@ -28,6 +28,20 @@ const eicAPI = {
             throw new Error('Failed to fetch EIC requests');
         }
         const data = await response.json();
+        
+        console.log('📥 [EIC Requests] Received from API:', {
+            total: data.requests?.length || 0,
+            firstRequest: data.requests?.[0] ? {
+                id: data.requests[0].id,
+                itemName: data.requests[0].itemName,
+                quantity: data.requests[0].quantity,
+                requestQuantity: data.requests[0].requestQuantity,
+                quantityType: typeof data.requests[0].quantity,
+                requestQuantityType: typeof data.requests[0].requestQuantity,
+                status: data.requests[0].status,
+            } : null
+        });
+        
         return data.requests || [];
     },
 

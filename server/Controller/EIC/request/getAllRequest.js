@@ -62,6 +62,7 @@ async function getAllRequest(req, res) {
             accountId: request.accountId,
             adminId: request.adminId,
             quantity: request.quantity,
+            requestQuantity: request.quantity, // Frontend expects requestQuantity
             status: request.status,
             pickupDate: request.pickupDate,
             returnDate: request.returnDate,
@@ -89,6 +90,19 @@ async function getAllRequest(req, res) {
                 : null,
             adminEmail: request.admin ? request.admin.email : null,
         }));
+
+        console.log('🔍 [EIC Requests] Total requests:', transformedRequests.length);
+        if (transformedRequests.length > 0) {
+            console.log('🔍 [EIC Requests] First request sample:', {
+                id: transformedRequests[0].id,
+                itemName: transformedRequests[0].itemName,
+                quantity: transformedRequests[0].quantity,
+                quantityType: typeof transformedRequests[0].quantity,
+                requestQuantity: transformedRequests[0].requestQuantity,
+                status: transformedRequests[0].status,
+                requestorName: transformedRequests[0].requestorName,
+            });
+        }
 
         return res.status(200).json({
             success: true,
