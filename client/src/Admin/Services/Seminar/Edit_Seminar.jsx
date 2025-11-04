@@ -1,20 +1,71 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState, useMemo } from 'react';
 import { useTheme } from '../../../contexts/ThemeContext';
 import default_picture from '../../../Assets/default_seminar_pic.jpg';
 
 export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
     const { isDark } = useTheme();
     
+    // Format dates from DateTime/ISO string to YYYY-MM-DD for date inputs
+    const formatDateForInput = (dateValue) => {
+        if (!dateValue) return '';
+        
+        // Handle ISO string dates (like "2025-11-07T00:00:00.000Z")
+        if (typeof dateValue === 'string') {
+            return dateValue.split('T')[0];
+        }
+        
+        // Handle Date objects
+        try {
+            const date = new Date(dateValue);
+            return date.toISOString().split('T')[0];
+        } catch (e) {
+            console.error('Error formatting date:', dateValue, e);
+            return '';
+        }
+    };
+
+    // Use useMemo to format dates when data changes
+    const initialData = useMemo(() => {
+        return {
+            ...data,
+            start_date: formatDateForInput(data.start_date),
+            end_date: formatDateForInput(data.end_date),
+            registration_deadline: formatDateForInput(data.registration_deadline),
+        };
+    }, [data]);
+    
     // Render editing data
-    const [newData, setNewData] = useState(data);
+    const [newData, setNewData] = useState(initialData);
     const [image, setImage] = useState(data.photo);
     const [newImage, setNewImage] = useState(null);
     const [showImagePreview, setShowImagePreview] = useState(false);
     const changedImage = useRef(false);
 
+    // Update newData when initialData changes
+    useEffect(() => {
+        setNewData(initialData);
+    }, [initialData]);
+
     // Save the record
     const saveSeminar = async (e) => {
         e.preventDefault();
+
+        // Validate dates
+        const startDate = new Date(newData.start_date);
+        const endDate = new Date(newData.end_date);
+        const regDeadline = new Date(newData.registration_deadline);
+
+        // Registration deadline must be before start date
+        if (regDeadline >= startDate) {
+            alert('Registration deadline must be earlier than the start date.');
+            return;
+        }
+
+        // End date must be same day or after start date
+        if (endDate < startDate) {
+            alert('End date cannot be earlier than the start date.');
+            return;
+        }
 
         try {
             // Create FormData for file upload support
@@ -306,7 +357,8 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                                         ? 'border-gray-600 bg-gray-800 text-gray-100' 
                                                         : 'border-green-300 bg-white text-gray-900'
                                                 }`}
-                                                value={newData.start_date}
+                                                value={newData.start_date || ''}
+                                                min={newData.registration_deadline || undefined}
                                                 onChange={(e) => setNewData({ ...newData, start_date: e.target.value })}
                                                 required
                                                 autoComplete="off"
@@ -323,7 +375,8 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                                         ? 'border-gray-600 bg-gray-800 text-gray-100' 
                                                         : 'border-green-300 bg-white text-gray-900'
                                                 }`}
-                                                value={newData.end_date}
+                                                value={newData.end_date || ''}
+                                                min={newData.start_date || undefined}
                                                 onChange={(e) => setNewData({ ...newData, end_date: e.target.value })}
                                                 required
                                                 autoComplete="off"
@@ -375,7 +428,8 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                                     ? 'border-gray-600 bg-gray-800 text-gray-100' 
                                                     : 'border-green-300 bg-white text-gray-900'
                                             }`}
-                                            value={newData.registration_deadline}
+                                            value={newData.registration_deadline || ''}
+                                            max={newData.start_date ? new Date(new Date(newData.start_date).getTime() - 86400000).toISOString().split('T')[0] : undefined}
                                             onChange={(e) => setNewData({ ...newData, registration_deadline: e.target.value })}
                                             required
                                             autoComplete="off"

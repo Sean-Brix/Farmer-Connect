@@ -4,10 +4,15 @@ import overrides from '../locales/overrides.json';
 /**
  * Custom translation hook with override support
  * This allows developers to override specific translations during development
- * Usage: const { t } = useCustomTranslation();
+ * Usage: const { t, i18n } = useCustomTranslation();
+ * 
+ * IMPORTANT: This hook subscribes to language changes and will trigger
+ * component re-renders when the language is changed via i18n.changeLanguage()
  */
 export const useCustomTranslation = (namespace = 'common') => {
-  const { t: originalT, i18n } = useTranslation(namespace);
+  // useTranslation automatically subscribes to language changes
+  // and triggers re-renders when language is changed
+  const { t: originalT, i18n, ready } = useTranslation(namespace);
   
   const t = (key, options) => {
     // Check if there's an override for this key
@@ -21,7 +26,8 @@ export const useCustomTranslation = (namespace = 'common') => {
     return originalT(key, options);
   };
   
-  return { t, i18n };
+  // Return i18n instance so components can use i18n.changeLanguage() and i18n.language
+  return { t, i18n, ready };
 };
 
 export default useCustomTranslation;

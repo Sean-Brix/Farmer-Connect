@@ -99,9 +99,21 @@ function DescriptionModal({ isOpen, onClose, title, description, seminar, isDark
         }
     };
 
+    // Format date for display
+    const formatDate = (dateValue) => {
+        if (!dateValue) return 'Not set';
+        const date = new Date(dateValue);
+        if (isNaN(date.getTime())) return 'Invalid date';
+        return date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+    };
+
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-            <div className={`rounded-xl shadow-2xl max-w-2xl w-full border overflow-hidden ${
+            <div className={`rounded-xl shadow-2xl max-w-3xl w-full border overflow-hidden ${
                 isDark 
                     ? 'bg-gray-800 border-gray-600' 
                     : 'bg-white border-gray-200'
@@ -139,16 +151,133 @@ function DescriptionModal({ isOpen, onClose, title, description, seminar, isDark
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
-                    <h4 className={`text-lg font-semibold mb-4 ${
+                <div className="p-6 max-h-[70vh] overflow-y-auto">
+                    {/* Title */}
+                    <h4 className={`text-2xl font-bold mb-4 ${
                         isDark ? 'text-gray-100' : 'text-gray-900'
                     }`}>
                         {title}
                     </h4>
-                    <div className={`text-sm leading-relaxed ${
-                        isDark ? 'text-gray-300' : 'text-gray-700'
-                    }`}>
-                        {description || 'No description available.'}
+
+                    {/* Description */}
+                    <div className="mb-6">
+                        <h5 className={`text-sm font-semibold mb-2 uppercase tracking-wide ${
+                            isDark ? 'text-green-400' : 'text-green-700'
+                        }`}>
+                            Description
+                        </h5>
+                        <p className={`text-sm leading-relaxed whitespace-pre-wrap ${
+                            isDark ? 'text-gray-300' : 'text-gray-700'
+                        }`}>
+                            {description || 'No description available.'}
+                        </p>
+                    </div>
+
+                    {/* Details Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Speaker */}
+                        <div>
+                            <h5 className={`text-sm font-semibold mb-2 uppercase tracking-wide ${
+                                isDark ? 'text-green-400' : 'text-green-700'
+                            }`}>
+                                Speaker
+                            </h5>
+                            <p className={`text-sm ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
+                                {seminar?.speaker || 'Not specified'}
+                            </p>
+                        </div>
+
+                        {/* Location */}
+                        <div>
+                            <h5 className={`text-sm font-semibold mb-2 uppercase tracking-wide ${
+                                isDark ? 'text-green-400' : 'text-green-700'
+                            }`}>
+                                Location
+                            </h5>
+                            <p className={`text-sm ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
+                                {seminar?.location || 'Not specified'}
+                            </p>
+                        </div>
+
+                        {/* Status */}
+                        <div>
+                            <h5 className={`text-sm font-semibold mb-2 uppercase tracking-wide ${
+                                isDark ? 'text-green-400' : 'text-green-700'
+                            }`}>
+                                Status
+                            </h5>
+                            <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                                seminar?.status === 'Upcoming' ? 'bg-blue-100 text-blue-700' :
+                                seminar?.status === 'Ongoing' ? 'bg-yellow-100 text-yellow-700' :
+                                seminar?.status === 'Completed' ? 'bg-green-100 text-green-700' :
+                                seminar?.status === 'Cancelled' ? 'bg-red-100 text-red-700' :
+                                isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+                            }`}>
+                                {seminar?.status || 'Unknown'}
+                            </span>
+                        </div>
+
+                        {/* Capacity */}
+                        <div>
+                            <h5 className={`text-sm font-semibold mb-2 uppercase tracking-wide ${
+                                isDark ? 'text-green-400' : 'text-green-700'
+                            }`}>
+                                Capacity
+                            </h5>
+                            <p className={`text-sm ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
+                                {seminar?.totalParticipants || 0} / {seminar?.capacity || 0} participants
+                            </p>
+                        </div>
+
+                        {/* Start Date & Time */}
+                        <div>
+                            <h5 className={`text-sm font-semibold mb-2 uppercase tracking-wide ${
+                                isDark ? 'text-green-400' : 'text-green-700'
+                            }`}>
+                                Start
+                            </h5>
+                            <p className={`text-sm ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
+                                {formatDate(seminar?.start_date)}
+                                {seminar?.start_time && <span className="ml-2 text-green-600">at {seminar.start_time}</span>}
+                            </p>
+                        </div>
+
+                        {/* End Date & Time */}
+                        <div>
+                            <h5 className={`text-sm font-semibold mb-2 uppercase tracking-wide ${
+                                isDark ? 'text-green-400' : 'text-green-700'
+                            }`}>
+                                End
+                            </h5>
+                            <p className={`text-sm ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
+                                {formatDate(seminar?.end_date)}
+                                {seminar?.end_time && <span className="ml-2 text-green-600">at {seminar.end_time}</span>}
+                            </p>
+                        </div>
+
+                        {/* Registration Deadline */}
+                        <div className="md:col-span-2">
+                            <h5 className={`text-sm font-semibold mb-2 uppercase tracking-wide ${
+                                isDark ? 'text-green-400' : 'text-green-700'
+                            }`}>
+                                Registration Deadline
+                            </h5>
+                            <p className={`text-sm ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
+                                {formatDate(seminar?.registration_deadline)}
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -186,7 +315,8 @@ function DescriptionModal({ isOpen, onClose, title, description, seminar, isDark
 
 export default function Seminar() {
     const { isDark } = useTheme();
-    const [search, setSearch] = useState('');
+    const [searchInput, setSearchInput] = useState(''); // Local input state
+    const [search, setSearch] = useState(''); // Debounced search value
     const [statusFilter, setStatusFilter] = useState('all');
     const [searchFilter, setSearchFilter] = useState('Title');
     const [showAdd, setShowAdd] = useState(false);
@@ -204,6 +334,15 @@ export default function Seminar() {
     const participantsData = useRef(null);
 
     const queryClient = useQueryClient();
+
+    // Debounce search input to prevent refocusing
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setSearch(searchInput);
+        }, 300); // 300ms delay
+
+        return () => clearTimeout(timer);
+    }, [searchInput]);
 
     const {
         isLoading,
@@ -224,6 +363,8 @@ export default function Seminar() {
                 photo: `/api/seminar/picture/${item.id}`,
             }));
         },
+        keepPreviousData: true, // Prevents input from losing focus during refetch
+        staleTime: 300, // Consider data fresh for 300ms (same as debounce time)
     });
 
     const mutation = useMutation({
@@ -324,8 +465,8 @@ export default function Seminar() {
                                                             ? 'bg-gray-700 border-gray-600 text-white' 
                                                             : 'bg-gray-50 border-gray-200 text-gray-900'
                                             }`}
-                                            value={search}
-                                            onChange={(e) => setSearch(e.target.value)}
+                                            value={searchInput}
+                                            onChange={(e) => setSearchInput(e.target.value)}
                                             aria-label="Search seminars"
                                         />
                                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">

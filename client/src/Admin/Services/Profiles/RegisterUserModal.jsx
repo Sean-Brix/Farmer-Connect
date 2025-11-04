@@ -308,22 +308,14 @@ class RegisterUserModal extends Component {
         
         const { inputs } = this.state;
         
-        // Create FormData for file upload
-        const formData = new FormData();
-        
-        // Add all form fields
-        Object.keys(inputs).forEach(key => {
-            if (Array.isArray(inputs[key])) {
-                formData.append(key, JSON.stringify(inputs[key]));
-            } else if (inputs[key] !== null && inputs[key] !== '') {
-                formData.append(key, inputs[key]);
-            }
-        });
-        
-        const response = await fetch('/api/account/register-rsbsa', {
+        // Send JSON instead of FormData since no files are being uploaded
+        const response = await fetch('/api/account/register', {
             method: 'POST',
             credentials: 'include',
-            body: formData,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(inputs),
         });
         
         this.setState({ isLoading: false });

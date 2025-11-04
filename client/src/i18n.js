@@ -45,6 +45,9 @@ i18n
     // React options
     react: {
       useSuspense: false,
+      // Bind i18n events to trigger React re-renders
+      bindI18n: 'languageChanged loaded',
+      bindI18nStore: 'added removed',
     },
   });
 

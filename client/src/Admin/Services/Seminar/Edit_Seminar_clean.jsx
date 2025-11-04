@@ -1,12 +1,64 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import default_picture from '../../../Assets/default_seminar_pic.jpg';
 
 export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
+    // Log the incoming data to see the structure
+    console.log('🔍 Edit Seminar - Received data:', data);
+    console.log('📅 Raw date values:', {
+        start_date: data.start_date,
+        end_date: data.end_date,
+        registration_deadline: data.registration_deadline,
+    });
+
+    // Format dates from DateTime/ISO string to YYYY-MM-DD for date inputs
+    const formatDateForInput = (dateValue) => {
+        if (!dateValue) return '';
+        
+        // Handle ISO string dates (like "2025-11-07T00:00:00.000Z")
+        if (typeof dateValue === 'string') {
+            // Simply extract the date part before 'T'
+            return dateValue.split('T')[0];
+        }
+        
+        // Handle Date objects
+        try {
+            const date = new Date(dateValue);
+            return date.toISOString().split('T')[0];
+        } catch (e) {
+            console.error('Error formatting date:', dateValue, e);
+            return '';
+        }
+    };
+
+    // Use useMemo to ensure dates are formatted only once when data changes
+    const initialData = useMemo(() => {
+        const formatted = {
+            ...data,
+            start_date: formatDateForInput(data.start_date),
+            end_date: formatDateForInput(data.end_date),
+            registration_deadline: formatDateForInput(data.registration_deadline),
+        };
+        
+        console.log('✨ Formatted dates:', {
+            start_date: formatted.start_date,
+            end_date: formatted.end_date,
+            registration_deadline: formatted.registration_deadline,
+        });
+        
+        return formatted;
+    }, [data]);
+
     // Render editing data
-    const [newData, setNewData] = useState(data);
+    const [newData, setNewData] = useState(initialData);
     const [image, setImage] = useState(data.photo);
     const [newImage, setNewImage] = useState(null);
     const changedImage = useRef(false);
+
+    // Update newData when initialData changes (when a different seminar is selected)
+    useEffect(() => {
+        console.log('🔄 Updating newData with initialData:', initialData);
+        setNewData(initialData);
+    }, [initialData]);
 
     // Save the record
     const saveSeminar = async (e) => {
@@ -125,6 +177,22 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
+                </div>
+
+                {/* DEBUG INFO - Remove after fixing */}
+                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mx-6 mt-4">
+                    <div className="flex">
+                        <div className="flex-shrink-0">
+                            <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                        </div>
+                        <div className="ml-3">
+                            <p className="text-sm text-yellow-700 font-mono">
+                                <strong>DEBUG:</strong> start_date="{newData.start_date}" | end_date="{newData.end_date}" | reg_deadline="{newData.registration_deadline}"
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Content */}
@@ -254,8 +322,11 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                                 <input
                                                     type="date"
                                                     className="w-full border border-green-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent text-gray-900 transition text-sm"
-                                                    value={newData.start_date}
-                                                    onChange={(e) => setNewData({ ...newData, start_date: e.target.value })}
+                                                    value={newData.start_date || ''}
+                                                    onChange={(e) => {
+                                                        console.log('📅 Start date changed to:', e.target.value);
+                                                        setNewData({ ...newData, start_date: e.target.value });
+                                                    }}
                                                     required
                                                     autoComplete="off"
                                                 />
@@ -265,8 +336,11 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                                 <input
                                                     type="date"
                                                     className="w-full border border-green-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent text-gray-900 transition text-sm"
-                                                    value={newData.end_date}
-                                                    onChange={(e) => setNewData({ ...newData, end_date: e.target.value })}
+                                                    value={newData.end_date || ''}
+                                                    onChange={(e) => {
+                                                        console.log('📅 End date changed to:', e.target.value);
+                                                        setNewData({ ...newData, end_date: e.target.value });
+                                                    }}
                                                     required
                                                     autoComplete="off"
                                                 />
@@ -301,8 +375,11 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                             <input
                                                 type="date"
                                                 className="w-full border border-green-300 rounded-lg px-3 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent text-gray-900 transition"
-                                                value={newData.registration_deadline}
-                                                onChange={(e) => setNewData({ ...newData, registration_deadline: e.target.value })}
+                                                value={newData.registration_deadline || ''}
+                                                onChange={(e) => {
+                                                    console.log('📅 Registration deadline changed to:', e.target.value);
+                                                    setNewData({ ...newData, registration_deadline: e.target.value });
+                                                }}
                                                 required
                                                 autoComplete="off"
                                             />
