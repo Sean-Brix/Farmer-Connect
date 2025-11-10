@@ -29,7 +29,6 @@ export default async function forgotPassword(req, res) {
     });
 
     const appUrl = process.env.APP_URL || 'http://localhost:5173';
-    const serverUrl = process.env.SERVER_PUBLIC_URL || 'http://localhost:3000';
     const resetUrl = `${appUrl}/reset-password?token=${token}`;
 
     const orgName = 'Department of Agriculture - FITS Tanza';

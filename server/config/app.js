@@ -39,6 +39,11 @@ app.use(
     })
 );
 
+// Handle favicon.ico requests to prevent 404 errors
+app.get('/favicon.ico', (req, res) => {
+    res.status(204).end(); // No Content - suppresses the error
+});
+
 // API Route
 import index from '../Router/index.js';
 app.use('/', index);
