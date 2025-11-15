@@ -132,14 +132,19 @@ export default function Distribution() {
             </span>
         );
 
-        if (type === 'Seeds') return icon('fa-solid fa-seedling text-green-500');
-        if (type === 'Fertilizers') return icon('fa-solid fa-flask text-green-500');
-        if (type === 'Livestock') return icon('fa-solid fa-horse text-yellow-500');
-        if (type === 'Fish Fingerlings') return icon('fa-solid fa-fish text-green-500');
-        if (type === 'Organic Inputs') return icon('fa-solid fa-leaf text-green-700');
-        if (type === 'Tools') return icon('fa-solid fa-toolbox text-gray-500');
-        if (type === 'Plants') return icon('fa-solid fa-tree text-green-900');
-        if (type === 'Compost') return icon('fa-solid fa-recycle text-orange-500');
+        if (type === 'All') return icon('fa-solid fa-border-all text-blue-500');
+        if (type === 'Farming_Equipment') return icon('fa-solid fa-tractor text-green-600');
+        if (type === 'Harvesting_Tools') return icon('fa-solid fa-wheat-awn text-yellow-600');
+        if (type === 'Irrigation_Systems') return icon('fa-solid fa-droplet text-blue-500');
+        if (type === 'Storage_Equipment') return icon('fa-solid fa-warehouse text-gray-600');
+        if (type === 'Processing_Equipment') return icon('fa-solid fa-gear text-gray-700');
+        if (type === 'Safety_Gear') return icon('fa-solid fa-shield-halved text-orange-500');
+        if (type === 'Pest_Control') return icon('fa-solid fa-spray-can text-red-500');
+        if (type === 'Livestock_Equipment') return icon('fa-solid fa-horse text-yellow-600');
+        if (type === 'Measuring_Tools') return icon('fa-solid fa-ruler text-purple-500');
+        if (type === 'Fisheries') return icon('fa-solid fa-fish text-blue-600');
+        if (type === 'Machinery') return icon('fa-solid fa-screwdriver-wrench text-gray-600');
+        if (type === 'Other') return icon('fa-solid fa-box text-gray-500');
         return icon('fa-solid fa-question text-gray-500');
     };
 
@@ -1138,56 +1143,59 @@ export default function Distribution() {
                             <div className={`mt-4 w-24 h-2 rounded-full opacity-90 shadow-lg ${isDark ? 'bg-gradient-to-r from-green-400 via-green-400 to-green-300' : 'bg-gradient-to-r from-green-600 via-green-500 to-green-400'}`}></div>
                         </header>
 
-                        <div className="w-full flex flex-row flex-wrap justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 mx-auto">
-                            <div className="w-full sm:w-auto flex justify-center order-2 sm:order-1">
+                        <div className="w-full max-w-5xl mb-8 mx-auto space-y-4">
+                            {/* Button Section - Top Right */}
+                            <div className="w-full flex justify-end">
                                 <button
-                                    className={`flex items-center gap-2 px-5 py-2 rounded-lg ${isDark ? 'bg-green-600 hover:bg-green-700' : 'bg-green-600 hover:bg-green-700'} text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-green-400`}
+                                    className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-lg text-sm sm:text-base ${isDark ? 'bg-green-600 hover:bg-green-700' : 'bg-green-600 hover:bg-green-700'} text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-green-400`}
                                     onClick={handleMyRequestsClick}
                                 >
-                                    <i className="fa-solid fa-list-check text-lg"></i>
-                                    My Requests
+                                    <i className="fa-solid fa-list-check text-base sm:text-lg"></i>
+                                    <span className="hidden sm:inline">My Requests</span>
+                                    <span className="sm:hidden">Requests</span>
                                 </button>
                             </div>
-                            <div className="flex items-center gap-3 flex-1 min-w-0 justify-center order-1 sm:order-2">
-                                <div className="relative flex-1 min-w-0">
+
+                            {/* Search and Filter Section */}
+                            <div className="w-full flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                                {/* Search Input */}
+                                <div className="relative flex-1">
                                     <input
                                         type="text"
-                                        className={`flex-1 w-full max-w-full px-10 py-2 rounded-lg border ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-gray-500 focus:ring-2 focus:ring-gray-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-900 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 placeholder:text-gray-400'} shadow transition font-medium`}
+                                        className={`w-full px-10 py-2.5 rounded-lg border text-sm sm:text-base ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-gray-500 focus:ring-2 focus:ring-gray-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-900 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 placeholder:text-gray-400'} shadow transition font-medium`}
                                         placeholder="Search by name, category, description..."
                                         value={search}
-                                        onChange={(e) =>
-                                            setSearch(e.target.value)
-                                        }
+                                        onChange={(e) => setSearch(e.target.value)}
                                     />
                                     <span className={`absolute left-3 top-1/2 -translate-y-1/2 ${isDark ? 'text-gray-400' : 'text-gray-400'} pointer-events-none`}>
                                         <i className="fa-solid fa-magnifying-glass"></i>
                                     </span>
                                 </div>
-                                <div className="relative flex-shrink-0">
+
+                                {/* Filter Dropdown */}
+                                <div className="relative w-full sm:w-auto">
                                     <button
                                         id="modernFilterButton"
-                                        className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap flex-shrink-0 ${isDark ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'} font-semibold border shadow transition focus:outline-none`}
+                                        className={`w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2 px-4 sm:px-5 py-2.5 rounded-lg text-sm sm:text-base ${isDark ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'} font-semibold border shadow transition focus:outline-none`}
                                         onClick={() => setShowFilter((f) => !f)}
                                         type="button"
                                         aria-label="Show filter options"
                                     >
-                                        <i className="fa-solid fa-filter"></i>
-                                        <span>Filter by: {filter}</span>
-                                        <i
-                                            className={`fa-solid fa-chevron-${
-                                                showFilter ? 'up' : 'down'
-                                            } ml-1`}
-                                        ></i>
+                                        <span className="flex items-center gap-2">
+                                            <i className="fa-solid fa-filter"></i>
+                                            <span>Filter: {filter}</span>
+                                        </span>
+                                        <i className={`fa-solid fa-chevron-${showFilter ? 'up' : 'down'} ml-1`}></i>
                                     </button>
                                     {showFilter && (
                                         <div
                                             id="modernFilterDropdown"
-                                            className={`absolute left-0 mt-2 w-48 ${isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-200'} rounded-lg shadow-lg border z-20 animate-fade-in py-2`}
+                                            className={`absolute w-full sm:w-56 left-0 sm:left-auto sm:right-0 mt-2 ${isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-200'} rounded-lg shadow-lg border z-20 animate-fade-in py-2`}
                                         >
                                             {filterOptions.map((opt) => (
                                                 <button
                                                     key={opt.value}
-                                                    className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-lg font-medium transition text-base ${
+                                                    className={`flex items-center gap-3 w-full text-left px-4 py-2 font-medium transition text-sm sm:text-base ${
                                                         filter === opt.value
                                                             ? 'bg-green-600 text-white shadow'
                                                             : isDark 
@@ -1200,7 +1208,7 @@ export default function Distribution() {
                                                     }}
                                                 >
                                                     {typeIcon(opt.value)}
-                                                    {opt.label}
+                                                    <span>{opt.label}</span>
                                                 </button>
                                             ))}
                                         </div>

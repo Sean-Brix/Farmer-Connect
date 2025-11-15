@@ -281,22 +281,26 @@ export default function Seminar() {
                             <div className={`mt-4 w-24 h-2 rounded-full shadow-lg ${isDark ? 'bg-green-400' : 'bg-green-500'}`}></div>
                         </header>
                         {/* Modernized: My Registered Seminars Button & Search/Filter Bar */}
-                        <div className="w-full flex flex-row sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-3 flex-wrap mx-auto">
-                            <div className="w-auto flex-shrink-0 flex justify-center order-2 sm:order-1">
+                        <div className="w-full max-w-5xl mb-8 mx-auto">
+                            {/* My Registered Seminars Button - Top Right on Desktop, Top on Mobile */}
+                            <div className="w-full flex justify-end mb-3">
                                 <button
-                                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold shadow-md hover:shadow-lg transition border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
+                                    className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold shadow-md hover:shadow-lg transition border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm sm:text-base"
                                     onClick={() => setShowUserSeminarsModal(true)}
                                 >
-                                    <i className="fa-solid fa-list-check text-lg"></i>
-                                    My Registered Seminars
+                                    <i className="fa-solid fa-list-check text-base sm:text-lg"></i>
+                                    <span className="hidden sm:inline">My Registered Seminars</span>
+                                    <span className="sm:hidden">My Seminars</span>
                                 </button>
                             </div>
-                            <div className="flex gap-3 flex-wrap items-center justify-center w-full sm:w-auto order-1 sm:order-2">
+                            
+                            {/* Search and Filter Section */}
+                            <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
                                 {/* Search Bar */}
-                                <div className="relative flex-1 min-w-0">
+                                <div className="relative flex-1">
                                     <input
                                         type="text"
-                                        className={`w-full sm:w-72 md:w-80 lg:w-96 max-w-full px-10 py-2 rounded-lg border-2 focus:ring-2 shadow-sm transition font-medium ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-green-400 focus:ring-green-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-800 focus:border-green-500 focus:ring-green-200 placeholder:text-gray-500'}`}
+                                        className={`w-full px-10 py-2.5 rounded-lg border-2 focus:ring-2 shadow-sm transition font-medium text-sm sm:text-base ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-green-400 focus:ring-green-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-800 focus:border-green-500 focus:ring-green-200 placeholder:text-gray-500'}`}
                                         placeholder={`Search by ${filterBy.toLowerCase()}...`}
                                         value={search}
                                         onChange={(e) => {
@@ -304,14 +308,15 @@ export default function Seminar() {
                                             setCurrentPage(1);
                                         }}
                                     />
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                                    <span className={`absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                                         <i className="fa-solid fa-magnifying-glass"></i>
                                     </span>
                                 </div>
+                                
                                 {/* Filter Dropdown */}
-                                <div className="relative flex-shrink-0 w-auto">
+                                <div className="relative flex-shrink-0 w-full sm:w-auto">
                                     <button
-                                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold border-2 shadow-sm hover:shadow-md transition focus:outline-none whitespace-nowrap ${
+                                        className={`w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2 px-4 py-2.5 rounded-lg font-semibold border-2 shadow-sm hover:shadow-md transition focus:outline-none text-sm sm:text-base ${
                                             isDark 
                                                 ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' 
                                                 : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'
@@ -320,12 +325,14 @@ export default function Seminar() {
                                         type="button"
                                         aria-label="Show filter options"
                                     >
-                                        <i className="fa-solid fa-filter"></i>
-                                        <span>Search by: {filterBy}</span>
+                                        <div className="flex items-center gap-2">
+                                            <i className="fa-solid fa-filter"></i>
+                                            <span>Search by: {filterBy}</span>
+                                        </div>
                                         <i className={`fa-solid fa-chevron-${showFilter ? 'up' : 'down'} ml-1`}></i>
                                     </button>
                                     {showFilter && (
-                                        <div className={`absolute left-0 mt-2 w-48 rounded-lg shadow-xl border-2 z-20 animate-fade-in py-2 ${
+                                        <div className={`absolute left-0 sm:left-auto sm:right-0 mt-2 w-full sm:w-56 rounded-lg shadow-xl border-2 z-20 animate-fade-in py-2 ${
                                             isDark 
                                                 ? 'bg-gray-800 border-gray-600' 
                                                 : 'bg-white border-gray-200'
@@ -333,7 +340,7 @@ export default function Seminar() {
                                             {filterOptions.map((opt) => (
                                                 <button
                                                     key={opt.value}
-                                                    className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-lg font-medium transition text-base ${
+                                                    className={`flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg font-medium transition text-sm sm:text-base ${
                                                         filterBy === opt.value
                                                             ? 'bg-green-600 text-white shadow'
                                                             : isDark 

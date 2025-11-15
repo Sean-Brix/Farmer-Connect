@@ -13,7 +13,7 @@ import cropGuidelinesData from '../../../data/cropGuidelinesData.json';
 // Charts removed for farmer simplicity
 
 export default function Farmer_Report() {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const [activeTab, setActiveTab] = useState('crops');
   const [showCropRegistrationModal, setShowCropRegistrationModal] = useState(false);
   const [showMonthlyReportModal, setShowMonthlyReportModal] = useState(false);
@@ -1181,8 +1181,8 @@ export default function Farmer_Report() {
           {activeTab === 'guidelines' && (
             <div className="space-y-6">
               {/* Search and Filter Controls */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
-                <div className="sm:w-96">
+              <div className="flex flex-col sm:flex-row gap-4 justify-between items-stretch mb-6">
+                <div className="flex-1">
                   <input
                     type="text"
                     placeholder="Search crops..."
@@ -1194,7 +1194,7 @@ export default function Farmer_Report() {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className={`px-4 py-3 text-sm border-2 rounded-lg bg-transparent focus:outline-none focus:border-green-500 transition-colors ${theme === 'dark' ? 'border-gray-500 text-white focus:border-green-400' : 'border-gray-400 text-gray-900'}`}
+                  className={`w-full sm:w-64 px-4 py-3 text-sm border-2 rounded-lg bg-transparent focus:outline-none focus:border-green-500 transition-colors ${theme === 'dark' ? 'border-gray-500 text-white focus:border-green-400' : 'border-gray-400 text-gray-900'}`}
                 >
                   <option value="all">All Categories</option>
                   {Object.entries(cropGuidelinesData.cropCategories).map(([key, category]) => (

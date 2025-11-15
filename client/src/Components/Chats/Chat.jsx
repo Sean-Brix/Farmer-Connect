@@ -1288,15 +1288,15 @@ export default function Chat() {
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9"/>
                                         </svg>
-                                        {attachments.length > 0 ? `${attachments.length} file${attachments.length>1?'s':''}` : 'Attach'}
+                                        <span className="hidden sm:inline">{attachments.length > 0 ? `${attachments.length} file${attachments.length>1?'s':''}` : 'Attach'}</span>
                                     </label>
                                 </div>
                                 <button
                                     type="submit"
-                                    className="text-white rounded-2xl px-6 py-3 transition-all duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center gap-2 bg-green-600 hover:bg-green-700"
+                                    className="text-white rounded-2xl px-4 sm:px-6 py-3 transition-all duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center gap-2 bg-green-600 hover:bg-green-700"
                                     disabled={sending || (!message.trim() && attachments.length === 0)}
                                 >
-                                    <span>{sending ? 'Sending…' : 'Send'}</span>
+                                    <span className="hidden sm:inline">{sending ? 'Sending…' : 'Send'}</span>
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                                     </svg>
