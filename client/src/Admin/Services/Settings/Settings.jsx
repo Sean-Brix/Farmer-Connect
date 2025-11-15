@@ -48,15 +48,15 @@ const Settings = () => {
     >
       
       {/* Header Section - flattened, icon inline with title */}
-      <div className="mt-20 mb-8 px-2">
-        <h1 className={`flex items-center gap-3 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}
+      <div className="mt-6 mb-6 px-2">
+        <h1 className={`flex items-center gap-2.5 text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}
             style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
-          <span className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-lg">
-            <i className="fas fa-cog text-white text-xl sm:text-2xl"></i>
+          <span className="inline-flex items-center justify-center w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl shadow-lg">
+            <i className="fas fa-cog text-white text-lg"></i>
           </span>
           Admin Settings
         </h1>
-        <p className={`mt-1 sm:mt-2 text-sm sm:text-base max-w-2xl ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Manage your admin preferences and account settings</p>
+        <p className={`mt-1 text-sm max-w-2xl ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Manage your admin preferences and account settings</p>
       </div>
 
       {/* Main Content Container */}
@@ -66,14 +66,14 @@ const Settings = () => {
             isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
           }`}
           style={{ 
-            height: '75vh',
-            minHeight: '600px'
+            height: '68vh',
+            minHeight: '500px'
           }}
         >
           
           {/* Mobile Tab Navigation */}
           <div 
-            className={`lg:hidden border-b px-4 py-4 flex-shrink-0 ${
+            className={`lg:hidden border-b px-3 py-3 flex-shrink-0 ${
               isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
             }`}
           >
@@ -106,7 +106,7 @@ const Settings = () => {
           {/* Mobile Content Area */}
           <div className="lg:hidden flex-1 overflow-hidden">
             <div 
-              className="h-full overflow-y-auto p-4 sm:p-6"
+              className="h-full overflow-y-auto p-3 sm:p-4"
               style={{
                 scrollbarWidth: 'thin',
                 scrollbarColor: isDark ? '#4B5563 #1F2937' : '#CBD5E1 #F1F5F9'
@@ -121,17 +121,17 @@ const Settings = () => {
           <div className="hidden lg:flex h-full">
             {/* Desktop Sidebar Navigation */}
             <div 
-              className={`flex flex-col w-80 xl:w-96 border-r flex-shrink-0 ${
+              className={`flex flex-col w-72 xl:w-80 border-r flex-shrink-0 ${
                 isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
               }`}
             >
-              <div className="flex-1 py-8 px-6">
+              <div className="flex-1 py-6 px-4">
                 <nav className="space-y-2">
                   {tabs.map((tab) => (
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`w-full flex items-center space-x-4 px-4 py-4 rounded-2xl text-left transition-all duration-300 group hover:shadow-md hover:scale-[1.01] shadow-lg border scale-[1.02] ${
+                      className={`w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left transition-all duration-300 group hover:shadow-md hover:scale-[1.01] shadow-lg border scale-[1.02] ${
                         activeTab === tab.id
                           ? `${
                               isDark 
@@ -146,7 +146,7 @@ const Settings = () => {
                       }`}
                     >
                       <div 
-                        className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                        className={`flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300 ${
                           activeTab === tab.id
                             ? `${
                                 isDark 
@@ -177,7 +177,7 @@ const Settings = () => {
             {/* Desktop Content Area */}
             <div className="flex-1 overflow-hidden">
               <div 
-                className="h-full overflow-y-auto p-8"
+                className="h-full overflow-y-auto p-6"
                 style={{
                   scrollbarWidth: 'thin',
                   scrollbarColor: isDark ? '#4B5563 #1F2937' : '#CBD5E1 #F1F5F9'

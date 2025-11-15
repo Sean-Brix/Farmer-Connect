@@ -599,11 +599,12 @@ export default function Distribution() {
             {activeSection === 'requests' ? (
                 <div className="max-w-7xl mx-auto">
                     {/* Request Search and Filters */}
-                    <div className="flex flex-col lg:flex-row items-center gap-4 w-full mb-6">
-                        <div className="relative flex-1 max-w-md">
+                    <div className="w-full mb-6 space-y-3">
+                        {/* Search Input - Full Width */}
+                        <div className="relative w-full">
                             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                 <svg
-                                    className="w-5 h-5 text-gray-500"
+                                    className={`w-5 h-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}
                                     fill="none"
                                     stroke="currentColor"
                                     strokeWidth="2"
@@ -619,7 +620,7 @@ export default function Distribution() {
                             <input
                                 type="search"
                                 placeholder="Search by item name, requestor, or note..."
-                                className={`block w-full p-3 pl-10 text-sm border rounded-lg focus:ring-green-500 focus:border-green-500 ${
+                                className={`block w-full p-2.5 sm:p-3 pl-10 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all ${
                                     isDark 
                                         ? 'text-white bg-gray-800 border-gray-600 placeholder-gray-400' 
                                         : 'text-gray-900 bg-gray-50 border-gray-300 placeholder-gray-500'
@@ -631,9 +632,10 @@ export default function Distribution() {
                             />
                         </div>
 
-                        <div className="flex flex-wrap gap-2">
+                        {/* Filters and Actions Row */}
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full">
                             <select
-                                className={`border text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-3 ${
+                                className={`border text-sm rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 block p-2.5 sm:p-3 transition-all ${
                                     isDark 
                                         ? 'bg-gray-800 border-gray-600 text-white' 
                                         : 'bg-gray-50 border-gray-300 text-gray-900'
@@ -652,7 +654,7 @@ export default function Distribution() {
                             </select>
 
                             <select
-                                className={`border text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-3 ${
+                                className={`border text-sm rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 block p-2.5 sm:p-3 transition-all ${
                                     isDark 
                                         ? 'bg-gray-800 border-gray-600 text-white' 
                                         : 'bg-gray-50 border-gray-300 text-gray-900'
@@ -670,10 +672,10 @@ export default function Distribution() {
 
                             <button
                                 onClick={refetchRequests}
-                                className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-green-500 hover:bg-green-600 text-white transition-all"
+                                className="flex items-center justify-center px-4 py-2.5 sm:py-3 rounded-lg text-sm font-medium bg-green-500 hover:bg-green-600 text-white transition-all shadow-sm"
                             >
                                 <svg
-                                    className="w-4 h-4 mr-2"
+                                    className="w-4 h-4 sm:mr-2"
                                     fill="none"
                                     stroke="currentColor"
                                     strokeWidth="2"
@@ -685,12 +687,12 @@ export default function Distribution() {
                                         strokeLinejoin="round"
                                     />
                                 </svg>
-                                Refresh
+                                <span className="hidden sm:inline">Refresh</span>
                             </button>
 
                             <button
                                 onClick={() => setActiveSection('items')}
-                                className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-gray-500 hover:bg-gray-600 text-white transition-all"
+                                className="flex items-center justify-center px-4 py-2.5 sm:py-3 rounded-lg text-sm font-medium bg-gray-500 hover:bg-gray-600 text-white transition-all shadow-sm sm:ml-auto"
                             >
                                 <svg
                                     className="w-4 h-4 mr-2"

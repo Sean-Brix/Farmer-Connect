@@ -474,79 +474,82 @@ class RegisterUserModal extends Component {
 
         return (
             <React.Fragment>
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 transition-opacity">
-                    <div className={`backdrop-blur-sm rounded-3xl shadow-2xl max-w-6xl w-full mx-6 relative max-h-[95vh] flex flex-col border ${
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 transition-opacity p-4">
+                    <div className={`backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl max-w-6xl w-full relative max-h-[95vh] flex flex-col border ${
                         isDark 
                             ? 'bg-gray-800/95 border-gray-600/20' 
                             : 'bg-white/95 border-white/20'
                     }`} style={{boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)'}}>
-                        <button
-                            onClick={this.handleCloseWithConfirmation}
-                            className={`absolute top-6 right-6 hover:text-red-500 rounded-full p-2 transition-all duration-300 group focus:outline-none z-10 ${
-                                isDark 
-                                    ? 'text-gray-400 hover:bg-red-900/20' 
-                                    : 'text-gray-400 hover:bg-red-50'
-                            }`}
-                            aria-label="Close"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6 group-hover:scale-110 transition-transform"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
+                        {/* Close Button - Fixed position */}
+                        <div className="absolute top-0 right-0 z-50 p-3 sm:p-6">
+                            <button
+                                onClick={this.handleCloseWithConfirmation}
+                                className={`hover:text-red-500 rounded-full p-2 transition-all duration-300 group focus:outline-none ${
+                                    isDark 
+                                        ? 'text-gray-400 hover:bg-red-900/20' 
+                                        : 'text-gray-400 hover:bg-red-50'
+                                }`}
+                                aria-label="Close"
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
-                        </button>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6 group-hover:scale-110 transition-transform"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
                     
-                    <div className={`p-10 overflow-y-auto ${
+                    <div className={`p-4 sm:p-6 md:p-8 lg:p-10 overflow-y-auto ${
                         isDark ? 'text-gray-200' : ''
                     }`} style={{ maxHeight: '85vh', fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
                         {/* Header */}
-                        <div className="text-center mb-10">
-                            <div className="relative inline-flex items-center justify-center w-20 h-20 mb-6">
+                        <div className="text-center mb-6 sm:mb-8 md:mb-10">
+                            <div className="relative inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-6">
                                 <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full blur-lg opacity-30 scale-110"></div>
                                 <div className="relative bg-gradient-to-br from-green-500 to-emerald-600 rounded-full w-full h-full flex items-center justify-center shadow-xl">
-                                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <svg className="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
                                 </div>
                             </div>
-                            <div className="space-y-3">
-                                <h2 className={`text-4xl font-black bg-clip-text text-transparent ${
+                            <div className="space-y-2 sm:space-y-3">
+                                <h2 className={`text-2xl sm:text-3xl md:text-4xl font-black bg-clip-text text-transparent px-4 ${
                                     isDark 
                                         ? 'bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100' 
                                         : 'bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900'
                                 }`}>RSBSA Registration</h2>
-                                <div className="h-1 w-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto shadow-lg"></div>
-                                <p className={`text-lg font-medium ${
+                                <div className="h-1 w-20 sm:w-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto shadow-lg"></div>
+                                <p className={`text-sm sm:text-base md:text-lg font-medium px-4 ${
                                     isDark ? 'text-gray-400' : 'text-gray-600'
                                 }`}>Registry System for Basic Sectors in Agriculture</p>
                             </div>
                         </div>
 
                         {/* Stepper */}
-                        <div className="relative flex items-center mb-10 w-full max-w-4xl mx-auto">
-                            <div className={`absolute top-1/2 left-0 right-0 h-3 rounded-full shadow-inner border ${
+                        <div className="relative flex items-center mb-6 sm:mb-8 md:mb-10 w-full max-w-4xl mx-auto px-2 sm:px-0">
+                            <div className={`absolute top-1/2 left-0 right-0 h-2 sm:h-3 rounded-full shadow-inner border ${
                                 isDark 
                                     ? 'bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 border-gray-600/50' 
                                     : 'bg-gradient-to-r from-gray-100 via-gray-150 to-gray-100 border-gray-200/50'
                             }`} style={{ transform: 'translateY(-50%)' }} />
-                            <div className="absolute top-1/2 left-0 h-3 bg-gradient-to-r from-green-500 via-emerald-500 to-green-600 rounded-full shadow-lg border border-green-400/30 transition-all duration-700 ease-out" style={{ width: `${(currentStep - 1) / (this.steps.length - 1) * 100}%`, transform: 'translateY(-50%)', boxShadow: '0 4px 14px rgba(34,197,94,0.4), inset 0 1px 0 rgba(255,255,255,0.3)' }} />
+                            <div className="absolute top-1/2 left-0 h-2 sm:h-3 bg-gradient-to-r from-green-500 via-emerald-500 to-green-600 rounded-full shadow-lg border border-green-400/30 transition-all duration-700 ease-out" style={{ width: `${(currentStep - 1) / (this.steps.length - 1) * 100}%`, transform: 'translateY(-50%)', boxShadow: '0 4px 14px rgba(34,197,94,0.4), inset 0 1px 0 rgba(255,255,255,0.3)' }} />
                             
                             {this.steps.map((step, idx) => (
                                 <div key={step.label} className="relative flex-1 flex flex-col items-center z-20">
-                                    <div className={`flex items-center justify-center w-16 h-16 rounded-full border-4 transition-all duration-500 shadow-lg font-bold text-2xl ${
+                                    <div className={`flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-full border-2 sm:border-3 md:border-4 transition-all duration-500 shadow-lg font-bold text-base sm:text-lg md:text-xl lg:text-2xl ${
                                         idx < currentStep - 1 
                                             ? 'border-green-600 bg-gradient-to-br from-green-500 to-green-600 text-white shadow-green-200' 
                                             : idx === currentStep - 1 
-                                                ? `border-green-600 text-green-700 shadow-green-300 ring-4 ring-green-100 ${
+                                                ? `border-green-600 text-green-700 shadow-green-300 ring-2 sm:ring-3 md:ring-4 ring-green-100 ${
                                                     isDark ? 'bg-gray-700' : 'bg-white'
                                                 }` 
                                                 : `border-gray-300 text-gray-400 shadow-gray-200 ${
@@ -555,7 +558,7 @@ class RegisterUserModal extends Component {
                                     }`} style={{boxShadow: idx === currentStep - 1 ? '0 8px 25px rgba(34,197,94,0.25), 0 0 0 4px rgba(34,197,94,0.1)' : undefined}}>
                                         {step.icon}
                                     </div>
-                                    <span className={`mt-3 text-sm font-semibold text-center transition-colors duration-300 ${
+                                    <span className={`mt-2 sm:mt-3 text-xs sm:text-sm font-semibold text-center transition-colors duration-300 hidden sm:block ${
                                         idx < currentStep - 1 
                                             ? 'text-green-600' 
                                             : idx === currentStep - 1 
@@ -1825,11 +1828,15 @@ class RegisterUserModal extends Component {
                     <button 
                         type="button" 
                         onClick={this.onBack}
-                        className="px-8 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl font-bold shadow-lg transition-all duration-300 transform hover:scale-[1.02] text-lg border-2 border-gray-200 hover:border-gray-300"
+                        className={`px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-bold shadow-lg transition-all duration-300 transform hover:scale-[1.02] text-base sm:text-lg border-2 ${
+                            isDark
+                                ? 'bg-gray-700 hover:bg-gray-600 text-gray-200 border-gray-600 hover:border-gray-500'
+                                : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200 hover:border-gray-300'
+                        }`}
                     >
                         Back
                     </button>
-                    <button type="submit" className="px-8 py-4 bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white rounded-2xl font-bold shadow-xl hover:shadow-2xl hover:shadow-green-200/50 transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group text-lg">
+                    <button type="submit" className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white rounded-2xl font-bold shadow-xl hover:shadow-2xl hover:shadow-green-200/50 transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group text-base sm:text-lg">
                         <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 via-green-600 to-green-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div className="relative flex items-center space-x-3">
                             <span>Continue</span>
@@ -1936,14 +1943,18 @@ class RegisterUserModal extends Component {
                         type="button" 
                         onClick={this.onBack}
                         disabled={isLoading}
-                        className="px-8 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl font-bold shadow-lg transition-all duration-300 transform hover:scale-[1.02] text-lg border-2 border-gray-200 hover:border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-bold shadow-lg transition-all duration-300 transform hover:scale-[1.02] text-base sm:text-lg border-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+                            isDark
+                                ? 'bg-gray-700 hover:bg-gray-600 text-gray-200 border-gray-600 hover:border-gray-500'
+                                : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200 hover:border-gray-300'
+                        }`}
                     >
                         Back
                     </button>
                     <button 
                         type="submit" 
                         disabled={isLoading}
-                        className="px-8 py-4 bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white rounded-2xl font-bold shadow-xl hover:shadow-2xl hover:shadow-green-200/50 transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white rounded-2xl font-bold shadow-xl hover:shadow-2xl hover:shadow-green-200/50 transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group text-base sm:text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     >
                         <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 via-green-600 to-green-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
@@ -2089,11 +2100,15 @@ class RegisterUserModal extends Component {
                     <button 
                         type="button" 
                         onClick={this.onBack}
-                        className="px-8 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl font-bold shadow-lg transition-all duration-300 transform hover:scale-[1.02] text-lg border-2 border-gray-200 hover:border-gray-300"
+                        className={`px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-bold shadow-lg transition-all duration-300 transform hover:scale-[1.02] text-base sm:text-lg border-2 ${
+                            isDark
+                                ? 'bg-gray-700 hover:bg-gray-600 text-gray-200 border-gray-600 hover:border-gray-500'
+                                : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200 hover:border-gray-300'
+                        }`}
                     >
                         Back
                     </button>
-                    <button type="submit" className="px-8 py-4 bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white rounded-2xl font-bold shadow-xl hover:shadow-2xl hover:shadow-green-200/50 transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group text-lg">
+                    <button type="submit" className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white rounded-2xl font-bold shadow-xl hover:shadow-2xl hover:shadow-green-200/50 transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group text-base sm:text-lg">
                         <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 via-green-600 to-green-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div className="relative flex items-center space-x-3">
                             <span>Continue</span>
@@ -2461,11 +2476,15 @@ class RegisterUserModal extends Component {
                     <button 
                         type="button" 
                         onClick={this.onBack}
-                        className="px-8 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl font-bold shadow-lg transition-all duration-300 transform hover:scale-[1.02] text-lg border-2 border-gray-200 hover:border-gray-300"
+                        className={`px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-bold shadow-lg transition-all duration-300 transform hover:scale-[1.02] text-base sm:text-lg border-2 ${
+                            isDark
+                                ? 'bg-gray-700 hover:bg-gray-600 text-gray-200 border-gray-600 hover:border-gray-500'
+                                : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200 hover:border-gray-300'
+                        }`}
                     >
                         Back
                     </button>
-                    <button type="submit" className="px-8 py-4 bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white rounded-2xl font-bold shadow-xl hover:shadow-2xl hover:shadow-green-200/50 transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group text-lg">
+                    <button type="submit" className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white rounded-2xl font-bold shadow-xl hover:shadow-2xl hover:shadow-green-200/50 transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group text-base sm:text-lg">
                         <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 via-green-600 to-green-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div className="relative flex items-center space-x-3">
                             <span>Continue</span>
@@ -2669,14 +2688,18 @@ class RegisterUserModal extends Component {
                         type="button" 
                         onClick={this.onBack}
                         disabled={isLoading}
-                        className="px-8 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl font-bold shadow-lg transition-all duration-300 transform hover:scale-[1.02] text-lg border-2 border-gray-200 hover:border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-bold shadow-lg transition-all duration-300 transform hover:scale-[1.02] text-base sm:text-lg border-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+                            isDark
+                                ? 'bg-gray-700 hover:bg-gray-600 text-gray-200 border-gray-600 hover:border-gray-500'
+                                : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200 hover:border-gray-300'
+                        }`}
                     >
                         Back
                     </button>
                     <button 
                         type="submit" 
                         disabled={isLoading}
-                        className="px-8 py-4 bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white rounded-2xl font-bold shadow-xl hover:shadow-2xl hover:shadow-green-200/50 transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white rounded-2xl font-bold shadow-xl hover:shadow-2xl hover:shadow-green-200/50 transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden group text-base sm:text-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     >
                         <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 via-green-600 to-green-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>

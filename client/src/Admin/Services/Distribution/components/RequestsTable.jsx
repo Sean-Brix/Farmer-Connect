@@ -99,7 +99,11 @@ export default function RequestsTable({
         const isLong = request.requestNote.length > 50;
         
         return (
-            <div className="text-xs text-gray-500 bg-gray-50 rounded px-2 py-1 max-w-xs relative note-tooltip-container">
+            <div className={`text-xs rounded px-2 py-1 max-w-xs relative note-tooltip-container ${
+                isDark 
+                    ? 'text-gray-400 bg-gray-700' 
+                    : 'text-gray-500 bg-gray-50'
+            }`}>
                 <div className={isExpanded ? '' : 'truncate'}>
                     {isLong && !isExpanded ? request.requestNote.substring(0, 50) + '...' : request.requestNote}
                 </div>
@@ -107,7 +111,11 @@ export default function RequestsTable({
                     <div className="relative inline-block">
                         <button
                             onClick={() => toggleNoteExpansion(request.id)}
-                            className="text-green-600 hover:text-green-800 font-medium mt-1 text-xs underline"
+                            className={`font-medium mt-1 text-xs underline ${
+                                isDark 
+                                    ? 'text-green-400 hover:text-green-300' 
+                                    : 'text-green-600 hover:text-green-800'
+                            }`}
                         >
                             {isExpanded ? 'Show less' : 'Show more'}
                         </button>
@@ -115,26 +123,42 @@ export default function RequestsTable({
                         {/* Tooltip popup for full note */}
                         {isExpanded && (
                             <div className="absolute z-50 bottom-full left-0 mb-2 w-80 max-w-sm">
-                                <div className="bg-gray-900 text-white text-xs rounded-lg px-4 py-3 shadow-2xl border border-gray-700 backdrop-blur-sm">
+                                <div className={`text-xs rounded-lg px-4 py-3 shadow-2xl border backdrop-blur-sm ${
+                                    isDark 
+                                        ? 'bg-gray-900 text-white border-gray-700' 
+                                        : 'bg-white text-gray-900 border-gray-300'
+                                }`}>
                                     {/* Arrow pointing down */}
-                                    <div className="absolute top-full left-4 w-0 h-0 border-l-[6px] border-r-[6px] border-l-transparent border-r-transparent border-t-[6px] border-t-gray-900"></div>
+                                    <div className={`absolute top-full left-4 w-0 h-0 border-l-[6px] border-r-[6px] border-l-transparent border-r-transparent border-t-[6px] ${
+                                        isDark ? 'border-t-gray-900' : 'border-t-white'
+                                    }`}></div>
                                     
                                     {/* Header */}
-                                    <div className="flex items-center gap-2 pb-2 border-b border-gray-700 mb-2">
+                                    <div className={`flex items-center gap-2 pb-2 mb-2 border-b ${
+                                        isDark ? 'border-gray-700' : 'border-gray-200'
+                                    }`}>
                                         <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                         </svg>
-                                        <span className="font-semibold text-gray-200">Request Note</span>
+                                        <span className={`font-semibold ${
+                                            isDark ? 'text-gray-200' : 'text-gray-700'
+                                        }`}>Request Note</span>
                                     </div>
                                     
                                     {/* Content */}
-                                    <div className="text-gray-300 leading-relaxed max-h-32 overflow-y-auto">
+                                    <div className={`leading-relaxed max-h-32 overflow-y-auto ${
+                                        isDark ? 'text-gray-300' : 'text-gray-600'
+                                    }`}>
                                         {request.requestNote}
                                     </div>
                                     
                                     {/* Footer */}
-                                    <div className="mt-2 pt-2 border-t border-gray-700 text-right">
-                                        <span className="text-gray-400 text-xs">Click "Show less" to close</span>
+                                    <div className={`mt-2 pt-2 text-right border-t ${
+                                        isDark ? 'border-gray-700' : 'border-gray-200'
+                                    }`}>
+                                        <span className={`text-xs ${
+                                            isDark ? 'text-gray-400' : 'text-gray-500'
+                                        }`}>Click "Show less" to close</span>
                                     </div>
                                 </div>
                             </div>

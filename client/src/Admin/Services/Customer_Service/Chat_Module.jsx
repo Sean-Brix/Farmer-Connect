@@ -624,7 +624,15 @@ function Chat_Module() {
       isDark ? 'bg-gray-900' : 'bg-white'
     }`}>
       {toast && (
-        <div className={`fixed top-4 right-4 z-[100000] px-4 py-3 rounded-xl shadow-xl border ${toast.type==='info' ? 'bg-green-50 border-green-200 text-green-900' : 'bg-white border-gray-200 text-gray-800'}`}>
+        <div className={`fixed top-4 right-4 z-[100000] px-4 py-3 rounded-xl shadow-xl border ${
+          toast.type === 'info'
+            ? isDark
+              ? 'bg-green-900 border-green-700 text-green-100'
+              : 'bg-green-50 border-green-200 text-green-900'
+            : isDark
+            ? 'bg-gray-800 border-gray-700 text-gray-100'
+            : 'bg-white border-gray-200 text-gray-800'
+        }`}>
           <div className="flex items-start gap-3">
             <div className="mt-0.5">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>
@@ -647,14 +655,21 @@ function Chat_Module() {
           </div>
           {/* Main Chat Interface - Slightly less wide Chat List */}
           <div className="w-full max-w-5xl">
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 flex flex-col w-full">
+            <div className={`rounded-xl sm:rounded-2xl shadow-lg border flex flex-col w-full ${
+              isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+            }`}>
               {/* Status Filter Dropdown */}
-              <div className="bg-gray-50 px-6 pt-6 pb-2 border-b border-gray-200 flex-shrink-0">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 w-full">
-                  <div className="flex items-center gap-3 w-full md:w-auto">
+              <div className={`px-3 sm:px-4 md:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4 border-b flex-shrink-0 ${
+                isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'
+              }`}>
+                <div className="flex flex-col gap-3 w-full">
+                  {/* Search Bar - Full width on mobile */}
+                  <div className="w-full">
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                        <svg className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                          isDark ? 'text-gray-400' : 'text-gray-500'
+                        }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </div>
@@ -663,42 +678,61 @@ function Chat_Module() {
                         placeholder="Search conversations..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 pr-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 font-medium text-sm"
-                        style={{}}
+                        className={`w-full pl-9 sm:pl-10 pr-3 py-2 border-2 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 font-medium text-sm ${
+                          isDark
+                            ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400 focus:bg-gray-700'
+                            : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-500 focus:bg-white'
+                        }`}
                       />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <label htmlFor="statusFilter" className="text-sm font-medium text-gray-700">Status:</label>
+                  </div>
+                  
+                  {/* Filters Row - Stack on mobile, inline on tablet+ */}
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex items-center gap-2 flex-1">
+                      <label htmlFor="statusFilter" className={`text-xs sm:text-sm font-medium whitespace-nowrap ${
+                        isDark ? 'text-gray-300' : 'text-gray-700'
+                      }`}>Status:</label>
                       <select
                         id="statusFilter"
                         value={activeTab}
                         onChange={e => setActiveTab(e.target.value)}
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
+                        className={`flex-1 sm:flex-none border rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                          isDark
+                            ? 'bg-gray-700 border-gray-600 text-gray-100'
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
                       >
                         <option value="PENDING">Pending ({pending.length})</option>
                         <option value="IN_PROGRESS">In Progress ({inProgress.length})</option>
                         <option value="RESOLVED">Resolved ({resolved.length})</option>
                       </select>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2 md:ml-auto">
-                    <label htmlFor="itemsPerPage" className="text-sm font-medium text-gray-700">Rows:</label>
-                    <select
-                      id="itemsPerPage"
-                      value={itemsPerPage}
-                      onChange={e => {
-                        setItemsPerPage(Number(e.target.value));
-                        setPendingPage(1);
-                        setInProgressPage(1);
-                        setResolvedPage(1);
-                      }}
-                      className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
-                      aria-label="Rows per page"
-                    >
-                      {[5, 8, 10, 20, 50].map(n => (
-                        <option key={n} value={n}>{n}</option>
-                      ))}
-                    </select>
+                    <div className="flex items-center gap-2">
+                      <label htmlFor="itemsPerPage" className={`text-xs sm:text-sm font-medium whitespace-nowrap ${
+                        isDark ? 'text-gray-300' : 'text-gray-700'
+                      }`}>Rows:</label>
+                      <select
+                        id="itemsPerPage"
+                        value={itemsPerPage}
+                        onChange={e => {
+                          setItemsPerPage(Number(e.target.value));
+                          setPendingPage(1);
+                          setInProgressPage(1);
+                          setResolvedPage(1);
+                        }}
+                        className={`border rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                          isDark
+                            ? 'bg-gray-700 border-gray-600 text-gray-100'
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
+                        aria-label="Rows per page"
+                      >
+                        {[5, 8, 10, 20, 50].map(n => (
+                          <option key={n} value={n}>{n}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -706,26 +740,44 @@ function Chat_Module() {
               {/* Search Bar moved above, removed here */}
 
               {/* Active Chats */}
-              <div className="flex-1 overflow-y-auto bg-white">
+              <div className={`flex-1 overflow-y-auto ${
+                isDark ? 'bg-gray-800' : 'bg-white'
+              }`}>
                 {/* Items per page selector moved and redesigned above */}
                 {loading ? (
-                  <div className="p-12 text-center text-gray-500">
-                    <div className="w-20 h-20 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center shadow-sm">
-                      <div className="w-10 h-10 border-4 border-green-200 border-t-green-600 rounded-full animate-spin"></div>
+                  <div className="p-8 sm:p-12 text-center">
+                    <div className={`w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-full flex items-center justify-center shadow-sm ${
+                      isDark ? 'bg-green-900' : 'bg-green-100'
+                    }`}>
+                      <div className={`w-8 h-8 sm:w-10 sm:h-10 border-4 rounded-full animate-spin ${
+                        isDark ? 'border-green-700 border-t-green-400' : 'border-green-200 border-t-green-600'
+                      }`}></div>
                     </div>
-                    <p className="text-xl font-semibold text-gray-800 mb-2">Loading inquiries...</p>
-                    <p className="text-sm text-gray-500">Please wait while we fetch your chat history</p>
+                    <p className={`text-lg sm:text-xl font-semibold mb-2 ${
+                      isDark ? 'text-gray-100' : 'text-gray-800'
+                    }`}>Loading inquiries...</p>
+                    <p className={`text-xs sm:text-sm ${
+                      isDark ? 'text-gray-400' : 'text-gray-500'
+                    }`}>Please wait while we fetch your chat history</p>
                   </div>
                 ) : (
                   filteredChats.length === 0 ? (
-                    <div className="p-12 text-center text-gray-500">
-                      <div className="w-20 h-20 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center shadow-sm">
-                        <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <div className="p-8 sm:p-12 text-center">
+                      <div className={`w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-full flex items-center justify-center shadow-sm ${
+                        isDark ? 'bg-gray-700' : 'bg-gray-100'
+                      }`}>
+                        <svg className={`w-8 h-8 sm:w-10 sm:h-10 ${
+                          isDark ? 'text-gray-400' : 'text-gray-400'
+                        }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </div>
-                      <p className="text-xl font-semibold text-gray-800 mb-2">No active chats</p>
-                      <p className="text-sm text-gray-500">Waiting for customer messages...</p>
+                      <p className={`text-lg sm:text-xl font-semibold mb-2 ${
+                        isDark ? 'text-gray-100' : 'text-gray-800'
+                      }`}>No active chats</p>
+                      <p className={`text-xs sm:text-sm ${
+                        isDark ? 'text-gray-400' : 'text-gray-500'
+                      }`}>Waiting for customer messages...</p>
                     </div>
                   ) : (
                     <>
@@ -742,13 +794,27 @@ function Chat_Module() {
                       {/* Pagination Controls */}
                       <div className="flex justify-center items-center gap-2 py-4">
                         <button
-                          className={`px-4 py-2 rounded-lg font-medium text-sm ${currentPage === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700'}`}
+                          className={`px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition-colors ${
+                            currentPage === 1
+                              ? isDark
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                              : 'bg-green-600 text-white hover:bg-green-700'
+                          }`}
                           onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                           disabled={currentPage === 1}
                         >Previous</button>
-                        <span className="px-2 text-gray-700 font-semibold">Page {currentPage} of {totalPages}</span>
+                        <span className={`px-2 font-semibold text-xs sm:text-sm ${
+                          isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>Page {currentPage} of {totalPages}</span>
                         <button
-                          className={`px-4 py-2 rounded-lg font-medium text-sm ${currentPage === totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700'}`}
+                          className={`px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition-colors ${
+                            currentPage === totalPages
+                              ? isDark
+                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                              : 'bg-green-600 text-white hover:bg-green-700'
+                          }`}
                           onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                           disabled={currentPage === totalPages}
                         >Next</button>

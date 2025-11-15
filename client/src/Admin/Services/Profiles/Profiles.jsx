@@ -195,13 +195,25 @@ export default function Profiles({ details }) {
                         <>
                             <div className="overflow-x-auto">
                                 <table className="min-w-full text-base">
-                                    <thead className={`text-gray-900 bg-gray-100`}>
+                                    <thead className={`${
+                                        isDark ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-900'
+                                    }`}>
                                         <tr>
-                                            <th className="px-5 py-3 text-left font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Username</th>
-                                            <th className="px-5 py-3 text-left font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Name</th>
-                                            <th className="px-5 py-3 text-center font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Role</th>
-                                            <th className="px-5 py-3 text-left font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Client Profile</th>
-                                            <th className="px-5 py-3 text-left font-semibold text-green-700 uppercase tracking-wide whitespace-nowrap text-sm">Actions</th>
+                                            <th className={`px-5 py-3 text-left font-semibold uppercase tracking-wide whitespace-nowrap text-sm ${
+                                                isDark ? 'text-green-400' : 'text-green-700'
+                                            }`}>Username</th>
+                                            <th className={`px-5 py-3 text-left font-semibold uppercase tracking-wide whitespace-nowrap text-sm ${
+                                                isDark ? 'text-green-400' : 'text-green-700'
+                                            }`}>Name</th>
+                                            <th className={`px-5 py-3 text-center font-semibold uppercase tracking-wide whitespace-nowrap text-sm ${
+                                                isDark ? 'text-green-400' : 'text-green-700'
+                                            }`}>Role</th>
+                                            <th className={`px-5 py-3 text-left font-semibold uppercase tracking-wide whitespace-nowrap text-sm ${
+                                                isDark ? 'text-green-400' : 'text-green-700'
+                                            }`}>Client Profile</th>
+                                            <th className={`px-5 py-3 text-left font-semibold uppercase tracking-wide whitespace-nowrap text-sm ${
+                                                isDark ? 'text-green-400' : 'text-green-700'
+                                            }`}>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody className={`divide-y ${
@@ -282,9 +294,9 @@ export default function Profiles({ details }) {
 
                 {/* Pagination Controls - Fixed professional layout */}
                 {!isLoading && !error && Array.isArray(userList) && userList.length > 0 && (
-                    <div className="flex justify-center items-center gap-4 py-8">
+                    <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-4 py-6 sm:py-8 px-2">
                         <button
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base ${
                                 isDark 
                                     ? 'border-green-600 bg-gray-800 text-green-400 hover:bg-gray-700 hover:border-green-500' 
                                     : 'border-green-300 bg-white text-green-700 hover:bg-green-50 hover:border-green-400'
@@ -292,22 +304,23 @@ export default function Profiles({ details }) {
                             onClick={() => setPage((p) => Math.max(1, p - 1))}
                             disabled={page === 1}
                         >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                             </svg>
-                            Previous
+                            <span className="hidden xs:inline">Previous</span>
+                            <span className="xs:hidden">Prev</span>
                         </button>
                         
-                        <div className={`px-4 py-2 font-semibold rounded-lg border ${
+                        <div className={`px-3 sm:px-4 py-2 font-semibold rounded-lg border text-sm sm:text-base whitespace-nowrap ${
                             isDark 
                                 ? 'bg-gray-700 text-green-400 border-gray-600' 
                                 : 'bg-green-100 text-green-800 border-green-200'
                         }`}>
-                            Page {page} of {totalPages}
+                            <span className="hidden xs:inline">Page </span>{page}<span className="hidden xs:inline"> of </span><span className="xs:hidden">/</span>{totalPages}
                         </div>
                         
                         <button
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base ${
                                 isDark 
                                     ? 'border-green-600 bg-gray-800 text-green-400 hover:bg-gray-700 hover:border-green-500' 
                                     : 'border-green-300 bg-white text-green-700 hover:bg-green-50 hover:border-green-400'
@@ -315,8 +328,9 @@ export default function Profiles({ details }) {
                             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                             disabled={page === totalPages || totalPages === 0}
                         >
-                            Next
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <span className="hidden xs:inline">Next</span>
+                            <span className="xs:hidden">Next</span>
+                            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                             </svg>
                         </button>

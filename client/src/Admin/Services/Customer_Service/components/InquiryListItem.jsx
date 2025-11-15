@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
+import { useTheme } from '../../../../contexts/ThemeContext';
 
 const InquiryListItem = ({ chat, isSelected, onClick, getUserName, getLastMessage }) => {
+  const { isDark } = useTheme();
   const [imgError, setImgError] = useState(false);
   const userName = getUserName(chat);
   const avatarUrl = useMemo(() => (
@@ -9,8 +11,10 @@ const InquiryListItem = ({ chat, isSelected, onClick, getUserName, getLastMessag
 
   return (
     <div
-      className={`py-2 px-4 border-b border-gray-100 cursor-pointer transition-all duration-200 hover:bg-gray-50 ${
-        isSelected ? 'bg-green-50 border-r-4 border-r-green-600 shadow-sm' : ''
+      className={`py-2 px-4 border-b cursor-pointer transition-all duration-200 ${
+        isDark
+          ? `border-gray-700 hover:bg-gray-750 ${isSelected ? 'bg-gray-700 border-r-4 border-r-green-500 shadow-sm' : ''}`
+          : `border-gray-100 hover:bg-gray-50 ${isSelected ? 'bg-green-50 border-r-4 border-r-green-600 shadow-sm' : ''}`
       }`}
       onClick={() => onClick(chat)}
     >
@@ -28,15 +32,21 @@ const InquiryListItem = ({ chat, isSelected, onClick, getUserName, getLastMessag
               {userName?.charAt(0).toUpperCase()}
             </div>
           )}
-          <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white shadow-sm ${
+          <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 shadow-sm ${
+            isDark ? 'border-gray-800' : 'border-white'
+          } ${
             chat.isOnline ? 'bg-green-500' : 'bg-gray-400'
           }`}></div>
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between mb-0.5">
-            <h4 className="font-semibold text-gray-900 truncate text-base mt-3">{userName}</h4>
+            <h4 className={`font-semibold truncate text-base mt-3 ${
+              isDark ? 'text-gray-100' : 'text-gray-900'
+            }`}>{userName}</h4>
             <div className="flex flex-col items-end gap-0.5 ml-2">
-              <span className="text-xs text-gray-500 font-medium">
+              <span className={`text-xs font-medium ${
+                isDark ? 'text-gray-400' : 'text-gray-500'
+              }`}>
                 {chat.updatedAt ? new Date(chat.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Now'}
               </span>
               <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold shadow-sm ${
@@ -49,8 +59,12 @@ const InquiryListItem = ({ chat, isSelected, onClick, getUserName, getLastMessag
               </span>
             </div>
           </div>
-          <p className="text-xs text-gray-800 mt-0.5 truncate font-medium">{chat.subject}</p>
-          <p className="text-xs text-gray-600 mt-0.5 truncate">{getLastMessage(chat)}</p>
+          <p className={`text-xs mt-0.5 truncate font-medium ${
+            isDark ? 'text-gray-300' : 'text-gray-800'
+          }`}>{chat.subject}</p>
+          <p className={`text-xs mt-0.5 truncate ${
+            isDark ? 'text-gray-400' : 'text-gray-600'
+          }`}>{getLastMessage(chat)}</p>
         </div>
       </div>
     </div>

@@ -466,7 +466,7 @@ export default function Dashboard() {
                                             style={{ userSelect: 'none', letterSpacing: '-0.5px', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', display: 'flex', alignItems: 'center', gap: '0.7rem' }}
                                         >
                                             {item && item.icon && (
-                                                <span className="md:-mt-1" style={{ fontSize: '1.15em', display: 'inline-flex', alignItems: 'center', marginRight: '0.55em', position: 'relative', top: '0px', lineHeight: 1, color: '#16a34a' }}>{item.icon}</span>
+                                                <span className="hidden md:inline-flex md:-mt-1" style={{ fontSize: '1.15em', alignItems: 'center', marginRight: '0.55em', position: 'relative', top: '0px', lineHeight: 1, color: '#16a34a' }}>{item.icon}</span>
                                             )}
                                             <span style={{ verticalAlign: 'middle', lineHeight: 1 }}>{item ? item.label : 'Dashboard'}</span>
                                         </h1>

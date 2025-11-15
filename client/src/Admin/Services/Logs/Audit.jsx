@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTheme } from '../../../contexts/ThemeContext';
 import {
     useAuditLogs,
     useAuditLogStats,
@@ -7,20 +8,29 @@ import {
 } from './hooks/useAuditQueries.js';
 
 export default function Audit({ admin_navigate }) {
+    const { theme, isDark } = useTheme();
     const [activeView, setActiveView] = useState('logs');
     const [timeRange, setTimeRange] = useState('30d');
 
     // Modern soft neutral background
     return (
-    <div className="min-h-screen bg-white py-4 sm:py-6 px-2 md:px-6 mt-8 sm:mt-16">
+    <div className={`min-h-screen py-4 sm:py-6 px-2 md:px-6 mt-8 sm:mt-16 ${
+        isDark ? 'bg-gray-900' : 'bg-white'
+    }`}>
             {/* View Toggle */}
             <div className="flex items-center justify-center mb-10">
-                <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                <div className={`flex items-center rounded-lg p-1 ${
+                    isDark ? 'bg-gray-800' : 'bg-gray-100'
+                }`}>
                     <button
                         onClick={() => setActiveView('logs')}
-                        className={`px-6 py-2.5 rounded-md text-sm font-medium transition-all duration-200 ${
+                        className={`px-4 sm:px-6 py-2.5 rounded-md text-sm font-medium transition-all duration-200 ${
                             activeView === 'logs'
-                                ? 'bg-white text-gray-900 shadow-sm'
+                                ? isDark
+                                    ? 'bg-gray-700 text-white shadow-sm'
+                                    : 'bg-white text-gray-900 shadow-sm'
+                                : isDark
+                                ? 'text-gray-300 hover:text-white hover:bg-gray-700'
                                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                         }`}
                     >
@@ -28,9 +38,13 @@ export default function Audit({ admin_navigate }) {
                     </button>
                     <button
                         onClick={() => setActiveView('analytics')}
-                        className={`px-6 py-2.5 rounded-md text-sm font-medium transition-all duration-200 ${
+                        className={`px-4 sm:px-6 py-2.5 rounded-md text-sm font-medium transition-all duration-200 ${
                             activeView === 'analytics'
-                                ? 'bg-white text-gray-900 shadow-sm'
+                                ? isDark
+                                    ? 'bg-gray-700 text-white shadow-sm'
+                                    : 'bg-white text-gray-900 shadow-sm'
+                                : isDark
+                                ? 'text-gray-300 hover:text-white hover:bg-gray-700'
                                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                         }`}
                     >
@@ -60,6 +74,7 @@ export default function Audit({ admin_navigate }) {
 /* ================================================================================== */
 
 function AuditLogsTable({ admin_navigate }) {
+    const { theme, isDark } = useTheme();
     // Filter and pagination states
     const [page, setPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -180,18 +195,18 @@ function AuditLogsTable({ admin_navigate }) {
     // Get action badge color
     const getActionBadgeColor = (actionCode) => {
         if (actionCode.includes('CREATE'))
-            return 'bg-green-100 text-green-800 border-green-200';
+            return isDark ? 'bg-green-900/50 text-green-300 border-green-700' : 'bg-green-100 text-green-800 border-green-200';
         if (actionCode.includes('UPDATE'))
-            return 'bg-green-100 text-green-800 border-green-200';
+            return isDark ? 'bg-green-900/50 text-green-300 border-green-700' : 'bg-green-100 text-green-800 border-green-200';
         if (actionCode.includes('DELETE'))
-            return 'bg-red-100 text-red-800 border-red-200';
+            return isDark ? 'bg-red-900/50 text-red-300 border-red-700' : 'bg-red-100 text-red-800 border-red-200';
         if (actionCode.includes('LOGIN') || actionCode.includes('LOGOUT'))
-            return 'bg-purple-100 text-purple-800 border-purple-200';
+            return isDark ? 'bg-purple-900/50 text-purple-300 border-purple-700' : 'bg-purple-100 text-purple-800 border-purple-200';
         if (actionCode.includes('APPROVE'))
-            return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+            return isDark ? 'bg-emerald-900/50 text-emerald-300 border-emerald-700' : 'bg-emerald-100 text-emerald-800 border-emerald-200';
         if (actionCode.includes('REJECT'))
-            return 'bg-orange-100 text-orange-800 border-orange-200';
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+            return isDark ? 'bg-orange-900/50 text-orange-300 border-orange-700' : 'bg-orange-100 text-orange-800 border-orange-200';
+        return isDark ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-gray-100 text-gray-800 border-gray-200';
     };
 
     // Format timestamp
@@ -226,7 +241,9 @@ function AuditLogsTable({ admin_navigate }) {
             <div className="flex justify-center items-center min-h-96">
                 <div className="flex flex-col items-center gap-4">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-                    <div className="text-lg text-gray-600">
+                    <div className={`text-lg ${
+                        isDark ? 'text-gray-300' : 'text-gray-600'
+                    }`}>
                         Loading audit logs...
                     </div>
                 </div>
@@ -242,7 +259,9 @@ function AuditLogsTable({ admin_navigate }) {
                     <div className="text-lg text-red-600 mb-4">
                         Error loading audit logs
                     </div>
-                    <div className="text-gray-600 mb-4">{error.message}</div>
+                    <div className={`mb-4 ${
+                        isDark ? 'text-gray-300' : 'text-gray-600'
+                    }`}>{error.message}</div>
                     <button
                         onClick={refreshLogs}
                         className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
@@ -268,10 +287,16 @@ function AuditLogsTable({ admin_navigate }) {
                             placeholder="Search admins, actions, targets, or details..."
                             value={search}
                             onChange={(e) => handleSearchChange(e.target.value)}
-                            className="appearance-none border rounded-lg pl-10 pr-10 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-base font-medium w-full bg-white border-gray-300 text-gray-700"
+                            className={`appearance-none border rounded-lg pl-10 pr-10 py-2 sm:py-2.5 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-sm sm:text-base font-medium w-full ${
+                                isDark
+                                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                                    : 'bg-white border-gray-300 text-gray-700 placeholder-gray-500'
+                            }`}
                             style={{ minWidth: '0' }}
                         />
-                        <span className="pointer-events-none absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <span className={`pointer-events-none absolute left-3 top-1/2 transform -translate-y-1/2 ${
+                            isDark ? 'text-gray-400' : 'text-gray-400'
+                        }`}>
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <circle cx="11" cy="11" r="8" />
                                 <path d="m21 21-4.35-4.35" />
@@ -280,12 +305,14 @@ function AuditLogsTable({ admin_navigate }) {
                     </div>
                     
                     {/* Filter and Clear and Refresh buttons */}
-                    <div className="flex items-center justify-center sm:justify-end gap-3 flex-shrink-0">
+                    <div className="flex items-center justify-center sm:justify-end gap-2 sm:gap-3 flex-shrink-0">
                         <button
                             onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                            className={`flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold border transition-all duration-200 transform hover:scale-105 ${
+                            className={`flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold border transition-all duration-200 transform hover:scale-105 ${
                                 showAdvancedFilters || adminId || action || targetType || dateFrom || dateTo
                                     ? 'bg-green-50 text-green-700 border-green-300 shadow-md'
+                                    : isDark
+                                    ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600 hover:border-gray-500'
                                     : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
                             }`}
                         >
@@ -303,7 +330,11 @@ function AuditLogsTable({ admin_navigate }) {
 
                         <button
                             onClick={clearFilters}
-                            className="flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 hover:border-gray-300 transition-all duration-200 transform hover:scale-105"
+                            className={`flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold border transition-all duration-200 transform hover:scale-105 ${
+                                isDark
+                                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 border-gray-600 hover:border-gray-500'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200 hover:border-gray-300'
+                            }`}
                         >
                             <svg
                                 className="w-4 h-4 mr-2"
@@ -324,7 +355,7 @@ function AuditLogsTable({ admin_navigate }) {
                         <button
                             onClick={refreshLogs}
                             disabled={isFetching}
-                            className="flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 transition-all duration-200 transform hover:scale-105 shadow-md border border-green-600"
+                            className="flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 transition-all duration-200 transform hover:scale-105 shadow-md border border-green-600"
                         >
                             <svg
                                 className={`w-4 h-4 mr-2 ${
@@ -348,17 +379,25 @@ function AuditLogsTable({ admin_navigate }) {
 
                 {/* Advanced Filters - Enhanced Design */}
                 {showAdvancedFilters && (
-                    <div className="bg-gradient-to-br from-gray-50 to-green-50 rounded-xl border-2 border-green-100 p-6 mt-4 shadow-inner">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <div className={`rounded-xl border-2 p-4 sm:p-6 mt-4 shadow-inner ${
+                        isDark
+                            ? 'bg-gray-800 border-gray-700'
+                            : 'bg-gradient-to-br from-gray-50 to-green-50 border-green-100'
+                    }`}>
+                        <h3 className={`text-base sm:text-lg font-semibold mb-4 flex items-center ${
+                            isDark ? 'text-white' : 'text-gray-800'
+                        }`}>
                             <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
                             </svg>
                             Advanced Filters
                         </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6">
                             {/* Admin Filter */}
                             <div className="flex flex-col">
-                                <label className="text-sm font-medium text-gray-700 mb-3 order-1">
+                                <label className={`text-xs sm:text-sm font-medium mb-2 sm:mb-3 order-1 ${
+                                    isDark ? 'text-gray-300' : 'text-gray-700'
+                                }`}>
                                     Admin
                                 </label>
                                 <select
@@ -369,7 +408,11 @@ function AuditLogsTable({ admin_navigate }) {
                                             e.target.value
                                         )
                                     }
-                                    className="w-full px-4 py-3 text-sm bg-white border-2 border-green-200 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2"
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border-2 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2 ${
+                                        isDark
+                                            ? 'bg-gray-700 border-gray-600 text-white'
+                                            : 'bg-white border-green-200'
+                                    }`}
                                     disabled={isLoadingFilters}
                                 >
                                     <option value="">All Admins</option>
@@ -383,7 +426,9 @@ function AuditLogsTable({ admin_navigate }) {
 
                             {/* Action Filter */}
                             <div className="flex flex-col">
-                                <label className="text-sm font-medium text-gray-700 mb-3 order-1">
+                                <label className={`text-xs sm:text-sm font-medium mb-2 sm:mb-3 order-1 ${
+                                    isDark ? 'text-gray-300' : 'text-gray-700'
+                                }`}>
                                     Action
                                 </label>
                                 <select
@@ -391,7 +436,11 @@ function AuditLogsTable({ admin_navigate }) {
                                     onChange={(e) =>
                                         handleFilterChange('action', e.target.value)
                                     }
-                                    className="w-full px-4 py-3 text-sm bg-white border-2 border-green-200 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2"
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border-2 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2 ${
+                                        isDark
+                                            ? 'bg-gray-700 border-gray-600 text-white'
+                                            : 'bg-white border-green-200'
+                                    }`}
                                     disabled={isLoadingFilters}
                                 >
                                     <option value="">All Actions</option>
@@ -408,7 +457,9 @@ function AuditLogsTable({ admin_navigate }) {
 
                             {/* Target Type Filter */}
                             <div className="flex flex-col">
-                                <label className="text-sm font-medium text-gray-700 mb-3 order-1">
+                                <label className={`text-xs sm:text-sm font-medium mb-2 sm:mb-3 order-1 ${
+                                    isDark ? 'text-gray-300' : 'text-gray-700'
+                                }`}>
                                     Target Type
                                 </label>
                                 <select
@@ -419,7 +470,11 @@ function AuditLogsTable({ admin_navigate }) {
                                             e.target.value
                                         )
                                     }
-                                    className="w-full px-4 py-3 text-sm bg-white border-2 border-green-200 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2"
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border-2 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2 ${
+                                        isDark
+                                            ? 'bg-gray-700 border-gray-600 text-white'
+                                            : 'bg-white border-green-200'
+                                    }`}
                                     disabled={isLoadingFilters}
                                 >
                                     <option value="">All Types</option>
@@ -433,7 +488,9 @@ function AuditLogsTable({ admin_navigate }) {
 
                             {/* Date From */}
                             <div className="flex flex-col">
-                                <label className="text-sm font-medium text-gray-700 mb-3 order-1">
+                                <label className={`text-xs sm:text-sm font-medium mb-2 sm:mb-3 order-1 ${
+                                    isDark ? 'text-gray-300' : 'text-gray-700'
+                                }`}>
                                     From Date
                                 </label>
                                 <input
@@ -445,13 +502,19 @@ function AuditLogsTable({ admin_navigate }) {
                                             e.target.value
                                         )
                                     }
-                                    className="w-full px-4 py-3 text-sm bg-white border-2 border-green-200 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2"
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border-2 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2 ${
+                                        isDark
+                                            ? 'bg-gray-700 border-gray-600 text-white'
+                                            : 'bg-white border-green-200'
+                                    }`}
                                 />
                             </div>
 
                             {/* Date To */}
                             <div className="flex flex-col">
-                                <label className="text-sm font-medium text-gray-700 mb-3 order-1">
+                                <label className={`text-xs sm:text-sm font-medium mb-2 sm:mb-3 order-1 ${
+                                    isDark ? 'text-gray-300' : 'text-gray-700'
+                                }`}>
                                     To Date
                                 </label>
                                 <input
@@ -460,7 +523,11 @@ function AuditLogsTable({ admin_navigate }) {
                                     onChange={(e) =>
                                         handleFilterChange('dateTo', e.target.value)
                                     }
-                                    className="w-full px-4 py-3 text-sm bg-white border-2 border-green-200 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2"
+                                    className={`w-full px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border-2 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2 ${
+                                        isDark
+                                            ? 'bg-gray-700 border-gray-600 text-white'
+                                            : 'bg-white border-green-200'
+                                    }`}
                                 />
                             </div>
                         </div>
@@ -468,16 +535,22 @@ function AuditLogsTable({ admin_navigate }) {
                 )}
 
                 {/* Results Summary - Enhanced */}
-                <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
-                    <div className="flex items-center text-sm text-gray-600">
+                <div className={`flex flex-col sm:flex-row items-start sm:items-center justify-between mt-6 pt-4 border-t gap-3 ${
+                    isDark ? 'border-gray-700' : 'border-gray-200'
+                }`}>
+                    <div className={`flex flex-col sm:flex-row sm:items-center text-xs sm:text-sm gap-2 sm:gap-0 ${
+                        isDark ? 'text-gray-300' : 'text-gray-600'
+                    }`}>
                         {isFetching && (
-                            <div className="text-green-600 flex items-center mr-6">
+                            <div className="text-green-600 flex items-center sm:mr-6">
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600 mr-2"></div>
                                 Updating...
                             </div>
                         )}
                         <div className="flex items-center">
-                            <svg className="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <svg className={`w-4 h-4 mr-2 ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                             <span className="font-medium">Showing {logs.length} of {pagination.totalCount || 0} entries</span>
@@ -495,44 +568,64 @@ function AuditLogsTable({ admin_navigate }) {
                     </div>
                     
                     {/* Quick Stats */}
-                    <div className="flex items-center text-sm text-gray-500">
+                    <div className={`flex items-center text-xs sm:text-sm ${
+                        isDark ? 'text-gray-400' : 'text-gray-500'
+                    }`}>
                         <span className="mr-4">Page {pagination.currentPage || 1} of {pagination.totalPages || 1}</span>
                     </div>
                 </div>
             </div>
 
             {/* Table */}
-        <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm mt-6">
+        <div className={`overflow-x-auto rounded-lg border shadow-sm mt-6 ${
+            isDark ? 'border-gray-700' : 'border-gray-200'
+        }`}>
             <table className="w-full">
-                <thead className="bg-gray-50">
+                <thead className={isDark ? 'bg-gray-800' : 'bg-gray-50'}>
                         <tr>
                             <th
-                                className="py-4 px-6 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-100 transition-colors"
+                                className={`py-3 sm:py-4 px-4 sm:px-6 text-left text-xs sm:text-sm font-semibold cursor-pointer transition-colors ${
+                                    isDark
+                                        ? 'text-gray-200 hover:bg-gray-700'
+                                        : 'text-gray-900 hover:bg-gray-100'
+                                }`}
                                 onClick={() => handleSort('createdAt')}
                             >
                                 <div className="flex items-center gap-2">
                                     Time
                                     {sortBy === 'createdAt' && (
-                                        <span className="text-gray-500">
+                                        <span className={isDark ? 'text-gray-400' : 'text-gray-500'}>
                                             {sortOrder === 'asc' ? '↑' : '↓'}
                                         </span>
                                     )}
                                 </div>
                             </th>
-                            <th className="py-4 px-6 text-left text-sm font-semibold text-gray-900">Admin</th>
-                            <th className="py-4 px-6 text-left text-sm font-semibold text-gray-900">Action</th>
-                            <th className="py-4 px-6 text-left text-sm font-semibold text-gray-900">Target</th>
-                            <th className="py-4 px-6 text-left text-sm font-semibold text-gray-900">
+                            <th className={`py-3 sm:py-4 px-4 sm:px-6 text-left text-xs sm:text-sm font-semibold ${
+                                isDark ? 'text-gray-200' : 'text-gray-900'
+                            }`}>Admin</th>
+                            <th className={`py-3 sm:py-4 px-4 sm:px-6 text-left text-xs sm:text-sm font-semibold ${
+                                isDark ? 'text-gray-200' : 'text-gray-900'
+                            }`}>Action</th>
+                            <th className={`py-3 sm:py-4 px-4 sm:px-6 text-left text-xs sm:text-sm font-semibold ${
+                                isDark ? 'text-gray-200' : 'text-gray-900'
+                            }`}>Target</th>
+                            <th className={`py-3 sm:py-4 px-4 sm:px-6 text-left text-xs sm:text-sm font-semibold ${
+                                isDark ? 'text-gray-200' : 'text-gray-900'
+                            }`}>
                                 Details
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className={`divide-y ${
+                        isDark ? 'divide-gray-700' : 'divide-gray-100'
+                    }`}>
                         {logs.length === 0 ? (
                             <tr>
                                 <td
                                     colSpan={5}
-                                    className="text-center py-16 text-gray-400 text-base font-medium"
+                                    className={`text-center py-12 sm:py-16 text-base font-medium ${
+                                        isDark ? 'text-gray-400' : 'text-gray-400'
+                                    }`}
                                 >
                                     {search ||
                                     adminId ||
@@ -548,18 +641,24 @@ function AuditLogsTable({ admin_navigate }) {
                             logs.map((log, index) => (
                                 <tr
                                     key={log.id}
-                                    className={`$${
+                                    className={`${
                                         index % 2 === 0
-                                            ? 'bg-white'
-                                            : 'bg-neutral-50'
-                                    } hover:bg-green-50 transition-colors group`}
+                                            ? isDark ? 'bg-gray-800' : 'bg-white'
+                                            : isDark ? 'bg-gray-750' : 'bg-neutral-50'
+                                    } transition-colors group ${
+                                        isDark ? 'hover:bg-gray-700' : 'hover:bg-green-50'
+                                    }`}
                                 >
                                     {/* Timestamp */}
-                                    <td className="py-4 px-6">
-                                        <div className="text-sm font-medium text-gray-900">
+                                    <td className="py-3 sm:py-4 px-4 sm:px-6">
+                                        <div className={`text-xs sm:text-sm font-medium ${
+                                            isDark ? 'text-gray-200' : 'text-gray-900'
+                                        }`}>
                                             {formatTimestamp(log.createdAt)}
                                         </div>
-                                        <div className="text-xs text-gray-500 mt-1">
+                                        <div className={`text-xs mt-1 ${
+                                            isDark ? 'text-gray-400' : 'text-gray-500'
+                                        }`}>
                                             {new Date(
                                                 log.createdAt
                                             ).toLocaleDateString('en-US', {
@@ -573,21 +672,27 @@ function AuditLogsTable({ admin_navigate }) {
                                     </td>
 
                                     {/* Admin */}
-                                    <td className="py-4 px-6">
+                                    <td className="py-3 sm:py-4 px-4 sm:px-6">
                                         <div className="flex items-center gap-3">
                                             {log.admin.hasPicture && (
                                                 <img
                                                     src={`/api/account/picture/${log.admin.id}`}
                                                     alt={log.admin.fullName}
-                                                    className="w-8 h-8 rounded-full object-cover border border-gray-200"
+                                                    className={`w-8 h-8 rounded-full object-cover border ${
+                                                        isDark ? 'border-gray-600' : 'border-gray-200'
+                                                    }`}
                                                     style={{ minWidth: '2rem' }}
                                                 />
                                             )}
                                             <div>
-                                                <div className="text-sm font-medium text-gray-900">
+                                                <div className={`text-xs sm:text-sm font-medium ${
+                                                    isDark ? 'text-gray-200' : 'text-gray-900'
+                                                }`}>
                                                     {log.admin.fullName}
                                                 </div>
-                                                <div className="text-xs text-gray-500">
+                                                <div className={`text-xs ${
+                                                    isDark ? 'text-gray-400' : 'text-gray-500'
+                                                }`}>
                                                     @{log.admin.username}
                                                 </div>
                                             </div>
@@ -595,7 +700,7 @@ function AuditLogsTable({ admin_navigate }) {
                                     </td>
 
                                     {/* Action */}
-                                    <td className="py-4 px-6">
+                                    <td className="py-3 sm:py-4 px-4 sm:px-6">
                                         <span
                                             className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${getActionBadgeColor(
                                                 log.action
@@ -606,20 +711,26 @@ function AuditLogsTable({ admin_navigate }) {
                                     </td>
 
                                     {/* Target */}
-                                    <td className="py-4 px-6">
-                                        <div className="text-sm font-medium text-gray-900">
+                                    <td className="py-3 sm:py-4 px-4 sm:px-6">
+                                        <div className={`text-xs sm:text-sm font-medium ${
+                                            isDark ? 'text-gray-200' : 'text-gray-900'
+                                        }`}>
                                             {log.targetName || 'N/A'}
                                         </div>
                                         {log.targetType && (
-                                            <div className="text-xs text-gray-500 mt-1">
+                                            <div className={`text-xs mt-1 ${
+                                                isDark ? 'text-gray-400' : 'text-gray-500'
+                                            }`}>
                                                 {log.targetType}
                                             </div>
                                         )}
                                     </td>
 
                                     {/* Details */}
-                                    <td className="py-4 px-6">
-                                        <div className="text-sm text-neutral-700">
+                                    <td className="py-3 sm:py-4 px-4 sm:px-6">
+                                        <div className={`text-xs sm:text-sm ${
+                                            isDark ? 'text-gray-300' : 'text-neutral-700'
+                                        }`}>
                                             {(() => {
                                                 const details =
                                                     log.details ||
@@ -668,7 +779,9 @@ function AuditLogsTable({ admin_navigate }) {
                                             })()}
                                         </div>
                                         {log.ipAddress && (
-                                            <div className="text-xs text-neutral-400 mt-1">
+                                            <div className={`text-xs mt-1 ${
+                                                isDark ? 'text-gray-500' : 'text-neutral-400'
+                                            }`}>
                                                 IP: {log.ipAddress}
                                             </div>
                                         )}
@@ -682,16 +795,24 @@ function AuditLogsTable({ admin_navigate }) {
 
             {/* Pagination - Seminar style */}
             {pagination.totalPages > 1 && (
-                <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8 mt-4">
-                    <div className="flex justify-between items-center mb-2">
-                        <span className="text-xs text-gray-500">
+                <div className="w-full max-w-[1400px] mx-auto px-2 sm:px-4 md:px-8 mt-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2">
+                        <span className={`text-xs ${
+                            isDark ? 'text-gray-400' : 'text-gray-500'
+                        }`}>
                             Showing {logs.length} of {pagination.totalCount || 0} entries
                         </span>
                         <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500">Rows per page:</span>
+                            <span className={`text-xs ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`}>Rows per page:</span>
                             <div className="relative">
                                 <select
-                                    className="appearance-none border text-sm rounded-lg focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-3 pr-10 min-w-[70px] transition bg-white border-gray-300 text-gray-700"
+                                    className={`appearance-none border text-xs sm:text-sm rounded-lg focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-3 pr-10 min-w-[70px] transition ${
+                                        isDark
+                                            ? 'bg-gray-700 border-gray-600 text-white'
+                                            : 'bg-white border-gray-300 text-gray-700'
+                                    }`}
                                     value={itemsPerPage}
                                     onChange={e => {
                                         setItemsPerPage(Number(e.target.value));
@@ -713,9 +834,13 @@ function AuditLogsTable({ admin_navigate }) {
                             </div>
                         </div>
                     </div>
-                    <div className="flex justify-center items-center gap-4 py-8">
+                    <div className="flex justify-center items-center gap-2 sm:gap-4 py-6 sm:py-8 flex-wrap">
                         <button
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed border-green-300 bg-white text-green-700 hover:bg-green-50 hover:border-green-400"
+                            className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm ${
+                                isDark
+                                    ? 'border-green-700 bg-gray-700 text-green-400 hover:bg-gray-600 hover:border-green-600'
+                                    : 'border-green-300 bg-white text-green-700 hover:bg-green-50 hover:border-green-400'
+                            }`}
                             onClick={() => setPage(prev => Math.max(1, prev - 1))}
                             disabled={page === 1 || isFetching}
                         >
@@ -724,11 +849,19 @@ function AuditLogsTable({ admin_navigate }) {
                             </svg>
                             Previous
                         </button>
-                        <div className="px-4 py-2 font-semibold rounded-lg border bg-green-100 text-green-800 border-green-200">
+                        <div className={`px-3 sm:px-4 py-2 font-semibold rounded-lg border text-xs sm:text-sm ${
+                            isDark
+                                ? 'bg-green-900/50 text-green-300 border-green-700'
+                                : 'bg-green-100 text-green-800 border-green-200'
+                        }`}>
                             Page {pagination.currentPage} of {pagination.totalPages}
                         </div>
                         <button
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed border-green-300 bg-white text-green-700 hover:bg-green-50 hover:border-green-400"
+                            className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm ${
+                                isDark
+                                    ? 'border-green-700 bg-gray-700 text-green-400 hover:bg-gray-600 hover:border-green-600'
+                                    : 'border-green-300 bg-white text-green-700 hover:bg-green-50 hover:border-green-400'
+                            }`}
                             onClick={() => setPage(prev => Math.min(pagination.totalPages, prev + 1))}
                             disabled={page === pagination.totalPages || isFetching}
                         >
@@ -749,6 +882,7 @@ function AuditLogsTable({ admin_navigate }) {
 /* ================================================================================== */
 
 function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
+    const { theme, isDark } = useTheme();
     const { data: statsData, isLoading, error } = useAuditLogStats(timeRange);
 
     const { refreshStats } = useRefreshAuditLogs();
@@ -758,7 +892,9 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
             <div className="flex justify-center items-center min-h-96">
                 <div className="flex flex-col items-center gap-4">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-                    <div className="text-lg text-gray-600">
+                    <div className={`text-lg ${
+                        isDark ? 'text-gray-300' : 'text-gray-600'
+                    }`}>
                         Loading analytics...
                     </div>
                 </div>
@@ -773,7 +909,9 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                     <div className="text-lg text-red-600 mb-4">
                         Error loading analytics
                     </div>
-                    <div className="text-gray-600 mb-4">{error.message}</div>
+                    <div className={`mb-4 ${
+                        isDark ? 'text-gray-300' : 'text-gray-600'
+                    }`}>{error.message}</div>
                     <button
                         onClick={refreshStats}
                         className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
@@ -796,14 +934,20 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
     return (
         <div className="space-y-8">
             {/* Time Range Selector */}
-            <div className="flex items-center justify-between">
-                <h3 className="text-xl font-semibold text-gray-900">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <h3 className={`text-lg sm:text-xl font-semibold ${
+                    isDark ? 'text-white' : 'text-gray-900'
+                }`}>
                     Analytics Overview
                 </h3>
                 <select
                     value={timeRange}
                     onChange={(e) => setTimeRange(e.target.value)}
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm font-medium bg-white"
+                    className={`px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm font-medium ${
+                        isDark
+                            ? 'bg-gray-700 border-gray-600 text-white'
+                            : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                 >
                     <option value="7d">Last 7 days</option>
                     <option value="30d">Last 30 days</option>
@@ -813,12 +957,18 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
             </div>
 
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="bg-white rounded-lg p-6 border border-gray-200">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                <div className={`rounded-lg p-4 sm:p-6 border ${
+                    isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                }`}>
                     <div className="flex items-center">
-                        <div className="p-2 rounded-md bg-gray-100 mr-4">
+                        <div className={`p-2 rounded-md mr-3 sm:mr-4 ${
+                            isDark ? 'bg-gray-700' : 'bg-gray-100'
+                        }`}>
                             <svg
-                                className="w-5 h-5 text-gray-600"
+                                className={`w-5 h-5 ${
+                                    isDark ? 'text-gray-300' : 'text-gray-600'
+                                }`}
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
@@ -832,21 +982,31 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                             </svg>
                         </div>
                         <div>
-                            <div className="text-2xl font-bold text-gray-900">
+                            <div className={`text-xl sm:text-2xl font-bold ${
+                                isDark ? 'text-white' : 'text-gray-900'
+                            }`}>
                                 {totalLogs.toLocaleString()}
                             </div>
-                            <div className="text-sm text-gray-600">
+                            <div className={`text-xs sm:text-sm ${
+                                isDark ? 'text-gray-400' : 'text-gray-600'
+                            }`}>
                                 Total Activities
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className={`rounded-lg p-4 sm:p-6 shadow-sm ${
+                    isDark ? 'bg-gray-800' : 'bg-white'
+                }`}>
                     <div className="flex items-center">
-                        <div className="p-3 rounded-lg bg-green-100 mr-4">
+                        <div className={`p-3 rounded-lg mr-3 sm:mr-4 ${
+                            isDark ? 'bg-green-900/50' : 'bg-green-100'
+                        }`}>
                             <svg
-                                className="w-6 h-6 text-green-600"
+                                className={`w-6 h-6 ${
+                                    isDark ? 'text-green-400' : 'text-green-600'
+                                }`}
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
@@ -860,21 +1020,31 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                             </svg>
                         </div>
                         <div>
-                            <div className="text-2xl font-bold text-gray-900">
+                            <div className={`text-xl sm:text-2xl font-bold ${
+                                isDark ? 'text-white' : 'text-gray-900'
+                            }`}>
                                 {adminActivity.length}
                             </div>
-                            <div className="text-sm text-gray-600">
+                            <div className={`text-xs sm:text-sm ${
+                                isDark ? 'text-gray-400' : 'text-gray-600'
+                            }`}>
                                 Active Admins
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className={`rounded-lg p-4 sm:p-6 shadow-sm ${
+                    isDark ? 'bg-gray-800' : 'bg-white'
+                }`}>
                     <div className="flex items-center">
-                        <div className="p-3 rounded-lg bg-purple-100 mr-4">
+                        <div className={`p-3 rounded-lg mr-3 sm:mr-4 ${
+                            isDark ? 'bg-purple-900/50' : 'bg-purple-100'
+                        }`}>
                             <svg
-                                className="w-6 h-6 text-purple-600"
+                                className={`w-6 h-6 ${
+                                    isDark ? 'text-purple-400' : 'text-purple-600'
+                                }`}
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
@@ -888,21 +1058,31 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                             </svg>
                         </div>
                         <div>
-                            <div className="text-2xl font-bold text-gray-900">
+                            <div className={`text-xl sm:text-2xl font-bold ${
+                                isDark ? 'text-white' : 'text-gray-900'
+                            }`}>
                                 {actionDistribution.length}
                             </div>
-                            <div className="text-sm text-gray-600">
+                            <div className={`text-xs sm:text-sm ${
+                                isDark ? 'text-gray-400' : 'text-gray-600'
+                            }`}>
                                 Action Types
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className={`rounded-lg p-4 sm:p-6 shadow-sm ${
+                    isDark ? 'bg-gray-800' : 'bg-white'
+                }`}>
                     <div className="flex items-center">
-                        <div className="p-3 rounded-lg bg-orange-100 mr-4">
+                        <div className={`p-3 rounded-lg mr-3 sm:mr-4 ${
+                            isDark ? 'bg-orange-900/50' : 'bg-orange-100'
+                        }`}>
                             <svg
-                                className="w-6 h-6 text-orange-600"
+                                className={`w-6 h-6 ${
+                                    isDark ? 'text-orange-400' : 'text-orange-600'
+                                }`}
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
@@ -916,10 +1096,14 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                             </svg>
                         </div>
                         <div>
-                            <div className="text-2xl font-bold text-gray-900">
+                            <div className={`text-xl sm:text-2xl font-bold ${
+                                isDark ? 'text-white' : 'text-gray-900'
+                            }`}>
                                 {targetTypeDistribution.length}
                             </div>
-                            <div className="text-sm text-gray-600">
+                            <div className={`text-xs sm:text-sm ${
+                                isDark ? 'text-gray-400' : 'text-gray-600'
+                            }`}>
                                 Target Types
                             </div>
                         </div>
@@ -928,10 +1112,14 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
             </div>
 
             {/* Charts Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* Top Actions */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                <div className={`rounded-lg p-4 sm:p-6 shadow-sm ${
+                    isDark ? 'bg-gray-800' : 'bg-white'
+                }`}>
+                    <h4 className={`text-base sm:text-lg font-semibold mb-4 ${
+                        isDark ? 'text-white' : 'text-gray-900'
+                    }`}>
                         Top Actions
                     </h4>
                     <div className="space-y-3">
@@ -941,12 +1129,18 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                                 className="flex items-center justify-between"
                             >
                                 <div className="flex items-center">
-                                    <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-3">
-                                        <span className="text-xs font-semibold text-green-600">
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${
+                                        isDark ? 'bg-green-900/50' : 'bg-green-100'
+                                    }`}>
+                                        <span className={`text-xs font-semibold ${
+                                            isDark ? 'text-green-400' : 'text-green-600'
+                                        }`}>
                                             {index + 1}
                                         </span>
                                     </div>
-                                    <span className="text-sm font-medium text-gray-900">
+                                    <span className={`text-xs sm:text-sm font-medium ${
+                                        isDark ? 'text-gray-200' : 'text-gray-900'
+                                    }`}>
                                         {item.action
                                             .split('_')
                                             .map(
@@ -959,7 +1153,9 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                                             .join(' ')}
                                     </span>
                                 </div>
-                                <span className="text-sm text-gray-600">
+                                <span className={`text-xs sm:text-sm ${
+                                    isDark ? 'text-gray-400' : 'text-gray-600'
+                                }`}>
                                     {item.count}
                                 </span>
                             </div>
@@ -968,8 +1164,12 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                 </div>
 
                 {/* Most Active Admins */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                <div className={`rounded-lg p-4 sm:p-6 shadow-sm ${
+                    isDark ? 'bg-gray-800' : 'bg-white'
+                }`}>
+                    <h4 className={`text-base sm:text-lg font-semibold mb-4 ${
+                        isDark ? 'text-white' : 'text-gray-900'
+                    }`}>
                         Most Active Admins
                     </h4>
                     <div className="space-y-3">
@@ -987,15 +1187,21 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                                         </span>
                                     </div>
                                     <div>
-                                        <div className="text-sm font-medium text-gray-900">
+                                        <div className={`text-xs sm:text-sm font-medium ${
+                                            isDark ? 'text-gray-200' : 'text-gray-900'
+                                        }`}>
                                             {item.admin.fullName}
                                         </div>
-                                        <div className="text-xs text-gray-500">
+                                        <div className={`text-xs ${
+                                            isDark ? 'text-gray-400' : 'text-gray-500'
+                                        }`}>
                                             @{item.admin.username}
                                         </div>
                                     </div>
                                 </div>
-                                <span className="text-sm text-gray-600">
+                                <span className={`text-xs sm:text-sm ${
+                                    isDark ? 'text-gray-400' : 'text-gray-600'
+                                }`}>
                                     {item.count}
                                 </span>
                             </div>
@@ -1005,8 +1211,12 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
             </div>
 
             {/* Daily Activity Chart */}
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className={`rounded-lg p-4 sm:p-6 shadow-sm ${
+                isDark ? 'bg-gray-800' : 'bg-white'
+            }`}>
+                <h4 className={`text-base sm:text-lg font-semibold mb-4 ${
+                    isDark ? 'text-white' : 'text-gray-900'
+                }`}>
                     Daily Activity (Last 30 Days)
                 </h4>
                 <div className="h-64 flex items-end space-x-1">
@@ -1030,7 +1240,9 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                                     title={`${day.date}: ${day.count} activities`}
                                 ></div>
                                 {index % 5 === 0 && (
-                                    <div className="text-xs text-gray-500 mt-1 transform -rotate-45 origin-top-left">
+                                    <div className={`text-xs mt-1 transform -rotate-45 origin-top-left ${
+                                        isDark ? 'text-gray-400' : 'text-gray-500'
+                                    }`}>
                                         {new Date(day.date).toLocaleDateString(
                                             'en-US',
                                             { month: 'short', day: 'numeric' }
