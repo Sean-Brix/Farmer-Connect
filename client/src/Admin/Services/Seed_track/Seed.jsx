@@ -12,6 +12,7 @@ import {
   Legend,
   ArcElement,
 } from 'chart.js';
+import { useTheme } from '../../../contexts/ThemeContext';
 import { useAdminSeedTrack } from './hooks/useSeedTrackQueries';
 import { 
   useCropGuidelines, 
@@ -35,6 +36,8 @@ ChartJS.register(
 );
 
 function Seed_Track() {
+  const { isDark } = useTheme();
+  
   // Data from backend
   const { farmers = [], reports: sampleSeedTrackingData = [], cropsByUser = new Map(), isLoading: seedLoading, error: seedError } = useAdminSeedTrack();
 
@@ -389,14 +392,14 @@ function Seed_Track() {
   // Loading and error states
   if (seedLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-700">Loading seed tracking data…</div>
+      <div className={`min-h-screen flex items-center justify-center ${isDark ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gray-50'}`}>
+        <div className={`${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Loading seed tracking data…</div>
       </div>
     );
   }
   if (seedError) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className={`min-h-screen flex items-center justify-center ${isDark ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gray-50'}`}>
         <div className="text-red-700">Failed to load data.</div>
       </div>
     );
@@ -404,26 +407,26 @@ function Seed_Track() {
 
   // UI markup (preserved styling)
   return (
-    <div className="min-h-screen bg-white">
+    <div className={`min-h-screen ${isDark ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-white'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 mt-8 sm:mt-16">
         {alert?.show && (
-          <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg border-l-4 max-w-sm ${alert.type === 'success' ? 'bg-green-50 border-green-500 text-green-800' : 'bg-gray-50 border-gray-500 text-gray-800'}`}>
+          <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg border-l-4 max-w-sm ${alert.type === 'success' ? (isDark ? 'bg-green-900 border-green-500 text-green-200' : 'bg-green-50 border-green-500 text-green-800') : (isDark ? 'bg-gray-800 border-gray-500 text-gray-200' : 'bg-gray-50 border-gray-500 text-gray-800')}`}>
             <span className="font-medium text-sm">{alert.message}</span>
           </div>
         )}
 
         {/* Main Content Container */}
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+        <div className={`rounded-lg border shadow-sm ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           <div className="p-6 lg:p-8">
             {/* Navigation Tabs */}
-            <div className="border-b border-gray-200 mb-8">
+            <div className={`border-b mb-8 ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
               <nav className="flex space-x-8 overflow-x-auto">
                 <button
                   onClick={() => setActiveTab('overview')}
                   className={`py-3 px-1 text-sm font-semibold border-b-2 whitespace-nowrap flex items-center gap-2 transition-colors duration-200 ${
                     activeTab === 'overview'
                       ? 'border-green-600 text-green-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      : isDark ? 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -437,7 +440,7 @@ function Seed_Track() {
                   className={`py-3 px-1 text-sm font-semibold border-b-2 whitespace-nowrap flex items-center gap-2 transition-colors duration-200 ${
                     activeTab === 'guidelines'
                       ? 'border-green-600 text-green-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      : isDark ? 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -465,7 +468,7 @@ function Seed_Track() {
                       className={`py-3 px-1 text-sm font-semibold whitespace-nowrap flex items-center gap-2 transition-colors duration-200 ${
                         activeFarmerId === farmer.farmerId && activeTab === 'farmer'
                           ? 'text-green-600'
-                          : 'text-gray-500 hover:text-gray-700'
+                          : isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-700'
                       }`}
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -476,7 +479,7 @@ function Seed_Track() {
                     </button>
                     <button
                       onClick={(e) => closeFarmerTab(farmer.farmerId, e)}
-                      className="ml-2 p-1 text-gray-400 hover:text-gray-600 rounded-md transition-colors duration-200"
+                      className={`ml-2 p-1 rounded-md transition-colors duration-200 ${isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'}`}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
@@ -496,58 +499,58 @@ function Seed_Track() {
                 const stats = getOverviewStatistics();
                 return (
                   <>
-                    <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200">
+                    <div className={`rounded-lg p-6 hover:shadow-md transition-shadow duration-200 ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
                       <div className="flex items-center">
-                        <div className="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center">
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${isDark ? 'bg-green-900' : 'bg-green-50'}`}>
                           <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </div>
                         <div className="ml-4">
-                          <h3 className="text-2xl font-bold text-black">{stats.totalFarmers}</h3>
-                          <p className="text-sm text-gray-600 font-medium">Total Farmers</p>
+                          <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-black'}`}>{stats.totalFarmers}</h3>
+                          <p className={`text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Farmers</p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200">
+                    <div className={`rounded-lg p-6 hover:shadow-md transition-shadow duration-200 ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
                       <div className="flex items-center">
-                        <div className="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center">
-                          <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                          <svg className={`w-6 h-6 ${isDark ? 'text-gray-300' : 'text-gray-600'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </div>
                         <div className="ml-4">
-                          <h3 className="text-2xl font-bold text-black">{stats.totalReports}</h3>
-                          <p className="text-sm text-gray-600 font-medium">Total Reports</p>
+                          <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-black'}`}>{stats.totalReports}</h3>
+                          <p className={`text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Reports</p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200">
+                    <div className={`rounded-lg p-6 hover:shadow-md transition-shadow duration-200 ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
                       <div className="flex items-center">
-                        <div className="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center">
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${isDark ? 'bg-green-900' : 'bg-green-50'}`}>
                           <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </div>
                         <div className="ml-4">
-                          <h3 className="text-2xl font-bold text-black">{stats.activeCrops}</h3>
-                          <p className="text-sm text-gray-600 font-medium">Active Crops</p>
+                          <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-black'}`}>{stats.activeCrops}</h3>
+                          <p className={`text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Active Crops</p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200">
+                    <div className={`rounded-lg p-6 hover:shadow-md transition-shadow duration-200 ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
                       <div className="flex items-center">
-                        <div className="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center">
-                          <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                          <svg className={`w-6 h-6 ${isDark ? 'text-gray-300' : 'text-gray-600'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </div>
                         <div className="ml-4">
-                          <h3 className="text-2xl font-bold text-black">{stats.recentReports}</h3>
-                          <p className="text-sm text-gray-600 font-medium">Recent Reports</p>
+                          <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-black'}`}>{stats.recentReports}</h3>
+                          <p className={`text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Recent Reports</p>
                         </div>
                       </div>
                     </div>
@@ -631,7 +634,7 @@ function Seed_Track() {
                         padding: 24,
                         usePointStyle: true,
                         pointStyle: 'circle',
-                        color: '#374151',
+                        color: isDark ? '#D1D5DB' : '#374151',
                         font: {
                           size: 13,
                           weight: '500',
@@ -687,12 +690,12 @@ function Seed_Track() {
                         display: false
                       },
                       grid: {
-                        color: '#F3F4F6',
+                        color: isDark ? '#374151' : '#F3F4F6',
                         drawBorder: false
                       },
                       ticks: {
                         stepSize: 1,
-                        color: '#6B7280',
+                        color: isDark ? '#9CA3AF' : '#6B7280',
                         font: {
                           size: 12,
                           weight: '500'
@@ -708,7 +711,7 @@ function Seed_Track() {
                         display: false
                       },
                       ticks: {
-                        color: '#6B7280',
+                        color: isDark ? '#9CA3AF' : '#6B7280',
                         font: {
                           size: 12,
                           weight: '500'
@@ -734,11 +737,11 @@ function Seed_Track() {
                         display: false
                       },
                       grid: {
-                        color: '#F3F4F6',
+                        color: isDark ? '#374151' : '#F3F4F6',
                         drawBorder: false
                       },
                       ticks: {
-                        color: '#6B7280',
+                        color: isDark ? '#9CA3AF' : '#6B7280',
                         font: {
                           size: 12,
                           weight: '500'
@@ -754,7 +757,7 @@ function Seed_Track() {
                         display: false
                       },
                       ticks: {
-                        color: '#6B7280',
+                        color: isDark ? '#9CA3AF' : '#6B7280',
                         font: {
                           size: 12,
                           weight: '500'
@@ -767,56 +770,58 @@ function Seed_Track() {
 
                 return (
                   <>
-                    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+                    <div className={`rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
                       <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-lg font-semibold text-black flex items-center gap-2">
-                          <div className="p-2 bg-green-100 rounded-lg">
+                        <h3 className={`text-lg font-semibold flex items-center gap-2 ${isDark ? 'text-white' : 'text-black'}`}>
+                          <div className={`p-2 rounded-lg ${isDark ? 'bg-green-900' : 'bg-green-100'}`}>
                             <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                               <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                           </div>
                           Crop Distribution
                         </h3>
-                        <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                        <span className={`text-sm px-3 py-1 rounded-full ${isDark ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-100'}`}>
                           {Object.values(stats.cropDistribution).reduce((a, b) => a + b, 0)} total crops
                         </span>
                       </div>
                       <div className="relative" style={{ height: '280px' }}>
-                        <Doughnut data={cropChartData} options={{
-                          ...modernChartOptions,
-                          cutout: '65%',
-                          plugins: {
-                            ...modernChartOptions.plugins,
-                            legend: {
-                              ...modernChartOptions.plugins.legend,
-                              position: 'bottom'
+                        <div className="absolute inset-0">
+                          <Doughnut data={cropChartData} options={{
+                            ...modernChartOptions,
+                            cutout: '65%',
+                            plugins: {
+                              ...modernChartOptions.plugins,
+                              legend: {
+                                ...modernChartOptions.plugins.legend,
+                                position: 'bottom'
+                              }
                             }
-                          }
-                        }} />
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          }} />
+                        </div>
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ marginTop: '-40px' }}>
                           <div className="text-center">
-                            <div className="text-2xl font-bold text-black">
+                            <div className={`text-3xl font-bold leading-none ${isDark ? 'text-white' : 'text-black'}`}>
                               {Object.keys(stats.cropDistribution).length}
                             </div>
-                            <div className="text-sm text-gray-500 font-medium">
-                              Types
+                            <div className={`text-xs font-medium mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                              Crop Types
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+                    <div className={`rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
                       <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-lg font-semibold text-black flex items-center gap-2">
-                          <div className="p-2 bg-green-100 rounded-lg">
+                        <h3 className={`text-lg font-semibold flex items-center gap-2 ${isDark ? 'text-white' : 'text-black'}`}>
+                          <div className={`p-2 rounded-lg ${isDark ? 'bg-green-900' : 'bg-green-100'}`}>
                             <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                           </div>
                           Health Status
                         </h3>
-                        <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                        <span className={`text-sm px-3 py-1 rounded-full ${isDark ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-100'}`}>
                           {Object.values(stats.healthDistribution).reduce((a, b) => a + b, 0)} reports
                         </span>
                       </div>
@@ -825,17 +830,17 @@ function Seed_Track() {
                       </div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+                    <div className={`rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
                       <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-lg font-semibold text-black flex items-center gap-2">
-                          <div className="p-2 bg-green-100 rounded-lg">
+                        <h3 className={`text-lg font-semibold flex items-center gap-2 ${isDark ? 'text-white' : 'text-black'}`}>
+                          <div className={`p-2 rounded-lg ${isDark ? 'bg-green-900' : 'bg-green-100'}`}>
                             <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                               <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                           </div>
                           Monthly Trend
                         </h3>
-                        <span className="text-sm text-green-600 bg-green-100 px-3 py-1 rounded-full font-medium">
+                        <span className={`text-sm px-3 py-1 rounded-full font-medium ${isDark ? 'text-green-400 bg-green-900' : 'text-green-600 bg-green-100'}`}>
                            +12% growth
                         </span>
                       </div>
@@ -849,9 +854,9 @@ function Seed_Track() {
             </div>
 
       {/* Filters Section - Clean Professional Design */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
+            <div className={`rounded-lg p-6 mb-8 ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
               <div className="mb-4">
-                <h3 className="text-lg font-semibold text-black flex items-center gap-2">
+                <h3 className={`text-lg font-semibold flex items-center gap-2 ${isDark ? 'text-white' : 'text-black'}`}>
                   <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -863,10 +868,10 @@ function Seed_Track() {
               <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 {/* Search Bar - positioned on the left */}
                 <div className="lg:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Search</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <svg className={`w-5 h-5 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </div>
@@ -875,18 +880,18 @@ function Seed_Track() {
                       placeholder="Search farmers by name or email..."
                       value={filters.search || ''}
                       onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white text-gray-700 placeholder-gray-400"
+                      className={`w-full pl-10 pr-4 py-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border border-gray-200 bg-white text-gray-700 placeholder-gray-400'}`}
                     />
                   </div>
                 </div>
 
                 {/* Filters */}
         <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Status</label>
                   <select
                     value={filters.status}
                     onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                    className={`w-full rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border border-gray-200 bg-white text-gray-700'}`}
                   >
                     <option value="all">All Status</option>
                     <option value="active">Active</option>
@@ -894,11 +899,11 @@ function Seed_Track() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Location</label>
                   <select
                     value={filters.location}
                     onChange={(e) => setFilters(prev => ({ ...prev, location: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                    className={`w-full rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border border-gray-200 bg-white text-gray-700'}`}
                   >
                     <option value="all">All Locations</option>
                     <option value="laguna">Laguna</option>
@@ -910,14 +915,14 @@ function Seed_Track() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Items per page</label>
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Items per page</label>
                   <select
                     value={itemsPerPage}
                     onChange={(e) => {
                       setItemsPerPage(Number(e.target.value));
                       setCurrentPage(1);
                     }}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                    className={`w-full rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border border-gray-200 bg-white text-gray-700'}`}
                   >
                     <option value="5">5 per page</option>
                     <option value="10">10 per page</option>
@@ -929,11 +934,11 @@ function Seed_Track() {
             </div>
 
             {/* Farmers Table - Clean Professional Design */}
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div className={`rounded-lg overflow-hidden ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
               {/* Table Header */}
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+              <div className={`px-6 py-4 border-b ${isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-200 bg-gray-50'}`}>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <h3 className="text-lg font-semibold text-black flex items-center gap-2">
+                  <h3 className={`text-lg font-semibold flex items-center gap-2 ${isDark ? 'text-white' : 'text-black'}`}>
                     <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -947,7 +952,7 @@ function Seed_Track() {
                       <span>📤</span>
                       Export Overview
                     </button>
-                    <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                    <div className={`text-sm px-3 py-1 rounded-full ${isDark ? 'text-gray-300 bg-gray-700' : 'text-gray-600 bg-gray-100'}`}>
                       {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, getFilteredFarmers().length)} of {getFilteredFarmers().length} farmers
                     </div>
                   </div>
@@ -957,48 +962,48 @@ function Seed_Track() {
               {/* Table */}
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
+                  <thead className={`border-b ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Farmer</th>
-                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Location</th>
-                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Crops</th>
-                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Reports</th>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
-                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+                      <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Farmer</th>
+                      <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Location</th>
+                      <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Crops</th>
+                      <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Reports</th>
+                      <th className={`px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Status</th>
+                      <th className={`px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-100">
+                  <tbody className={`divide-y ${isDark ? 'bg-gray-800 divide-gray-700' : 'bg-white divide-gray-100'}`}>
                     {getPaginatedFarmers().map((farmer) => (
-                      <tr key={farmer.id} className="hover:bg-gray-50 transition-colors duration-150">
+                      <tr key={farmer.id} className={`transition-colors duration-150 ${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}>
                         <td className="px-6 py-3 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
                             <div className="ml-0">
-                              <div className="text-sm font-semibold text-black">{farmer.name}</div>
-                              <div className="text-xs text-gray-500">ID: {farmer.id}</div>
+                              <div className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-black'}`}>{farmer.name}</div>
+                              <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>ID: {farmer.id}</div>
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-3 whitespace-nowrap">
-                          <div className="text-sm text-black">{farmer.location}</div>
-                          <div className="text-xs text-gray-500">Joined: {farmer.joinDate}</div>
+                          <div className={`text-sm ${isDark ? 'text-gray-200' : 'text-black'}`}>{farmer.location}</div>
+                          <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Joined: {farmer.joinDate}</div>
                         </td>
                         <td className="px-6 py-3 whitespace-nowrap">
                           <div className="flex flex-wrap gap-1">
                             {farmer.cropTypes.map((crop, index) => (
-                              <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-300">
+                              <span key={index} className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${isDark ? 'bg-gray-700 text-gray-200 border border-gray-600' : 'bg-gray-100 text-gray-700 border border-gray-300'}`}>
                                 {crop}
                               </span>
                             ))}
                           </div>
                         </td>
                         <td className="px-6 py-3 whitespace-nowrap text-center">
-                          <div className="text-sm font-semibold text-black">{farmer.totalReports}</div>
-                          <div className="text-xs text-gray-500">reports</div>
+                          <div className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-black'}`}>{farmer.totalReports}</div>
+                          <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>reports</div>
                         </td>
                         <td className="px-3 py-3 whitespace-nowrap">
                           <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
-                            farmer.status === 'Active' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-gray-100 text-gray-700 border border-gray-200'
+                            farmer.status === 'Active' ? 'bg-green-100 text-green-700 border border-green-200' : (isDark ? 'bg-gray-700 text-gray-200 border border-gray-600' : 'bg-gray-100 text-gray-700 border border-gray-200')
                           }`}>
                             {farmer.status}
                           </span>
@@ -1027,16 +1032,16 @@ function Seed_Track() {
               </div>
 
               {/* Pagination - Clean Design */}
-              <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+              <div className={`px-6 py-4 border-t ${isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-200 bg-gray-50'}`}>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="text-sm text-gray-600 font-medium">
+                  <div className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                     Page {currentPage} of {getTotalPages()}
                   </div>
                   <div className="flex items-center space-x-1">
                     <button
                       onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                       disabled={currentPage === 1}
-                      className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${isDark ? 'text-gray-300 bg-gray-700 border border-gray-600 hover:bg-gray-600' : 'text-gray-600 bg-white border border-gray-300 hover:bg-gray-50'}`}
                     >
                       Previous
                     </button>
@@ -1052,7 +1057,7 @@ function Seed_Track() {
                             className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
                               currentPage === pageNum
                                 ? 'bg-green-600 text-white border border-green-600'
-                                : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                                : isDark ? 'text-gray-300 bg-gray-700 border border-gray-600 hover:bg-gray-600' : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
                             }`}
                           >
                             {pageNum}
@@ -1064,7 +1069,7 @@ function Seed_Track() {
                     <button
                       onClick={() => setCurrentPage(Math.min(getTotalPages(), currentPage + 1))}
                       disabled={currentPage === getTotalPages()}
-                      className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${isDark ? 'text-gray-300 bg-gray-700 border border-gray-600 hover:bg-gray-600' : 'text-gray-600 bg-white border border-gray-300 hover:bg-gray-50'}`}
                     >
                       Next
                     </button>
@@ -1081,13 +1086,13 @@ function Seed_Track() {
             {/* Guidelines Header */}
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                <h2 className={`text-xl font-semibold flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   Crop Guidelines Management
                 </h2>
-                <p className="text-sm text-gray-600 mt-1">Manage crop growing guidelines for farmers</p>
+                <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Manage crop growing guidelines for farmers</p>
               </div>
               <button
                 onClick={() => {
@@ -1102,13 +1107,13 @@ function Seed_Track() {
             </div>
 
             {/* Search and Filter Bar */}
-            <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+            <div className={`rounded-lg p-4 mb-6 ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
               <div className="flex flex-col lg:flex-row gap-4">
                 <div className="flex-1">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Search Guidelines</label>
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Search Guidelines</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className={`h-5 w-5 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
                     </div>
@@ -1117,16 +1122,16 @@ function Seed_Track() {
                       placeholder="Search by crop name or variety..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                      className={`w-full pl-10 pr-4 py-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border border-gray-300 bg-white text-gray-700 placeholder-gray-400'}`}
                     />
                   </div>
                 </div>
                 <div className="min-w-[200px]">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Category</label>
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                    className={`w-full px-4 py-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border border-gray-300 bg-white text-gray-700'}`}
                   >
                     <option value="all">All Categories</option>
                     {categoryOptions.map(cat => (
@@ -1157,10 +1162,10 @@ function Seed_Track() {
 
             {/* Empty State */}
             {!guidelinesLoading && filteredGuidelines.length === 0 && (
-              <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+              <div className={`text-center py-12 rounded-lg ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
                 <div className="text-6xl mb-4 opacity-30">📚</div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No guidelines found</h3>
-                <p className="text-gray-600 mb-6">
+                <h3 className={`text-lg font-medium mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>No guidelines found</h3>
+                <p className={`mb-6 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                   {searchTerm || selectedCategory !== 'all' 
                     ? 'No guidelines match your current search and filters' 
                     : 'Start by adding your first crop guideline'}
@@ -1190,20 +1195,20 @@ function Seed_Track() {
           if (!currentFarmer) return null;
           
           return (
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200">
+            <div className={`rounded-xl shadow-lg ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
               {/* Enhanced Farmer Header */}
-              <div className="border-b border-gray-100 p-4 sm:p-5">
+              <div className={`border-b p-4 sm:p-5 ${isDark ? 'border-gray-700' : 'border-gray-100'}`}>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center">
                     <div className="ml-0">
-                      <h2 className="text-xl font-bold text-gray-900">{currentFarmer.name}</h2>
-                      <p className="text-gray-600">{currentFarmer.email}</p>
-                      <p className="text-gray-600">{currentFarmer.location}</p>
+                      <h2 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{currentFarmer.name}</h2>
+                      <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{currentFarmer.email}</p>
+                      <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{currentFarmer.location}</p>
                     </div>
                   </div>
                   <div className="text-right">
                     <span className={`px-4 py-2 rounded-full text-sm font-medium ${
-                      currentFarmer.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                      currentFarmer.status === 'Active' ? 'bg-green-100 text-green-700' : (isDark ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-700')
                     }`}>
                       {currentFarmer.status}
                     </span>
@@ -1218,7 +1223,7 @@ function Seed_Track() {
                       className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
                         selectedFarmerTab === 'reports'
                           ? 'border-green-500 text-gray-900'
-                          : 'border-transparent text-gray-600 hover:text-gray-900'
+                          : isDark ? 'border-transparent text-gray-400 hover:text-gray-200' : 'border-transparent text-gray-600 hover:text-gray-900'
                       }`}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1232,7 +1237,7 @@ function Seed_Track() {
                       className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
                         selectedFarmerTab === 'archive'
                           ? 'border-green-500 text-gray-900'
-                          : 'border-transparent text-gray-600 hover:text-gray-900'
+                          : isDark ? 'border-transparent text-gray-400 hover:text-gray-200' : 'border-transparent text-gray-600 hover:text-gray-900'
                       }`}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1245,7 +1250,7 @@ function Seed_Track() {
                       className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
                         selectedFarmerTab === 'analytics'
                           ? 'border-green-500 text-gray-900'
-                          : 'border-transparent text-gray-600 hover:text-gray-900'
+                          : isDark ? 'border-transparent text-gray-400 hover:text-gray-200' : 'border-transparent text-gray-600 hover:text-gray-900'
                       }`}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1263,13 +1268,13 @@ function Seed_Track() {
                 {selectedFarmerTab === 'reports' && (
                   <div>
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                      <h4 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                      <h4 className={`text-lg font-semibold flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                         <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                         Current Crops
                       </h4>
-                      <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                      <span className={`text-sm px-3 py-1 rounded-full ${isDark ? 'text-gray-300 bg-gray-700' : 'text-gray-600 bg-gray-100'}`}>
                         {getFarmerCrops(currentFarmer.id, false).length} active
                       </span>
                     </div>
@@ -1358,39 +1363,39 @@ function Seed_Track() {
 
                             {/* Latest Report Preview */}
                             {latestReport && (
-                              <div className="px-6 py-4 bg-gray-50">
+                              <div className={`px-6 py-4 ${isDark ? 'bg-gray-800' : 'bg-gray-50'}`}>
                                 <div className="flex items-center justify-between mb-3">
-                                  <h6 className="font-semibold text-gray-800">Latest Report</h6>
-                                  <span className="text-sm text-gray-500">
+                                  <h6 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>Latest Report</h6>
+                                  <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                                     {latestReport.reportDate} • Growth Stage: {latestReport.growthStage}
                                   </span>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                                   <div>
-                                    <span className="text-gray-600">Plant Height:</span>
-                                    <span className="ml-2 font-medium">{latestReport.plantHeight}cm</span>
+                                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>Plant Height:</span>
+                                    <span className={`ml-2 font-medium ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>{latestReport.plantHeight}cm</span>
                                   </div>
                                   <div>
-                                    <span className="text-gray-600">Estimated Yield:</span>
-                                    <span className="ml-2 font-medium">{latestReport.estimatedYield}kg</span>
+                                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>Estimated Yield:</span>
+                                    <span className={`ml-2 font-medium ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>{latestReport.estimatedYield}kg</span>
                                   </div>
                                   <div>
-                                    <span className="text-gray-600">Pests/Diseases:</span>
-                                    <span className="ml-2 font-medium">{latestReport.pestsAndDiseases || 'None reported'}</span>
+                                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>Pests/Diseases:</span>
+                                    <span className={`ml-2 font-medium ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>{latestReport.pestsAndDiseases || 'None reported'}</span>
                                   </div>
                                   <div>
-                                    <span className="text-gray-600">Weather Impact:</span>
-                                    <span className="ml-2 font-medium">{latestReport.weatherImpact || 'None'}</span>
+                                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>Weather Impact:</span>
+                                    <span className={`ml-2 font-medium ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>{latestReport.weatherImpact || 'None'}</span>
                                   </div>
                                 </div>
                               </div>
                             )}
 
                             {/* Expected Report Timeline */}
-                            <div className="px-6 py-4 border-t border-gray-100">
+                            <div className={`px-6 py-4 border-t ${isDark ? 'border-gray-700' : 'border-gray-100'}`}>
                               <div className="flex items-center justify-between mb-3">
-                                <h6 className="font-semibold text-gray-800">📅 Report Timeline</h6>
-                                <span className="text-sm text-gray-500">
+                                <h6 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>📅 Report Timeline</h6>
+                                <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                                   {crop.reports.length} of {expectedMonths.length} reports submitted
                                 </span>
                               </div>

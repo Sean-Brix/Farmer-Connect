@@ -914,10 +914,10 @@ function Content() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 items-end mb-6 sm:mb-8">
                         {/* Search Input */}
                         <div className="xl:col-span-2">
-                            <label className="block text-xs font-medium text-gray-700 mb-1">Search Items</label>
+                            <label className={`block text-xs font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Search Items</label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-                                    <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className={`h-4 w-4 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
                                 </div>
@@ -926,19 +926,19 @@ function Content() {
                                     placeholder="Search by name, description..."
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
-                                    className="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+                                    className={`w-full pl-8 pr-3 py-2 text-sm border rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${isDark ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400' : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-500 focus:bg-white'}`}
                                 />
                             </div>
                         </div>
 
                         {/* Category Filter */}
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">Category</label>
+                            <label className={`block text-xs font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Category</label>
                             <div className="relative z-10">
                                 <select
                                     value={categoryFilter}
                                     onChange={(e) => setCategoryFilter(e.target.value)}
-                                    className="w-full px-3 py-2 pr-8 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white appearance-none relative z-20"
+                                    className={`w-full px-3 py-2 pr-8 text-sm border rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200 appearance-none relative z-20 ${isDark ? 'bg-gray-800 border-gray-600 text-white' : 'bg-gray-50 border-gray-200 text-gray-900 focus:bg-white'}`}
                                 >
                                     <option value="All">All Categories</option>
                                     {categories.map((cat) => (
@@ -948,7 +948,7 @@ function Content() {
                                     ))}
                                 </select>
                                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none z-30">
-                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className={`w-4 h-4 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </div>
@@ -966,14 +966,14 @@ function Content() {
                             {!showDelete ? (
                                 <button
                                     onClick={() => setShowDelete(true)}
-                                    className="px-3 py-2 text-sm border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+                                    className={`px-3 py-2 text-sm border font-medium rounded-lg transition-all duration-200 ${isDark ? 'border-gray-600 text-gray-300 hover:bg-gray-800 hover:border-gray-500' : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'}`}
                                 >
                                     Manage
                                 </button>
                             ) : (
                                 <button
                                     onClick={() => setShowDelete(false)}
-                                    className="px-3 py-2 text-sm bg-gray-200 text-gray-800 font-medium rounded-lg hover:bg-gray-300 transition-all duration-200"
+                                    className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${isDark ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}
                                 >
                                     Cancel
                                 </button>
@@ -983,15 +983,15 @@ function Content() {
 
                     {/* Delete Mode Actions */}
                     {showDelete && (
-                        <div className="mt-6 pt-6 border-t border-gray-200">
+                        <div className={`mt-6 pt-6 border-t ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
                             <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-                                <div className="text-sm text-gray-700">
+                                <div className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                                     {selectedItems.length > 0 ? (
-                                        <span className="font-semibold text-gray-900 bg-green-100 px-3 py-1 rounded-full">
+                                        <span className={`font-semibold px-3 py-1 rounded-full ${isDark ? 'bg-green-900 text-green-200 border border-green-700' : 'bg-green-100 text-gray-900'}`}>
                                             {selectedItems.length} item{selectedItems.length !== 1 ? 's' : ''} selected
                                         </span>
                                     ) : (
-                                        <span className="text-gray-600">Select items to delete or manage</span>
+                                        <span className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Select items to delete or manage</span>
                                     )}
                                 </div>
                                 <div className="flex flex-wrap gap-2">
@@ -1000,7 +1000,7 @@ function Content() {
                                             setSelectAll(true);
                                             setSelectedItems(filteredItems.map((item) => item.id));
                                         }}
-                                        className="px-3 py-1.5 text-sm border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+                                        className={`px-3 py-1.5 text-sm border font-medium rounded-lg transition-all duration-200 ${isDark ? 'border-gray-600 text-gray-300 hover:bg-gray-800 hover:border-gray-500' : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'}`}
                                     >
                                         Select All
                                     </button>
@@ -1009,7 +1009,7 @@ function Content() {
                                             setSelectAll(false);
                                             setSelectedItems([]);
                                         }}
-                                        className="px-3 py-1.5 text-sm border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+                                        className={`px-3 py-1.5 text-sm border font-medium rounded-lg transition-all duration-200 ${isDark ? 'border-gray-600 text-gray-300 hover:bg-gray-800 hover:border-gray-500' : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'}`}
                                     >
                                         Clear All
                                     </button>
@@ -1019,7 +1019,7 @@ function Content() {
                                         className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:transform-none ${
                                             selectedItems.length > 0
                                                 ? 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800'
-                                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                                : isDark ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                         }`}
                                     >
                                         Delete Selected
@@ -1031,15 +1031,16 @@ function Content() {
 
                     {/* Helper Text */}
                     {!showDelete && (
-                        <div className="mt-4 pt-4 border-t border-gray-200">
-                            <p className="text-sm text-gray-500 flex items-center gap-2">
-                                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <div className={`mt-4 pt-4 border-t ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+                            <p className={`text-sm flex items-center gap-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                <svg className={`w-5 h-5 ${isDark ? 'text-green-500' : 'text-green-600'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                     <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                                 Click the expand buttons to view and manage item stacks in detail
                             </p>
                         </div>
                     )}
+
 
                 {/* Professional Table Container */}
                 <div className={`rounded-2xl shadow-xl border overflow-hidden backdrop-blur-sm mt-6 sm:mt-8 ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-100'}`}> 
@@ -1080,7 +1081,7 @@ function Content() {
                                                 type="checkbox"
                                                 checked={paginatedItems.length > 0 && paginatedItems.every(item => selectedItems.includes(item.id))}
                                                 onChange={handleSelectAll}
-                                                className="w-5 h-5 text-green-600 bg-white border-2 border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                                                className={`w-5 h-5 text-green-600 border-2 rounded-md focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
                                                 aria-label="Select all on this page"
                                             />
                                         </th>
@@ -1219,7 +1220,7 @@ function Content() {
                                                                 type="checkbox"
                                                                 checked={selectedItems.includes(item.id)}
                                                                 onChange={() => handleSelectItem(item.id)}
-                                                                className="w-5 h-5 text-green-600 bg-white border-2 border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                                                                className={`w-5 h-5 text-green-600 border-2 rounded-md focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
                                                             />
                                                         </td>
                                                     )}
@@ -1476,23 +1477,23 @@ function Content() {
 
                     {/* Pagination Controls */}
                     {totalItems > 0 && (
-                        <div className={`border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white ${sizeClasses[uiSize].padding}`}>
+                        <div className={`border-t ${sizeClasses[uiSize].padding} ${isDark ? 'border-gray-700 bg-gradient-to-r from-gray-800 to-gray-900' : 'border-gray-200 bg-gradient-to-r from-gray-50 to-white'}`}>
                             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                                 <div className="flex flex-col sm:flex-row items-center gap-4">
                                     {totalPages > 1 && (
-                                        <span className={`font-semibold text-gray-800 bg-green-100 px-3 py-1 rounded-full ${sizeClasses[uiSize].text}`}>
+                                        <span className={`font-semibold px-3 py-1 rounded-full ${sizeClasses[uiSize].text} ${isDark ? 'bg-green-900 text-green-200 border border-green-700' : 'bg-green-100 text-gray-800'}`}>
                                             Page {currentPage} of {totalPages}
                                         </span>
                                     )}
                                     <div className="flex items-center gap-2">
-                                        <span className={`font-medium text-gray-700 ${sizeClasses[uiSize].text}`}>Items per page:</span>
+                                        <span className={`font-medium ${sizeClasses[uiSize].text} ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Items per page:</span>
                                         <select
                                             value={itemsPerPage}
                                             onChange={(e) => {
                                                 setItemsPerPage(Number(e.target.value));
                                                 setCurrentPage(1);
                                             }}
-                                            className={`border-2 border-gray-300 rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 font-medium ${sizeClasses[uiSize].text}`}
+                                            className={`border-2 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 font-medium ${sizeClasses[uiSize].text} ${isDark ? 'bg-gray-800 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
                                         >
                                             <option value={5}>5</option>
                                             <option value={10}>10</option>
@@ -1507,14 +1508,14 @@ function Content() {
                                         <button
                                             onClick={() => setCurrentPage(1)}
                                             disabled={currentPage === 1}
-                                            className={`px-4 py-2 border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 font-medium transition-all duration-200 ${sizeClasses[uiSize].text}`}
+                                            className={`px-4 py-2 border-2 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 font-medium transition-all duration-200 ${sizeClasses[uiSize].text} ${isDark ? 'border-gray-600 text-gray-300 hover:bg-gray-800 hover:border-gray-500' : 'border-gray-300 text-gray-900 hover:bg-gray-50 hover:border-gray-400'}`}
                                         >
                                             First
                                         </button>
                                         <button
                                             onClick={() => setCurrentPage(currentPage - 1)}
                                             disabled={currentPage === 1}
-                                            className={`px-4 py-2 border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 font-medium transition-all duration-200 ${sizeClasses[uiSize].text}`}
+                                            className={`px-4 py-2 border-2 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 font-medium transition-all duration-200 ${sizeClasses[uiSize].text} ${isDark ? 'border-gray-600 text-gray-300 hover:bg-gray-800 hover:border-gray-500' : 'border-gray-300 text-gray-900 hover:bg-gray-50 hover:border-gray-400'}`}
                                         >
                                             Previous
                                         </button>
@@ -1540,7 +1541,7 @@ function Content() {
                                                             className={`px-4 py-2 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 font-semibold transition-all duration-200 ${sizeClasses[uiSize].text} ${
                                                                 i === currentPage
                                                                     ? 'bg-gradient-to-r from-green-600 to-green-700 text-white border-green-600 shadow-lg'
-                                                                    : 'border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-gray-700'
+                                                                    : isDark ? 'border-gray-600 text-gray-300 hover:bg-gray-800 hover:border-gray-500' : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
                                                             }`}
                                                         >
                                                             {i}
@@ -1554,14 +1555,14 @@ function Content() {
                                         <button
                                             onClick={() => setCurrentPage(currentPage + 1)}
                                             disabled={currentPage === totalPages}
-                                            className={`px-4 py-2 border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 font-medium transition-all duration-200 ${sizeClasses[uiSize].text}`}
+                                            className={`px-4 py-2 border-2 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 font-medium transition-all duration-200 ${sizeClasses[uiSize].text} ${isDark ? 'border-gray-600 text-gray-300 hover:bg-gray-800 hover:border-gray-500' : 'border-gray-300 text-gray-900 hover:bg-gray-50 hover:border-gray-400'}`}
                                         >
                                             Next
                                         </button>
                                         <button
                                             onClick={() => setCurrentPage(totalPages)}
                                             disabled={currentPage === totalPages}
-                                            className={`px-4 py-2 border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 font-medium transition-all duration-200 ${sizeClasses[uiSize].text}`}
+                                            className={`px-4 py-2 border-2 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 font-medium transition-all duration-200 ${sizeClasses[uiSize].text} ${isDark ? 'border-gray-600 text-gray-300 hover:bg-gray-800 hover:border-gray-500' : 'border-gray-300 text-gray-900 hover:bg-gray-50 hover:border-gray-400'}`}
                                         >
                                             Last
                                         </button>
@@ -1950,13 +1951,13 @@ function Content() {
 
             {/* UI Size Control */}
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-end items-center mt-8 mb-6 gap-3">
-                <label className="font-bold text-gray-800 text-lg">
+                <label className={`font-bold text-lg ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
                     UI Size:
                 </label>
                 <select
                     value={uiSize}
                     onChange={(e) => setUiSize(e.target.value)}
-                    className="border-2 border-gray-300 rounded-xl px-4 py-3 bg-white text-gray-900 font-semibold w-full sm:w-auto focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                    className={`border-2 rounded-xl px-4 py-3 font-semibold w-full sm:w-auto focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm hover:shadow-md ${isDark ? 'bg-gray-800 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
                 >
                     <option value="sm">Small</option>
                     <option value="md">Medium</option>

@@ -675,7 +675,7 @@ export default function Distribution() {
                                 className="flex items-center justify-center px-4 py-2.5 sm:py-3 rounded-lg text-sm font-medium bg-green-500 hover:bg-green-600 text-white transition-all shadow-sm"
                             >
                                 <svg
-                                    className="w-4 h-4 sm:mr-2"
+                                    className="w-4 h-4 mr-2"
                                     fill="none"
                                     stroke="currentColor"
                                     strokeWidth="2"
@@ -687,7 +687,7 @@ export default function Distribution() {
                                         strokeLinejoin="round"
                                     />
                                 </svg>
-                                <span className="hidden sm:inline">Refresh</span>
+                                Refresh
                             </button>
 
                             <button
@@ -726,7 +726,31 @@ export default function Distribution() {
                 <>
                     {/* Divider line removed for minimal UI */}
                     {/* Search Bar and Refresh Button - Same Row */}
-                                        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8 mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8 mb-6 space-y-3">
+                                            {/* Mobile: Requests button on top */}
+                                            <div className="flex md:hidden justify-end">
+                                                <button
+                                                    onClick={handleRequestsButtonClick}
+                                                    className="flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"
+                                                >
+                                                    <svg
+                                                        className="w-4 h-4 mr-2"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                    </svg>
+                                                    Requests
+                                                </button>
+                                            </div>
+
+                                            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                                             {/* Search bar */}
                                             <div className="relative flex-1 min-w-0 w-full md:w-1/2 max-w-md">
                                                 <input
@@ -789,9 +813,10 @@ export default function Distribution() {
                                                     <option value="quantity">Sort by Quantity</option>
                                                     <option value="date">Sort by Date</option>
                                                 </select>
+                                                {/* Desktop: Requests button inline */}
                                                 <button
                                                     onClick={handleRequestsButtonClick}
-                                                    className="flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"
+                                                    className="hidden md:flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"
                                                 >
                                                     <svg
                                                         className="w-4 h-4 mr-2"
@@ -827,6 +852,7 @@ export default function Distribution() {
                                                     </svg>
                                                     Add Item
                                                 </button>
+                                            </div>
                                             </div>
                                         </div>
 
