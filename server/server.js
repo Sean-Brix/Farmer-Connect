@@ -13,6 +13,7 @@ colors.enable();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 3000;
+const APP_URL = process.env.APP_URL || `http://localhost:${PORT}`;
 
 // Server
 const server = http.createServer(app);
@@ -27,7 +28,7 @@ server.listen(PORT, ()=>{
 const io = new Server(server, {
     // CORS for Development
     cors: {
-        origin: ["https://farmer-connect.onrender.com/"],
+        origin: [APP_URL],
         methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
         credentials: true
     },
