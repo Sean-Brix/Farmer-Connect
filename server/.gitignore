@@ -3,4 +3,3 @@
 *.env
 .env
 /prisma/generated/prisma
-/public/app
