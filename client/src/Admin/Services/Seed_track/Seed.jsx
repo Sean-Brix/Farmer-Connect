@@ -90,6 +90,13 @@ function Seed_Track() {
   const [guidelineToDelete, setGuidelineToDelete] = useState(null);
   const [editingGuideline, setEditingGuideline] = useState(null);
   const [adminId, setAdminId] = useState(null); // Store admin user ID
+  
+  // Stage editor modal states
+  const [showStageEditorModal, setShowStageEditorModal] = useState(false);
+  const [selectedCropForStageEdit, setSelectedCropForStageEdit] = useState(null);
+  const [showStageConfirmModal, setShowStageConfirmModal] = useState(false);
+  const [stageAction, setStageAction] = useState(null); // 'skip', 'revert', 'delete-report'
+  const [pendingActionData, setPendingActionData] = useState(null);
 
   // Fetch admin ID on mount
   React.useEffect(() => {
@@ -208,6 +215,103 @@ function Seed_Track() {
     } catch (error) {
       console.error('Complete error:', error);
       showAlert('Failed to complete crop', 'error');
+    }
+  };
+
+  // Helper function to skip crop stage (admin control)
+  const skipCropStage = async (cropId) => {
+    try {
+      const res = await fetch(`/api/seed-track/crops/${cropId}/skip-stage`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Failed to skip stage');
+      }
+      
+      const data = await res.json();
+      showAlert(data.message || 'Stage skipped successfully', 'success');
+      // Refresh data
+      window.location.reload();
+    } catch (error) {
+      console.error('Skip stage error:', error);
+      showAlert(error.message || 'Failed to skip stage', 'error');
+    }
+  };
+
+  // Helper function to revert crop stage (admin control)
+  const revertCropStage = async (cropId) => {
+    try {
+      const res = await fetch(`/api/seed-track/crops/${cropId}/revert-stage`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Failed to revert stage');
+      }
+      
+      const data = await res.json();
+      showAlert(data.message || 'Stage reverted successfully', 'success');
+      // Refresh data
+      window.location.reload();
+    } catch (error) {
+      console.error('Revert stage error:', error);
+      showAlert(error.message || 'Failed to revert stage', 'error');
+    }
+  };
+
+  // Helper function to delete a report (admin control)
+  const deleteReport = async (reportId) => {
+    try {
+      const res = await fetch(`/api/seed-track/reports/${reportId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Failed to delete report');
+      }
+      
+      showAlert('Report deleted successfully', 'success');
+      // Refresh data
+      window.location.reload();
+    } catch (error) {
+      console.error('Delete report error:', error);
+      showAlert(error.message || 'Failed to delete report', 'error');
+    }
+  };
+
+  // Stage editor modal functions
+  const openStageEditor = (crop) => {
+    setSelectedCropForStageEdit(crop);
+    setShowStageEditorModal(true);
+  };
+
+  const handleStageAction = (action, data = null) => {
+    setStageAction(action);
+    setPendingActionData(data);
+    setShowStageConfirmModal(true);
+  };
+
+  const confirmStageAction = async () => {
+    setShowStageConfirmModal(false);
+    
+    try {
+      if (stageAction === 'skip') {
+        await skipCropStage(selectedCropForStageEdit.id);
+      } else if (stageAction === 'revert') {
+        await revertCropStage(selectedCropForStageEdit.id);
+      } else if (stageAction === 'delete-report') {
+        await deleteReport(pendingActionData.reportId);
+      }
+      setShowStageEditorModal(false);
+    } catch (error) {
+      console.error('Stage action error:', error);
     }
   };
 
@@ -803,10 +907,8 @@ function Seed_Track() {
                   <thead className={`border-b ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
                     <tr>
                       <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Farmer</th>
-                      <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Location</th>
-                      <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Crops</th>
-                      <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Reports</th>
-                      <th className={`px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Status</th>
+                      <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Client Profile</th>
+                      <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Current Crops</th>
                       <th className={`px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Actions</th>
                     </tr>
                   </thead>
@@ -824,28 +926,37 @@ function Seed_Track() {
                         </td>
                         <td className="px-6 py-3 whitespace-nowrap">
                           <div className={`text-sm ${isDark ? 'text-gray-200' : 'text-black'}`}>{farmer.location}</div>
-                          <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Joined: {farmer.joinDate}</div>
+                          <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{farmer.joinDate}</div>
                         </td>
                         <td className="px-6 py-3 whitespace-nowrap">
                           <div className="flex flex-wrap gap-1">
-                            {farmer.cropTypes.map((crop, index) => (
-                              <span key={index} className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${isDark ? 'bg-gray-700 text-gray-200 border border-gray-600' : 'bg-gray-100 text-gray-700 border border-gray-300'}`}>
-                                {crop}
-                              </span>
-                            ))}
+                            {(() => {
+                              // Get only active crops (not archived or completed)
+                              const userCrops = cropsByUser.get(farmer.id) || [];
+                              const activeCrops = userCrops.filter(crop => 
+                                crop.status !== 'Archived' && crop.status !== 'Completed'
+                              );
+                              
+                              if (activeCrops.length === 0) {
+                                return (
+                                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${isDark ? 'bg-gray-700 text-gray-400 border border-gray-600' : 'bg-gray-100 text-gray-500 border border-gray-300'}`}>
+                                    None
+                                  </span>
+                                );
+                              }
+                              
+                              // Get unique crop types from active crops
+                              const activeCropTypes = [...new Set(activeCrops.map(c => c.cropType))];
+                              
+                              return activeCropTypes.map((cropType, index) => (
+                                <span key={index} className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${isDark ? 'bg-gray-700 text-gray-200 border border-gray-600' : 'bg-gray-100 text-gray-700 border border-gray-300'}`}>
+                                  {cropType}
+                                </span>
+                              ));
+                            })()}
                           </div>
                         </td>
-                        <td className="px-6 py-3 whitespace-nowrap text-center">
-                          <div className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-black'}`}>{farmer.totalReports}</div>
-                          <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>reports</div>
-                        </td>
-                        <td className="px-3 py-3 whitespace-nowrap">
-                          <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
-                            farmer.status === 'Active' ? 'bg-green-100 text-green-700 border border-green-200' : (isDark ? 'bg-gray-700 text-gray-200 border border-gray-600' : 'bg-gray-100 text-gray-700 border border-gray-200')
-                          }`}>
-                            {farmer.status}
-                          </span>
-                        </td>
+    
                         <td className="px-3 py-3 whitespace-nowrap text-right">
                           <button
                             onClick={() => {
@@ -1260,17 +1371,41 @@ function Seed_Track() {
                                       {crop.variety}
                                     </td>
                                     <td className={`px-4 py-3 whitespace-nowrap`}>
-                                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                        latestReport?.healthStatus === 'Healthy' ? 'bg-green-100 text-green-800' :
-                                        latestReport?.healthStatus === 'Warning' ? 'bg-yellow-100 text-yellow-800' :
-                                        latestReport?.healthStatus === 'Critical' ? 'bg-red-100 text-red-800' :
-                                        'bg-gray-100 text-gray-600'
-                                      }`}>
-                                        {crop.currentStageName || crop.currentStage || latestReport?.growthStage || 'N/A'}
-                                      </span>
+                                      <div className="flex items-center gap-2">
+                                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                          latestReport?.healthStatus === 'Healthy' ? 'bg-green-100 text-green-800' :
+                                          latestReport?.healthStatus === 'Warning' ? 'bg-yellow-100 text-yellow-800' :
+                                          latestReport?.healthStatus === 'Critical' ? 'bg-red-100 text-red-800' :
+                                          'bg-gray-100 text-gray-600'
+                                        }`}>
+                                          {crop.currentStageName || crop.currentStage || latestReport?.growthStage || 'N/A'}
+                                        </span>
+                                        {crop.guideline && crop.guideline.stages && (
+                                          <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                            {crop.currentStageIndex + 1}/{crop.guideline.stages.length}
+                                          </span>
+                                        )}
+                                      </div>
                                     </td>
                                     <td className={`px-4 py-3 whitespace-nowrap text-right text-sm font-medium`}>
-                                      <div className="flex items-center gap-2 justify-end">
+                                      <div className="flex items-center gap-2 justify-end flex-wrap">
+                                        {/* Stage Editor Button */}
+                                        {crop.guideline && crop.guideline.stages && (
+                                          <button
+                                            onClick={() => openStageEditor(crop)}
+                                            className={`px-3 py-1 text-xs rounded-md transition-colors flex items-center gap-1 ${
+                                              isDark 
+                                                ? 'bg-indigo-600 hover:bg-indigo-700 text-white' 
+                                                : 'bg-indigo-500 hover:bg-indigo-600 text-white'
+                                            }`}
+                                            title="Edit crop stages"
+                                          >
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                              <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                            Edit Stages
+                                          </button>
+                                        )}
                                         <button
                                           onClick={() => setExpandedCropId(expandedCropId === crop.id ? null : crop.id)}
                                           className={`px-3 py-1 rounded-md transition-colors ${
@@ -1313,6 +1448,7 @@ function Seed_Track() {
                                                 <th className="px-3 py-2 text-left font-medium">Height</th>
                                                 <th className="px-3 py-2 text-left font-medium">Issues</th>
                                                 <th className="px-3 py-2 text-left font-medium">Notes</th>
+                                                <th className="px-3 py-2 text-left font-medium">Actions</th>
                                               </tr>
                                             </thead>
                                             <tbody className={`divide-y ${isDark ? 'divide-gray-700' : 'divide-gray-200'}`}>
@@ -1339,6 +1475,23 @@ function Seed_Track() {
                                                   <td className="px-3 py-2">{report.plantHeight || 'N/A'} cm</td>
                                                   <td className="px-3 py-2 max-w-xs truncate">{report.pestsAndDiseases || 'None'}</td>
                                                   <td className="px-3 py-2 max-w-xs truncate">{report.notes || '-'}</td>
+                                                  <td className="px-3 py-2 whitespace-nowrap">
+                                                    <button
+                                                      onClick={() => {
+                                                        if (window.confirm(`⚠️ DELETE REPORT CONFIRMATION\n\nReport Date: ${new Date(report.createdAt || report.reportDate).toLocaleDateString()}\nGrowth Stage: ${report.growthStage || 'N/A'}\nHealth Status: ${report.healthStatus || 'Unknown'}\n\nThis action cannot be undone. Are you sure you want to delete this report?`)) {
+                                                          deleteReport(report.id);
+                                                        }
+                                                      }}
+                                                      className={`px-2 py-1 text-xs rounded-md transition-colors ${
+                                                        isDark 
+                                                          ? 'bg-red-600 hover:bg-red-700 text-white' 
+                                                          : 'bg-red-500 hover:bg-red-600 text-white'
+                                                      }`}
+                                                      title="Delete report"
+                                                    >
+                                                      🗑️ Delete
+                                                    </button>
+                                                  </td>
                                                 </tr>
                                               ))}
                                             </tbody>
@@ -2427,7 +2580,9 @@ function Seed_Track() {
             </div>
           </div>
         )}
-        </div>
+
+          </div> 
+        </div> 
         
     {/* Guideline Create/Edit Modal */}
     <GuidelineModal
@@ -2468,18 +2623,303 @@ function Seed_Track() {
             </button>
             <button
               onClick={handleDeleteGuideline}
-              disabled={deleteGuideline.isPending}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50"
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
             >
-              {deleteGuideline.isPending ? 'Deleting...' : 'Delete'}
+              Delete
             </button>
           </div>
         </div>
       </div>
     )}
+
+    {/* Stage Editor Modal */}
+    {showStageEditorModal && selectedCropForStageEdit && (
+      <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+        <div className={`rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+          {/* Modal Header */}
+          <div className={`px-6 py-4 border-b ${isDark ? 'bg-gradient-to-r from-indigo-900 to-indigo-800 border-gray-700' : 'bg-gradient-to-r from-indigo-600 to-indigo-500 border-gray-200'}`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                  <span className="text-2xl">🌱</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white">Stage Editor</h3>
+                  <p className="text-sm text-indigo-100">{selectedCropForStageEdit.cropType} - {selectedCropForStageEdit.variety}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowStageEditorModal(false)}
+                className="text-white hover:text-gray-200 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Modal Body */}
+          <div className="p-6">
+            {/* Stage Progress Visual */}
+            <div className={`rounded-lg p-6 mb-6 ${isDark ? 'bg-gray-900' : 'bg-gradient-to-br from-blue-50 to-indigo-50'}`}>
+              <h4 className={`text-lg font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                📊 Stage Progression
+              </h4>
+              
+              <div className="space-y-3">
+                {selectedCropForStageEdit.guideline?.stages?.map((stage, index) => {
+                  const isCurrent = index === selectedCropForStageEdit.currentStageIndex;
+                  const isPast = index < selectedCropForStageEdit.currentStageIndex;
+                  const isFuture = index > selectedCropForStageEdit.currentStageIndex;
+
+                  return (
+                    <div key={index} className="flex items-center gap-3">
+                      {/* Stage Number Circle */}
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${
+                        isCurrent 
+                          ? 'bg-green-500 text-white ring-4 ring-green-300 shadow-lg' 
+                          : isPast 
+                          ? isDark ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
+                          : isDark ? 'bg-gray-700 text-gray-400' : 'bg-gray-200 text-gray-500'
+                      }`}>
+                        {isPast ? '✓' : index + 1}
+                      </div>
+
+                      {/* Stage Info */}
+                      <div className="flex-1">
+                        <div className={`font-semibold ${
+                          isCurrent 
+                            ? isDark ? 'text-green-400' : 'text-green-600'
+                            : isDark ? 'text-gray-300' : 'text-gray-900'
+                        }`}>
+                          {stage.stageName}
+                          {isCurrent && <span className="ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full">CURRENT</span>}
+                        </div>
+                        <div className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                          Duration: {stage.durationValue} {stage.durationUnit}
+                        </div>
+                      </div>
+
+                      {/* Progress Line */}
+                      {index < selectedCropForStageEdit.guideline.stages.length - 1 && (
+                        <div className={`absolute left-8 w-0.5 h-8 ${
+                          isPast ? 'bg-blue-500' : isDark ? 'bg-gray-700' : 'bg-gray-300'
+                        }`} style={{ marginTop: '3.5rem' }} />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Stage Controls */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              {/* Revert Stage */}
+              <button
+                onClick={() => handleStageAction('revert')}
+                disabled={selectedCropForStageEdit.currentStageIndex === 0}
+                className={`p-6 rounded-lg border-2 transition-all ${
+                  selectedCropForStageEdit.currentStageIndex === 0
+                    ? isDark 
+                      ? 'bg-gray-800 border-gray-700 text-gray-600 cursor-not-allowed' 
+                      : 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed'
+                    : isDark
+                    ? 'bg-orange-900/30 border-orange-600 hover:bg-orange-900/50 text-orange-400 hover:shadow-lg'
+                    : 'bg-orange-50 border-orange-300 hover:bg-orange-100 text-orange-700 hover:shadow-lg'
+                }`}
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-2xl">⏪</span>
+                  <span className="font-bold text-lg">Revert Stage</span>
+                </div>
+                <p className="text-sm">
+                  {selectedCropForStageEdit.currentStageIndex === 0 
+                    ? 'Already at first stage' 
+                    : `Move back to: ${selectedCropForStageEdit.guideline?.stages[selectedCropForStageEdit.currentStageIndex - 1]?.stageName}`}
+                </p>
+              </button>
+
+              {/* Skip Stage */}
+              <button
+                onClick={() => handleStageAction('skip')}
+                disabled={selectedCropForStageEdit.currentStageIndex >= selectedCropForStageEdit.guideline?.stages?.length - 1}
+                className={`p-6 rounded-lg border-2 transition-all ${
+                  selectedCropForStageEdit.currentStageIndex >= selectedCropForStageEdit.guideline?.stages?.length - 1
+                    ? isDark
+                      ? 'bg-gray-800 border-gray-700 text-gray-600 cursor-not-allowed'
+                      : 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed'
+                    : isDark
+                    ? 'bg-purple-900/30 border-purple-600 hover:bg-purple-900/50 text-purple-400 hover:shadow-lg'
+                    : 'bg-purple-50 border-purple-300 hover:bg-purple-100 text-purple-700 hover:shadow-lg'
+                }`}
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-2xl">⏩</span>
+                  <span className="font-bold text-lg">Skip Stage</span>
+                </div>
+                <p className="text-sm">
+                  {selectedCropForStageEdit.currentStageIndex >= selectedCropForStageEdit.guideline?.stages?.length - 1
+                    ? 'Already at final stage'
+                    : `Advance to: ${selectedCropForStageEdit.guideline?.stages[selectedCropForStageEdit.currentStageIndex + 1]?.stageName}`}
+                </p>
+              </button>
+            </div>
+
+            {/* Reports Section */}
+            {selectedCropForStageEdit.reports && selectedCropForStageEdit.reports.length > 0 && (
+              <div className={`rounded-lg p-4 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+                <h4 className={`text-lg font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  📋 Recent Reports ({selectedCropForStageEdit.reports.length})
+                </h4>
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {selectedCropForStageEdit.reports.slice(-5).reverse().map((report, idx) => (
+                    <div key={idx} className={`p-3 rounded-lg flex items-center justify-between ${
+                      isDark ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
+                    } transition-colors`}>
+                      <div className="flex-1">
+                        <div className={`font-medium ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
+                          {report.growthStage || 'N/A'} - {new Date(report.createdAt || report.reportDate).toLocaleDateString()}
+                        </div>
+                        <div className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                          Health: {report.healthStatus || 'Unknown'} • Height: {report.plantHeight || 'N/A'} cm
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleStageAction('delete-report', { reportId: report.id, reportDate: new Date(report.createdAt || report.reportDate).toLocaleDateString() })}
+                        className={`ml-4 px-3 py-1 text-xs rounded-md transition-colors ${
+                          isDark
+                            ? 'bg-red-900/50 hover:bg-red-900 text-red-300'
+                            : 'bg-red-100 hover:bg-red-200 text-red-700'
+                        }`}
+                      >
+                        🗑️ Delete
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Modal Footer */}
+          <div className={`px-6 py-4 border-t ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+            <button
+              onClick={() => setShowStageEditorModal(false)}
+              className={`w-full py-3 rounded-lg font-semibold transition-colors ${
+                isDark
+                  ? 'bg-gray-700 hover:bg-gray-600 text-white'
+                  : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+              }`}
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
+    )}
+
+    {/* Stage Action Confirmation Modal */}
+    {showStageConfirmModal && selectedCropForStageEdit && (
+      <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[60] p-4">
+        <div className={`rounded-xl shadow-2xl w-full max-w-md ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+          {/* Warning Header */}
+          <div className="bg-gradient-to-r from-yellow-500 to-orange-500 px-6 py-4 rounded-t-xl">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                <span className="text-3xl">⚠️</span>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-white">Confirm Action</h3>
+                <p className="text-sm text-yellow-100">Please review before proceeding</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Confirmation Body */}
+          <div className="p-6">
+            <div className={`space-y-4 ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+              {stageAction === 'skip' && (
+                <>
+                  <div className={`p-4 rounded-lg ${isDark ? 'bg-purple-900/30' : 'bg-purple-50'}`}>
+                    <p className="font-semibold mb-2">⏩ Skip Current Stage</p>
+                    <p className="text-sm">
+                      <strong>Crop:</strong> {selectedCropForStageEdit.cropType} - {selectedCropForStageEdit.variety}<br />
+                      <strong>Current:</strong> {selectedCropForStageEdit.currentStageName} ({selectedCropForStageEdit.currentStageIndex + 1}/{selectedCropForStageEdit.guideline?.stages?.length})<br />
+                      <strong className="text-purple-600">New Stage:</strong> {selectedCropForStageEdit.guideline?.stages[selectedCropForStageEdit.currentStageIndex + 1]?.stageName} ({selectedCropForStageEdit.currentStageIndex + 2}/{selectedCropForStageEdit.guideline?.stages?.length})
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {stageAction === 'revert' && (
+                <>
+                  <div className={`p-4 rounded-lg ${isDark ? 'bg-orange-900/30' : 'bg-orange-50'}`}>
+                    <p className="font-semibold mb-2">⏪ Revert to Previous Stage</p>
+                    <p className="text-sm">
+                      <strong>Crop:</strong> {selectedCropForStageEdit.cropType} - {selectedCropForStageEdit.variety}<br />
+                      <strong>Current:</strong> {selectedCropForStageEdit.currentStageName} ({selectedCropForStageEdit.currentStageIndex + 1}/{selectedCropForStageEdit.guideline?.stages?.length})<br />
+                      <strong className="text-orange-600">New Stage:</strong> {selectedCropForStageEdit.guideline?.stages[selectedCropForStageEdit.currentStageIndex - 1]?.stageName} ({selectedCropForStageEdit.currentStageIndex}/{selectedCropForStageEdit.guideline?.stages?.length})
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {stageAction === 'delete-report' && (
+                <>
+                  <div className={`p-4 rounded-lg ${isDark ? 'bg-red-900/30' : 'bg-red-50'}`}>
+                    <p className="font-semibold mb-2 text-red-600">🗑️ Delete Report</p>
+                    <p className="text-sm">
+                      <strong>Report Date:</strong> {pendingActionData?.reportDate}<br />
+                      <strong className="text-red-600">Warning:</strong> This action cannot be undone!
+                    </p>
+                  </div>
+                </>
+              )}
+
+              <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                Are you sure you want to proceed with this action?
+              </p>
+            </div>
+          </div>
+
+          {/* Confirmation Footer */}
+          <div className={`px-6 py-4 border-t ${isDark ? 'border-gray-700 bg-gray-900' : 'border-gray-200 bg-gray-50'} rounded-b-xl`}>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowStageConfirmModal(false);
+                  setStageAction(null);
+                  setPendingActionData(null);
+                }}
+                className={`flex-1 py-3 rounded-lg font-semibold transition-colors ${
+                  isDark
+                    ? 'bg-gray-700 hover:bg-gray-600 text-white'
+                    : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+                }`}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmStageAction}
+                className={`flex-1 py-3 rounded-lg font-semibold transition-colors ${
+                  stageAction === 'delete-report'
+                    ? 'bg-red-600 hover:bg-red-700 text-white'
+                    : stageAction === 'skip'
+                    ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                    : 'bg-orange-600 hover:bg-orange-700 text-white'
+                }`}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+
     </div>
+  </div>
   );
 }
 

@@ -401,4 +401,30 @@ router.delete('/:reportId/feedback/:feedbackId', async (req, res) => {
   }
 });
 
+// DELETE /api/seed-track/reports/:id - Admin: Delete a report
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Note: In production, add proper admin authentication
+    // For now, trusting the frontend to only call this from admin panel
+
+    const deleted = await prisma.cropReport.delete({ 
+      where: { id } 
+    });
+
+    res.json({ 
+      success: true, 
+      data: deleted, 
+      message: 'Report deleted successfully' 
+    });
+  } catch (error) {
+    console.error('[SeedTrack][Reports][DELETE] Error:', error);
+    if (error.code === 'P2025') {
+      return res.status(404).json({ success: false, message: 'Report not found' });
+    }
+    res.status(500).json({ success: false, message: 'Failed to delete report' });
+  }
+});
+
 export default router;

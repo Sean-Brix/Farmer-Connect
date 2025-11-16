@@ -330,6 +330,22 @@ export default function Farmer_Report() {
   const createReport = useCreateReport();
   const registeredCrops = crops || [];
 
+  // Check if user can register more crops (max 3 active)
+  const canRegisterNewCrop = useMemo(() => {
+    const activeCropsCount = registeredCrops.filter(
+      crop => crop.status !== 'Completed' && crop.status !== 'Archived'
+    ).length;
+    return activeCropsCount < 3;
+  }, [registeredCrops]);
+
+  const handleOpenCropRegistration = () => {
+    if (!canRegisterNewCrop) {
+      alert('You have reached the maximum of 3 active crops. Please complete or archive an existing crop before registering a new one.');
+      return;
+    }
+    setShowCropRegistrationModal(true);
+  };
+
   // Local helper functions
   const calculateProgress = (plantingDate, expectedHarvest) => {
     if (!plantingDate || !expectedHarvest) return 0;
@@ -415,7 +431,9 @@ export default function Farmer_Report() {
       });
     } catch (e) {
       console.error('Create crop failed:', e);
-      alert('Failed to register crop.');
+      // Show error message from backend if available
+      const errorMessage = e.response?.data?.message || e.message || 'Failed to register crop.';
+      alert(errorMessage);
       return;
     }
 
@@ -651,11 +669,17 @@ export default function Farmer_Report() {
                 </button>
               ))}
               <button 
-                onClick={() => setShowCropRegistrationModal(true)} 
-                className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 transition-all duration-200 shadow-lg hover:shadow-xl ml-4"
+                onClick={handleOpenCropRegistration}
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 shadow-lg hover:shadow-xl ml-4 ${
+                  canRegisterNewCrop
+                    ? 'bg-green-600 text-white hover:bg-green-700'
+                    : 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-60'
+                }`}
+                disabled={!canRegisterNewCrop}
               >
                 <span className="text-lg">+</span>
                 <span>Add Crop</span>
+                {!canRegisterNewCrop && <span className="text-xs">(Max 3)</span>}
               </button>
             </div>
           </div>

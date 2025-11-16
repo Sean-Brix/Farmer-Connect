@@ -156,6 +156,23 @@ router.post('/', async (req, res) => {
       });
     }
 
+    // Check active crop limit (max 3 active crops per user)
+    const activeCropsCount = await prisma.registeredCrop.count({
+      where: {
+        userId,
+        status: {
+          notIn: ['Completed', 'Archived']
+        }
+      }
+    });
+
+    if (activeCropsCount >= 3) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Maximum of 3 active crops allowed. Please complete or archive an existing crop before registering a new one.' 
+      });
+    }
+
     // Verify guideline exists and has stages
     const guideline = await prisma.cropGuideline.findUnique({
       where: { id: guidelineId },
@@ -279,6 +296,108 @@ router.patch('/:id/complete', async (req, res) => {
     console.error('[SeedTrack][Crops][COMPLETE] Error:', error);
     if (error.code === 'P2025') return res.status(404).json({ success: false, message: 'Crop not found' });
     res.status(500).json({ success: false, message: 'Failed to complete crop' });
+  }
+});
+
+// PATCH /api/seed-track/crops/:id/skip-stage - Admin: Skip to next stage
+router.patch('/:id/skip-stage', async (req, res) => {
+  try {
+    const crop = await prisma.registeredCrop.findUnique({
+      where: { id: req.params.id },
+      include: {
+        guideline: {
+          include: {
+            stages: {
+              orderBy: { sequenceOrder: 'asc' }
+            }
+          }
+        }
+      }
+    });
+
+    if (!crop) {
+      return res.status(404).json({ success: false, message: 'Crop not found' });
+    }
+
+    if (!crop.guideline || !crop.guideline.stages || crop.guideline.stages.length === 0) {
+      return res.status(400).json({ success: false, message: 'Crop has no guideline stages' });
+    }
+
+    const currentIndex = crop.currentStageIndex || 0;
+    if (currentIndex >= crop.guideline.stages.length - 1) {
+      return res.status(400).json({ success: false, message: 'Already at the last stage' });
+    }
+
+    const nextIndex = currentIndex + 1;
+    const nextStage = crop.guideline.stages[nextIndex];
+
+    const updated = await prisma.registeredCrop.update({
+      where: { id: req.params.id },
+      data: {
+        currentStageIndex: nextIndex,
+        currentStageName: nextStage.stageName,
+      },
+    });
+
+    res.json({ 
+      success: true, 
+      data: updated, 
+      message: `Stage advanced to: ${nextStage.stageName}` 
+    });
+  } catch (error) {
+    console.error('[SeedTrack][Crops][SKIP_STAGE] Error:', error);
+    res.status(500).json({ success: false, message: 'Failed to skip stage' });
+  }
+});
+
+// PATCH /api/seed-track/crops/:id/revert-stage - Admin: Revert to previous stage
+router.patch('/:id/revert-stage', async (req, res) => {
+  try {
+    const crop = await prisma.registeredCrop.findUnique({
+      where: { id: req.params.id },
+      include: {
+        guideline: {
+          include: {
+            stages: {
+              orderBy: { sequenceOrder: 'asc' }
+            }
+          }
+        }
+      }
+    });
+
+    if (!crop) {
+      return res.status(404).json({ success: false, message: 'Crop not found' });
+    }
+
+    if (!crop.guideline || !crop.guideline.stages || crop.guideline.stages.length === 0) {
+      return res.status(400).json({ success: false, message: 'Crop has no guideline stages' });
+    }
+
+    const currentIndex = crop.currentStageIndex || 0;
+    if (currentIndex <= 0) {
+      return res.status(400).json({ success: false, message: 'Already at the first stage' });
+    }
+
+    const prevIndex = currentIndex - 1;
+    const prevStage = crop.guideline.stages[prevIndex];
+
+    const updated = await prisma.registeredCrop.update({
+      where: { id: req.params.id },
+      data: {
+        currentStageIndex: prevIndex,
+        currentStageName: prevStage.stageName,
+      },
+    });
+
+    res.json({ 
+      success: true, 
+      data: updated, 
+      message: `Stage reverted to: ${prevStage.stageName}` 
+    });
+  } catch (error) {
+    console.error('[SeedTrack][Crops][REVERT_STAGE] Error:', error);
+    res.status(500).json({ success: false, message: 'Failed to revert stage' });
   }
 });
 
