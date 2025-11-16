@@ -400,11 +400,8 @@ CREATE TABLE `registered_crops` (
 CREATE TABLE `crop_monthly_reports` (
     `id` VARCHAR(191) NOT NULL,
     `cropId` VARCHAR(191) NOT NULL,
-    `reportDate` DATETIME(3) NOT NULL,
-    `growthStage` ENUM('Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Maturity', 'Harvested') NOT NULL,
     `plantHeight` DOUBLE NULL,
     `healthStatus` VARCHAR(191) NULL,
-    `estimatedYield` DOUBLE NULL,
     `weatherImpact` VARCHAR(191) NULL,
     `notes` VARCHAR(191) NULL,
     `pestsObserved` VARCHAR(191) NULL,
@@ -413,17 +410,29 @@ CREATE TABLE `crop_monthly_reports` (
     `pesticideApplications` VARCHAR(191) NULL,
     `irrigationFrequency` VARCHAR(191) NULL,
     `soilCondition` VARCHAR(191) NULL,
-    `majorActivities` VARCHAR(191) NULL,
-    `challenges` VARCHAR(191) NULL,
     `plannedActions` VARCHAR(191) NULL,
     `actualYield` DOUBLE NULL,
     `costs` LONGTEXT NULL,
-    `submissionDate` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `weatherSnapshot` LONGTEXT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
-    INDEX `crop_monthly_reports_cropId_reportDate_idx`(`cropId`, `reportDate`),
+    INDEX `crop_monthly_reports_cropId_createdAt_idx`(`cropId`, `createdAt`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `report_feedback` (
+    `id` VARCHAR(191) NOT NULL,
+    `reportId` VARCHAR(191) NOT NULL,
+    `authorId` VARCHAR(191) NOT NULL,
+    `message` TEXT NOT NULL,
+    `parentId` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    INDEX `report_feedback_reportId_createdAt_idx`(`reportId`, `createdAt`),
+    INDEX `report_feedback_parentId_idx`(`parentId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -629,6 +638,15 @@ ALTER TABLE `registered_crops` ADD CONSTRAINT `registered_crops_guidelineId_fkey
 
 -- AddForeignKey
 ALTER TABLE `crop_monthly_reports` ADD CONSTRAINT `crop_monthly_reports_cropId_fkey` FOREIGN KEY (`cropId`) REFERENCES `registered_crops`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `report_feedback` ADD CONSTRAINT `report_feedback_reportId_fkey` FOREIGN KEY (`reportId`) REFERENCES `crop_monthly_reports`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `report_feedback` ADD CONSTRAINT `report_feedback_authorId_fkey` FOREIGN KEY (`authorId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `report_feedback` ADD CONSTRAINT `report_feedback_parentId_fkey` FOREIGN KEY (`parentId`) REFERENCES `report_feedback`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `seminars` ADD CONSTRAINT `seminars_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

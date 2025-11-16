@@ -1,15 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { seedAccounts } from './accounts.seed.js';
-import { seedSeminars, seedSeminarParticipants } from './seminars.seed.js';
-import { seedInventoryItems, seedItemStacks, seedItemTransactions } from './inventory.seed.js';
-import { seedFAQCategories, seedFAQs, seedInquiries } from './inquiries.seed.js';
-import { seedSurveyForms, seedSurveyResponses, seedSurveyStatistics } from './surveys.seed.js';
-import { seedChat } from './chat.seed.js';
-import { seedAuditLogs } from './audit.seed.js';
-import { seedDataAccounts, seedDataInventoryItems, seedDataSeminars, seedDataFAQsAndInquiries } from './data-import.seed.js';
-import { seedAccountImages, seedSeminarImages } from './images.seed.js';
 import { seedUserPreferences, seedRegisteredCrops } from './preferences-and-crops.seed.js';
 import seedCropGuidelines from './seedCropGuidelines.js';
+import { seedCropReports } from './crop-reports.seed.js';
 
 const prisma = new PrismaClient();
 
@@ -53,65 +46,47 @@ async function runStep(label, fn) {
 
 async function main() {
   try {
-    console.log('Seeding started...');
+    console.log('🌱 Starting simplified seed process...\n');
 
-  await runStep('DataAccounts', () => seedDataAccounts(prisma));
-  await runStep('Accounts', () => seedAccounts(prisma, { count: 220 }));
-    await runStep('Seminars', () => seedSeminars(prisma, { count: 160 }));
-    await runStep('SeminarParticipants', () => seedSeminarParticipants(prisma));
+    // Clean existing data in correct order
+    console.log('🧹 Cleaning existing data...');
+    await prisma.reportFeedback.deleteMany({});
+    await prisma.cropMonthlyReport.deleteMany({});
+    await prisma.registeredCrop.deleteMany({});
+    await prisma.cropGuidelineStage.deleteMany({});
+    await prisma.cropGuideline.deleteMany({});
+    await prisma.userPreference.deleteMany({});
+    await prisma.account.deleteMany({});
+    console.log('✅ Cleanup complete\n');
 
-  await runStep('DataInventoryItems', () => seedDataInventoryItems(prisma));
-  await runStep('InventoryItems', () => seedInventoryItems(prisma, { count: 90 }));
-    await runStep('ItemStacks', () => seedItemStacks(prisma));
-    await runStep('ItemTransactions', () => seedItemTransactions(prisma, { perStackMax: 7 }));
-
-  await runStep('DataSeminars', () => seedDataSeminars(prisma));
-  await runStep('AccountImages', () => seedAccountImages(prisma));
-  await runStep('SeminarImages', () => seedSeminarImages(prisma));
-  await runStep('FAQCategories', () => seedFAQCategories(prisma));
-  await runStep('FAQs', () => seedFAQs(prisma, { count: 40 }));
-  await runStep('DataFAQs&Inquiries', () => seedDataFAQsAndInquiries(prisma));
-  await runStep('Inquiries', () => seedInquiries(prisma, { count: 200 }));
-
-    await runStep('SurveyForms', () => seedSurveyForms(prisma));
-    await runStep('SurveyResponses', () => seedSurveyResponses(prisma));
-    await runStep('SurveyStatistics', () => seedSurveyStatistics(prisma));
-
-  await runStep('Chat', () => seedChat(prisma, { rooms: 40, maxParticipants: 7, maxMessages: 80 }));
-    await runStep('AuditLogs', () => seedAuditLogs(prisma, { count: 600 }));
-
-  await runStep('CropGuidelines', () => seedCropGuidelines(prisma));
-  await runStep('UserPreferences', () => seedUserPreferences(prisma, { perUser: 3 }));
-  await runStep('RegisteredCrops', () => seedRegisteredCrops(prisma, { perUserMax: 3 }));
-
-    // Fix existing FAQs without categories - assign them to "General"
-    const generalCat = await prisma.fAQCategory.findFirst({ where: { name: 'General' } });
-    if (generalCat) {
-      await prisma.fAQ.updateMany({
-        where: { categoryId: null },
-        data: { categoryId: generalCat.id },
-      });
-    }
+    // Seed in correct order
+    await runStep('Accounts', () => seedAccounts(prisma));
+    await runStep('CropGuidelines', () => seedCropGuidelines(prisma));
+    await runStep('RegisteredCrops', () => seedRegisteredCrops(prisma));
+    await runStep('CropReports', () => seedCropReports(prisma));
+    await runStep('UserPreferences', () => seedUserPreferences(prisma));
 
     // Final summary
-    const [accounts, seminars, stacks, items, txs, inquiries, faqs] = await Promise.all([
+    const [accounts, guidelines, crops, reports, feedback] = await Promise.all([
       prisma.account.count(),
-      prisma.seminar.count(),
-      prisma.itemStack.count(),
-      prisma.inventoryItem.count(),
-      prisma.itemTransaction.count(),
-      prisma.inquiry.count(),
-      prisma.fAQ.count(),
+      prisma.cropGuideline.count(),
+      prisma.registeredCrop.count(),
+      prisma.cropMonthlyReport.count(),
+      prisma.reportFeedback.count(),
     ]);
-    console.log('\nSeeding Summary:');
-    console.log(`  Accounts:       ${accounts}`);
-    console.log(`  Seminars:       ${seminars}`);
-    console.log(`  InventoryItems: ${items}`);
-    console.log(`  ItemStacks:     ${stacks}`);
-    console.log(`  Transactions:   ${txs}`);
-    console.log(`  Inquiries:      ${inquiries}`);
-    console.log(`  FAQs:           ${faqs}`);
-    console.log('\nAll done.');
+    
+    console.log('\n📊 Seeding Summary:');
+    console.log(`  Accounts:        ${accounts} (1 Super_Admin, ${accounts - 1} Users)`);
+    console.log(`  Crop Guidelines: ${guidelines}`);
+    console.log(`  Registered Crops: ${crops}`);
+    console.log(`  Crop Reports:    ${reports}`);
+    console.log(`  Feedback:        ${feedback}`);
+    console.log('\n✨ All done! Database seeded successfully.\n');
+    
+    console.log('📝 Login Credentials:');
+    console.log('   Admin: username = admin, password = 123456');
+    console.log('   Users: username = [firstname].[surname] (e.g., juan.delacruz), password = 123456');
+    console.log('\n💡 6 users have crop reports with feedback, 3 users have crops without reports');
   } finally {
     await prisma.$disconnect();
   }
