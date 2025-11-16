@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -8,6 +9,22 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+
+  // Build configuration for production
+  build: {
+    outDir: path.resolve(__dirname, '../server/public/app'),
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          query: ['@tanstack/react-query'],
+          socket: ['socket.io-client'],
+          charts: ['chart.js', 'react-chartjs-2', 'recharts'],
+        },
+      },
+    },
+  },
 
   server: {
     port: 5173,

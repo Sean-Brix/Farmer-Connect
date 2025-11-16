@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:deploy": "vite build && echo Build completed! React app is now in server/public/app",
     "lint": "eslint .",
     "preview": "vite preview",
     "exp-server": "vite --config vite.config.exp.js"

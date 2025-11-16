@@ -12,8 +12,9 @@ import { fileURLToPath } from 'url';
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const viewPath = path.join(__dirname, '../View');
 const publicPath = path.join(__dirname, '../public');
+const reactAppPath = path.join(__dirname, '../public/app');
+const reactIndexPath = path.join(reactAppPath, 'index.html');
 
 // Initialize i18n - temporarily disabled
 // await initI18n();
@@ -25,8 +26,12 @@ const app = express();
 app.use(urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static(viewPath));
+
+// Serve static files from public directory (images, uploads, etc.)
 app.use('/public', express.static(publicPath));
+
+// Serve React app static files (JS, CSS, images from Vite build)
+app.use(express.static(reactAppPath));
 
 // i18n middleware - temporarily disabled
 // app.use(i18nMiddleware.handle);
@@ -39,17 +44,13 @@ app.use(
     })
 );
 
-// Handle favicon.ico requests to prevent 404 errors
-app.get('/favicon.ico', (req, res) => {
-    res.status(204).end(); // No Content - suppresses the error
-});
-
 // API Route
 import index from '../Router/index.js';
 app.use('/', index);
 
+// SPA Fallback - serve index.html for all non-API routes
 app.use((req, res) => {
-    res.sendFile(viewPath);
+    res.sendFile(reactIndexPath);
 });
 
 export default app;
