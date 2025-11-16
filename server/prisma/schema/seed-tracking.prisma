@@ -25,13 +25,10 @@ model RegisteredCrop {
 }
 
 model CropMonthlyReport {
-  id                    String         @id @default(cuid())
+  id                    String              @id @default(cuid())
   cropId                String
-  reportDate            DateTime
-  growthStage           GrowthStage
   plantHeight           Float?
   healthStatus          String?
-  estimatedYield        Float?
   weatherImpact         String?
   notes                 String?
   pestsObserved         String?
@@ -40,19 +37,35 @@ model CropMonthlyReport {
   pesticideApplications String?
   irrigationFrequency   String?
   soilCondition         String?
-  majorActivities       String?
-  challenges            String?
   plannedActions        String?
   actualYield           Float?
-  costs                 String?        @db.LongText
-  submissionDate        DateTime       @default(now())
-  weatherSnapshot       String?        @db.LongText
-  createdAt             DateTime       @default(now())
-  updatedAt             DateTime       @updatedAt
-  crop                  RegisteredCrop @relation(fields: [cropId], references: [id], onDelete: Cascade)
+  costs                 String?             @db.LongText
+  weatherSnapshot       String?             @db.LongText
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  crop                  RegisteredCrop      @relation(fields: [cropId], references: [id], onDelete: Cascade)
+  feedback              ReportFeedback[]
 
-  @@index([cropId, reportDate])
+  @@index([cropId, createdAt])
   @@map("crop_monthly_reports")
+}
+
+model ReportFeedback {
+  id        String            @id @default(cuid())
+  reportId  String
+  authorId  String
+  message   String            @db.Text
+  parentId  String?           // For threaded replies
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  report    CropMonthlyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  author    Account           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parent    ReportFeedback?   @relation("FeedbackReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   ReportFeedback[]  @relation("FeedbackReplies")
+
+  @@index([reportId, createdAt])
+  @@index([parentId])
+  @@map("report_feedback")
 }
 
 enum CropStatus {

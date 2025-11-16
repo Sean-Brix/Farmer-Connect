@@ -59,11 +59,8 @@ export default function Farmer_Report() {
   const [selectedGuideline, setSelectedGuideline] = useState(null);
 
   const [newReport, setNewReport] = useState({
-    reportDate: new Date().toISOString().split('T')[0],
-    growthStage: '',
     plantHeight: '',
     healthStatus: 'Healthy',
-    estimatedYield: '',
     weatherImpact: '',
     notes: '',
     // Monthly report specific fields
@@ -73,8 +70,6 @@ export default function Farmer_Report() {
     pesticideApplications: '',
     irrigationFrequency: '',
     soilCondition: '',
-    majorActivities: '',
-    challenges: '',
     plannedActions: '',
     actualYield: '',
     costs: {
@@ -359,19 +354,16 @@ export default function Farmer_Report() {
   };
 
   const handleAddReport = async () => {
-    if (!newReport.reportDate || !newReport.growthStage || !newReport.plantHeight) {
-      alert('Please fill in all required fields');
+    if (!newReport.plantHeight) {
+      alert('Please fill in plant height');
       return;
     }
 
     try {
       await createReport.mutateAsync({
         cropId: selectedCropForReport.id,
-        reportDate: newReport.reportDate,
-        growthStage: newReport.growthStage,
         plantHeight: newReport.plantHeight ? Number(newReport.plantHeight) : null,
         healthStatus: newReport.healthStatus || null,
-        estimatedYield: newReport.estimatedYield ? Number(newReport.estimatedYield) : null,
         weatherImpact: newReport.weatherImpact || null,
         notes: newReport.notes || null,
         pestsObserved: newReport.pestsObserved || null,
@@ -380,8 +372,6 @@ export default function Farmer_Report() {
         pesticideApplications: newReport.pesticideApplications || null,
         irrigationFrequency: newReport.irrigationFrequency || null,
         soilCondition: newReport.soilCondition || null,
-        majorActivities: newReport.majorActivities || null,
-        challenges: newReport.challenges || null,
         plannedActions: newReport.plannedActions || null,
         actualYield: newReport.actualYield ? Number(newReport.actualYield) : null,
         costs: newReport.costs || null,
@@ -400,11 +390,8 @@ export default function Farmer_Report() {
     }
 
     setNewReport({
-      reportDate: new Date().toISOString().split('T')[0],
-      growthStage: '',
       plantHeight: '',
       healthStatus: 'Healthy',
-      estimatedYield: '',
       weatherImpact: '',
       notes: '',
       pestsObserved: '',
@@ -413,8 +400,6 @@ export default function Farmer_Report() {
       pesticideApplications: '',
       irrigationFrequency: '',
       soilCondition: '',
-      majorActivities: '',
-      challenges: '',
       plannedActions: '',
       actualYield: '',
       costs: {
@@ -1728,73 +1713,36 @@ export default function Farmer_Report() {
               {/* Modal Body */}
               <div className="p-4 sm:p-6">
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Report Date *</label>
-                      <input 
-                        type="date" 
-                        value={newReport.reportDate} 
-                        onChange={(e) => setNewReport({...newReport, reportDate: e.target.value})}
-                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
-                          theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600 text-white' 
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                      />
-                    </div>
-                    <div>
-                      <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Growth Stage *</label>
-                      <select 
-                        value={newReport.growthStage} 
-                        onChange={(e) => setNewReport({...newReport, growthStage: e.target.value})}
-                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
-                          theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600 text-white' 
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                      >
-                        <option value="">Select stage</option>
-                        <option value="Seedling">Seedling</option>
-                        <option value="Vegetative">Vegetative</option>
-                        <option value="Flowering">Flowering</option>
-                        <option value="Fruiting">Fruiting</option>
-                        <option value="Maturity">Maturity</option>
-                      </select>
-                    </div>
+                  <div>
+                    <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Plant Height (cm) *</label>
+                    <input 
+                      type="number" 
+                      value={newReport.plantHeight} 
+                      onChange={(e) => setNewReport({...newReport, plantHeight: e.target.value})}
+                      placeholder="e.g., 45"
+                      className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                        theme === 'dark' 
+                          ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                      }`}
+                    />
                   </div>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Plant Height (cm)</label>
-                      <input 
-                        type="number" 
-                        value={newReport.plantHeight} 
-                        onChange={(e) => setNewReport({...newReport, plantHeight: e.target.value})}
-                        placeholder="e.g., 45"
-                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
-                          theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                        }`}
-                      />
-                    </div>
-                    <div>
-                      <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Health Status</label>
-                      <select 
-                        value={newReport.healthStatus || 'Good'} 
-                        onChange={(e) => setNewReport({...newReport, healthStatus: e.target.value})}
-                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
-                          theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600 text-white' 
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                      >
-                        <option value="Excellent">Excellent</option>
-                        <option value="Good">Good</option>
-                        <option value="Fair">Fair</option>
-                        <option value="Poor">Poor</option>
-                      </select>
-                    </div>
+                  <div>
+                    <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Health Status</label>
+                    <select 
+                      value={newReport.healthStatus || 'Good'} 
+                      onChange={(e) => setNewReport({...newReport, healthStatus: e.target.value})}
+                      className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                        theme === 'dark' 
+                          ? 'bg-gray-700 border-gray-600 text-white' 
+                          : 'bg-white border-gray-300 text-gray-900'
+                      }`}
+                    >
+                      <option value="Excellent">Excellent</option>
+                      <option value="Good">Good</option>
+                      <option value="Fair">Fair</option>
+                      <option value="Poor">Poor</option>
+                    </select>
                   </div>
                   
                   <div>
@@ -1803,7 +1751,7 @@ export default function Farmer_Report() {
                       value={newReport.notes} 
                       onChange={(e) => setNewReport({...newReport, notes: e.target.value})}
                       placeholder="Observations, problems, treatments applied..."
-                      rows="2"
+                      rows="3"
                       className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none ${
                         theme === 'dark' 
                           ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
@@ -1905,33 +1853,6 @@ export default function Farmer_Report() {
                     <div className="space-y-6">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Report Date *</label>
-                          <input 
-                            type="date" 
-                            value={newReport.reportDate} 
-                            onChange={(e) => setNewReport({...newReport, reportDate: e.target.value})}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
-                          />
-                        </div>
-                        <div>
-                          <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Growth Stage *</label>
-                          <select 
-                            value={newReport.growthStage} 
-                            onChange={(e) => setNewReport({...newReport, growthStage: e.target.value})}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
-                          >
-                            <option value="">Select stage</option>
-                            <option value="Seedling">Seedling</option>
-                            <option value="Vegetative">Vegetative</option>
-                            <option value="Flowering">Flowering</option>
-                            <option value="Fruiting">Fruiting</option>
-                            <option value="Maturity">Maturity</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
                           <label className="block text-sm font-semibold text-gray-700 mb-2">Plant Height (cm) *</label>
                           <input 
                             type="number" 
@@ -1963,39 +1884,23 @@ export default function Farmer_Report() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Estimated Yield (kg)</label>
-                          <input 
-                            type="number" 
-                            value={newReport.estimatedYield} 
-                            onChange={(e) => setNewReport({...newReport, estimatedYield: e.target.value})}
-                            placeholder="e.g., 5000"
-                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
-                              theme === 'dark' 
-                                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                            }`}
-                          />
-                        </div>
-                        <div>
-                          <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Soil Condition</label>
-                          <select 
-                            value={newReport.soilCondition} 
-                            onChange={(e) => setNewReport({...newReport, soilCondition: e.target.value})}
-                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
-                              theme === 'dark' 
-                                ? 'bg-gray-700 border-gray-600 text-white' 
-                                : 'bg-white border-gray-300 text-gray-900'
-                            }`}
-                          >
-                            <option value="">Select condition</option>
-                            <option value="Excellent">Excellent</option>
-                            <option value="Good">Good</option>
-                            <option value="Fair">Fair</option>
-                            <option value="Poor">Poor</option>
-                          </select>
-                        </div>
+                      <div>
+                        <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Soil Condition</label>
+                        <select 
+                          value={newReport.soilCondition} 
+                          onChange={(e) => setNewReport({...newReport, soilCondition: e.target.value})}
+                          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                            theme === 'dark' 
+                              ? 'bg-gray-700 border-gray-600 text-white' 
+                              : 'bg-white border-gray-300 text-gray-900'
+                          }`}
+                        >
+                          <option value="">Select condition</option>
+                          <option value="Excellent">Excellent</option>
+                          <option value="Good">Good</option>
+                          <option value="Fair">Fair</option>
+                          <option value="Poor">Poor</option>
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -2104,37 +2009,7 @@ export default function Farmer_Report() {
                   
                   <div className="space-y-6">
                     <div>
-                      <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Major Activities This Month</label>
-                      <textarea 
-                        value={newReport.majorActivities} 
-                        onChange={(e) => setNewReport({...newReport, majorActivities: e.target.value})}
-                        placeholder="e.g., Transplanting, weeding, fertilizer application..."
-                        rows="3"
-                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none ${
-                          theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                        }`}
-                      />
-                    </div>
-
-                    <div>
-                      <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Challenges Faced</label>
-                      <textarea 
-                        value={newReport.challenges} 
-                        onChange={(e) => setNewReport({...newReport, challenges: e.target.value})}
-                        placeholder="e.g., Pest infestation, drought stress, equipment issues..."
-                        rows="3"
-                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none ${
-                          theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                        }`}
-                      />
-                    </div>
-
-                    <div>
-                      <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Planned Actions for Next Month</label>
+                      <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Planned Actions</label>
                       <textarea 
                         value={newReport.plannedActions} 
                         onChange={(e) => setNewReport({...newReport, plannedActions: e.target.value})}

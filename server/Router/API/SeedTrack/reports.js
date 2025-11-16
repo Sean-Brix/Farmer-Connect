@@ -58,19 +58,48 @@ router.get('/', async (req, res) => {
     const where = {};
     if (cropId) where.cropId = cropId;
     if (from || to) {
-      where.reportDate = {};
-      if (from) where.reportDate.gte = new Date(from);
-      if (to) where.reportDate.lte = new Date(to);
+      where.createdAt = {};
+      if (from) where.createdAt.gte = new Date(from);
+      if (to) where.createdAt.lte = new Date(to);
     }
 
-    const include = {};
+    const include = {
+      feedback: {
+        include: {
+          author: {
+            select: {
+              id: true,
+              firstName: true,
+              surname: true,
+              access: true
+            }
+          },
+          replies: {
+            include: {
+              author: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  surname: true,
+                  access: true
+                }
+              }
+            },
+            orderBy: { createdAt: 'asc' }
+          }
+        },
+        where: { parentId: null },
+        orderBy: { createdAt: 'desc' }
+      }
+    };
+    
     if (userId) {
       include.crop = { select: { id: true, userId: true, cropType: true, variety: true } };
     }
 
     let reports = await prisma.cropMonthlyReport.findMany({
       where,
-      orderBy: { reportDate: 'desc' },
+      orderBy: { createdAt: 'desc' },
       include,
     });
 
@@ -91,7 +120,38 @@ router.get('/', async (req, res) => {
 // GET /api/seed-track/reports/:id
 router.get('/:id', async (req, res) => {
   try {
-    const report = await prisma.cropMonthlyReport.findUnique({ where: { id: req.params.id } });
+    const report = await prisma.cropMonthlyReport.findUnique({ 
+      where: { id: req.params.id },
+      include: {
+        feedback: {
+          include: {
+            author: {
+              select: {
+                id: true,
+                firstName: true,
+                surname: true,
+                access: true
+              }
+            },
+            replies: {
+              include: {
+                author: {
+                  select: {
+                    id: true,
+                    firstName: true,
+                    surname: true,
+                    access: true
+                  }
+                }
+              },
+              orderBy: { createdAt: 'asc' }
+            }
+          },
+          where: { parentId: null },
+          orderBy: { createdAt: 'desc' }
+        }
+      }
+    });
     if (!report) return res.status(404).json({ success: false, message: 'Report not found' });
     
     // Parse JSON fields before sending response
@@ -107,18 +167,15 @@ router.get('/:id', async (req, res) => {
 // POST /api/seed-track/reports
 router.post('/', async (req, res) => {
   try {
-    const { cropId, reportDate, growthStage, plantHeight, healthStatus, estimatedYield, weatherImpact, notes, pestsObserved, diseasesObserved, fertilizersApplied, pesticideApplications, irrigationFrequency, soilCondition, majorActivities, challenges, plannedActions, actualYield, costs, weatherSnapshot } = req.body || {};
-    if (!cropId || !reportDate || !growthStage) {
-      return res.status(400).json({ success: false, message: 'cropId, reportDate, growthStage are required' });
+    const { cropId, plantHeight, healthStatus, weatherImpact, notes, pestsObserved, diseasesObserved, fertilizersApplied, pesticideApplications, irrigationFrequency, soilCondition, plannedActions, actualYield, costs, weatherSnapshot } = req.body || {};
+    if (!cropId) {
+      return res.status(400).json({ success: false, message: 'cropId is required' });
     }
 
     const data = {
       cropId,
-      reportDate: new Date(reportDate),
-      growthStage,
       plantHeight: plantHeight != null ? Number(plantHeight) : null,
       healthStatus: healthStatus || null,
-      estimatedYield: estimatedYield != null ? Number(estimatedYield) : null,
       weatherImpact: weatherImpact || null,
       notes: notes || null,
       pestsObserved: pestsObserved || null,
@@ -127,8 +184,6 @@ router.post('/', async (req, res) => {
       pesticideApplications: pesticideApplications || null,
       irrigationFrequency: irrigationFrequency || null,
       soilCondition: soilCondition || null,
-      majorActivities: majorActivities || null,
-      challenges: challenges || null,
       plannedActions: plannedActions || null,
       actualYield: actualYield != null ? Number(actualYield) : null,
       costs: costs || null,
@@ -139,14 +194,6 @@ router.post('/', async (req, res) => {
     const stringifiedData = stringifyReportJsonFields(data);
 
     const created = await prisma.cropMonthlyReport.create({ data: stringifiedData });
-
-    // Optionally update crop stage
-    if (growthStage) {
-      await prisma.registeredCrop.update({
-        where: { id: cropId },
-        data: { currentStage: growthStage },
-      }).catch(() => {});
-    }
 
     // Parse JSON fields back for response
     const parsedCreated = parseReportJsonFields(created);
@@ -161,12 +208,11 @@ router.post('/', async (req, res) => {
 // PATCH /api/seed-track/reports/:id
 router.patch('/:id', async (req, res) => {
   try {
-    const updatable = ['reportDate','growthStage','plantHeight','healthStatus','estimatedYield','weatherImpact','notes','pestsObserved','diseasesObserved','fertilizersApplied','pesticideApplications','irrigationFrequency','soilCondition','majorActivities','challenges','plannedActions','actualYield','costs','weatherSnapshot'];
+    const updatable = ['plantHeight','healthStatus','weatherImpact','notes','pestsObserved','diseasesObserved','fertilizersApplied','pesticideApplications','irrigationFrequency','soilCondition','plannedActions','actualYield','costs','weatherSnapshot'];
     const data = {};
     for (const key of updatable) {
       if (req.body[key] !== undefined) {
-        if (key === 'reportDate') data[key] = req.body[key] ? new Date(req.body[key]) : null;
-        else if (['plantHeight','estimatedYield','actualYield'].includes(key)) data[key] = req.body[key] != null ? Number(req.body[key]) : null;
+        if (['plantHeight','actualYield'].includes(key)) data[key] = req.body[key] != null ? Number(req.body[key]) : null;
         else data[key] = req.body[key];
       }
     }
@@ -196,6 +242,120 @@ router.delete('/:id', async (req, res) => {
     console.error('[SeedTrack][Reports][DELETE] Error:', error);
     if (error.code === 'P2025') return res.status(404).json({ success: false, message: 'Report not found' });
     res.status(500).json({ success: false, message: 'Failed to delete report' });
+  }
+});
+
+// POST /api/seed-track/reports/:reportId/feedback
+router.post('/:reportId/feedback', async (req, res) => {
+  try {
+    const { reportId } = req.params;
+    const { authorId, message, parentId } = req.body;
+
+    if (!authorId || !message) {
+      return res.status(400).json({ success: false, message: 'authorId and message are required' });
+    }
+
+    // Verify report exists
+    const report = await prisma.cropMonthlyReport.findUnique({ where: { id: reportId } });
+    if (!report) {
+      return res.status(404).json({ success: false, message: 'Report not found' });
+    }
+
+    // Verify parent feedback exists if parentId is provided
+    if (parentId) {
+      const parentFeedback = await prisma.reportFeedback.findUnique({ where: { id: parentId } });
+      if (!parentFeedback || parentFeedback.reportId !== reportId) {
+        return res.status(404).json({ success: false, message: 'Parent feedback not found or does not belong to this report' });
+      }
+    }
+
+    const feedback = await prisma.reportFeedback.create({
+      data: {
+        reportId,
+        authorId,
+        message,
+        parentId: parentId || null
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            firstName: true,
+            surname: true,
+            access: true
+          }
+        }
+      }
+    });
+
+    res.status(201).json({ success: true, data: feedback });
+  } catch (error) {
+    console.error('[SeedTrack][Reports][Feedback][CREATE] Error:', error);
+    res.status(500).json({ success: false, message: 'Failed to create feedback' });
+  }
+});
+
+// GET /api/seed-track/reports/:reportId/feedback
+router.get('/:reportId/feedback', async (req, res) => {
+  try {
+    const { reportId } = req.params;
+
+    const feedback = await prisma.reportFeedback.findMany({
+      where: { 
+        reportId,
+        parentId: null
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            firstName: true,
+            surname: true,
+            access: true
+          }
+        },
+        replies: {
+          include: {
+            author: {
+              select: {
+                id: true,
+                firstName: true,
+                surname: true,
+                access: true
+              }
+            }
+          },
+          orderBy: { createdAt: 'asc' }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    res.json({ success: true, data: feedback });
+  } catch (error) {
+    console.error('[SeedTrack][Reports][Feedback][LIST] Error:', error);
+    res.status(500).json({ success: false, message: 'Failed to list feedback' });
+  }
+});
+
+// DELETE /api/seed-track/reports/:reportId/feedback/:feedbackId
+router.delete('/:reportId/feedback/:feedbackId', async (req, res) => {
+  try {
+    const { reportId, feedbackId } = req.params;
+
+    // Verify feedback belongs to this report
+    const feedback = await prisma.reportFeedback.findUnique({ where: { id: feedbackId } });
+    if (!feedback || feedback.reportId !== reportId) {
+      return res.status(404).json({ success: false, message: 'Feedback not found' });
+    }
+
+    await prisma.reportFeedback.delete({ where: { id: feedbackId } });
+
+    res.json({ success: true, message: 'Feedback deleted successfully' });
+  } catch (error) {
+    console.error('[SeedTrack][Reports][Feedback][DELETE] Error:', error);
+    if (error.code === 'P2025') return res.status(404).json({ success: false, message: 'Feedback not found' });
+    res.status(500).json({ success: false, message: 'Failed to delete feedback' });
   }
 });
 
