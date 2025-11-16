@@ -4,7 +4,7 @@ import { useTheme } from '../../../contexts/ThemeContext';
 import Navbar from '../../Components/Navbar';
 
 // ASSETS
-import default_image from './Assets/default_image.jpg';
+import default_image from './Assets/default_image.webp';
 
 const ITEMS_PER_PAGE = 8;
 

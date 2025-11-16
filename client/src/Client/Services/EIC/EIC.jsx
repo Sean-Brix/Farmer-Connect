@@ -3,9 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../../contexts/ThemeContext.jsx';
 import Navbar from '../../Components/Navbar';
 
-// ASSETS
-import default_image from './Assets/default_image.jpg';
-
 // TANSTACK QUERY HOOKS
 import { useEICEquipment, useUserRequests, useSubmitRequest, useCancelRequest } from './hooks/useEICQueries';
 

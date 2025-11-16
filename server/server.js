@@ -27,7 +27,7 @@ server.listen(PORT, ()=>{
 const io = new Server(server, {
     // CORS for Development
     cors: {
-        origin: ["http://localhost:5173", "http://localhost:5174"],
+        origin: ["https://farmer-connect.onrender.com/"],
         methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
         credentials: true
     },

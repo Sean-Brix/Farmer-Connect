@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import i1 from '../Assets/people.jpg';
-import ebg from '../Assets/elementbg.jpg';
+import i1 from '../Assets/people.webp';
+import ebg from '../Assets/elementbg.webp';
 import logo from '../../Assets/Logo.png';
 
 export default function ForgotPassword() {

@@ -4,13 +4,10 @@ import { useTheme } from '../../contexts/ThemeContext.jsx';
 
 
 // COMPONENTS
-import cover from '../Assets/Cover.jpg';
 import logo from '../../Assets/Logo.png';
-import ebg from '../Assets/elementbg.jpg';
-import pipol from '../Assets/pinoy.jpg'; 
-import i1 from '../Assets/i1.jpg';
-import i2 from '../Assets/i2.jpg';
-import i3 from '../Assets/i3.jpg';
+import ebg from '../Assets/elementbg.webp';
+import pipol from '../Assets/pinoy.webp'; 
+
 
 export default function Login() {
     const { theme } = useTheme();

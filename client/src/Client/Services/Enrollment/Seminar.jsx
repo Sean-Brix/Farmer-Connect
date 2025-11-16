@@ -5,7 +5,7 @@ import { useTheme } from '../../../contexts/ThemeContext';
 
 // SUB COMPONENT
 import Navbar from '../../Components/Navbar';
-import default_seminar_pic from './Assets/default_seminar_pic.jpg';
+import default_seminar_pic from './Assets/default_seminar_pic.webp';
 
 // API functions
 const fetchSeminars = async ({ queryKey }) => {

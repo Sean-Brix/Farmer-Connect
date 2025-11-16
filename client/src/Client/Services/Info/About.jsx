@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTheme } from '../../../contexts/ThemeContext.jsx'
 import Navbar from '../../Components/Navbar'
-import farm from './Assets/farm.jpg'
+import farm from './Assets/farm.webp'
 
 export default function About() {
 const { theme } = useTheme();

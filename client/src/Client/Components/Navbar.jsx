@@ -4,7 +4,6 @@ import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import logo from '../../Assets/Logo.png';
 import Chat from '../../Components/Chats/Chat.jsx';
-import logo2 from '../Assets/farmerconnect.png'; 
 import { connectSocket } from '../../utils/socket.js';
 import { useCustomTranslation } from '../../hooks/useCustomTranslation.js';
 import { useTheme } from '../../contexts/ThemeContext.jsx';
