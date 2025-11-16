@@ -269,13 +269,29 @@ const updateGuideline = async (req, res) => {
 
     // Check if guideline exists
     const existingGuideline = await prisma.cropGuideline.findUnique({
-      where: { id }
+      where: { id },
+      include: {
+        _count: {
+          select: {
+            registeredCrops: true
+          }
+        }
+      }
     });
 
     if (!existingGuideline) {
       return res.status(404).json({
         success: false,
         message: 'Crop guideline not found'
+      });
+    }
+
+    // Prevent updating if there are active registered crops using this guideline
+    if (existingGuideline._count.registeredCrops > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Cannot update guideline: ${existingGuideline._count.registeredCrops} farmers are currently using this guideline`,
+        inUseCount: existingGuideline._count.registeredCrops
       });
     }
 
@@ -388,20 +404,16 @@ const deleteGuideline = async (req, res) => {
       });
     }
 
-    // If there are registered crops using this guideline, soft delete (set isActive to false)
+    // Prevent deletion if there are registered crops using this guideline
     if (existingGuideline._count.registeredCrops > 0) {
-      await prisma.cropGuideline.update({
-        where: { id },
-        data: { isActive: false }
-      });
-
-      return res.json({
-        success: true,
-        message: 'Crop guideline deactivated (has active registered crops)'
+      return res.status(400).json({
+        success: false,
+        message: `Cannot delete guideline: ${existingGuideline._count.registeredCrops} farmers are currently using this guideline`,
+        inUseCount: existingGuideline._count.registeredCrops
       });
     }
 
-    // Otherwise, hard delete
+    // Hard delete since no crops are using it
     await prisma.cropGuideline.delete({
       where: { id }
     });
