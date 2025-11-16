@@ -702,16 +702,6 @@ export default function Landing() {
                                 // Hide scrollbar for webkit browsers
                                 e.target.style.webkitScrollbar = 'none';
                             }}
-                            onWheel={(e) => {
-                                // Prevent default vertical scrolling
-                                e.preventDefault();
-                                // Scroll horizontally instead
-                                const container = e.currentTarget;
-                                container.scrollBy({
-                                    left: e.deltaY * 2, // Multiply by 2 for faster scrolling
-                                    behavior: 'smooth'
-                                });
-                            }}
                             onMouseDown={(e) => {
                                 const container = e.currentTarget;
                                 let isDown = true;
@@ -738,6 +728,20 @@ export default function Landing() {
                                 document.addEventListener('mouseup', handleMouseUp);
                             }}
                             onDragStart={(e) => e.preventDefault()} // Prevent text/image dragging
+                            ref={el => {
+                                // Attach wheel event imperatively with passive: false
+                                if (el && !el._customWheelListener) {
+                                    const wheelHandler = (e) => {
+                                        e.preventDefault();
+                                        el.scrollBy({
+                                            left: e.deltaY * 2,
+                                            behavior: 'smooth'
+                                        });
+                                    };
+                                    el.addEventListener('wheel', wheelHandler, { passive: false });
+                                    el._customWheelListener = true;
+                                }
+                            }}
                         >
                             {programs.map((program, index) => (
                                 <div

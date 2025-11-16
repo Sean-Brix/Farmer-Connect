@@ -121,7 +121,7 @@ export default function StageProgressionUI({
                 <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                   theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'
                 }`}>
-                  Level {(crop.currentStageIndex || 0) + 1} of {stageProgress.length}
+                  Stage {(crop.currentStageIndex || 0) + 1} of {stageProgress.length}
                 </span>
               </div>
               <p className={`text-sm mb-3 ${theme === 'dark' ? 'text-blue-200' : 'text-blue-800'}`}>
@@ -199,7 +199,7 @@ export default function StageProgressionUI({
         theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
       }`}>
         <h3 className={`text-lg font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-          🎮 Growth Journey - All Stages
+          Growth Journey - All Stages
         </h3>
         
         <div className="space-y-4">
@@ -363,7 +363,7 @@ export default function StageProgressionUI({
         {/* Overall completion percentage */}
         <div className="mt-4">
           <div className="flex justify-between text-sm mb-1">
-            <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>Total Journey Progress</span>
+            <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>Seedling Progress</span>
             <span className={`font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>
               {Math.round(((crop.currentStageIndex || 0) / stageProgress.length) * 100)}%
             </span>
