@@ -64,6 +64,9 @@ function Seed_Track() {
   
   // Crop view toggle (active vs archived)
   const [showArchivedCrops, setShowArchivedCrops] = useState(false);
+  
+  // Expandable crop rows in table
+  const [expandedCropId, setExpandedCropId] = useState(null);
 
   // Alerts
   const [alert, setAlert] = useState({ show: false, message: '', type: 'success' });
@@ -559,310 +562,8 @@ function Seed_Track() {
               })()}
             </div>
 
-            {/* Analytics Charts - Modern Design with 3 charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-              {(() => {
-                const stats = getOverviewStatistics();
-                
-                // Modern Crop Distribution Chart Data with gradient-inspired colors
-                const cropChartData = {
-                  labels: Object.keys(stats.cropDistribution),
-                  datasets: [{
-                    data: Object.values(stats.cropDistribution),
-                    backgroundColor: [
-                      '#10B981', // Emerald 500
-                      '#059669', // Emerald 600  
-                      '#047857', // Emerald 700
-                      '#065F46', // Emerald 800
-                      '#6B7280', // Gray 500
-                      '#4B5563'  // Gray 600
-                    ],
-                    borderWidth: 0,
-                    hoverBorderWidth: 2,
-                    hoverBorderColor: '#ffffff',
-                    hoverOffset: 8
-                  }]
-                };
-
-                // Modern Health Status Chart Data with enhanced styling
-                const healthChartData = {
-                  labels: Object.keys(stats.healthDistribution),
-                  datasets: [{
-                    label: 'Reports',
-                    data: Object.values(stats.healthDistribution),
-                    backgroundColor: [
-                      '#10B981', // Healthy - Emerald
-                      '#6B7280', // Warning - Gray  
-                      '#374151', // Critical - Dark Gray
-                      '#9CA3AF'  // Unknown - Light Gray
-                    ],
-                    borderWidth: 0,
-                    borderRadius: 6,
-                    borderSkipped: false,
-                    barThickness: 40,
-                    maxBarThickness: 50
-                  }]
-                };
-
-                // Monthly Reports Trend Chart Data
-                const monthlyTrendData = {
-                  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-                  datasets: [{
-                    label: 'Reports Submitted',
-                    data: [12, 19, 15, 25, 22, 30, 28, 35],
-                    borderColor: '#10B981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#10B981',
-                    pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 8
-                  }]
-                };
-
-                // Modern chart options with enhanced styling
-                const modernChartOptions = {
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: {
-                      position: 'bottom',
-                      labels: {
-                        padding: 24,
-                        usePointStyle: true,
-                        pointStyle: 'circle',
-                        color: isDark ? '#D1D5DB' : '#374151',
-                        font: {
-                          size: 13,
-                          weight: '500',
-                          family: 'Inter, system-ui, sans-serif'
-                        },
-                        generateLabels: function(chart) {
-                          const data = chart.data;
-                          if (data.labels.length && data.datasets.length) {
-                            return data.labels.map((label, i) => {
-                              const meta = chart.getDatasetMeta(0);
-                              const style = meta.controller.getStyle(i);
-                              return {
-                                text: label,
-                                fillStyle: style.backgroundColor,
-                                strokeStyle: style.borderColor,
-                                lineWidth: style.borderWidth,
-                                pointStyle: 'circle',
-                                hidden: isNaN(data.datasets[0].data[i]) || meta.data[i].hidden,
-                                index: i
-                              };
-                            });
-                          }
-                          return [];
-                        }
-                      }
-                    },
-                    tooltip: {
-                      backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                      titleColor: '#ffffff',
-                      bodyColor: '#ffffff',
-                      borderColor: '#10B981',
-                      borderWidth: 1,
-                      cornerRadius: 8,
-                      padding: 12,
-                      titleFont: {
-                        size: 14,
-                        weight: '600'
-                      },
-                      bodyFont: {
-                        size: 13,
-                        weight: '400'
-                      }
-                    }
-                  }
-                };
-
-                const modernBarOptions = {
-                  ...modernChartOptions,
-                  scales: {
-                    y: {
-                      beginAtZero: true,
-                      border: {
-                        display: false
-                      },
-                      grid: {
-                        color: isDark ? '#374151' : '#F3F4F6',
-                        drawBorder: false
-                      },
-                      ticks: {
-                        stepSize: 1,
-                        color: isDark ? '#9CA3AF' : '#6B7280',
-                        font: {
-                          size: 12,
-                          weight: '500'
-                        },
-                        padding: 8
-                      }
-                    },
-                    x: {
-                      border: {
-                        display: false
-                      },
-                      grid: {
-                        display: false
-                      },
-                      ticks: {
-                        color: isDark ? '#9CA3AF' : '#6B7280',
-                        font: {
-                          size: 12,
-                          weight: '500'
-                        },
-                        padding: 8
-                      }
-                    }
-                  }
-                };
-
-                const modernLineOptions = {
-                  ...modernChartOptions,
-                  plugins: {
-                    ...modernChartOptions.plugins,
-                    legend: {
-                      display: false
-                    }
-                  },
-                  scales: {
-                    y: {
-                      beginAtZero: true,
-                      border: {
-                        display: false
-                      },
-                      grid: {
-                        color: isDark ? '#374151' : '#F3F4F6',
-                        drawBorder: false
-                      },
-                      ticks: {
-                        color: isDark ? '#9CA3AF' : '#6B7280',
-                        font: {
-                          size: 12,
-                          weight: '500'
-                        },
-                        padding: 8
-                      }
-                    },
-                    x: {
-                      border: {
-                        display: false
-                      },
-                      grid: {
-                        display: false
-                      },
-                      ticks: {
-                        color: isDark ? '#9CA3AF' : '#6B7280',
-                        font: {
-                          size: 12,
-                          weight: '500'
-                        },
-                        padding: 8
-                      }
-                    }
-                  }
-                };
-
-                return (
-                  <>
-                    <div className={`rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
-                      <div className="flex items-center justify-between mb-6">
-                        <h3 className={`text-lg font-semibold flex items-center gap-2 ${isDark ? 'text-white' : 'text-black'}`}>
-                          <div className={`p-2 rounded-lg ${isDark ? 'bg-green-900' : 'bg-green-100'}`}>
-                            <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                          </div>
-                          Crop Distribution
-                        </h3>
-                        <span className={`text-sm px-3 py-1 rounded-full ${isDark ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-100'}`}>
-                          {Object.values(stats.cropDistribution).reduce((a, b) => a + b, 0)} total crops
-                        </span>
-                      </div>
-                      <div className="relative" style={{ height: '280px' }}>
-                        <div className="absolute inset-0">
-                          <Doughnut data={cropChartData} options={{
-                            ...modernChartOptions,
-                            cutout: '65%',
-                            plugins: {
-                              ...modernChartOptions.plugins,
-                              legend: {
-                                ...modernChartOptions.plugins.legend,
-                                position: 'bottom'
-                              }
-                            }
-                          }} />
-                        </div>
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ marginTop: '-40px' }}>
-                          <div className="text-center">
-                            <div className={`text-3xl font-bold leading-none ${isDark ? 'text-white' : 'text-black'}`}>
-                              {Object.keys(stats.cropDistribution).length}
-                            </div>
-                            <div className={`text-xs font-medium mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                              Crop Types
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className={`rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
-                      <div className="flex items-center justify-between mb-6">
-                        <h3 className={`text-lg font-semibold flex items-center gap-2 ${isDark ? 'text-white' : 'text-black'}`}>
-                          <div className={`p-2 rounded-lg ${isDark ? 'bg-green-900' : 'bg-green-100'}`}>
-                            <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                          </div>
-                          Health Status
-                        </h3>
-                        <span className={`text-sm px-3 py-1 rounded-full ${isDark ? 'text-gray-300 bg-gray-700' : 'text-gray-500 bg-gray-100'}`}>
-                          {Object.values(stats.healthDistribution).reduce((a, b) => a + b, 0)} reports
-                        </span>
-                      </div>
-                      <div style={{ height: '280px' }}>
-                        <Bar data={healthChartData} options={modernBarOptions} />
-                      </div>
-                    </div>
-
-                    <div className={`rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
-                      <div className="flex items-center justify-between mb-6">
-                        <h3 className={`text-lg font-semibold flex items-center gap-2 ${isDark ? 'text-white' : 'text-black'}`}>
-                          <div className={`p-2 rounded-lg ${isDark ? 'bg-green-900' : 'bg-green-100'}`}>
-                            <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                          </div>
-                          Monthly Trend
-                        </h3>
-                        <span className={`text-sm px-3 py-1 rounded-full font-medium ${isDark ? 'text-green-400 bg-green-900' : 'text-green-600 bg-green-100'}`}>
-                           +12% growth
-                        </span>
-                      </div>
-                      <div style={{ height: '280px' }}>
-                        <Line data={monthlyTrendData} options={modernLineOptions} />
-                      </div>
-                    </div>
-                  </>
-                );
-              })()}
-            </div>
-
-      {/* Filters Section - Clean Professional Design */}
+            {/* Filters Section - Clean Professional Design */}
             <div className={`rounded-lg p-6 mb-8 ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
-              <div className="mb-4">
-                <h3 className={`text-lg font-semibold flex items-center gap-2 ${isDark ? 'text-white' : 'text-black'}`}>
-                  <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  Search & Filter
-                </h3>
-              </div>
 
               {/* Search Bar and Filters in horizontal layout */}
               <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
@@ -886,52 +587,42 @@ function Seed_Track() {
                 </div>
 
                 {/* Filters */}
-        <div>
-                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Status</label>
-                  <select
-                    value={filters.status}
-                    onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
-                    className={`w-full rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border border-gray-200 bg-white text-gray-700'}`}
-                  >
-                    <option value="all">All Status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
-                </div>
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Location</label>
-                  <select
-                    value={filters.location}
-                    onChange={(e) => setFilters(prev => ({ ...prev, location: e.target.value }))}
-                    className={`w-full rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border border-gray-200 bg-white text-gray-700'}`}
-                  >
-                    <option value="all">All Locations</option>
-                    <option value="laguna">Laguna</option>
-                    <option value="nueva ecija">Nueva Ecija</option>
-                    <option value="bulacan">Bulacan</option>
-                    <option value="bataan">Bataan</option>
-                    <option value="pampanga">Pampanga</option>
-                    <option value="tarlac">Tarlac</option>
-                  </select>
-                </div>
-                <div>
-                  <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Items per page</label>
-                  <select
-                    value={itemsPerPage}
-                    onChange={(e) => {
-                      setItemsPerPage(Number(e.target.value));
-                      setCurrentPage(1);
-                    }}
-                    className={`w-full rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border border-gray-200 bg-white text-gray-700'}`}
-                  >
-                    <option value="5">5 per page</option>
-                    <option value="10">10 per page</option>
-                    <option value="20">20 per page</option>
-                    <option value="50">50 per page</option>
-                  </select>
-                </div>
+                <div className="flex flex-col justify-end sm:flex-row lg:col-span-3 gap-4 sm:gap-6">
+                  <div>
+                    <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Location</label>
+                    <select
+                      value={filters.location}
+                      onChange={(e) => setFilters(prev => ({ ...prev, location: e.target.value }))}
+                      className={`w-full rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border border-gray-200 bg-white text-gray-700'}`}
+                    >
+                      <option value="all">All Locations</option>
+                      <option value="laguna">Laguna</option>
+                      <option value="nueva ecija">Nueva Ecija</option>
+                      <option value="bulacan">Bulacan</option>
+                      <option value="bataan">Bataan</option>
+                      <option value="pampanga">Pampanga</option>
+                      <option value="tarlac">Tarlac</option>
+                    </select>
+                  </div>
+                    <div>
+                      <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Items per page</label>
+                      <select
+                        value={itemsPerPage}
+                        onChange={(e) => {
+                          setItemsPerPage(Number(e.target.value));
+                          setCurrentPage(1);
+                        }}
+                        className={`w-full rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border border-gray-200 bg-white text-gray-700'}`}
+                      >
+                        <option value="5">5 per page</option>
+                        <option value="10">10 per page</option>
+                        <option value="20">20 per page</option>
+                        <option value="50">50 per page</option>
+                      </select>
+                    </div>
+                  </div>
               </div>
-            </div>
+          </div>
 
             {/* Farmers Table - Clean Professional Design */}
             <div className={`rounded-lg overflow-hidden ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
@@ -1279,183 +970,150 @@ function Seed_Track() {
                       </span>
                     </div>
                     
-                    <div className="space-y-6">
-                      {getFarmerCrops(currentFarmer.id, false).map((crop, index) => {
-                        const expectedMonths = getExpectedReportMonths(crop.plantingDate, crop.expectedHarvest);
-                        const latestReport = crop.reports && crop.reports.length > 0 ? crop.reports[crop.reports.length - 1] : null;
-                        
-                        // Format dates for display
-                        const plantingDateFormatted = new Date(crop.plantingDate).toLocaleDateString('en-US', { 
-                          year: 'numeric', 
-                          month: 'long', 
-                          day: 'numeric' 
-                        });
-                        const harvestDateFormatted = crop.expectedHarvest ? new Date(crop.expectedHarvest).toLocaleDateString('en-US', { 
-                          year: 'numeric', 
-                          month: 'long', 
-                          day: 'numeric' 
-                        }) : 'N/A';
-                        
-                        return (
-                          <div key={crop.id} className="border border-gray-200 rounded-lg overflow-hidden">
-                            {/* Crop Header */}
-                            <div className="bg-white px-6 py-4 border-b border-gray-200">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <h5 className="text-xl font-bold text-gray-800">{crop.cropType} - {crop.variety}</h5>
-                                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-sm text-gray-600">
-                                    <span>🌱 Planted: {plantingDateFormatted}</span>
-                                    <span>🌾 Expected Harvest: {harvestDateFormatted}</span>
-                                    <span>📏 Area: {crop.area} hectares</span>
-                                  </div>
-                                </div>
-                                <div className="text-right">
-                                  <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                                    latestReport?.healthStatus === 'Healthy' ? 'bg-green-100 text-green-800' :
-                                    latestReport?.healthStatus === 'Warning' ? 'bg-yellow-100 text-yellow-800' :
-                                    latestReport?.healthStatus === 'Critical' ? 'bg-red-100 text-red-800' :
-                                    'bg-gray-100 text-gray-800'
-                                  }`}>
-                                    {latestReport?.healthStatus || 'No Status'}
-                                  </div>
-                                  <div className="mt-2 flex gap-2">
-                                    <button
-                                      onClick={() => {
-                                        setSelectedCrop({
-                                          ...crop,
-                                          expectedMonths,
-                                          farmerId: currentFarmer.id
-                                        });
-                                        setShowCropReportsModal(true);
-                                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                                      }}
-                                      className="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                                    >
-                                      View All Reports →
-                                    </button>
-                                    <button
-                                      onClick={() => {
-                                        if (window.confirm('Mark this crop as completed/harvested?')) {
-                                          completeCrop(crop.id);
-                                        }
-                                      }}
-                                      className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded-lg shadow transition-colors"
-                                      title="Mark as completed/harvested"
-                                    >
-                                      ✓ Complete
-                                    </button>
-                                    <button
-                                      onClick={() => {
-                                        const reason = window.prompt('Reason for archiving this crop (optional):');
-                                        if (reason !== null) {
-                                          archiveCrop(crop.id, reason);
-                                        }
-                                      }}
-                                      className="bg-gray-600 hover:bg-gray-700 text-white text-xs px-3 py-2 rounded-lg shadow transition-colors"
-                                      title="Archive this crop"
-                                    >
-                                      📦 Archive
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Latest Report Preview */}
-                            {latestReport && (
-                              <div className={`px-6 py-4 ${isDark ? 'bg-gray-800' : 'bg-gray-50'}`}>
-                                <div className="flex items-center justify-between mb-3">
-                                  <h6 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>Latest Report</h6>
-                                  <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                                    {latestReport.reportDate} • Growth Stage: {latestReport.growthStage}
-                                  </span>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                                  <div>
-                                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>Plant Height:</span>
-                                    <span className={`ml-2 font-medium ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>{latestReport.plantHeight}cm</span>
-                                  </div>
-                                  <div>
-                                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>Estimated Yield:</span>
-                                    <span className={`ml-2 font-medium ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>{latestReport.estimatedYield}kg</span>
-                                  </div>
-                                  <div>
-                                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>Pests/Diseases:</span>
-                                    <span className={`ml-2 font-medium ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>{latestReport.pestsAndDiseases || 'None reported'}</span>
-                                  </div>
-                                  <div>
-                                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>Weather Impact:</span>
-                                    <span className={`ml-2 font-medium ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>{latestReport.weatherImpact || 'None'}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Expected Report Timeline */}
-                            <div className={`px-6 py-4 border-t ${isDark ? 'border-gray-700' : 'border-gray-100'}`}>
-                              <div className="flex items-center justify-between mb-3">
-                                <h6 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>📅 Report Timeline</h6>
-                                <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                                  {crop.reports.length} of {expectedMonths.length} reports submitted
-                                </span>
-                              </div>
+                    {/* Crops Table */}
+                    {getFarmerCrops(currentFarmer.id, false).length > 0 ? (
+                      <div className={`overflow-x-auto rounded-lg border ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+                        <table className={`w-full ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+                          <thead className={`${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                            <tr>
+                              <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Crop</th>
+                              <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Variety</th>
+                              <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Stage</th>
+                              <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody className={`divide-y ${isDark ? 'divide-gray-700' : 'divide-gray-200'}`}>
+                            {getFarmerCrops(currentFarmer.id, false).map((crop, index) => {
+                              const latestReport = crop.reports && crop.reports.length > 0 ? crop.reports[crop.reports.length - 1] : null;
                               
-                              <div className="flex flex-wrap gap-2">
-                                {expectedMonths.map((month, monthIndex) => {
-                                  // Check if there's a report for this month
-                                  const hasReport = Array.isArray(crop.reports) && crop.reports.some(report => {
-                                    if (!report || !report.reportDate) return false;
-                                    // Extract YYYY-MM from reportDate (handles both "YYYY-MM-DD" and "YYYY-MM-DDTHH:mm:ss.sssZ" formats)
-                                    const reportMonth = String(report.reportDate).substring(0, 7);
-                                    return reportMonth === month;
-                                  });
-                                  
-                                  const currentDate = new Date().toISOString().slice(0, 7); // Current YYYY-MM
-                                  const isCurrentMonth = month === currentDate;
-                                  const isPastMonth = month < currentDate;
-                                  
-                                  return (
-                                    <div 
-                                      key={month} 
-                                      className={`px-2 py-1 rounded-full text-xs font-medium border ${
-                                        hasReport 
-                                          ? 'bg-green-100 border-green-400 text-green-800' 
-                                          : isCurrentMonth
-                                            ? 'bg-yellow-100 border-yellow-400 text-yellow-800'
-                                            : isPastMonth
-                                              ? 'bg-red-100 border-red-400 text-red-800'
-                                              : 'bg-gray-100 border-gray-300 text-gray-600'
-                                      }`}
-                                      title={`${new Date(month + '-01').toLocaleDateString('en-US', { 
-                                        month: 'long', 
-                                        year: 'numeric' 
-                                      })} - ${hasReport ? 'Report submitted' : 
-                                           isCurrentMonth ? 'Current month' :
-                                           isPastMonth ? 'Missing report' : 'Future report'}`}
-                                    >
-                                      {new Date(month + '-01').toLocaleDateString('en-US', { 
-                                        month: 'short' 
-                                      })}
-                                      {hasReport ? ' ✓' : 
-                                       isCurrentMonth ? ' 📍' :
-                                       isPastMonth ? ' ⚠' : ' ⏳'}
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-
-                      {getFarmerCrops(currentFarmer.id, false).length === 0 && (
-                        <div className="text-center py-12 text-gray-500">
-                          <span className="text-6xl">🌱</span>
-                          <p className="mt-4 text-xl">No active crops</p>
-                          <p className="text-sm">This farmer hasn't planted any crops yet</p>
-                        </div>
-                      )}
-                    </div>
+                              return (
+                                <React.Fragment key={crop.id}>
+                                  <tr className={`${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'} transition-colors`}>
+                                    <td className={`px-4 py-3 whitespace-nowrap ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
+                                      <div className="font-medium">{crop.cropType}</div>
+                                      <div className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                        Planted: {new Date(crop.plantingDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                                      </div>
+                                    </td>
+                                    <td className={`px-4 py-3 whitespace-nowrap ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                      {crop.variety}
+                                    </td>
+                                    <td className={`px-4 py-3 whitespace-nowrap`}>
+                                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                        latestReport?.healthStatus === 'Healthy' ? 'bg-green-100 text-green-800' :
+                                        latestReport?.healthStatus === 'Warning' ? 'bg-yellow-100 text-yellow-800' :
+                                        latestReport?.healthStatus === 'Critical' ? 'bg-red-100 text-red-800' :
+                                        'bg-gray-100 text-gray-600'
+                                      }`}>
+                                        {crop.currentStage || latestReport?.growthStage || 'N/A'}
+                                      </span>
+                                    </td>
+                                    <td className={`px-4 py-3 whitespace-nowrap text-right text-sm font-medium`}>
+                                      <div className="flex items-center gap-2 justify-end">
+                                        <button
+                                          onClick={() => setExpandedCropId(expandedCropId === crop.id ? null : crop.id)}
+                                          className={`px-3 py-1 rounded-md transition-colors ${
+                                            isDark 
+                                              ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                                              : 'bg-blue-500 hover:bg-blue-600 text-white'
+                                          }`}
+                                        >
+                                          {expandedCropId === crop.id ? 'Hide' : 'View'} Reports ({crop.reports?.length || 0})
+                                        </button>
+                                        <button
+                                          onClick={() => {
+                                            if (window.confirm('Mark this crop as completed/harvested?')) {
+                                              completeCrop(crop.id);
+                                            }
+                                          }}
+                                          className={`px-3 py-1 rounded-md transition-colors ${
+                                            isDark 
+                                              ? 'bg-green-600 hover:bg-green-700 text-white' 
+                                              : 'bg-green-500 hover:bg-green-600 text-white'
+                                          }`}
+                                          title="Mark as completed"
+                                        >
+                                          ✓
+                                        </button>
+                                        <button
+                                          onClick={() => {
+                                            const reason = window.prompt('Reason for archiving this crop (optional):');
+                                            if (reason !== null) {
+                                              archiveCrop(crop.id, reason);
+                                            }
+                                          }}
+                                          className={`px-3 py-1 rounded-md transition-colors ${
+                                            isDark 
+                                              ? 'bg-gray-600 hover:bg-gray-700 text-white' 
+                                              : 'bg-gray-500 hover:bg-gray-600 text-white'
+                                          }`}
+                                          title="Archive"
+                                        >
+                                          📦
+                                        </button>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                  {expandedCropId === crop.id && crop.reports && crop.reports.length > 0 && (
+                                    <tr>
+                                      <td colSpan="4" className={`px-4 py-3 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+                                        <div className="overflow-x-auto">
+                                          <table className={`w-full text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                            <thead className={`${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}>
+                                              <tr>
+                                                <th className="px-3 py-2 text-left font-medium">Date</th>
+                                                <th className="px-3 py-2 text-left font-medium">Growth Stage</th>
+                                                <th className="px-3 py-2 text-left font-medium">Health</th>
+                                                <th className="px-3 py-2 text-left font-medium">Height</th>
+                                                <th className="px-3 py-2 text-left font-medium">Issues</th>
+                                                <th className="px-3 py-2 text-left font-medium">Notes</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody className={`divide-y ${isDark ? 'divide-gray-700' : 'divide-gray-200'}`}>
+                                              {crop.reports.map((report, idx) => (
+                                                <tr key={idx} className={isDark ? 'hover:bg-gray-800' : 'hover:bg-white'}>
+                                                  <td className="px-3 py-2 whitespace-nowrap">
+                                                    {new Date(report.createdAt || report.reportDate).toLocaleDateString('en-US', { 
+                                                      month: 'short', 
+                                                      day: 'numeric',
+                                                      year: 'numeric'
+                                                    })}
+                                                  </td>
+                                                  <td className="px-3 py-2">{report.growthStage || 'N/A'}</td>
+                                                  <td className="px-3 py-2">
+                                                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                                                      report.healthStatus === 'Healthy' ? 'bg-green-100 text-green-800' :
+                                                      report.healthStatus === 'Warning' ? 'bg-yellow-100 text-yellow-800' :
+                                                      report.healthStatus === 'Critical' ? 'bg-red-100 text-red-800' :
+                                                      'bg-gray-100 text-gray-600'
+                                                    }`}>
+                                                      {report.healthStatus || 'Unknown'}
+                                                    </span>
+                                                  </td>
+                                                  <td className="px-3 py-2">{report.plantHeight || 'N/A'} cm</td>
+                                                  <td className="px-3 py-2 max-w-xs truncate">{report.pestsAndDiseases || 'None'}</td>
+                                                  <td className="px-3 py-2 max-w-xs truncate">{report.notes || '-'}</td>
+                                                </tr>
+                                              ))}
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  )}
+                                </React.Fragment>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <div className="text-center py-12 text-gray-500">
+                        <span className="text-6xl">🌱</span>
+                        <p className="mt-4 text-xl">No active crops</p>
+                        <p className="text-sm">This farmer hasn't planted any crops yet</p>
+                      </div>
+                    )}
                   </div>
                 )}
 

@@ -1,83 +1,147 @@
-import { rnd, pick, randomDateBetweenDaysAgo, wait } from './util.js';
-
-export async function seedUserPreferences(prisma, { perUser = 3 } = {}) {
-  const users = await prisma.account.findMany({ select: { id: true } });
-  const keys = ['language', 'notifications_email', 'dark_mode', 'sms_alerts'];
-  for (const u of users) {
-    const n = rnd.number.int({ min: 1, max: perUser });
-    const chosen = rnd.helpers.shuffle(keys).slice(0, n);
+export async function seedUserPreferences(prisma) {
+  // Simplified - just set basic preferences for all users
+  const users = await prisma.account.findMany({ 
+    where: { access: 'User' }, 
+    select: { id: true } 
+  });
+  
+  for (const user of users) {
     await prisma.userPreference.createMany({
-      data: chosen.map((k) => ({ userId: u.id, key: k, value: pick(['true', 'false', 'en', 'tl']) })),
+      data: [
+        { userId: user.id, key: 'language', value: 'en' },
+        { userId: user.id, key: 'notifications_email', value: 'true' },
+      ],
       skipDuplicates: true,
     });
   }
+  
+  console.log(`✅ Created preferences for ${users.length} users`);
 }
 
-export async function seedRegisteredCrops(prisma, { perUserMax = 3 } = {}) {
-  const users = await prisma.account.findMany({ where: { access: 'User' }, select: { id: true } });
-  const crops = ['Rice', 'Corn', 'Vegetables', 'Coconut', 'Banana', 'Coffee'];
-  const varieties = ['IR64', 'Sweet Corn', 'Tomato', 'Eggplant', 'Robusta', 'Cavendish'];
-  const statuses = ['Active', 'Inactive', 'Completed', 'Archived'];
-  const stages = ['Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Maturity', 'Harvested'];
-  let created = 0;
-  for (const u of users) {
-    const n = rnd.number.int({ min: 0, max: perUserMax });
-    for (let i = 0; i < n; i++) {
-      const plant = randomDateBetweenDaysAgo(540, 120);
-      const expectedHarvest = new Date(plant.getTime() + rnd.number.int({ min: 60, max: 180 }) * 24 * 60 * 60 * 1000);
-      const crop = await prisma.registeredCrop.create({
+export async function seedRegisteredCrops(prisma) {
+  // Get all users (excluding admin)
+  const users = await prisma.account.findMany({ 
+    where: { access: 'User' }, 
+    select: { id: true, username: true },
+    orderBy: { createdAt: 'asc' }
+  });
+
+  // Get all guidelines
+  const guidelines = await prisma.cropGuideline.findMany({
+    select: { id: true, name: true }
+  });
+
+  // Define which users get how many crops
+  // Users 1-6: 1-2 crops each (will have reports)
+  // Users 7-9: 1-2 crops each (no reports)
+  
+  const cropAssignments = [
+    // User 1: Juan - 2 crops
+    { 
+      userIndex: 0, 
+      crops: [
+        { guidelineName: 'Rice (Inbred)', variety: 'NSIC Rc222', area: 1.5, daysAgo: 90 },
+        { guidelineName: 'Corn (Sweet Corn)', variety: 'Sweet Grande', area: 0.8, daysAgo: 60 }
+      ]
+    },
+    // User 2: Maria - 2 crops
+    { 
+      userIndex: 1, 
+      crops: [
+        { guidelineName: 'Tomato', variety: 'Diamante Max', area: 0.5, daysAgo: 75 },
+        { guidelineName: 'Eggplant', variety: 'Mara', area: 0.6, daysAgo: 80 }
+      ]
+    },
+    // User 3: Pedro - 1 crop
+    { 
+      userIndex: 2, 
+      crops: [
+        { guidelineName: 'Rice (Inbred)', variety: 'PSB Rc18', area: 2.0, daysAgo: 100 }
+      ]
+    },
+    // User 4: Ana - 2 crops
+    { 
+      userIndex: 3, 
+      crops: [
+        { guidelineName: 'Mongo (Mung Bean)', variety: 'Pagasa 3', area: 1.0, daysAgo: 50 },
+        { guidelineName: 'Peanut (Groundnut)', variety: 'PN 19', area: 0.7, daysAgo: 85 }
+      ]
+    },
+    // User 5: Jose - 1 crop
+    { 
+      userIndex: 4, 
+      crops: [
+        { guidelineName: 'Sweet Potato (Kamote)', variety: 'VSP', area: 1.2, daysAgo: 70 }
+      ]
+    },
+    // User 6: Rosa - 2 crops
+    { 
+      userIndex: 5, 
+      crops: [
+        { guidelineName: 'Cassava (Kamoteng Kahoy)', variety: 'Lakan 1', area: 1.5, daysAgo: 200 },
+        { guidelineName: 'Corn (Sweet Corn)', variety: 'Honey Bantam', area: 0.9, daysAgo: 55 }
+      ]
+    },
+    // User 7: Carlos - 1 crop (NO REPORTS)
+    { 
+      userIndex: 6, 
+      crops: [
+        { guidelineName: 'Banana (Lakatan)', variety: 'Lakatan', area: 0.8, daysAgo: 180 }
+      ]
+    },
+    // User 8: Elena - 2 crops (NO REPORTS)
+    { 
+      userIndex: 7, 
+      crops: [
+        { guidelineName: 'Tomato', variety: 'Apollo', area: 0.4, daysAgo: 65 },
+        { guidelineName: 'Eggplant', variety: 'Morena', area: 0.5, daysAgo: 70 }
+      ]
+    },
+    // User 9: Roberto - 1 crop (NO REPORTS)
+    { 
+      userIndex: 8, 
+      crops: [
+        { guidelineName: 'Mango', variety: 'Carabao', area: 1.0, daysAgo: 730 }
+      ]
+    },
+  ];
+
+  let totalCrops = 0;
+
+  for (const assignment of cropAssignments) {
+    const user = users[assignment.userIndex];
+    if (!user) continue;
+
+    for (const cropData of assignment.crops) {
+      const guideline = guidelines.find(g => g.name === cropData.guidelineName);
+      if (!guideline) continue;
+
+      const plantingDate = new Date();
+      plantingDate.setDate(plantingDate.getDate() - cropData.daysAgo);
+
+      const expectedHarvest = new Date(plantingDate);
+      expectedHarvest.setDate(expectedHarvest.getDate() + 120); // Default 120 days
+
+      await prisma.registeredCrop.create({
         data: {
-          userId: u.id,
-          cropType: pick(crops),
-          variety: pick(varieties),
-          plantingDate: plant,
+          userId: user.id,
+          guidelineId: guideline.id,
+          cropType: cropData.guidelineName,
+          variety: cropData.variety,
+          plantingDate,
           expectedHarvest,
-          area: parseFloat((Math.random() * 2 + 0.1).toFixed(2)),
-          status: pick(statuses),
-          currentStage: pick(stages),
-          expectedYield: parseFloat((Math.random() * 500 + 50).toFixed(2)),
-          notes: Math.random() < 0.3 ? rnd.lorem.sentence() : null,
-          createdAt: randomDateBetweenDaysAgo(540, 0),
+          area: cropData.area,
+          status: 'Active',
+          currentStage: 'Vegetative',
+          currentStageIndex: 2,
+          expectedYield: cropData.area * 1000, // Simple calculation
+          notes: `Following ${cropData.guidelineName} guideline`,
         },
       });
-      created++;
-
-      // monthly reports over lifetime
-      const months = rnd.number.int({ min: 2, max: 8 });
-      for (let m = 0; m < months; m++) {
-        const reportDate = randomDateBetweenDaysAgo(360, 0);
-        
-        // Prepare JSON fields
-        const costsObj = { seeds: Math.random() * 1000, labor: Math.random() * 3000 };
-        const weatherSnapshotObj = { temp: 30 + Math.random() * 5, humidity: 60 + Math.random() * 20 };
-        
-        await prisma.cropMonthlyReport.create({
-          data: {
-            cropId: crop.id,
-            reportDate,
-            growthStage: pick(stages),
-            plantHeight: parseFloat((Math.random() * 150).toFixed(1)),
-            healthStatus: pick(['Good', 'Fair', 'Poor']),
-            estimatedYield: parseFloat((Math.random() * 500 + 20).toFixed(2)),
-            weatherImpact: pick(['None', 'Rain', 'Dry Spell', 'Storm']),
-            notes: Math.random() < 0.4 ? rnd.lorem.sentence() : null,
-            pestsObserved: Math.random() < 0.3 ? 'APHIDS' : null,
-            diseasesObserved: Math.random() < 0.2 ? 'BLIGHT' : null,
-            fertilizersApplied: Math.random() < 0.5 ? 'NPK' : null,
-            pesticideApplications: Math.random() < 0.4 ? 'Pyrethroids' : null,
-            irrigationFrequency: pick(['Daily','Weekly','Biweekly','None']),
-            soilCondition: pick(['Loam','Clay','Sandy']),
-            majorActivities: pick(['Weeding','Fertilizing','Irrigation','Harvest Planning']),
-            challenges: Math.random() < 0.3 ? 'Labor shortage' : null,
-            plannedActions: Math.random() < 0.3 ? 'Apply bio-fertilizer' : null,
-            actualYield: Math.random() < 0.2 ? parseFloat((Math.random() * 500).toFixed(2)) : null,
-            costs: JSON.stringify(costsObj),
-            weatherSnapshot: JSON.stringify(weatherSnapshotObj),
-            createdAt: randomDateBetweenDaysAgo(360, 0),
-          },
-        });
-      }
-      if (created % 20 === 0) await wait(10);
+      
+      totalCrops++;
     }
   }
+
+  console.log(`✅ Created ${totalCrops} registered crops for ${users.length} farmers`);
 }
