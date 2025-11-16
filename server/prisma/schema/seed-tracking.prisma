@@ -1,32 +1,41 @@
 model RegisteredCrop {
-  id                 String              @id @default(cuid())
-  userId             String
-  guidelineId        String? // Reference to CropGuideline
-  cropType           String
-  variety            String
-  plantingDate       DateTime
-  expectedHarvest    DateTime?
-  area               Float?
-  status             CropStatus          @default(Active)
-  currentStage       GrowthStage         @default(Seedling)
-  currentStageIndex  Int?                @default(0) // Track which guideline stage (0-based index)
-  expectedYield      Float?
-  notes              String?
-  archiveReason      String? // Reason for archiving
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  reports            CropMonthlyReport[]
-  user               Account             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  guideline          CropGuideline?      @relation(fields: [guidelineId], references: [id], onDelete: SetNull)
+  id                    String              @id @default(cuid())
+  userId                String
+  guidelineId           String              // REQUIRED: Reference to CropGuideline
+  cropType              String
+  variety               String
+  plantingDate          DateTime
+  expectedHarvest       DateTime?
+  area                  Float?
+  status                CropStatus          @default(Active)
+  currentStageIndex     Int                 @default(0) // Track which guideline stage (0-based index)
+  currentStageName      String?             // Name of current stage from guideline
+  currentStageStartDate DateTime?           // When current stage started
+  currentStageEndDate   DateTime?           // When current stage should end
+  canSubmitReport       Boolean             @default(true) // Can submit report for current stage
+  lastReportDate        DateTime?           // Date of last submitted report
+  totalStages           Int?                // Total number of stages from guideline
+  completedStages       Int                 @default(0) // How many stages have reports
+  notes                 String?
+  archiveReason         String?             // Reason for archiving
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  reports               CropMonthlyReport[]
+  messages              CropStageMessage[]  // Messages about this crop
+  user                  Account             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guideline             CropGuideline       @relation(fields: [guidelineId], references: [id], onDelete: Restrict)
 
   @@index([userId, cropType, status])
   @@index([guidelineId])
+  @@index([currentStageIndex, canSubmitReport])
   @@map("registered_crops")
 }
 
 model CropMonthlyReport {
   id                    String              @id @default(cuid())
   cropId                String
+  stageIndex            Int                 // Which stage this report is for (0-based)
+  stageName             String              // Name of the stage being reported
   plantHeight           Float?
   healthStatus          String?
   weatherImpact         String?
@@ -47,6 +56,7 @@ model CropMonthlyReport {
   feedback              ReportFeedback[]
 
   @@index([cropId, createdAt])
+  @@index([cropId, stageIndex])
   @@map("crop_monthly_reports")
 }
 
@@ -66,6 +76,28 @@ model ReportFeedback {
   @@index([reportId, createdAt])
   @@index([parentId])
   @@map("report_feedback")
+}
+
+model CropStageMessage {
+  id                String           @id @default(cuid())
+  cropId            String
+  userId            String           // Who sent the message
+  stageIndex        Int              // Which stage this message is about
+  stageName         String           // Name of the stage
+  message           String           @db.Text
+  isAdminReply      Boolean          @default(false) // True if admin is replying
+  parentId          String?          // For threaded replies
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  crop              RegisteredCrop   @relation(fields: [cropId], references: [id], onDelete: Cascade)
+  user              Account          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent            CropStageMessage? @relation("MessageReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies           CropStageMessage[] @relation("MessageReplies")
+
+  @@index([cropId, createdAt])
+  @@index([cropId, stageIndex])
+  @@index([parentId])
+  @@map("crop_stage_messages")
 }
 
 enum CropStatus {

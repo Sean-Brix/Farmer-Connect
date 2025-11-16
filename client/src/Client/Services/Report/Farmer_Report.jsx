@@ -43,6 +43,12 @@ export default function Farmer_Report() {
   const [selectedCropInSidebar, setSelectedCropInSidebar] = useState(null);
   const [selectedStageView, setSelectedStageView] = useState(null); // For viewing past reports
 
+  // Stage comment system states
+  const [showStageCommentModal, setShowStageCommentModal] = useState(false);
+  const [selectedCropForComment, setSelectedCropForComment] = useState(null);
+  const [stageCommentText, setStageCommentText] = useState('');
+  const [stageComments, setStageComments] = useState([]); // Will fetch from backend later
+
   // Form states
   const [newCrop, setNewCrop] = useState({
     guidelineId: '',
@@ -50,7 +56,6 @@ export default function Farmer_Report() {
     variety: '',
     plantingDate: '',
     area: '',
-    expectedYield: '',
     currentStage: 'Seedling',
     notes: ''
   });
@@ -234,6 +239,81 @@ export default function Farmer_Report() {
     setCurrentPage(1);
   }, [searchTerm, selectedCategory]);
 
+  // Fetch messages when modal opens
+  useEffect(() => {
+    if (showStageCommentModal && selectedCropForComment) {
+      fetchMessages();
+    }
+  }, [showStageCommentModal, selectedCropForComment]);
+
+  // Fetch messages for selected crop
+  const fetchMessages = async () => {
+    if (!selectedCropForComment?.id) return;
+    
+    try {
+      const response = await fetch(`/api/seed-track/crops/${selectedCropForComment.id}/messages?userId=${accountData?.id}`);
+      if (!response.ok) throw new Error('Failed to fetch messages');
+      
+      const data = await response.json();
+      if (data.success) {
+        // Flatten messages with replies for display
+        const formattedMessages = [];
+        // Reverse to show oldest first (newest at bottom like chat)
+        const reversedData = [...data.data].reverse();
+        reversedData.forEach(msg => {
+          formattedMessages.push({
+            text: msg.message,
+            isAdmin: msg.isAdminReply,
+            createdAt: msg.createdAt,
+            userId: msg.userId
+          });
+          // Add replies
+          if (msg.replies && msg.replies.length > 0) {
+            msg.replies.forEach(reply => {
+              formattedMessages.push({
+                text: reply.message,
+                isAdmin: reply.isAdminReply,
+                createdAt: reply.createdAt,
+                userId: reply.userId
+              });
+            });
+          }
+        });
+        setStageComments(formattedMessages);
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
+
+  // Submit new message
+  const submitMessage = async () => {
+    if (!stageCommentText.trim() || !selectedCropForComment?.id) return;
+    
+    try {
+      const response = await fetch(`/api/seed-track/crops/${selectedCropForComment.id}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          message: stageCommentText,
+          userId: accountData?.id // Pass userId explicitly
+        })
+      });
+      
+      if (!response.ok) throw new Error('Failed to send message');
+      
+      const data = await response.json();
+      if (data.success) {
+        // Refresh messages
+        await fetchMessages();
+        setStageCommentText('');
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      alert('Failed to send message. Please try again.');
+    }
+  };
+
   // Derive farmer profile from account data (fallbacks provided)
   const farmerProfile = useMemo(() => ({
     id: accountData?.id || 1,
@@ -268,7 +348,7 @@ export default function Farmer_Report() {
     
     // Check if farmer has submitted report for current month
     const hasCurrentMonthReport = crop.reports?.some(report => {
-      const reportDate = new Date(report.reportDate);
+      const reportDate = new Date(report.createdAt);
       return reportDate.getMonth() === currentMonth && reportDate.getFullYear() === currentYear;
     });
     
@@ -639,11 +719,11 @@ export default function Farmer_Report() {
                 </div>
               </div>
 
-              {/* Active Crops Section */}
+              {/* Active Crops Section - Table View */}
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                    🌱 Active Crops
+                    🌱 My Crops
                   </h2>
                   <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
                     {registeredCrops.filter(c => c.status === 'Active').length} crops in progress
@@ -651,21 +731,89 @@ export default function Farmer_Report() {
                 </div>
 
                 {registeredCrops.filter(c => c.status === 'Active').length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {registeredCrops
-                      .filter(c => c.status === 'Active')
-                      .map(crop => (
-                        <CropCard 
-                          key={crop.id}
-                          crop={crop}
-                          theme={theme}
-                          weatherData={weatherData}
-                          onViewDetails={(selectedCrop) => {
-                            setSelectedCropInSidebar(selectedCrop);
-                            setActiveTab('reports');
-                          }}
-                        />
-                      ))}
+                  <div className={`rounded-xl border overflow-hidden ${
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  }`}>
+                    <table className="w-full">
+                      <thead className={theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}>
+                        <tr>
+                          <th className={`px-4 py-3 text-left text-xs font-semibold ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                          }`}>Crop</th>
+                          <th className={`px-4 py-3 text-left text-xs font-semibold ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                          }`}>Variety</th>
+                          <th className={`px-4 py-3 text-left text-xs font-semibold ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                          }`}>Current Stage</th>
+                          <th className={`px-4 py-3 text-left text-xs font-semibold ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                          }`}>Progress</th>
+                          <th className={`px-4 py-3 text-left text-xs font-semibold ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                          }`}>Area</th>
+                          <th className={`px-4 py-3 text-left text-xs font-semibold ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                          }`}>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {registeredCrops
+                          .filter(c => c.status === 'Active')
+                          .map((crop, idx) => (
+                            <React.Fragment key={crop.id}>
+                              {/* Main Row */}
+                              <tr className={`border-t ${
+                                theme === 'dark' ? 'border-gray-700 hover:bg-gray-700/50' : 'border-gray-200 hover:bg-gray-50'
+                              } transition-colors`}>
+                                <td className={`px-4 py-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                                  <div className="flex items-center gap-3">
+                                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                                      theme === 'dark' ? 'bg-gray-600' : 'bg-gray-100'
+                                    }`}>
+                                      <span className="text-lg">🌱</span>
+                                    </div>
+                                    <span className="font-semibold">{crop.cropType}</span>
+                                  </div>
+                                </td>
+                                <td className={`px-4 py-4 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                  {crop.variety}
+                                </td>
+                                <td className={`px-4 py-4 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                  {crop.currentStageName || 'N/A'}
+                                </td>
+                                <td className={`px-4 py-4 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                  <div className="flex items-center gap-2">
+                                    <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                                      theme === 'dark' ? 'bg-blue-900 text-blue-200' : 'bg-blue-100 text-blue-700'
+                                    }`}>
+                                      {crop.currentStageIndex + 1 || 1}/{crop.totalStages || '?'}
+                                    </span>
+                                  </div>
+                                </td>
+                                <td className={`px-4 py-4 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                  {crop.area} ha
+                                </td>
+                                <td className="px-4 py-4">
+                                  <button
+                                    onClick={() => {
+                                      setSelectedCropInSidebar(crop);
+                                      setActiveTab('reports');
+                                    }}
+                                    className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+                                      theme === 'dark'
+                                        ? 'bg-green-900 text-green-200 hover:bg-green-800'
+                                        : 'bg-green-100 text-green-700 hover:bg-green-200'
+                                    }`}
+                                  >
+                                    📊 View Report
+                                  </button>
+                                </td>
+                              </tr>
+                            </React.Fragment>
+                          ))}
+                      </tbody>
+                    </table>
                   </div>
                 ) : (
                   <div className={`rounded-xl border-2 border-dashed p-12 text-center ${
@@ -896,6 +1044,10 @@ export default function Farmer_Report() {
                           onSubmitReport={(selectedCrop) => {
                             setSelectedCropForReport(selectedCrop);
                             setShowDetailedReportModal(true);
+                          }}
+                          onMessageAdmin={(selectedCrop) => {
+                            setSelectedCropForComment(selectedCrop);
+                            setShowStageCommentModal(true);
                           }}
                           onStageClick={(stageIndex) => {
                             setSelectedStageView(stageIndex);
@@ -2376,6 +2528,125 @@ export default function Farmer_Report() {
                 <button onClick={() => setShowCropDetail(false)}
                   className={`px-4 py-2 rounded-lg transition-colors ${theme === 'dark' ? 'bg-gray-600 text-white hover:bg-gray-500' : 'bg-gray-600 text-white hover:bg-gray-700'}`}>
                   Close Guide
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Stage Comment Modal */}
+        {showStageCommentModal && selectedCropForComment && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className={`w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl ${
+              theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+            }`}>
+              {/* Modal Header */}
+              <div className={`px-6 py-4 border-b ${
+                theme === 'dark' ? 'bg-gradient-to-r from-green-900/50 to-green-800/50 border-gray-600' : 'bg-gradient-to-r from-green-50 to-green-100 border-gray-200'
+              }`}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                      💬 Message with Admin
+                    </h3>
+                    <p className={`text-sm mt-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                      {selectedCropForComment.cropType} - {selectedCropForComment.variety} • Stage: {selectedCropForComment.currentStageName}
+                    </p>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      setShowStageCommentModal(false);
+                      setStageCommentText('');
+                    }}
+                    className={`flex items-center justify-center w-8 h-8 rounded-lg transition-all ${
+                      theme === 'dark' ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700' : 'text-gray-500 hover:text-gray-700 hover:bg-white/80'
+                    }`}
+                  >
+                    <span className="text-xl font-light">&times;</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-6 space-y-4">
+                {/* Comments Thread */}
+                <div>
+                  {stageComments.length > 0 ? (
+                    <div className="space-y-3 max-h-64 overflow-y-auto">
+                      {stageComments.map((comment, idx) => (
+                        <div key={idx} className={`p-3 rounded-lg ${
+                          comment.isAdmin 
+                            ? theme === 'dark' ? 'bg-green-900/30 border-l-4 border-green-500' : 'bg-green-50 border-l-4 border-green-500'
+                            : theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'
+                        }`}>
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-sm font-semibold">
+                              {comment.isAdmin ? '👨‍💼 Admin' : '👤 You'}
+                            </span>
+                            <span className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                              {new Date(comment.createdAt).toLocaleString()}
+                            </span>
+                          </div>
+                          <p className={`text-sm ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>
+                            {comment.text}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className={`p-6 text-center rounded-lg border-2 border-dashed ${
+                      theme === 'dark' ? 'bg-gray-700/50 border-gray-600 text-gray-400' : 'bg-gray-50 border-gray-300 text-gray-500'
+                    }`}>
+                      <span className="text-3xl block mb-2">💭</span>
+                      <p className="text-sm">No comments yet. Start the conversation!</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* New Message Form */}
+                <div>
+                  <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    Your Message
+                  </label>
+                  <textarea
+                    value={stageCommentText}
+                    onChange={(e) => setStageCommentText(e.target.value)}
+                    placeholder="Type your message to the admin here..."
+                    rows={4}
+                    className={`w-full px-4 py-3 rounded-lg border text-sm ${
+                      theme === 'dark'
+                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-green-500'
+                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-green-500'
+                    } focus:outline-none focus:ring-2 focus:ring-green-500/50`}
+                  />
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className={`px-6 py-4 border-t flex justify-end gap-3 ${
+                theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+              }`}>
+                <button
+                  onClick={() => {
+                    setShowStageCommentModal(false);
+                    setStageCommentText('');
+                  }}
+                  className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                    theme === 'dark' ? 'bg-gray-600 text-white hover:bg-gray-500' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={submitMessage}
+                  disabled={!stageCommentText.trim()}
+                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                    stageCommentText.trim()
+                      ? 'bg-green-600 text-white hover:bg-green-700 shadow-lg'
+                      : 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                  }`}
+                >
+                  📤 Send Message
                 </button>
               </div>
             </div>

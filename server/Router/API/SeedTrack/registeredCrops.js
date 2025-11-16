@@ -1,5 +1,6 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
+import { getCurrentStageInfo, initializeCropStages } from '../../../Services/stageProgressionService.js';
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -93,7 +94,9 @@ router.get('/:id', async (req, res) => {
     const crop = await prisma.registeredCrop.findUnique({
       where: { id: req.params.id },
       include: { 
-        reports: true,
+        reports: {
+          orderBy: { stageIndex: 'asc' }
+        },
         guideline: {
           include: {
             stages: {
@@ -109,39 +112,114 @@ router.get('/:id', async (req, res) => {
     if (crop.reports && Array.isArray(crop.reports)) {
       crop.reports = crop.reports.map(parseReportJsonFields);
     }
+
+    // Get current stage information
+    const stageInfo = await getCurrentStageInfo(crop.id);
     
-    res.json({ success: true, data: crop });
+    res.json({ 
+      success: true, 
+      data: crop,
+      stageInfo: stageInfo 
+    });
   } catch (error) {
     console.error('[SeedTrack][Crops][GET] Error:', error);
     res.status(500).json({ success: false, message: 'Failed to get crop' });
   }
 });
 
+// GET /api/seed-track/crops/:id/stage-info - Get current stage information
+router.get('/:id/stage-info', async (req, res) => {
+  try {
+    const stageInfo = await getCurrentStageInfo(req.params.id);
+    
+    if (!stageInfo) {
+      return res.status(404).json({ success: false, message: 'Crop not found or no stage information available' });
+    }
+
+    res.json({ success: true, stageInfo: stageInfo });
+  } catch (error) {
+    console.error('[SeedTrack][Crops][STAGE_INFO] Error:', error);
+    res.status(500).json({ success: false, message: 'Failed to get stage info', error: error.message });
+  }
+});
+
 // POST /api/seed-track/crops
 router.post('/', async (req, res) => {
   try {
-    const { userId, guidelineId, cropType, variety, plantingDate, expectedHarvest, area, expectedYield, currentStage, notes } = req.body || {};
-    if (!userId || !cropType || !variety || !plantingDate) {
-      return res.status(400).json({ success: false, message: 'userId, cropType, variety, plantingDate are required' });
+    const { userId, guidelineId, cropType, variety, plantingDate, expectedHarvest, area, notes } = req.body || {};
+    
+    // Validate required fields
+    if (!userId || !guidelineId || !cropType || !variety || !plantingDate) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'userId, guidelineId, cropType, variety, and plantingDate are required' 
+      });
     }
+
+    // Verify guideline exists and has stages
+    const guideline = await prisma.cropGuideline.findUnique({
+      where: { id: guidelineId },
+      include: {
+        stages: {
+          orderBy: { sequenceOrder: 'asc' }
+        }
+      }
+    });
+
+    if (!guideline) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Guideline not found' 
+      });
+    }
+
+    if (!guideline.stages || guideline.stages.length === 0) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Guideline must have at least one stage defined' 
+      });
+    }
+
+    // Create the crop
     const data = {
       userId,
-      guidelineId: guidelineId || null,
+      guidelineId,
       cropType,
       variety,
       plantingDate: new Date(plantingDate),
       expectedHarvest: expectedHarvest ? new Date(expectedHarvest) : null,
       area: area != null ? Number(area) : null,
-      expectedYield: expectedYield != null ? Number(expectedYield) : null,
-      currentStage: currentStage || 'Seedling',
-      currentStageIndex: guidelineId ? 0 : null, // Start at first stage if guideline is selected
       notes: notes || null,
+      status: 'Active'
     };
+
     const created = await prisma.registeredCrop.create({ data });
-    res.status(201).json({ success: true, data: created });
+
+    // Initialize stage tracking
+    await initializeCropStages(created.id);
+
+    // Fetch updated crop with stage info
+    const cropWithStages = await prisma.registeredCrop.findUnique({
+      where: { id: created.id },
+      include: {
+        guideline: {
+          include: {
+            stages: {
+              orderBy: { sequenceOrder: 'asc' }
+            }
+          }
+        }
+      }
+    });
+
+    res.status(201).json({ 
+      success: true, 
+      data: cropWithStages,
+      message: `Crop registered successfully! Current stage: ${cropWithStages.currentStageName}` 
+    });
   } catch (error) {
     console.error('[SeedTrack][Crops][CREATE] Error:', error);
-    res.status(500).json({ success: false, message: 'Failed to create crop' });
+    res.status(500).json({ success: false, message: 'Failed to create crop', error: error.message });
   }
 });
 

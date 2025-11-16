@@ -1,5 +1,6 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
+import { canSubmitReportForStage, advanceToNextStage, getCurrentStageInfo } from '../../../Services/stageProgressionService.js';
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -172,8 +173,36 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ success: false, message: 'cropId is required' });
     }
 
+    // Get the crop with guideline to validate stage progression
+    const crop = await prisma.registeredCrop.findUnique({
+      where: { id: cropId },
+      include: {
+        guideline: {
+          include: { stages: { orderBy: { stageNumber: 'asc' } } }
+        }
+      }
+    });
+
+    if (!crop) {
+      return res.status(404).json({ success: false, message: 'Crop not found' });
+    }
+
+    // Validate if farmer can submit report for current stage
+    const validation = await canSubmitReportForStage(crop);
+    if (!validation.canSubmit) {
+      return res.status(400).json({ 
+        success: false, 
+        message: validation.reason,
+        daysRemaining: validation.daysRemaining,
+        currentStage: crop.currentStageName,
+        stageIndex: crop.currentStageIndex
+      });
+    }
+
     const data = {
       cropId,
+      stageIndex: crop.currentStageIndex,
+      stageName: crop.currentStageName,
       plantHeight: plantHeight != null ? Number(plantHeight) : null,
       healthStatus: healthStatus || null,
       weatherImpact: weatherImpact || null,
@@ -195,10 +224,23 @@ router.post('/', async (req, res) => {
 
     const created = await prisma.cropMonthlyReport.create({ data: stringifiedData });
 
+    // Advance to next stage after successful report submission
+    const updatedCrop = await advanceToNextStage(crop);
+
+    // Get updated stage info
+    const stageInfo = await getCurrentStageInfo(updatedCrop);
+
     // Parse JSON fields back for response
     const parsedCreated = parseReportJsonFields(created);
 
-    res.status(201).json({ success: true, data: parsedCreated });
+    res.status(201).json({ 
+      success: true, 
+      data: parsedCreated,
+      stageInfo: stageInfo,
+      message: stageInfo.isCompleted 
+        ? 'Report submitted successfully! All stages completed.' 
+        : `Report submitted successfully! Advanced to stage ${stageInfo.currentStageIndex + 1}/${stageInfo.totalStages}: ${stageInfo.currentStageName}`
+    });
   } catch (error) {
     console.error('[SeedTrack][Reports][CREATE] Error:', error);
     res.status(500).json({ success: false, message: 'Failed to create report' });

@@ -79,9 +79,47 @@ function Seed_Track() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [showGuidelineModal, setShowGuidelineModal] = useState(false);
+  
+  // Messages state
+  const [pendingMessages, setPendingMessages] = useState([]);
+  const [messagesLoading, setMessagesLoading] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [replyText, setReplyText] = useState('');
+  const [collapsedCrops, setCollapsedCrops] = useState(new Set()); // Track collapsed crop messages
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [guidelineToDelete, setGuidelineToDelete] = useState(null);
   const [editingGuideline, setEditingGuideline] = useState(null);
+  const [adminId, setAdminId] = useState(null); // Store admin user ID
+
+  // Fetch admin ID on mount
+  React.useEffect(() => {
+    const fetchAdminId = async () => {
+      try {
+        const response = await fetch('/api/account/details/me');
+        const data = await response.json();
+        if (response.ok && data.id) {
+          setAdminId(data.id);
+        }
+      } catch (error) {
+        console.error('Error fetching admin ID:', error);
+      }
+    };
+    fetchAdminId();
+  }, []);
+
+  // Fetch messages when Messages main tab is opened
+  React.useEffect(() => {
+    if (activeTab === 'messages') {
+      fetchPendingMessages();
+    }
+  }, [activeTab]);
+
+  // Fetch messages when farmer Messages sub-tab is opened
+  React.useEffect(() => {
+    if (activeTab === 'farmer' && selectedFarmerTab === 'messages') {
+      fetchPendingMessages();
+    }
+  }, [activeTab, selectedFarmerTab]);
 
   // Seed tracking helpers mapping to existing UI expectations
   const getBBCHStages = (cropType) => {
@@ -170,6 +208,101 @@ function Seed_Track() {
     } catch (error) {
       console.error('Complete error:', error);
       showAlert('Failed to complete crop', 'error');
+    }
+  };
+
+  // Messages management functions
+  const fetchPendingMessages = async () => {
+    setMessagesLoading(true);
+    try {
+      const res = await fetch('/api/seed-track/messages/pending');
+      if (!res.ok) throw new Error('Failed to fetch messages');
+      const data = await res.json();
+      if (data.success) {
+        setPendingMessages(data.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      showAlert('Failed to load messages', 'error');
+    } finally {
+      setMessagesLoading(false);
+    }
+  };
+
+  // Group messages by farmer
+  const farmerMessagesMap = useMemo(() => {
+    const map = new Map();
+    pendingMessages.forEach(msg => {
+      const userId = msg.user.id;
+      if (!map.has(userId)) {
+        map.set(userId, {
+          user: msg.user,
+          messages: [],
+          lastMessageDate: msg.createdAt
+        });
+      }
+      map.get(userId).messages.push(msg);
+      // Update last message date if this message is newer
+      if (new Date(msg.createdAt) > new Date(map.get(userId).lastMessageDate)) {
+        map.get(userId).lastMessageDate = msg.createdAt;
+      }
+    });
+    return map;
+  }, [pendingMessages]);
+
+  // Open farmer's tab with messages
+  const openFarmerMessages = (userId) => {
+    const farmer = farmers.find(f => f.id === userId);
+    if (farmer) {
+      openFarmerTab({ 
+        farmerId: farmer.id, 
+        name: farmer.name, 
+        ...farmer 
+      });
+      setSelectedFarmerTab('messages');
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
+    }
+  };
+
+  const sendReply = async (messageId, cropId) => {
+    if (!replyText.trim()) return;
+    if (!adminId) {
+      showAlert('Admin session not found. Please refresh the page.', 'error');
+      return;
+    }
+    
+    try {
+      const res = await fetch(`/api/seed-track/messages/${messageId}/reply`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          message: replyText,
+          userId: adminId
+        })
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to send reply');
+      }
+      
+      showAlert('Reply sent successfully', 'success');
+      setReplyText('');
+      setSelectedMessage(null);
+      
+      // Collapse the crop message section after sending
+      if (cropId) {
+        const newCollapsed = new Set(collapsedCrops);
+        newCollapsed.add(cropId);
+        setCollapsedCrops(newCollapsed);
+      }
+      
+      fetchPendingMessages(); // Refresh list
+    } catch (error) {
+      console.error('Error sending reply:', error);
+      showAlert(error.message || 'Failed to send reply', 'error');
     }
   };
 
@@ -451,6 +584,20 @@ function Seed_Track() {
                   </svg>
                   <span className="hidden sm:inline">Crop Guidelines</span>
                   <span className="sm:hidden">Guidelines</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('messages')}
+                  className={`py-3 px-1 text-sm font-semibold border-b-2 whitespace-nowrap flex items-center gap-2 transition-colors duration-200 ${
+                    activeTab === 'messages'
+                      ? 'border-green-600 text-green-600'
+                      : isDark ? 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Messages
                 </button>
                 
                 {/* Dynamic Farmer Tabs */}
@@ -771,6 +918,120 @@ function Seed_Track() {
           </div>
         )}
 
+        {/* Messages Tab */}
+        {activeTab === 'messages' && (
+          <div>
+            {/* Messages Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className={`text-xl font-semibold flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  💬 Farmers with Pending Messages
+                </h2>
+                <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Click on a farmer to view and reply to their messages</p>
+              </div>
+              <button
+                onClick={fetchPendingMessages}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Refresh
+              </button>
+            </div>
+
+            {messagesLoading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+                <p className={`mt-4 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Loading messages...</p>
+              </div>
+            ) : farmerMessagesMap.size === 0 ? (
+              <div className={`text-center py-16 rounded-lg border-2 border-dashed ${isDark ? 'bg-gray-800 border-gray-600' : 'bg-gray-50 border-gray-300'}`}>
+                <span className="text-6xl block mb-4">📭</span>
+                <h3 className={`text-lg font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>No Pending Messages</h3>
+                <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>All farmer messages have been addressed</p>
+              </div>
+            ) : (
+              <div className={`overflow-x-auto rounded-lg border ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className={isDark ? 'bg-gray-800' : 'bg-gray-50'}>
+                    <tr>
+                      <th scope="col" className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+                        Farmer
+                      </th>
+                      <th scope="col" className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+                        Messages
+                      </th>
+                      <th scope="col" className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+                        Last Message
+                      </th>
+                      <th scope="col" className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+                        Preview
+                      </th>
+                      <th scope="col" className={`px-6 py-3 text-right text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className={`divide-y ${isDark ? 'bg-gray-900 divide-gray-700' : 'bg-white divide-gray-200'}`}>
+                    {Array.from(farmerMessagesMap.values()).map((farmerData) => (
+                      <tr 
+                        key={farmerData.user.id}
+                        className={`transition-colors ${isDark ? 'hover:bg-gray-800' : 'hover:bg-gray-50'}`}
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isDark ? 'bg-blue-900' : 'bg-blue-100'}`}>
+                              <span className="text-lg">👤</span>
+                            </div>
+                            <div className="ml-4">
+                              <div className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                {farmerData.user.firstName} {farmerData.user.surname}
+                              </div>
+                              <div className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                @{farmerData.user.username}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${isDark ? 'bg-red-900/30 text-red-300' : 'bg-red-100 text-red-800'}`}>
+                            {farmerData.messages.length} pending
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>
+                            {new Date(farmerData.lastMessageDate).toLocaleDateString()}
+                          </div>
+                          <div className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                            {new Date(farmerData.lastMessageDate).toLocaleTimeString()}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className={`text-sm max-w-xs truncate ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                            {farmerData.messages[0].message}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <button
+                            onClick={() => openFarmerMessages(farmerData.user.id)}
+                            className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                          >
+                            View & Reply
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+
   {/* Crop Guidelines Tab */}
         {activeTab === 'guidelines' && (
           <div>
@@ -937,17 +1198,17 @@ function Seed_Track() {
                       <span className="hidden sm:inline">Archive</span>
                     </button>
                     <button
-                      onClick={() => setSelectedFarmerTab('analytics')}
+                      onClick={() => setSelectedFarmerTab('messages')}
                       className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
-                        selectedFarmerTab === 'analytics'
+                        selectedFarmerTab === 'messages'
                           ? 'border-green-500 text-gray-900'
                           : isDark ? 'border-transparent text-gray-400 hover:text-gray-200' : 'border-transparent text-gray-600 hover:text-gray-900'
                       }`}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
-                      <span className="hidden sm:inline">Analytics</span>
+                      <span className="hidden sm:inline">Messages</span>
                     </button>
                   </nav>
                 </div>
@@ -1005,7 +1266,7 @@ function Seed_Track() {
                                         latestReport?.healthStatus === 'Critical' ? 'bg-red-100 text-red-800' :
                                         'bg-gray-100 text-gray-600'
                                       }`}>
-                                        {crop.currentStage || latestReport?.growthStage || 'N/A'}
+                                        {crop.currentStageName || crop.currentStage || latestReport?.growthStage || 'N/A'}
                                       </span>
                                     </td>
                                     <td className={`px-4 py-3 whitespace-nowrap text-right text-sm font-medium`}>
@@ -1019,21 +1280,6 @@ function Seed_Track() {
                                           }`}
                                         >
                                           {expandedCropId === crop.id ? 'Hide' : 'View'} Reports ({crop.reports?.length || 0})
-                                        </button>
-                                        <button
-                                          onClick={() => {
-                                            if (window.confirm('Mark this crop as completed/harvested?')) {
-                                              completeCrop(crop.id);
-                                            }
-                                          }}
-                                          className={`px-3 py-1 rounded-md transition-colors ${
-                                            isDark 
-                                              ? 'bg-green-600 hover:bg-green-700 text-white' 
-                                              : 'bg-green-500 hover:bg-green-600 text-white'
-                                          }`}
-                                          title="Mark as completed"
-                                        >
-                                          ✓
                                         </button>
                                         <button
                                           onClick={() => {
@@ -1408,6 +1654,183 @@ function Seed_Track() {
                         })}
                       </div>
                     )}
+                  </div>
+                )}
+
+                {/* Messages Tab */}
+                {selectedFarmerTab === 'messages' && (
+                  <div>
+                    {(() => {
+                      const farmerMessages = pendingMessages.filter(msg => msg.user.id === currentFarmer.id);
+                      
+                      if (farmerMessages.length === 0) {
+                        return (
+                          <div className={`text-center py-16 rounded-lg border-2 border-dashed ${isDark ? 'bg-gray-800 border-gray-600' : 'bg-gray-50 border-gray-300'}`}>
+                            <span className="text-6xl block mb-4">📭</span>
+                            <h3 className={`text-lg font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>No Messages</h3>
+                            <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>This farmer hasn't sent any messages yet</p>
+                          </div>
+                        );
+                      }
+
+                      // Group messages by crop
+                      const messagesByCrop = farmerMessages.reduce((acc, msg) => {
+                        const cropKey = msg.crop.id;
+                        if (!acc[cropKey]) {
+                          acc[cropKey] = {
+                            crop: msg.crop,
+                            messages: [],
+                            allMessages: [],
+                            hasUnreplied: false // Track if there are messages without admin replies
+                          };
+                        }
+                        acc[cropKey].messages.push(msg);
+                        
+                        // Check if this message has no admin replies
+                        if (!msg.replies || msg.replies.length === 0) {
+                          acc[cropKey].hasUnreplied = true;
+                        }
+                        
+                        // Flatten messages with replies for chat display
+                        acc[cropKey].allMessages.push({
+                          ...msg,
+                          isAdminReply: false,
+                          isOriginal: true
+                        });
+                        if (msg.replies && msg.replies.length > 0) {
+                          msg.replies.forEach(reply => {
+                            acc[cropKey].allMessages.push({
+                              ...reply,
+                              isAdminReply: true,
+                              isOriginal: false
+                            });
+                          });
+                        }
+                        
+                        return acc;
+                      }, {});
+
+                      return (
+                        <div className="space-y-3">
+                          {Object.values(messagesByCrop).map((cropData) => {
+                            const isCollapsed = collapsedCrops.has(cropData.crop.id);
+                            
+                            return (
+                              <div key={cropData.crop.id} className={`rounded-lg shadow-lg ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
+                                {/* Collapsible Crop Header */}
+                                <button
+                                  onClick={() => {
+                                    const newCollapsed = new Set(collapsedCrops);
+                                    if (isCollapsed) {
+                                      newCollapsed.delete(cropData.crop.id);
+                                    } else {
+                                      newCollapsed.add(cropData.crop.id);
+                                    }
+                                    setCollapsedCrops(newCollapsed);
+                                  }}
+                                  className={`w-full px-6 py-4 text-left transition-colors ${isDark ? 'hover:bg-gray-750' : 'hover:bg-gray-50'}`}
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-3">
+                                        <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                                          🌾 {cropData.crop.cropType} - {cropData.crop.variety}
+                                        </h3>
+                                        {cropData.hasUnreplied && (
+                                          <span className="relative flex h-3 w-3">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                                          </span>
+                                        )}
+                                      </div>
+                                      <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        {cropData.messages.length} {cropData.messages.length === 1 ? 'message' : 'messages'} • Stage: {cropData.crop.currentStageName || `Stage ${cropData.crop.currentStageIndex + 1}`}
+                                      </p>
+                                    </div>
+                                    <svg 
+                                      className={`w-5 h-5 transition-transform ${isCollapsed ? '' : 'rotate-180'} ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
+                                      fill="none" 
+                                      stroke="currentColor" 
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                  </div>
+                                </button>
+
+                                {/* Collapsible Content */}
+                                {!isCollapsed && (
+                                  <div className={`border-t ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+                                    {/* Chat Thread */}
+                                    <div className="p-6 space-y-4">
+                                      <div className="space-y-3 max-h-96 overflow-y-auto">
+                                        {cropData.allMessages.map((comment, idx) => (
+                                          <div key={idx} className={`p-3 rounded-lg ${
+                                            comment.isAdminReply 
+                                              ? isDark ? 'bg-green-900/30 border-l-4 border-green-500' : 'bg-green-50 border-l-4 border-green-500'
+                                              : isDark ? 'bg-gray-700' : 'bg-gray-100'
+                                          }`}>
+                                            <div className="flex items-center gap-2 mb-2">
+                                              <span className="text-sm font-semibold">
+                                                {comment.isAdminReply ? '👨‍💼 Admin' : `👤 ${currentFarmer.name}`}
+                                              </span>
+                                              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                {new Date(comment.createdAt).toLocaleString()}
+                                              </span>
+                                            </div>
+                                            <p className={`text-sm ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                              {comment.message}
+                                            </p>
+                                          </div>
+                                        ))}
+                                      </div>
+
+                                      {/* Reply Form */}
+                                      <div>
+                                        <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                          Your Reply
+                                        </label>
+                                        <textarea
+                                          value={selectedMessage === cropData.crop.id ? replyText : ''}
+                                          onChange={(e) => {
+                                            setReplyText(e.target.value);
+                                            setSelectedMessage(cropData.crop.id);
+                                          }}
+                                          placeholder="Type your reply here..."
+                                          rows={4}
+                                          className={`w-full px-4 py-3 rounded-lg border text-sm ${
+                                            isDark
+                                              ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-green-500'
+                                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-green-500'
+                                          } focus:outline-none focus:ring-2 focus:ring-green-500/50`}
+                                        />
+                                        <div className="flex justify-end gap-3 mt-3">
+                                          <button
+                                            onClick={() => {
+                                              // Send reply to the last farmer message in this crop
+                                              const lastFarmerMsg = cropData.messages[cropData.messages.length - 1];
+                                              sendReply(lastFarmerMsg.id, cropData.crop.id);
+                                            }}
+                                            disabled={!replyText.trim()}
+                                            className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                                              replyText.trim()
+                                                ? 'bg-green-600 text-white hover:bg-green-700 shadow-lg'
+                                                : 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                                            }`}
+                                          >
+                                            📤 Send Reply
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })()}
                   </div>
                 )}
               </div>

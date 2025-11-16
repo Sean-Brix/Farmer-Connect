@@ -72,6 +72,7 @@ model Account {
   adminTransactions       ItemTransaction[]    @relation("AdminTransactions")
   registeredCrops         RegisteredCrop[]
   reportFeedback          ReportFeedback[]
+  cropStageMessages       CropStageMessage[]   // Messages sent by user
   seminars                SeminarParticipant[]
   seminarsCreated         Seminar[]            @relation("SeminarsCreated")
   surveyFormsCreated      SurveyForm[]         @relation("SurveyFormsCreated")
