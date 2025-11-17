@@ -1,10 +1,12 @@
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTheme } from '../../contexts/ThemeContext';
 import i1 from '../Assets/people.webp';
 import ebg from '../Assets/elementbg.webp';
 import logo from '../../Assets/Logo.png';
 
 export default function ForgotPassword() {
+    const { theme, isDark } = useTheme();
     const navigate = useNavigate();
     const email = useRef(null);
     const [alert, setAlert] = useState({ show: false, message: '', type: '' });
@@ -16,13 +18,13 @@ export default function ForgotPassword() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-2 py-6 sm:py-10" style={{
-            backgroundImage: `url(${ebg})`,
+        <div className={`min-h-screen flex items-center justify-center px-2 py-6 sm:py-10 ${isDark ? 'bg-gray-900' : ''}`} style={{
+            backgroundImage: isDark ? 'none' : `url(${ebg})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
         }}>
-            <div className="relative flex flex-col md:flex-row w-full max-w-5xl md:h-[600px] bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200">
+            <div className={`relative flex flex-col md:flex-row w-full max-w-5xl md:h-[600px] rounded-3xl shadow-2xl overflow-hidden border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                 {/* Left: Form Section */}
                 <div className="flex-1 flex flex-col justify-center px-4 sm:px-8 py-8 md:py-10 z-10 max-h-[90vh] md:max-h-[600px] overflow-y-auto custom-scrollbar">
                 {/* Custom Scrollbar Styles */}
@@ -32,9 +34,9 @@ export default function ForgotPassword() {
                     background: transparent;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: linear-gradient(120deg, #22c55e 60%, #16a34a 100%);
+                    background: ${isDark ? 'linear-gradient(120deg, #16a34a 60%, #22c55e 100%)' : 'linear-gradient(120deg, #22c55e 60%, #16a34a 100%)'};
                     border-radius: 16px;
-                    border: 2px solid #bbf7d0;
+                    border: 2px solid ${isDark ? '#15803d' : '#bbf7d0'};
                     box-shadow: 0 2px 8px 0 rgba(34,197,94,0.10);
                     min-height: 36px;
                     transition: background 0.25s, border 0.25s;
@@ -44,19 +46,19 @@ export default function ForgotPassword() {
                     border: 2px solid #22c55e;
                 }
                 .custom-scrollbar::-webkit-scrollbar-track {
-                    background: #bbf7d0;
+                    background: ${isDark ? '#374151' : '#bbf7d0'};
                     border-radius: 16px;
                 }
                 .custom-scrollbar {
                     scrollbar-width: thin;
-                    scrollbar-color: #22c55e #bbf7d0;
+                    scrollbar-color: #22c55e ${isDark ? '#374151' : '#bbf7d0'};
                 }
                 `}</style>
                     <div className="flex flex-col items-center mb-8 ">
                         <img src={logo} alt="FITS Tanza Logo" className="h-12 w-12 rounded-full mb-3 shadow-xl  z-30 relative mt-5" />
-                        <h1 className="font-extrabold text-3xl md:text-4xl text-green-700 tracking-tight mb-1 text-center drop-shadow font-sans uppercase" style={{letterSpacing: '0.04em'}}>FITS - Tanza</h1>
-                        <span className="text-sm md:text-sm font-semibold text-green-600 tracking-wide mb-2 text-center" style={{textShadow: '0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.07)'}}>Municipal Agriculture Office</span>
-                        <span className="text-gray-500 text-base md:text-lg text-center">Enter your registered email address below and we'll send you a link to reset your password.</span>
+                        <h1 className={`font-extrabold text-3xl md:text-4xl tracking-tight mb-1 text-center drop-shadow font-sans uppercase ${isDark ? 'text-green-400' : 'text-green-700'}`} style={{letterSpacing: '0.04em'}}>FITS - Tanza</h1>
+                        <span className={`text-sm md:text-sm font-semibold tracking-wide mb-2 text-center ${isDark ? 'text-green-300' : 'text-green-600'}`} style={{textShadow: '0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.07)'}}>Municipal Agriculture Office</span>
+                        <span className={`text-base md:text-lg text-center ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>Enter your registered email address below and we'll send you a link to reset your password.</span>
                     </div>
                     <form
                         className="space-y-6 w-full max-w-md mx-auto"
@@ -82,7 +84,7 @@ export default function ForgotPassword() {
                         }}
                     >
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                            <label htmlFor="email" className={`block text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Email</label>
                             <input
                                 type="email"
                                 id="email"
@@ -90,7 +92,7 @@ export default function ForgotPassword() {
                                 required
                                 ref={email}
                                 autoComplete="email"
-                                className="w-full px-4 py-2 mt-1 border rounded-md focus:ring-green-500 focus:border-green-500 border-black-300"
+                                className={`w-full px-4 py-2 mt-1 border rounded-md focus:ring-green-500 focus:border-green-500 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300 text-gray-900'}`}
                             />
                         </div>
                         <button
@@ -100,7 +102,7 @@ export default function ForgotPassword() {
                         >
                             {loading ? 'Sending...' : 'Send Reset Link'}
                         </button>
-                        <p className="mt-6 text-center text-sm text-gray-700">
+                        <p className={`mt-6 text-center text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                             Remembered your password?{' '}
                             <Link to="/login" className="text-green-600 hover:underline">Sign in</Link>
                         </p>

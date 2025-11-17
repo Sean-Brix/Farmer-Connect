@@ -52,9 +52,9 @@ export default function EICSearchAndFilters({
             </div>
             
             {/* Search and Filter Section */}
-            <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+            <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center sm:justify-between">
                 {/* Search Input */}
-                <div className="relative flex-1">
+                <div className="relative flex-1 sm:max-w-md">
                     <input
                         type="text"
                         className={`w-full px-10 py-2.5 rounded-lg border-2 ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-green-500 focus:ring-2 focus:ring-green-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-800 focus:border-green-500 focus:ring-2 focus:ring-green-200 placeholder:text-gray-500'} shadow-sm transition font-medium text-sm sm:text-base`}
@@ -68,10 +68,10 @@ export default function EICSearchAndFilters({
                 </div>
                 
                 {/* Filter Dropdown */}
-                <div className="relative flex-shrink-0 w-full sm:w-auto">
+                <div className="relative flex-shrink-0 w-auto sm:w-auto sm:ml-auto">
                     <button
                         id="modernFilterButton"
-                        className={`w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2 px-4 py-2.5 rounded-lg ${isDark ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'} font-semibold border-2 shadow-sm hover:shadow-md transition focus:outline-none text-sm sm:text-base`}
+                        className={`w-auto sm:w-auto flex items-center justify-between sm:justify-start gap-2 px-4 py-2.5 rounded-lg ${isDark ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'} font-semibold border-2 shadow-sm hover:shadow-md transition focus:outline-none text-sm sm:text-base`}
                         onClick={() => setShowFilter((f) => !f)}
                         type="button"
                         aria-label="Show filter options"
@@ -89,7 +89,7 @@ export default function EICSearchAndFilters({
                     {showFilter && (
                         <div 
                             id="modernFilterDropdown"
-                            className={`absolute left-0 sm:left-auto sm:right-0 mt-2 w-full sm:w-56 ${isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-200'} rounded-lg shadow-xl border-2 z-20 animate-fade-in py-2`}
+                            className={`absolute left-0 sm:left-auto sm:right-0 mt-2 w-56 sm:w-56 ${isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-200'} rounded-lg shadow-xl border-2 z-20 animate-fade-in py-2`}
                         >
                             {filterOptions.map((opt) => (
                                 <button

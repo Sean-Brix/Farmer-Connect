@@ -545,25 +545,25 @@ export default function Farmer_Report() {
       
       {/* Loading State */}
       {accessLoading && (
-        <div className="pt-[14vh] min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50 flex items-center justify-center">
+        <div className={`pt-[14vh] min-h-screen flex items-center justify-center ${isDark ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-green-50'}`}>
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
-            <p className={`font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Verifying access permissions...</p>
+            <p className={`font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Verifying access permissions...</p>
           </div>
         </div>
       )}
 
       {/* Access Error State */}
       {accessError && !accessLoading && (
-        <div className="pt-[14vh] min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50 flex items-center justify-center">
+        <div className={`pt-[14vh] min-h-screen flex items-center justify-center ${isDark ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-red-50'}`}>
           <div className="text-center max-w-md mx-auto px-6">
-            <div className="rounded-full bg-red-100 p-4 w-16 h-16 mx-auto mb-6 flex items-center justify-center">
-              <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <div className={`rounded-full p-4 w-16 h-16 mx-auto mb-6 flex items-center justify-center ${isDark ? 'bg-red-900/30' : 'bg-red-100'}`}>
+              <svg className={`w-8 h-8 ${isDark ? 'text-red-400' : 'text-red-500'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
-            <h2 className={`text-2xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Access Error</h2>
-            <p className={`mb-6 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{accessError.message || 'Unable to verify user access'}</p>
+            <h2 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Access Error</h2>
+            <p className={`mb-6 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{accessError.message || 'Unable to verify user access'}</p>
             <button 
               onClick={() => window.location.reload()}
               className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
@@ -576,20 +576,20 @@ export default function Farmer_Report() {
 
       {/* Non-User Access Restriction (Admin, etc.) */}
       {userAccess && userAccess !== 'User' && !accessLoading && !accessError && (
-        <div className="pt-[14vh] min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 flex items-center justify-center">
+        <div className={`pt-[14vh] min-h-screen flex items-center justify-center ${isDark ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-green-50'}`}>
           <div className="text-center max-w-lg mx-auto px-6">
-            <div className="rounded-full bg-blue-100 p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center">
-              <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <div className={`rounded-full p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center ${isDark ? 'bg-green-900/30' : 'bg-green-100'}`}>
+              <svg className={`w-10 h-10 ${isDark ? 'text-green-400' : 'text-green-500'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
-            <h2 className={`text-3xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Access Restricted</h2>
-            <p className={`mb-2 text-lg ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>This Farmer Report module is exclusively designed for farmers.</p>
+            <h2 className={`text-3xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Access Restricted</h2>
+            <p className={`mb-2 text-lg ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>This Farmer Report module is exclusively designed for farmers.</p>
 
             <div className="space-y-4">
               <a 
                 href="/admin" 
-                className="inline-flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                className="inline-flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" strokeLinecap="round" strokeLinejoin="round" />
@@ -600,15 +600,15 @@ export default function Farmer_Report() {
               <div className="flex justify-center gap-4">
                 <a 
                   href="/" 
-                  className={`font-medium underline transition-colors duration-200 ${theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'}`}
+                  className={`font-medium underline transition-colors duration-200 ${isDark ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'}`}
                 >
                   Return to Home
                 </a>
-                <span className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-400'}`}>•</span>
+                <span className={`${isDark ? 'text-gray-400' : 'text-gray-400'}`}>•</span>
                 {userAccess !== 'User' && 
                   <a 
                   href="/admin" 
-                  className={`font-medium underline transition-colors duration-200 ${theme === 'dark' ? 'text-blue-300 hover:text-blue-200' : 'text-blue-600 hover:text-blue-800'}`}
+                  className={`font-medium underline transition-colors duration-200 ${isDark ? 'text-green-300 hover:text-green-200' : 'text-green-600 hover:text-green-800'}`}
                   >
                     Admin Panel
                   </a>
@@ -704,7 +704,7 @@ export default function Farmer_Report() {
                 </div>
                 <div className={`rounded-xl border-2 p-4 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
                       <span className="text-2xl">🏞️</span>
                     </div>
                     <div>
@@ -809,7 +809,7 @@ export default function Farmer_Report() {
                                 <td className={`px-4 py-4 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
                                   <div className="flex items-center gap-2">
                                     <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                                      theme === 'dark' ? 'bg-blue-900 text-blue-200' : 'bg-blue-100 text-blue-700'
+                                      theme === 'dark' ? 'bg-green-900 text-green-200' : 'bg-green-100 text-green-700'
                                     }`}>
                                       {crop.currentStageIndex + 1 || 1}/{crop.totalStages || '?'}
                                     </span>
@@ -1143,7 +1143,7 @@ export default function Farmer_Report() {
                   <h3 className={`font-semibold flex items-center gap-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                     🌤️ Current Weather - {LOCATION.name}
                     <button onClick={fetchWeatherData} 
-                      className="ml-2 px-2 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors">
+                      className="ml-2 px-2 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700 transition-colors">
                       {weatherLoading ? 'Loading...' : 'Refresh'}
                     </button>
                   </h3>
@@ -1152,7 +1152,7 @@ export default function Farmer_Report() {
                   {weatherError && (
                     <div className={`text-sm mb-4 p-3 rounded-lg ${
                       weatherError.includes('Demo mode') 
-                        ? 'text-blue-600 bg-blue-50 border border-blue-200' 
+                        ? 'text-green-600 bg-green-50 border border-green-200' 
                         : 'text-red-600 bg-red-50 border border-red-200'
                     }`}>
                       <div className="flex items-center gap-2">
@@ -1164,7 +1164,7 @@ export default function Farmer_Report() {
                       <button onClick={fetchWeatherData} 
                         className={`ml-2 px-2 py-1 rounded text-xs mt-2 ${
                           weatherError.includes('Demo mode')
-                            ? 'bg-blue-600 text-white hover:bg-blue-700'
+                            ? 'bg-green-600 text-white hover:bg-green-700'
                             : 'bg-red-600 text-white hover:bg-red-700'
                         }`}>
                         {weatherError.includes('Demo mode') ? 'Try Live Data' : 'Retry'}
@@ -1223,7 +1223,7 @@ export default function Farmer_Report() {
 
                   {weatherLoading && (
                     <div className="text-center py-8">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
                       <p className={`mt-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Loading weather data...</p>
                     </div>
                   )}
@@ -1257,7 +1257,7 @@ export default function Farmer_Report() {
                               <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{getWeatherDescription(weatherData.daily.weather_code[i])}</div>
                             </td>
                             <td className="px-3 py-2 text-center font-semibold text-red-600">{Math.round(weatherData.daily.temperature_2m_max[i])}°</td>
-                            <td className="px-3 py-2 text-center font-semibold text-blue-600">{Math.round(weatherData.daily.temperature_2m_min[i])}°</td>
+                            <td className="px-3 py-2 text-center font-semibold text-green-600">{Math.round(weatherData.daily.temperature_2m_min[i])}°</td>
                             <td className="px-3 py-2 text-center">
                               <span className="font-semibold">{weatherData.daily.precipitation_sum[i]} mm</span>
                             </td>
@@ -1407,86 +1407,51 @@ export default function Farmer_Report() {
                         {totalPages > 1 && ` (Page ${currentPage} of ${totalPages})`}
                       </div>
 
-                      {/* Grid */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
-                        {currentItems.map(crop => (
-                          <div key={crop.id} className={`border rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col h-full ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                            <div className="p-4 flex-1 flex flex-col">
-                              <div className="flex items-start justify-between mb-3">
-                                <div className="flex-1 min-w-0 mr-3">
-                                  <h3 className={`font-semibold text-lg truncate ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{crop.name}</h3>
-                                  <p className={`text-sm truncate ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                                    {cropGuidelinesData.cropCategories[crop.category]?.icon} {cropGuidelinesData.cropCategories[crop.category]?.name}
-                                  </p>
-                                </div>
-                                <div className="text-right flex-shrink-0">
-                                  <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Growing Period</div>
-                                  <div className={`text-sm font-semibold whitespace-nowrap ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>{crop.growingPeriod}</div>
-                                </div>
-                              </div>
-
-                              <div className="space-y-2 text-sm flex-1">
-                                <div className="flex justify-between items-center">
-                                  <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Expected Yield:</span>
-                                  <span className={`font-semibold truncate ml-2 ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>{crop.expectedYield}</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                  <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Water Requirements:</span>
-                                  <span 
-                                    className={`font-semibold truncate ml-2 cursor-help ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}
-                                    title={crop.waterRequirements}
+                      {/* Table */}
+                      <div className="overflow-x-auto">
+                        <table className={`w-full border ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}>
+                          <thead className={theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}>
+                            <tr>
+                              <th className={`px-4 py-3 text-left text-sm font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                Crop Name
+                              </th>
+                              <th className={`px-4 py-3 text-left text-sm font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                Growing Period
+                              </th>
+                              <th className={`px-4 py-3 text-center text-sm font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                Actions
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className={theme === 'dark' ? 'divide-y divide-gray-700' : 'divide-y divide-gray-200'}>
+                            {currentItems.map(crop => (
+                              <tr key={crop.id} className={theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
+                                <td className={`px-4 py-3 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                                  <div className="flex items-center gap-3">
+                                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                                      🌾
+                                    </div>
+                                    <span>{crop.name}</span>
+                                  </div>
+                                </td>
+                                <td className={`px-4 py-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                  {crop.growingPeriod}
+                                </td>
+                                <td className="px-4 py-3 text-center">
+                                  <button
+                                    onClick={() => {
+                                      setSelectedCrop(crop);
+                                      setShowCropDetail(true);
+                                    }}
+                                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 text-sm font-semibold shadow-sm hover:shadow-md"
                                   >
-                                    {crop.waterRequirements.length > 20 ? 
-                                      `${crop.waterRequirements.substring(0, 20)}...` : 
-                                      crop.waterRequirements
-                                    }
-                                  </span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                  <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Difficulty:</span>
-                                  <span className={`font-semibold flex-shrink-0 ml-2 ${
-                                    crop.difficulty === 'Easy' ? (theme === 'dark' ? 'text-green-400' : 'text-green-600') :
-                                    crop.difficulty === 'Moderate' ? (theme === 'dark' ? 'text-yellow-400' : 'text-yellow-600') : 
-                                    (theme === 'dark' ? 'text-red-400' : 'text-red-600')
-                                  }`}>
-                                    {crop.difficulty}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                  <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Market Price:</span>
-                                  <span className={`font-semibold truncate ml-2 ${theme === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>{crop.marketPrice}</span>
-                                </div>
-                              </div>
-
-                              <div className={`mt-3 pt-3 border-t ${theme === 'dark' ? 'border-gray-600' : 'border-gray-200'}`}>
-                                <div className={`text-xs mb-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Key Varieties:</div>
-                                <div className="flex flex-wrap gap-1 min-h-[24px]">
-                                  {crop.varieties.slice(0, 3).map((variety, idx) => (
-                                    <span key={idx} className={`px-2 py-1 rounded text-xs truncate max-w-[80px] ${theme === 'dark' ? 'bg-gray-600 text-gray-200' : 'bg-gray-100 text-gray-700'}`}>
-                                      {variety}
-                                    </span>
-                                  ))}
-                                  {crop.varieties.length > 3 && (
-                                    <span className={`text-xs flex-shrink-0 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>+{crop.varieties.length - 3} more</span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                            
-                            {/* Fixed Position Button */}
-                            <div className="p-4 pt-0">
-                              <button
-                                onClick={() => {
-                                  setSelectedCrop(crop);
-                                  setShowCropDetail(true);
-                                }}
-                                className="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 text-sm font-semibold shadow-sm hover:shadow-md"
-                              >
-                                📖 View Full Guide
-                              </button>
-                            </div>
-                          </div>
-                        ))}
+                                    📖 View Full Guide
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
 
                       {/* Pagination Controls */}
@@ -1587,7 +1552,7 @@ export default function Farmer_Report() {
                         <tr key={month} className={`border-b last:border-0 ${theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}>
                           <td className={`px-3 py-2 font-medium capitalize ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>{month}</td>
                           <td className="px-3 py-2 text-sm">
-                            <span className={`px-2 py-1 rounded-full text-xs font-semibold ${theme === 'dark' ? 'bg-blue-900 text-blue-100' : 'bg-blue-100 text-blue-800'}`}>
+                            <span className={`px-2 py-1 rounded-full text-xs font-semibold ${theme === 'dark' ? 'bg-green-900 text-green-100' : 'bg-green-100 text-green-800'}`}>
                               {data.season}
                             </span>
                           </td>
@@ -2350,9 +2315,16 @@ export default function Farmer_Report() {
                 </div>
               </div>
               
-              <div className="p-4 sm:p-6 space-y-4">
-                {/* Basic Info */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-4 sm:p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Left Side - Crop Image */}
+                  <div className={`rounded-lg overflow-hidden ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className="w-full h-full min-h-[400px] flex items-center justify-center text-8xl">
+                      🌾
+                    </div>
+                  </div>
+
+                  {/* Right Side - Basic Info */}
                   <div className="space-y-3">
                     <div>
                       <h4 className={`font-semibold mb-2 text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>📋 Basic Information</h4>
@@ -2379,7 +2351,7 @@ export default function Farmer_Report() {
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                           <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}>Market Price:</span>
-                          <span className={`font-semibold ${theme === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>{selectedCrop.marketPrice}</span>
+                          <span className={`font-semibold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>{selectedCrop.marketPrice}</span>
                         </div>
                       </div>
                     </div>
@@ -2417,65 +2389,65 @@ export default function Farmer_Report() {
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>💡 Key Growing Tips</h4>
-                      <ul className="space-y-2">
-                        {selectedCrop.keyTips.map((tip, idx) => (
-                          <li key={idx} className="flex items-start gap-2 text-sm">
-                            <span className={theme === 'dark' ? 'text-green-400 mt-1' : 'text-green-600 mt-1'}>•</span>
-                            <span className={theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}>{tip}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                <div className="space-y-4 mt-6">
+                  <div>
+                    <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>💡 Key Growing Tips</h4>
+                    <ul className="space-y-2">
+                      {selectedCrop.keyTips.map((tip, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm">
+                          <span className={theme === 'dark' ? 'text-green-400 mt-1' : 'text-green-600 mt-1'}>•</span>
+                          <span className={theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}>{tip}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
-                    <div>
-                      <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>🐛 Common Pests</h4>
-                      <div className="space-y-2">
-                        {selectedCrop.commonPests.map((pest, idx) => (
-                          <div key={idx} className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-red-900/30 border border-red-800' : 'bg-red-50 border border-red-200'}`}>
-                            <div className={`font-semibold mb-1 ${theme === 'dark' ? 'text-red-300' : 'text-red-800'}`}>
-                              {typeof pest === 'string' ? pest : pest.name}
+                  <div>
+                    <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>🐛 Common Pests</h4>
+                    <div className="space-y-2">
+                      {selectedCrop.commonPests.map((pest, idx) => (
+                        <div key={idx} className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-red-900/30 border border-red-800' : 'bg-red-50 border border-red-200'}`}>
+                          <div className={`font-semibold mb-1 ${theme === 'dark' ? 'text-red-300' : 'text-red-800'}`}>
+                            {typeof pest === 'string' ? pest : pest.name}
+                          </div>
+                          {typeof pest === 'object' && pest.control && (
+                            <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                              <span className="font-medium">Control: </span>{pest.control}
                             </div>
-                            {typeof pest === 'object' && pest.control && (
-                              <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                                <span className="font-medium">Control: </span>{pest.control}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
+                  </div>
 
-                    <div>
-                      <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>🦠 Common Diseases</h4>
-                      <div className="space-y-2">
-                        {selectedCrop.diseases.map((disease, idx) => (
-                          <div key={idx} className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-orange-900/30 border border-orange-800' : 'bg-orange-50 border border-orange-200'}`}>
-                            <div className={`font-semibold mb-1 ${theme === 'dark' ? 'text-orange-300' : 'text-orange-800'}`}>
-                              {typeof disease === 'string' ? disease : disease.name}
+                  <div>
+                    <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>🦠 Common Diseases</h4>
+                    <div className="space-y-2">
+                      {selectedCrop.diseases.map((disease, idx) => (
+                        <div key={idx} className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-orange-900/30 border border-orange-800' : 'bg-orange-50 border border-orange-200'}`}>
+                          <div className={`font-semibold mb-1 ${theme === 'dark' ? 'text-orange-300' : 'text-orange-800'}`}>
+                            {typeof disease === 'string' ? disease : disease.name}
+                          </div>
+                          {typeof disease === 'object' && disease.symptoms && (
+                            <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                              <span className="font-medium">Symptoms: </span>{disease.symptoms}
                             </div>
-                            {typeof disease === 'object' && disease.symptoms && (
-                              <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                                <span className="font-medium">Symptoms: </span>{disease.symptoms}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
+                  </div>
 
-                    <div>
-                      <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>📅 Planting Seasons</h4>
-                      <div className="space-y-1">
-                        {selectedCrop.plantingSeasons.map((season, idx) => (
-                          <div key={idx} className={`px-3 py-2 rounded text-sm font-semibold ${theme === 'dark' ? 'bg-blue-900 text-blue-100' : 'bg-blue-100 text-blue-800'}`}>
-                            {season}
-                          </div>
-                        ))}
-                      </div>
+                  <div>
+                    <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>📅 Planting Seasons</h4>
+                    <div className="space-y-1">
+                      {selectedCrop.plantingSeasons.map((season, idx) => (
+                        <div key={idx} className={`px-3 py-2 rounded text-sm font-semibold ${theme === 'dark' ? 'bg-green-900 text-green-100' : 'bg-green-100 text-green-800'}`}>
+                          {season}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -2499,7 +2471,7 @@ export default function Farmer_Report() {
                             <td className={`px-4 py-3 font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                               {stage.stageName || stage.stage || 'N/A'}
                             </td>
-                            <td className={`px-4 py-3 text-center font-semibold ${theme === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>
+                            <td className={`px-4 py-3 text-center font-semibold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>
                               {stage.duration || 'N/A'}
                             </td>
                             <td className={`px-4 py-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
@@ -2534,8 +2506,8 @@ export default function Farmer_Report() {
                     <div className={`text-2xl font-bold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>{selectedCrop.profitability}</div>
                     <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Profitability Rating</div>
                   </div>
-                  <div className={`p-4 rounded-lg text-center ${theme === 'dark' ? 'bg-blue-900/50' : 'bg-blue-50'}`}>
-                    <div className={`text-2xl font-bold ${theme === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>{selectedCrop.marketPrice}</div>
+                  <div className={`p-4 rounded-lg text-center ${theme === 'dark' ? 'bg-green-900/50' : 'bg-green-50'}`}>
+                    <div className={`text-2xl font-bold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>{selectedCrop.marketPrice}</div>
                     <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Current Market Price</div>
                   </div>
                   <div className={`p-4 rounded-lg text-center ${theme === 'dark' ? 'bg-purple-900/50' : 'bg-purple-50'}`}>

@@ -209,174 +209,157 @@ export default function ChatSupport() {
             {/* Navigation */}
             <Navbar />
             
-            {/* Main Chat Support Page - Professional Modal-like Layout */}
-            <div className={`min-h-screen p-4 pt-[16vh] ${
+            {/* Main Chat Support Page - Minimal Professional Layout */}
+            <div className={`min-h-screen pt-[14vh] pb-8 px-4 ${
                 isDark 
-                    ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-black' 
-                    : 'bg-gradient-to-br from-slate-50 via-green-50 to-gray-100'
+                    ? 'bg-gray-900' 
+                    : 'bg-gray-50'
             }`}>
-                <div className="container mx-auto max-w-5xl">
-                    {/* Professional Page Header - EIC Style */}
-                    <div className="text-center mb-12">
-                        <div className={`text-xs font-semibold uppercase tracking-wider mb-4 ${
-                            isDark ? 'text-gray-400' : 'text-gray-500'
-                        }`}>
-                            Welcome to
+                <div className="container mx-auto max-w-6xl">
+                    {/* Enhanced Appealing Header */}
+                    <div className="mb-8 text-center">
+                        <div className="inline-flex items-center gap-2 mb-3">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                                isDark ? 'bg-green-600' : 'bg-green-500'
+                            }`}>
+                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                            </div>
+                            <h1 className={`text-3xl font-bold ${
+                                isDark ? 'text-white' : 'text-gray-900'
+                            }`}>
+                                Help & Support Center
+                            </h1>
                         </div>
-                        <h1 className={`text-4xl md:text-5xl font-extrabold mb-6 ${
-                            isDark ? 'text-gray-100' : 'text-gray-800'
-                        }`}>
-                            Professional Support Center
-                        </h1>
-                        <div className="w-24 h-1 bg-green-500 mx-auto rounded-full mb-6"></div>
-                      
-                      
+                        <p className={`text-base ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                            We're here to help you 24/7 • Get instant answers to your questions
+                        </p>
                     </div>
 
-                    {/* Professional Chat Interface */}
-                    <div className={`rounded-3xl shadow-2xl border overflow-hidden max-w-5xl mx-auto ${
+                    {/* Minimal Chat Interface */}
+                    <div className={`rounded-xl border overflow-hidden ${
                         isDark 
                             ? 'bg-gray-800 border-gray-700' 
-                            : 'bg-white border-gray-100'
-                    }`} style={{ height: '700px' }}>
-                        {/* Enhanced Professional Header */}
-                        <div className={`text-white px-8 py-6 relative overflow-hidden ${
+                            : 'bg-white border-gray-200'
+                    }`} style={{ height: '75vh', maxHeight: '700px' }}>
+                        {/* Minimal Header */}
+                        <div className={`px-6 py-4 border-b flex items-center justify-between ${
                             isDark 
-                                ? 'bg-gradient-to-r from-green-700 via-green-800 to-green-900' 
-                                : 'bg-gradient-to-r from-green-600 via-green-700 to-green-800'
+                                ? 'bg-gray-800 border-gray-700' 
+                                : 'bg-white border-gray-200'
                         }`}>
-                            {/* Background Pattern */}
-                            <div className="absolute inset-0 bg-white/5">
-                                <div className="absolute inset-0" style={{
-                                    backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)',
-                                    backgroundSize: '24px 24px'
-                                }}></div>
-                            </div>
-                            
-                            <div className="relative z-10 flex items-center justify-between">
-                                <div className="flex items-center gap-6">
-                                    <div className="relative">
-                                        <div className="w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                                            <img src={botAvatar} alt="Support Assistant" className="w-12 h-12 rounded-xl" />
-                                        </div>
-                                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 border-2 border-white rounded-full animate-pulse"></div>
-                                    </div>
-                                    <div>
-                                        <h2 className="text-2xl font-bold tracking-tight">FITS-Tanza Assistant</h2>
-                                        <div className="flex items-center gap-2 text-blue-100 mt-1">
-                                            <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
-                                            <span className="font-medium">Ready to assist you</span>
-                                        </div>
-                                    </div>
+                            <div className="flex items-center gap-3 pt-4">
+                                <div className="relative">
+                                    <img src={botAvatar} alt="Support" className="w-10 h-10 rounded-full" />
+                                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                                 </div>
-                                <div className="hidden md:flex items-center gap-4 text-white/80 text-sm">
-                                    <div className="flex items-center gap-2">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <span>24/7 Available</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                        </svg>
-                                        <span>Instant Response</span>
-                                    </div>
+                                <div>
+                                    <h2 className={`text-base font-semibold  ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                        FITS-Tanza Assistant
+                                    </h2>
+                                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                        Online • Ready to help
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Professional Navigation Tabs */}
-                        <div className="bg-gray-50 border-b border-gray-200 px-8 py-4">
-                            <div className="flex gap-1 bg-white rounded-xl p-1 shadow-inner max-w-md mx-auto">
+                        {/* Enhanced Visible Navigation Tabs */}
+                        <div className={`px-6 py-4 border-b ${isDark ? 'bg-gray-800/50 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                            <div className="flex gap-3 justify-center">
                                 <button
                                     onClick={() => setCurrentView('chat')}
-                                    className={`flex-1 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
+                                    className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${
                                         currentView === 'chat' 
-                                            ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg transform scale-105' 
-                                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
+                                            ? 'bg-green-600 text-white shadow-lg scale-105' 
+                                            : isDark
+                                                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
+                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 border border-gray-300 hover:border-green-400'
                                     }`}
                                 >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                     </svg>
-                                    <span>Chat</span>
+                                    Chat Support
                                 </button>
                                 <button
                                     onClick={() => setCurrentView('faq')}
-                                    className={`flex-1 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
+                                    className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${
                                         currentView === 'faq' 
-                                            ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg transform scale-105' 
-                                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
+                                            ? 'bg-green-600 text-white shadow-lg scale-105' 
+                                            : isDark
+                                                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
+                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 border border-gray-300 hover:border-green-400'
                                     }`}
                                 >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    <span>FAQ</span>
+                                    FAQ
                                 </button>
                                 <button
                                     onClick={() => setCurrentView('inquiries')}
-                                    className={`flex-1 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
+                                    className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${
                                         currentView === 'inquiries' 
-                                            ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg transform scale-105' 
-                                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
+                                            ? 'bg-green-600 text-white shadow-lg scale-105' 
+                                            : isDark
+                                                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
+                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 border border-gray-300 hover:border-green-400'
                                     }`}
                                 >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
-                                    <span>My Tickets</span>
+                                    My Tickets
                                 </button>
                             </div>
                         </div>
                         
-                        {/* Professional Content Area */}
-                        <div className="flex-1 h-full bg-gradient-to-br from-gray-50 via-white to-gray-50" style={{ height: 'calc(700px - 200px)' }}>
+                        {/* Minimal Content Area */}
+                        <div className={`flex-1 h-full ${isDark ? 'bg-gray-800' : 'bg-white'}`} style={{ height: 'calc(75vh - 140px)', maxHeight: 'calc(700px - 140px)' }}>
                             {/* Chat View */}
                             {currentView === 'chat' && (
                                 <div className="h-full flex flex-col">
                                     {/* Messages Area */}
-                                    <div className="flex-1 overflow-y-auto p-6 space-y-6" style={{ maxHeight: 'calc(100% - 100px)' }}>
+                                    <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ maxHeight: 'calc(100% - 80px)' }}>
                                         {messages.map((msg, index) => (
-                                            <div key={index} className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                                <div className={`max-w-[75%] ${msg.from === 'user' ? 'order-2' : 'order-1'}`}>
-                                                    <div className={`rounded-2xl px-6 py-4 shadow-lg ${
+                                            <div key={index} className={`flex gap-2 ${msg.from === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                                                <div className="flex-shrink-0">
+                                                    <img 
+                                                        src={msg.from === 'user' ? userAvatar : botAvatar} 
+                                                        alt={msg.from} 
+                                                        className="w-8 h-8 rounded-full"
+                                                    />
+                                                </div>
+                                                <div className={`max-w-[75%] ${msg.from === 'user' ? 'items-end' : 'items-start'} flex flex-col`}>
+                                                    <div className={`rounded-2xl px-4 py-2.5 ${
                                                         msg.from === 'user'
-                                                            ? 'bg-gradient-to-r from-green-600 to-green-700 text-white rounded-br-sm'
-                                                            : 'bg-white border border-gray-200 text-gray-800 rounded-bl-sm'
+                                                            ? isDark
+                                                                ? 'bg-green-600 text-white'
+                                                                : 'bg-green-600 text-white'
+                                                            : isDark
+                                                                ? 'bg-gray-700 text-gray-100'
+                                                                : 'bg-gray-100 text-gray-900'
                                                     }`}>
-                                                        <div className="flex items-start gap-3">
-                                                            {msg.from === 'bot' && (
-                                                                <img src={botAvatar} alt="Bot" className="w-9 h-9 rounded-full flex-shrink-0 mt-1 ring-2 ring-gray-100" />
-                                                            )}
-                                                            <div className="flex-1">
-                                                                <p className="leading-relaxed whitespace-pre-wrap">{msg.text}</p>
-                                                                <p className={`text-xs mt-3 ${msg.from === 'user' ? 'text-green-100' : 'text-gray-500'}`}>
-                                                                    {msg.time}
-                                                                </p>
-                                                            </div>
-                                                            {msg.from === 'user' && (
-                                                                <img src={userAvatar} alt="User" className="w-9 h-9 rounded-full flex-shrink-0 mt-1 ring-2 ring-green-100" />
-                                                            )}
-                                                        </div>
+                                                        <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.text}</p>
                                                     </div>
+                                                    <span className={`text-xs mt-1 px-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+                                                        {msg.time}
+                                                    </span>
                                                 </div>
                                             </div>
                                         ))}
                                         
-                                        {/* Enhanced Bot Typing Indicator */}
+                                        {/* Minimal Bot Typing Indicator */}
                                         {isBotTyping && (
-                                            <div className="flex justify-start">
-                                                <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-sm px-6 py-4 shadow-lg">
-                                                    <div className="flex items-center gap-3">
-                                                        <img src={botAvatar} alt="Bot" className="w-9 h-9 rounded-full ring-2 ring-gray-100" />
-                                                        <div className="flex space-x-1">
-                                                            <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                                            <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                                                            <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                                                        </div>
-                                                        <span className="text-sm text-gray-500">Typing...</span>
+                                            <div className="flex gap-2">
+                                                <img src={botAvatar} alt="Bot" className="w-8 h-8 rounded-full flex-shrink-0" />
+                                                <div className={`rounded-2xl px-4 py-3 ${isDark ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                                                    <div className="flex space-x-1">
+                                                        <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce"></div>
+                                                        <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                                        <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -384,100 +367,65 @@ export default function ChatSupport() {
                                         <div ref={messagesEndRef} />
                                     </div>
                                     
-                                    {/* Professional Message Input */}
-                                    <div className="bg-white border-t border-gray-200 px-6 py-4">
+                                    {/* Minimal Message Input */}
+                                    <div className={`border-t px-4 py-3 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                                         <form
                                             onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }}
-                                            className="flex items-center gap-3"
+                                            className="flex items-center gap-2"
                                             autoComplete="off"
                                         >
-                                            <div className="flex-1 relative">
-                                                <input
-                                                    type="text"
-                                                    placeholder="Type your message here..."
-                                                    className="w-full rounded-2xl px-5 py-3 pr-12 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 bg-gray-50 focus:bg-white text-sm transition-all duration-200 placeholder-gray-500"
-                                                    value={message}
-                                                    onChange={(e) => setMessage(e.target.value)}
-                                                    onKeyPress={handleKeyPress}
-                                                    autoFocus
-                                                    maxLength={500}
-                                                    aria-label="Type your message"
-                                                    disabled={isBotTyping}
-                                                />
-                                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400">
-                                                    {message.length}/500
-                                                </div>
-                                            </div>
+                                            <input
+                                                type="text"
+                                                placeholder="Type your message..."
+                                                className={`flex-1 rounded-lg px-4 py-2.5 text-sm border focus:outline-none focus:ring-2 focus:ring-green-500/50 ${
+                                                    isDark
+                                                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                                                        : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500'
+                                                }`}
+                                                value={message}
+                                                onChange={(e) => setMessage(e.target.value)}
+                                                onKeyPress={handleKeyPress}
+                                                autoFocus
+                                                maxLength={500}
+                                                disabled={isBotTyping}
+                                            />
                                             <button
                                                 type="submit"
-                                                className="bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl px-6 py-3 hover:from-green-700 hover:to-green-800 transition-all duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center gap-2"
+                                                className="bg-green-600 text-white rounded-lg px-5 py-2.5 hover:bg-green-700 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                                                 disabled={isBotTyping || !message.trim()}
-                                                aria-label="Send message"
                                             >
-                                                {isBotTyping ? (
-                                                    <>
-                                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                                        <span>Sending...</span>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <span>Send</span>
-                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                                                        </svg>
-                                                    </>
-                                                )}
+                                                <span>Send</span>
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                                </svg>
                                             </button>
                                         </form>
-                                        
-                                        {/* Quick Actions */}
-                                        <div className="flex gap-2 mt-3 flex-wrap">
-                                            <button
-                                                onClick={() => setCurrentView('faq')}
-                                                className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors duration-200 flex items-center gap-1"
-                                            >
-                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                FAQ
-                                            </button>
-                                            <button
-                                                onClick={() => setCurrentView('inquiries')}
-                                                className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors duration-200 flex items-center gap-1"
-                                            >
-                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                </svg>
-                                                My Tickets
-                                            </button>
-                                        </div>
                                     </div>
                                 </div>
                             )}
 
                             {/* Enhanced FAQ View with Categories */}
                             {currentView === 'faq' && (
-                                <div className="h-full overflow-y-auto p-8">
-                                    <div className="max-w-6xl mx-auto">
-                                        <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center">Frequently Asked Questions</h2>
+                                <div className="h-full overflow-y-auto p-6">
+                                    <div className="max-w-4xl mx-auto">
                                         
                                         {faqsLoading ? (
                                             <div className="flex items-center justify-center py-12">
-                                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-                                                <span className="ml-3 text-gray-600">Loading FAQs...</span>
+                                                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600"></div>
+                                                <span className={`ml-3 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Loading FAQs...</span>
                                             </div>
                                         ) : faqsError ? (
                                             <div className="text-center py-12">
-                                                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                    <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 ${isDark ? 'bg-red-900/20' : 'bg-red-100'}`}>
+                                                    <svg className={`w-6 h-6 ${isDark ? 'text-red-400' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                                     </svg>
                                                 </div>
-                                                <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading FAQs</h3>
-                                                <p className="text-gray-600 mb-4">{faqsError}</p>
+                                                <h3 className={`text-base font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>Error Loading FAQs</h3>
+                                                <p className={`text-sm mb-4 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{faqsError}</p>
                                                 <button
                                                     onClick={loadFAQCategories}
-                                                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
+                                                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
                                                 >
                                                     Try Again
                                                 </button>
@@ -485,16 +433,18 @@ export default function ChatSupport() {
                                         ) : (
                                             <>
                                                 {/* Category Filter Buttons */}
-                                                <div className="flex flex-wrap gap-3 mb-8 justify-center">
+                                                <div className="flex flex-wrap gap-2 mb-6">
                                                     <button
                                                         onClick={() => setSelectedCategoryId(null)}
-                                                        className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                                                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                                                             selectedCategoryId === null
-                                                                ? 'bg-green-600 text-white shadow-lg'
-                                                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                                                ? 'bg-green-600 text-white'
+                                                                : isDark
+                                                                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                                         }`}
                                                     >
-                                                        All Categories ({faqs.length})
+                                                        All ({faqs.length})
                                                     </button>
                                                     {categories.map((category) => {
                                                         const categoryFAQCount = faqs.filter(faq => faq.categoryId === category.id).length;
@@ -502,10 +452,12 @@ export default function ChatSupport() {
                                                             <button
                                                                 key={category.id}
                                                                 onClick={() => setSelectedCategoryId(category.id)}
-                                                                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                                                                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                                                                     selectedCategoryId === category.id
-                                                                        ? 'bg-green-600 text-white shadow-lg'
-                                                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                                                        ? 'bg-green-600 text-white'
+                                                                        : isDark
+                                                                            ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                                                 }`}
                                                             >
                                                                 {category.name} ({categoryFAQCount})
@@ -517,13 +469,13 @@ export default function ChatSupport() {
                                                 {/* FAQ List */}
                                                 {getFilteredFAQs().length === 0 ? (
                                                     <div className="text-center py-12">
-                                                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 ${isDark ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                                                            <svg className={`w-6 h-6 ${isDark ? 'text-gray-400' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                             </svg>
                                                         </div>
-                                                        <h3 className="text-lg font-semibold text-gray-900 mb-2">No FAQs Available</h3>
-                                                        <p className="text-gray-600">
+                                                        <h3 className={`text-base font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>No FAQs Available</h3>
+                                                        <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                                             {selectedCategoryId
                                                                 ? `No FAQs found in ${categories.find(c => c.id === selectedCategoryId)?.name || 'this category'}.`
                                                                 : 'No FAQs have been added yet.'
@@ -531,51 +483,44 @@ export default function ChatSupport() {
                                                         </p>
                                                     </div>
                                                 ) : (
-                                                    <div className="grid gap-6">
+                                                    <div className="space-y-3">
                                                         {getFilteredFAQs().map((faq) => {
-                                                            const category = categories.find(c => c.id === faq.categoryId);
                                                             const isExpanded = expandedFAQs.has(faq.id);
                                                             
                                                             return (
-                                                                <div key={faq.id} className="bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-                                                                    <div className="p-6">
-                                                                        <div className="flex items-start justify-between">
-                                                                            <div className="flex-1">
-                                                                                <div className="mb-2">
-                                                                                    <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-                                                                                        {faq.categoryName || 'General'}
-                                                                                    </span>
-                                                                                </div>
-                                                                                <button
-                                                                                    onClick={() => toggleFAQExpansion(faq.id)}
-                                                                                    className="text-left w-full group"
-                                                                                >
-                                                                                    <h3 className="font-bold text-gray-900 mb-3 text-lg group-hover:text-green-600 transition-colors">
-                                                                                        {faq.question}
-                                                                                    </h3>
-                                                                                </button>
-                                                                                
-                                                                                {isExpanded && (
-                                                                                    <div className="mb-4">
-                                                                                        <p className="text-gray-700 leading-relaxed mb-4">{faq.answer}</p>
-                                                                                    </div>
-                                                                                )}
-                                                                            </div>
-                                                                            <div className="ml-6">
-                                                                                <button
-                                                                                    onClick={() => toggleFAQExpansion(faq.id)}
-                                                                                    className="w-10 h-10 bg-green-100 hover:bg-green-200 rounded-full flex items-center justify-center transition-colors"
-                                                                                >
-                                                                                    <svg 
-                                                                                        className={`w-5 h-5 text-green-600 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} 
-                                                                                        fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                                                                    >
-                                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                                                                    </svg>
-                                                                                </button>
-                                                                            </div>
+                                                                <div key={faq.id} className={`border rounded-lg overflow-hidden ${
+                                                                    isDark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'
+                                                                }`}>
+                                                                    <button
+                                                                        onClick={() => toggleFAQExpansion(faq.id)}
+                                                                        className={`w-full text-left px-4 py-3 flex items-center justify-between hover:bg-opacity-80 transition-colors ${
+                                                                            isDark ? 'hover:bg-gray-600' : 'hover:bg-gray-50'
+                                                                        }`}
+                                                                    >
+                                                                        <div className="flex-1 pr-4">
+                                                                            <h3 className={`font-medium text-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                                                                {faq.question}
+                                                                            </h3>
                                                                         </div>
-                                                                    </div>
+                                                                        <svg 
+                                                                            className={`w-5 h-5 flex-shrink-0 transition-transform ${isExpanded ? 'rotate-180' : ''} ${
+                                                                                isDark ? 'text-gray-400' : 'text-gray-500'
+                                                                            }`} 
+                                                                            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                                        >
+                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                                        </svg>
+                                                                    </button>
+                                                                    
+                                                                    {isExpanded && (
+                                                                        <div className={`px-4 py-3 border-t ${
+                                                                            isDark ? 'border-gray-600 bg-gray-800/50' : 'border-gray-200 bg-gray-50'
+                                                                        }`}>
+                                                                            <p className={`text-sm leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                                                                {faq.answer}
+                                                                            </p>
+                                                                        </div>
+                                                                    )}
                                                                 </div>
                                                             );
                                                         })}
@@ -589,51 +534,60 @@ export default function ChatSupport() {
 
                             {/* Enhanced My Inquiries View */}
                             {currentView === 'inquiries' && (
-                                <div className="h-full overflow-y-auto p-8">
+                                <div className="h-full overflow-y-auto p-6">
                                     <div className="max-w-4xl mx-auto">
-                                        <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center">My Support Tickets</h2>
                                         {userInquiries.length === 0 ? (
                                             <div className="text-center py-16">
-                                                <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                                                    <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
+                                                    isDark ? 'bg-gray-700' : 'bg-gray-100'
+                                                }`}>
+                                                    <svg className={`w-8 h-8 ${isDark ? 'text-gray-400' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                     </svg>
                                                 </div>
-                                                <h3 className="text-xl font-bold text-gray-900 mb-3">No support tickets yet</h3>
-                                                <p className="text-gray-600 mb-8 max-w-md mx-auto">You haven't submitted any support tickets. Start a conversation to create your first ticket!</p>
+                                                <h3 className={`text-lg font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>No support tickets yet</h3>
+                                                <p className={`text-sm mb-6 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>You haven't submitted any support tickets</p>
                                                 <button
                                                     onClick={() => setCurrentView('chat')}
-                                                    className="bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-4 rounded-2xl hover:from-green-700 hover:to-green-800 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+                                                    className="bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
                                                 >
                                                     Start a Conversation
                                                 </button>
                                             </div>
                                         ) : (
-                                            <div className="grid gap-6">
+                                            <div className="space-y-4">
                                                 {userInquiries.map((inquiry) => (
-                                                    <div key={inquiry.id} className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-                                                        <div className="flex items-start justify-between mb-6">
+                                                    <div key={inquiry.id} className={`border rounded-lg p-4 ${
+                                                        isDark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'
+                                                    }`}>
+                                                        <div className="flex items-start justify-between mb-3">
                                                             <div className="flex-1">
-                                                                <h3 className="font-bold text-gray-900 mb-3 text-lg">{inquiry.subject}</h3>
-                                                                <p className="text-gray-700 mb-4 leading-relaxed">{inquiry.message}</p>
-                                                                <div className="flex items-center gap-3 mb-4">
-                                                                    <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold ${getCategoryColor(inquiry.category)}`}>
+                                                                <h3 className={`font-semibold text-base mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                                                    {inquiry.subject}
+                                                                </h3>
+                                                                <p className={`text-sm mb-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                                                    {inquiry.message}
+                                                                </p>
+                                                                <div className="flex items-center gap-2 flex-wrap mb-2">
+                                                                    <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${getCategoryColor(inquiry.category)}`}>
                                                                         {inquiry.category}
                                                                     </span>
-                                                                    <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold ${getPriorityColor(inquiry.priority)}`}>
+                                                                    <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${getPriorityColor(inquiry.priority)}`}>
                                                                         {inquiry.priority}
                                                                     </span>
-                                                                    <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(inquiry.status)}`}>
+                                                                    <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${getStatusColor(inquiry.status)}`}>
                                                                         {inquiry.status}
                                                                     </span>
                                                                 </div>
-                                                                <p className="text-sm text-gray-500">Created: {inquiry.createdAt}</p>
+                                                                <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                                                                    Created: {inquiry.createdAt}
+                                                                </p>
                                                             </div>
                                                         </div>
-                                                        <div className="flex gap-4">
+                                                        <div className="flex gap-2">
                                                             <button
                                                                 onClick={() => setSelectedInquiry(inquiry)}
-                                                                className="bg-green-600 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-green-700 transition-colors shadow-md hover:shadow-lg"
+                                                                className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
                                                             >
                                                                 View Details
                                                             </button>
@@ -642,9 +596,13 @@ export default function ChatSupport() {
                                                                     setCurrentInquiry(inquiry);
                                                                     setCurrentView('chat');
                                                                 }}
-                                                                className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:from-green-700 hover:to-emerald-700 transition-colors shadow-md hover:shadow-lg"
+                                                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                                                    isDark 
+                                                                        ? 'bg-gray-600 text-white hover:bg-gray-500'
+                                                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                                                }`}
                                                             >
-                                                                Continue Discussion
+                                                                Continue
                                                             </button>
                                                         </div>
                                                     </div>
@@ -661,41 +619,55 @@ export default function ChatSupport() {
 
             {/* Professional Inquiry Details Modal */}
             {selectedInquiry && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[99999999] p-4" onClick={() => setSelectedInquiry(null)}>
-                    <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden border border-gray-200" onClick={e => e.stopPropagation()}>
-                        <div className="bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-6 flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[99999999] p-4" onClick={() => setSelectedInquiry(null)}>
+                    <div className={`rounded-xl max-w-3xl w-full max-h-[90vh] overflow-hidden border ${
+                        isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                    }`} onClick={e => e.stopPropagation()}>
+                        <div className={`px-6 py-4 flex items-center justify-between border-b ${
+                            isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                        }`}>
+                            <div className="flex items-center gap-3">
+                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                                    isDark ? 'bg-green-900/30' : 'bg-green-100'
+                                }`}>
+                                    <svg className={`w-5 h-5 ${isDark ? 'text-green-400' : 'text-green-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-bold">{selectedInquiry.subject}</h3>
-                                    <p className="text-blue-100">Ticket Conversation</p>
+                                    <h3 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                        {selectedInquiry.subject}
+                                    </h3>
+                                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Ticket Conversation</p>
                                 </div>
                             </div>
                             <button
                                 onClick={() => setSelectedInquiry(null)}
-                                className="p-2 hover:bg-white/20 rounded-xl transition-colors"
+                                className={`p-2 rounded-lg transition-colors ${
+                                    isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
+                                }`}
                             >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className={`w-5 h-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
                         </div>
                         
-                        <div className="p-8 max-h-[70vh] overflow-y-auto">
-                            <div className="space-y-6">
+                        <div className="p-6 max-h-[70vh] overflow-y-auto">
+                            <div className="space-y-4">
                                 {selectedInquiry.replies.map((reply, index) => (
-                                    <div key={index} className={`flex ${reply.from === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                        <div className={`max-w-[80%] p-6 rounded-2xl shadow-lg ${
+                                    <div key={index} className={`flex gap-2 ${reply.from === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                                        <div className={`max-w-[80%] p-4 rounded-lg ${
                                             reply.from === 'user'
-                                                ? 'bg-gradient-to-r from-green-600 to-green-700 text-white rounded-br-sm'
-                                                : 'bg-gray-100 text-gray-800 rounded-bl-sm'
+                                                ? 'bg-green-600 text-white'
+                                                : isDark
+                                                    ? 'bg-gray-700 text-gray-100'
+                                                    : 'bg-gray-100 text-gray-800'
                                         }`}>
-                                            <p className="leading-relaxed">{reply.message}</p>
-                                            <div className="flex items-center justify-between mt-4 text-sm opacity-80">
+                                            <p className="text-sm leading-relaxed">{reply.message}</p>
+                                            <div className={`flex items-center justify-between mt-2 text-xs ${
+                                                reply.from === 'user' ? 'text-green-100' : isDark ? 'text-gray-400' : 'text-gray-500'
+                                            }`}>
                                                 <span>{reply.time}</span>
                                                 {reply.responder && <span>- {reply.responder}</span>}
                                             </div>
@@ -705,12 +677,12 @@ export default function ChatSupport() {
                             </div>
                         </div>
                         
-                        <div className="border-t border-gray-200 px-8 py-6 bg-gray-50">
+                        <div className={`border-t px-6 py-4 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
                             <button
                                 onClick={() => setSelectedInquiry(null)}
-                                className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-2xl hover:from-green-700 hover:to-green-800 transition-colors font-semibold shadow-lg"
+                                className="w-full bg-green-600 text-white px-4 py-2.5 rounded-lg hover:bg-green-700 transition-colors font-medium text-sm"
                             >
-                                Close Conversation
+                                Close
                             </button>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../../../../contexts/ThemeContext';
 
 const CATEGORY_OPTIONS = [
   { value: 'Cereals', label: 'Cereals', icon: '🌾' },
@@ -17,12 +18,13 @@ export default function GuidelinesList({
   onDelete, 
   onViewDetails 
 }) {
+  const { theme, isDark } = useTheme();
   
   if (isLoading) {
     return (
       <div className="text-center py-12">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
-        <p className="text-gray-600">Loading crop guidelines...</p>
+        <p className={isDark ? 'text-gray-300' : 'text-gray-600'}>Loading crop guidelines...</p>
       </div>
     );
   }
@@ -30,18 +32,18 @@ export default function GuidelinesList({
   if (error) {
     return (
       <div className="text-center py-12">
-        <div className="text-red-500 mb-2">⚠️ Failed to load guidelines</div>
-        <p className="text-sm text-gray-600">{error.message}</p>
+        <div className={isDark ? 'text-red-400 mb-2' : 'text-red-500 mb-2'}>⚠️ Failed to load guidelines</div>
+        <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{error.message}</p>
       </div>
     );
   }
 
   if (!guidelines || guidelines.length === 0) {
     return (
-      <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+      <div className={`text-center py-12 rounded-lg border-2 border-dashed ${isDark ? 'bg-gray-800 border-gray-600' : 'bg-gray-50 border-gray-300'}`}>
         <div className="text-6xl mb-4">🌱</div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">No Guidelines Found</h3>
-        <p className="text-gray-600">Create your first crop guideline to get started</p>
+        <h3 className={`text-lg font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>No Guidelines Found</h3>
+        <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>Create your first crop guideline to get started</p>
       </div>
     );
   }
@@ -51,56 +53,56 @@ export default function GuidelinesList({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+    <div className={`rounded-lg border shadow-sm overflow-hidden ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className={`border-b ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Crop Name
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Category
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Growing Period
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Stages
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Difficulty
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              <th className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Profitability
               </th>
-              <th className="px-6 py-3 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              <th className={`px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className={`divide-y ${isDark ? 'bg-gray-800 divide-gray-700' : 'bg-white divide-gray-200'}`}>
             {guidelines.map((guideline) => {
               const categoryInfo = getCategoryInfo(guideline.category);
               
               return (
                 <tr 
                   key={guideline.id} 
-                  className="hover:bg-gray-50 transition-colors duration-150"
+                  className={`transition-colors duration-150 ${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}
                 >
                   {/* Crop Name */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-green-100 rounded-lg flex-shrink-0">
+                      <div className={`p-2 rounded-lg flex-shrink-0 ${isDark ? 'bg-green-900/30' : 'bg-green-100'}`}>
                         <span className="text-xl">{categoryInfo.icon}</span>
                       </div>
                       <div>
-                        <div className="text-sm font-semibold text-gray-800">
+                        <div className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>
                           {guideline.name}
                         </div>
                         {guideline.varieties && guideline.varieties.length > 0 && (
-                          <div className="text-xs text-gray-500 mt-1">
+                          <div className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                             {guideline.varieties.slice(0, 2).join(', ')}
                             {guideline.varieties.length > 2 && ` +${guideline.varieties.length - 2}`}
                           </div>
@@ -118,7 +120,7 @@ export default function GuidelinesList({
 
                   {/* Growing Period */}
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-800">
+                    <div className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-800'}`}>
                       {guideline.growingPeriod || 'N/A'}
                     </div>
                   </td>
@@ -126,11 +128,11 @@ export default function GuidelinesList({
                   {/* Stages */}
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-green-100 text-green-800 text-sm font-bold">
+                      <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-sm font-bold ${isDark ? 'bg-green-900/30 text-green-300' : 'bg-green-100 text-green-800'}`}>
                         {guideline.stages?.length || 0}
                       </span>
                       {guideline.stages && guideline.stages.length > 0 && (
-                        <div className="text-xs text-gray-600 max-w-[150px] truncate" title={guideline.stages.map(s => s.stageName).join(', ')}>
+                        <div className={`text-xs max-w-[150px] truncate ${isDark ? 'text-gray-400' : 'text-gray-600'}`} title={guideline.stages.map(s => s.stageName).join(', ')}>
                           {guideline.stages[0].stageName}
                           {guideline.stages.length > 1 && ` +${guideline.stages.length - 1}`}
                         </div>
@@ -162,7 +164,7 @@ export default function GuidelinesList({
                     <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => onViewDetails(guideline)}
-                        className="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-200"
+                        className={`p-2 rounded-lg transition-colors duration-200 ${isDark ? 'text-gray-400 hover:text-green-400 hover:bg-green-900/30' : 'text-gray-600 hover:text-green-600 hover:bg-green-50'}`}
                         title="View Details"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,7 +174,7 @@ export default function GuidelinesList({
                       </button>
                       <button
                         onClick={() => onEdit(guideline)}
-                        className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                        className={`p-2 rounded-lg transition-colors duration-200 ${isDark ? 'text-gray-400 hover:text-blue-400 hover:bg-blue-900/30' : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'}`}
                         title="Edit Guideline"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -181,7 +183,7 @@ export default function GuidelinesList({
                       </button>
                       <button
                         onClick={() => onDelete(guideline)}
-                        className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                        className={`p-2 rounded-lg transition-colors duration-200 ${isDark ? 'text-gray-400 hover:text-red-400 hover:bg-red-900/30' : 'text-gray-600 hover:text-red-600 hover:bg-red-50'}`}
                         title="Delete Guideline"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

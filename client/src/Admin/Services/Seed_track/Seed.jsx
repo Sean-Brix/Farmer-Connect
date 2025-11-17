@@ -1393,10 +1393,10 @@ function Seed_Track() {
                                         {crop.guideline && crop.guideline.stages && (
                                           <button
                                             onClick={() => openStageEditor(crop)}
-                                            className={`px-3 py-1 text-xs rounded-md transition-colors flex items-center gap-1 ${
+                                            className={`px-3 py-2 text-xs rounded-md transition-colors flex items-center gap-1 ${
                                               isDark 
-                                                ? 'bg-indigo-600 hover:bg-indigo-700 text-white' 
-                                                : 'bg-indigo-500 hover:bg-indigo-600 text-white'
+                                                ? 'bg-green-700 hover:bg-green-800 text-white' 
+                                                : 'bg-green-600 hover:bg-green-700 text-white'
                                             }`}
                                             title="Edit crop stages"
                                           >
@@ -1408,10 +1408,10 @@ function Seed_Track() {
                                         )}
                                         <button
                                           onClick={() => setExpandedCropId(expandedCropId === crop.id ? null : crop.id)}
-                                          className={`px-3 py-1 rounded-md transition-colors ${
+                                          className={`px-3 py-2 text-xs rounded-md transition-colors ${
                                             isDark 
-                                              ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                                              : 'bg-blue-500 hover:bg-blue-600 text-white'
+                                              ? 'bg-green-600 hover:bg-green-700 text-white' 
+                                              : 'bg-green-500 hover:bg-green-600 text-white'
                                           }`}
                                         >
                                           {expandedCropId === crop.id ? 'Hide' : 'View'} Reports ({crop.reports?.length || 0})
@@ -1423,10 +1423,10 @@ function Seed_Track() {
                                               archiveCrop(crop.id, reason);
                                             }
                                           }}
-                                          className={`px-3 py-1 rounded-md transition-colors ${
+                                          className={`px-3 py-2 text-xs rounded-md transition-colors ${
                                             isDark 
-                                              ? 'bg-gray-600 hover:bg-gray-700 text-white' 
-                                              : 'bg-gray-500 hover:bg-gray-600 text-white'
+                                              ? 'bg-green-500 hover:bg-green-600 text-white' 
+                                              : 'bg-green-400 hover:bg-green-500 text-white'
                                           }`}
                                           title="Archive"
                                         >
@@ -1520,13 +1520,13 @@ function Seed_Track() {
                 {selectedFarmerTab === 'archive' && (
                   <div>
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                      <h4 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                        <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <h4 className={`text-lg font-semibold flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        <svg className={`w-5 h-5 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                         Archived Crops
                       </h4>
-                      <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                      <span className={`text-sm px-3 py-1 rounded-full ${isDark ? 'text-gray-300 bg-gray-700' : 'text-gray-600 bg-gray-100'}`}>
                         {getFarmerCrops(currentFarmer.id, true).length} archived
                       </span>
                     </div>
@@ -1546,32 +1546,32 @@ function Seed_Track() {
                           }) : 'N/A';
 
                           return (
-                            <div key={crop.id} className="bg-white border border-gray-300 rounded-lg p-6 opacity-90">
+                            <div key={crop.id} className={`border rounded-lg p-6 opacity-90 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-300'}`}>
                               <div className="flex items-start justify-between">
                                 <div className="flex-1">
                                   <div className="flex items-center gap-3 mb-2">
-                                    <h5 className="text-lg font-semibold text-gray-800">{crop.cropType} - {crop.variety}</h5>
+                                    <h5 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>{crop.cropType} - {crop.variety}</h5>
                                     <span className={`px-2 py-1 rounded text-xs font-medium ${
                                       crop.status === 'Completed' ? 'bg-green-100 text-green-800' :
-                                      crop.status === 'Archived' ? 'bg-gray-200 text-gray-700' :
-                                      'bg-gray-100 text-gray-600'
+                                      crop.status === 'Archived' ? (isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700') :
+                                      isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'
                                     }`}>
                                       {crop.status}
                                     </span>
                                   </div>
-                                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600">
+                                  <div className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                     <span>🌱 Planted: {plantingDateFormatted}</span>
                                     <span>🌾 Expected Harvest: {harvestDateFormatted}</span>
                                     <span>📏 Area: {crop.area} hectares</span>
                                   </div>
                                   {crop.notes && (
-                                    <div className="mt-2 text-sm text-gray-500 italic">
+                                    <div className={`mt-2 text-sm italic ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                                       Note: {crop.notes}
                                     </div>
                                   )}
                                 </div>
                                 <div className="text-right ml-4">
-                                  <div className="text-sm font-medium text-gray-700">
+                                  <div className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                                     {crop.reports?.length || 0} reports
                                   </div>
                                   <button
@@ -1584,7 +1584,7 @@ function Seed_Track() {
                                       });
                                       setShowCropReportsModal(true);
                                     }}
-                                    className="mt-2 text-xs text-blue-600 hover:text-blue-800 underline"
+                                    className={`mt-2 text-xs underline ${isDark ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-800'}`}
                                   >
                                     View Reports
                                   </button>
@@ -1595,9 +1595,9 @@ function Seed_Track() {
                         })}
                       </div>
                     ) : (
-                      <div className="text-center py-12 text-gray-500">
+                      <div className={`text-center py-12 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                         <span className="text-6xl">📦</span>
-                        <p className="mt-4 text-xl">No archived crops</p>
+                        <p className={`mt-4 text-xl ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>No archived crops</p>
                         <p className="text-sm">Completed or archived crops will appear here</p>
                       </div>
                     )}
@@ -1615,28 +1615,28 @@ function Seed_Track() {
                     </div>
                     
                     {/* Quick Overview Section */}
-                    <div className="bg-white rounded-lg p-6 mb-6 border border-gray-200">
-                      <h5 className="font-semibold text-gray-800 mb-4">📊 Quick Overview</h5>
+                    <div className={`rounded-lg p-6 mb-6 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                      <h5 className={`font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>📊 Quick Overview</h5>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {(() => {
                           const analytics = getFarmerAnalytics(currentFarmer.id);
                           return (
                             <>
-                              <div className="text-center p-3 bg-gray-50 rounded-lg shadow-sm">
-                                <div className="text-2xl font-bold text-gray-900">{analytics.totalReports}</div>
-                                <div className="text-xs text-gray-600">Total Reports</div>
+                              <div className={`text-center p-3 rounded-lg shadow-sm ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                                <div className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{analytics.totalReports}</div>
+                                <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Reports</div>
                               </div>
-                              <div className="text-center p-3 bg-gray-50 rounded-lg shadow-sm">
-                                <div className="text-2xl font-bold text-gray-900">{analytics.activeCrops}</div>
-                                <div className="text-xs text-gray-600">Active Crops</div>
+                              <div className={`text-center p-3 rounded-lg shadow-sm ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                                <div className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{analytics.activeCrops}</div>
+                                <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Active Crops</div>
                               </div>
-                              <div className="text-center p-3 bg-gray-50 rounded-lg shadow-sm">
-                                <div className="text-2xl font-bold text-gray-900">{analytics.avgPlantHeight}cm</div>
-                                <div className="text-xs text-gray-600">Avg Height</div>
+                              <div className={`text-center p-3 rounded-lg shadow-sm ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                                <div className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{analytics.avgPlantHeight}cm</div>
+                                <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Avg Height</div>
                               </div>
-                              <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+                              <div className={`text-center p-3 rounded-lg shadow-sm ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
                                 <div className="text-2xl font-bold text-orange-600">{analytics.totalEstimatedYield}kg</div>
-                                <div className="text-xs text-gray-600">Est. Yield</div>
+                                <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Est. Yield</div>
                               </div>
                             </>
                           );
@@ -1758,10 +1758,10 @@ function Seed_Track() {
                           };
 
                           return (
-                            <div key={cropIndex} className="bg-white border border-gray-200 rounded-lg p-6">
+                            <div key={cropIndex} className={`border rounded-lg p-6 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                               <div className="mb-4">
-                                <h6 className="font-semibold text-gray-800">{crop.cropType} - Growth Analytics</h6>
-                                <p className="text-sm text-gray-600">
+                                <h6 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>{crop.cropType} - Growth Analytics</h6>
+                                <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                   Planted: {crop.plantingDate} • Area: {crop.area} hectares • Reports: {crop.reports.length}
                                 </p>
                               </div>
@@ -1778,10 +1778,10 @@ function Seed_Track() {
                               
                               {/* Recent Reports Timeline */}
                               <div className="border-t pt-4">
-                                <h6 className="font-medium text-gray-800 mb-3">📈 Recent Reports Timeline</h6>
+                                <h6 className={`font-medium mb-3 ${isDark ? 'text-white' : 'text-gray-800'}`}>📈 Recent Reports Timeline</h6>
                                 <div className="space-y-3 max-h-60 overflow-y-auto">
                                   {crop.reports.slice(-5).reverse().map((report, reportIndex) => (
-                                    <div key={reportIndex} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div key={reportIndex} className={`flex items-center justify-between p-3 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                                       <div className="flex items-center space-x-3">
                                         <div className={`w-3 h-3 rounded-full ${
                                           report.healthStatus === 'Healthy' ? 'bg-green-500' :
@@ -1790,13 +1790,13 @@ function Seed_Track() {
                                           'bg-gray-500'
                                         }`}></div>
                                         <div>
-                                          <div className="text-sm font-medium text-gray-800">{report.reportDate}</div>
-                                          <div className="text-xs text-gray-600">Stage: {report.growthStage}</div>
+                                          <div className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-800'}`}>{report.reportDate}</div>
+                                          <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Stage: {report.growthStage}</div>
                                         </div>
                                       </div>
                                       <div className="text-right text-sm">
-                                        <div className="font-medium">{report.plantHeight}cm</div>
-                                        <div className="text-gray-600">{report.estimatedYield}kg</div>
+                                        <div className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{report.plantHeight}cm</div>
+                                        <div className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{report.estimatedYield}kg</div>
                                       </div>
                                     </div>
                                   ))}
@@ -2009,7 +2009,7 @@ function Seed_Track() {
   {/* Professional Crop Reports Modal */}
         {showCropReportsModal && selectedCrop && (
           <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden shadow-xl border border-gray-300">
+            <div className={`rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden shadow-xl border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-300'}`}>
               {/* Modal Header */}
               <div className="bg-green-600 text-white p-4 border-b border-green-700">
                 <div className="flex items-center justify-between">
@@ -2044,17 +2044,17 @@ function Seed_Track() {
               </div>
 
               {/* Modal Body */}
-              <div className="p-4 max-h-[calc(90vh-120px)] overflow-y-auto bg-gray-50">
+              <div className={`p-4 max-h-[calc(90vh-120px)] overflow-y-auto ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
                 {/* Expected Harvest Timeline */}
                 <div className="mb-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center border-b border-gray-200 pb-2">
+                  <h3 className={`text-lg font-semibold mb-4 flex items-center border-b pb-2 ${isDark ? 'text-white border-gray-700' : 'text-gray-800 border-gray-200'}`}>
                     <svg className="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     Expected Monthly Reports Timeline
                   </h3>
                   
-                  <div className="bg-white rounded-lg p-4 border border-gray-200">
+                  <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                       {selectedCrop.expectedMonths.map((month, index) => {
                         // Check if there's a report for this month
@@ -2101,19 +2101,19 @@ function Seed_Track() {
                     <div className="mt-4 flex flex-wrap gap-4 text-sm">
                       <div className="flex items-center">
                         <div className="w-4 h-4 bg-green-500 rounded mr-2"></div>
-                        <span className="text-gray-700">Report Submitted</span>
+                        <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Report Submitted</span>
                       </div>
                       <div className="flex items-center">
                         <div className="w-4 h-4 bg-gray-500 rounded mr-2"></div>
-                        <span className="text-gray-700">Current Month</span>
+                        <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Current Month</span>
                       </div>
                       <div className="flex items-center">
                         <div className="w-4 h-4 bg-gray-300 rounded mr-2"></div>
-                        <span className="text-gray-700">Missing Report</span>
+                        <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Missing Report</span>
                       </div>
                       <div className="flex items-center">
-                        <div className="w-4 h-4 bg-gray-100 border border-gray-300 rounded mr-2"></div>
-                        <span className="text-gray-700">Future Report</span>
+                        <div className={`w-4 h-4 rounded mr-2 border ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-100 border-gray-300'}`}></div>
+                        <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Future Report</span>
                       </div>
                     </div>
                   </div>
@@ -2121,7 +2121,7 @@ function Seed_Track() {
 
                 {/* Detailed Reports List */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center border-b border-gray-200 pb-2">
+                  <h3 className={`text-lg font-semibold mb-4 flex items-center border-b pb-2 ${isDark ? 'text-white border-gray-700' : 'text-gray-800 border-gray-200'}`}>
                     <svg className="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -2133,17 +2133,17 @@ function Seed_Track() {
                       {selectedCrop.reports
                         .sort((a, b) => new Date(b.reportDate) - new Date(a.reportDate))
                         .map((report, index) => (
-                        <div key={index} className="border border-gray-200 rounded-lg overflow-hidden bg-white">
+                        <div key={index} className={`border rounded-lg overflow-hidden ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                           {/* Report Header */}
                           <div className={`px-4 py-3 border-l-4 ${
-                            report.healthStatus === 'Healthy' ? 'bg-green-50 border-green-500' :
-                            report.healthStatus === 'Warning' ? 'bg-gray-50 border-gray-500' :
-                            report.healthStatus === 'Critical' ? 'bg-gray-100 border-gray-600' :
-                            'bg-white border-gray-400'
+                            report.healthStatus === 'Healthy' ? (isDark ? 'bg-green-900/30 border-green-500' : 'bg-green-50 border-green-500') :
+                            report.healthStatus === 'Warning' ? (isDark ? 'bg-gray-800 border-gray-500' : 'bg-gray-50 border-gray-500') :
+                            report.healthStatus === 'Critical' ? (isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-100 border-gray-600') :
+                            isDark ? 'bg-gray-800 border-gray-400' : 'bg-white border-gray-400'
                           }`}>
                             <div className="flex items-center justify-between mb-2">
-                              <h4 className="text-base font-semibold text-gray-800 flex items-center">
-                                <span className="w-6 h-6 bg-white rounded flex items-center justify-center mr-2 text-xs font-medium text-gray-600">
+                              <h4 className={`text-base font-semibold flex items-center ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                                <span className={`w-6 h-6 rounded flex items-center justify-center mr-2 text-xs font-medium ${isDark ? 'bg-gray-700 text-gray-300' : 'bg-white text-gray-600'}`}>
                                   #{selectedCrop.reports.length - index}
                                 </span>
                                 Report - {new Date(report.reportDate).toLocaleDateString('en-US', { 

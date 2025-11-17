@@ -388,7 +388,8 @@ export default function Navbar({refresh}) {
                     }
                 `}
             </style>
-            <Chat />
+            {/* Only show Chat for regular users, not Admin or Super Admin */}
+            {loggedIn && user.access !== 'Admin' && user.access !== 'Super Admin' && user.access !== 'Super_Admin' && <Chat />}
             {showAlert && (
                 <div className="fixed inset-0 z-[999] flex items-center justify-center  bg-black/70 transition-all duration-300">
                     <div
@@ -485,7 +486,7 @@ export default function Navbar({refresh}) {
                                     setInfoOpen(true);
                                 }}
                                 onMouseLeave={() => {
-                                    window.infoMenuTimeout = setTimeout(() => setInfoOpen(false), 180);
+                                    window.infoMenuTimeout = setTimeout(() => setInfoOpen(false), 400);
                                 }}
                             >
                                 <button
@@ -833,13 +834,13 @@ export default function Navbar({refresh}) {
      
                         {loggedIn ? (
                             <div
-                                className="relative hidden md:block"
+                                className="relative hidden md:block p-3 -m-3"
                                 onMouseEnter={() => {
                                     if (closeProfileTimeout.current) clearTimeout(closeProfileTimeout.current);
                                     setOpen(true);
                                 }}
                                 onMouseLeave={() => {
-                                    closeProfileTimeout.current = setTimeout(() => setOpen(false), 250); // 250ms delay
+                                    closeProfileTimeout.current = setTimeout(() => setOpen(false), 500); // 500ms delay
                                 }}
                             >
                                 <button
@@ -854,7 +855,6 @@ export default function Navbar({refresh}) {
                                         alt="User Avatar"
                                         className="w-9 h-9 rounded-full object-cover"
                                     />
-                                    <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 border-2 border-white rounded-full shadow-sm"></span>
                                 </button>
                                 {open && (
                                     <ul
@@ -867,7 +867,7 @@ export default function Navbar({refresh}) {
                                             if (closeProfileTimeout.current) clearTimeout(closeProfileTimeout.current);
                                         }}
                                         onMouseLeave={() => {
-                                            closeProfileTimeout.current = setTimeout(() => setOpen(false), 250);
+                                            closeProfileTimeout.current = setTimeout(() => setOpen(false), 500);
                                         }}
                                     >
                                         <li>
