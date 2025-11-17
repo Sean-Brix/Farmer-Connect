@@ -218,11 +218,11 @@ export default function GuidelineModal({ isOpen, onClose, guideline, onSave, isL
     let totalDays = 0;
     formData.stages.forEach((stage, index) => {
       if (!stage.stageName.trim()) newErrors[`stage_${index}_name`] = `Stage ${index + 1} name is required`;
-      if (!stage.durationValue) newErrors[`stage_${index}_duration`] = `Stage ${index + 1} duration is required`;
+      if (stage.durationValue === '' || stage.durationValue === null || stage.durationValue === undefined) newErrors[`stage_${index}_duration`] = `Stage ${index + 1} duration is required`;
       if (!stage.description.trim()) newErrors[`stage_${index}_description`] = `Stage ${index + 1} description is required`;
       
-      // Calculate days
-      if (stage.durationValue && stage.durationUnit) {
+      // Calculate days (allow 0 duration)
+      if ((stage.durationValue !== '' && stage.durationValue !== null && stage.durationValue !== undefined) && stage.durationUnit) {
         const value = parseInt(stage.durationValue);
         switch(stage.durationUnit) {
           case 'days': totalDays += value; break;

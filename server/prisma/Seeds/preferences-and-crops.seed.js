@@ -132,9 +132,10 @@ export async function seedRegisteredCrops(prisma) {
           expectedHarvest,
           area: cropData.area,
           status: 'Active',
-          currentStage: 'Vegetative',
           currentStageIndex: 2,
-          expectedYield: cropData.area * 1000, // Simple calculation
+          currentStageName: 'Vegetative',
+          completedStages: 2,
+          totalStages: guideline.stages?.length || 0,
           notes: `Following ${cropData.guidelineName} guideline`,
         },
       });

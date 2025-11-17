@@ -376,16 +376,21 @@ CREATE TABLE `user_preferences` (
 CREATE TABLE `registered_crops` (
     `id` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(191) NOT NULL,
-    `guidelineId` VARCHAR(191) NULL,
+    `guidelineId` VARCHAR(191) NOT NULL,
     `cropType` VARCHAR(191) NOT NULL,
     `variety` VARCHAR(191) NOT NULL,
     `plantingDate` DATETIME(3) NOT NULL,
     `expectedHarvest` DATETIME(3) NULL,
     `area` DOUBLE NULL,
     `status` ENUM('Active', 'Inactive', 'Completed', 'Archived') NOT NULL DEFAULT 'Active',
-    `currentStage` ENUM('Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Maturity', 'Harvested') NOT NULL DEFAULT 'Seedling',
-    `currentStageIndex` INTEGER NULL DEFAULT 0,
-    `expectedYield` DOUBLE NULL,
+    `currentStageIndex` INTEGER NOT NULL DEFAULT 0,
+    `currentStageName` VARCHAR(191) NULL,
+    `currentStageStartDate` DATETIME(3) NULL,
+    `currentStageEndDate` DATETIME(3) NULL,
+    `canSubmitReport` BOOLEAN NOT NULL DEFAULT true,
+    `lastReportDate` DATETIME(3) NULL,
+    `totalStages` INTEGER NULL,
+    `completedStages` INTEGER NOT NULL DEFAULT 0,
     `notes` VARCHAR(191) NULL,
     `archiveReason` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -393,6 +398,7 @@ CREATE TABLE `registered_crops` (
 
     INDEX `registered_crops_userId_cropType_status_idx`(`userId`, `cropType`, `status`),
     INDEX `registered_crops_guidelineId_idx`(`guidelineId`),
+    INDEX `registered_crops_currentStageIndex_canSubmitReport_idx`(`currentStageIndex`, `canSubmitReport`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -400,6 +406,8 @@ CREATE TABLE `registered_crops` (
 CREATE TABLE `crop_monthly_reports` (
     `id` VARCHAR(191) NOT NULL,
     `cropId` VARCHAR(191) NOT NULL,
+    `stageIndex` INTEGER NOT NULL,
+    `stageName` VARCHAR(191) NOT NULL,
     `plantHeight` DOUBLE NULL,
     `healthStatus` VARCHAR(191) NULL,
     `weatherImpact` VARCHAR(191) NULL,
@@ -418,6 +426,7 @@ CREATE TABLE `crop_monthly_reports` (
     `updatedAt` DATETIME(3) NOT NULL,
 
     INDEX `crop_monthly_reports_cropId_createdAt_idx`(`cropId`, `createdAt`),
+    INDEX `crop_monthly_reports_cropId_stageIndex_idx`(`cropId`, `stageIndex`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -433,6 +442,25 @@ CREATE TABLE `report_feedback` (
 
     INDEX `report_feedback_reportId_createdAt_idx`(`reportId`, `createdAt`),
     INDEX `report_feedback_parentId_idx`(`parentId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `crop_stage_messages` (
+    `id` VARCHAR(191) NOT NULL,
+    `cropId` VARCHAR(191) NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
+    `stageIndex` INTEGER NOT NULL,
+    `stageName` VARCHAR(191) NOT NULL,
+    `message` TEXT NOT NULL,
+    `isAdminReply` BOOLEAN NOT NULL DEFAULT false,
+    `parentId` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    INDEX `crop_stage_messages_cropId_createdAt_idx`(`cropId`, `createdAt`),
+    INDEX `crop_stage_messages_cropId_stageIndex_idx`(`cropId`, `stageIndex`),
+    INDEX `crop_stage_messages_parentId_idx`(`parentId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -634,7 +662,7 @@ ALTER TABLE `user_preferences` ADD CONSTRAINT `user_preferences_userId_fkey` FOR
 ALTER TABLE `registered_crops` ADD CONSTRAINT `registered_crops_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `registered_crops` ADD CONSTRAINT `registered_crops_guidelineId_fkey` FOREIGN KEY (`guidelineId`) REFERENCES `crop_guidelines`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `registered_crops` ADD CONSTRAINT `registered_crops_guidelineId_fkey` FOREIGN KEY (`guidelineId`) REFERENCES `crop_guidelines`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `crop_monthly_reports` ADD CONSTRAINT `crop_monthly_reports_cropId_fkey` FOREIGN KEY (`cropId`) REFERENCES `registered_crops`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -647,6 +675,15 @@ ALTER TABLE `report_feedback` ADD CONSTRAINT `report_feedback_authorId_fkey` FOR
 
 -- AddForeignKey
 ALTER TABLE `report_feedback` ADD CONSTRAINT `report_feedback_parentId_fkey` FOREIGN KEY (`parentId`) REFERENCES `report_feedback`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `crop_stage_messages` ADD CONSTRAINT `crop_stage_messages_cropId_fkey` FOREIGN KEY (`cropId`) REFERENCES `registered_crops`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `crop_stage_messages` ADD CONSTRAINT `crop_stage_messages_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `crop_stage_messages` ADD CONSTRAINT `crop_stage_messages_parentId_fkey` FOREIGN KEY (`parentId`) REFERENCES `crop_stage_messages`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `seminars` ADD CONSTRAINT `seminars_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

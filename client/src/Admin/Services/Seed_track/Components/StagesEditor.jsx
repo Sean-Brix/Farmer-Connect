@@ -218,7 +218,7 @@ export default function StagesEditor({ stages, onChange, growingPeriod }) {
                       value={stage.durationValue || ''}
                       onChange={(e) => updateStage(stageIndex, 'durationValue', e.target.value)}
                       placeholder="Number"
-                      min="1"
+                      min="0"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       required
                     />

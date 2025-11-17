@@ -444,6 +444,13 @@ function Seed_Track() {
   // Filter function for farmers with search
   const getFilteredFarmers = () => {
     return farmers.filter(farmer => {
+      // Only show farmers with active registered crops
+      const userCrops = cropsByUser.get(farmer.id) || [];
+      const hasActiveCrops = userCrops.some(crop => crop.status === 'Active');
+      if (!hasActiveCrops) {
+        return false;
+      }
+      
       if (filters.status !== 'all' && farmer.status.toLowerCase() !== filters.status) {
         return false;
       }
@@ -594,7 +601,7 @@ function Seed_Track() {
         // Update existing guideline
         await updateGuideline.mutateAsync({
           id: editingGuideline.id,
-          data: guidelineData
+          ...guidelineData
         });
         showAlert('Guideline updated successfully!', 'success');
       } else {
