@@ -96,7 +96,7 @@ export default function Distribution() {
             ? stacksError?.message
             : requestsError?.message;
 
-    // Filter and sort stacks based on search and sort options
+    // Filter and sort stacks based on search and sort options  
     const filteredStacks = distributionStacks
         .filter((stack) => {
             const searchValue = search.toLowerCase();
@@ -114,6 +114,16 @@ export default function Distribution() {
             return matchesSearch;
         })
         .sort((a, b) => {
+            // Define low stock threshold
+            const LOW_STOCK_THRESHOLD = 10;
+            const aIsLow = a.quantity <= LOW_STOCK_THRESHOLD;
+            const bIsLow = b.quantity <= LOW_STOCK_THRESHOLD;
+            
+            // Always show low stock items first
+            if (aIsLow && !bIsLow) return -1;
+            if (!aIsLow && bIsLow) return 1;
+            
+            // Then apply selected sorting
             switch (sortBy) {
                 case 'name':
                     return (a.item?.name || '').localeCompare(
@@ -124,7 +134,7 @@ export default function Distribution() {
                         b.item?.category || ''
                     );
                 case 'quantity':
-                    return b.quantity - a.quantity; // Descending order
+                    return a.quantity - b.quantity; // Ascending for low stock visibility
                 case 'date':
                     return new Date(b.createdAt) - new Date(a.createdAt); // Newest first
                 case 'default':
@@ -1733,7 +1743,13 @@ function InternalDistributionItemCard({
                         <span className="font-semibold text-slate-700">
                             Quantity:
                         </span>{' '}
-                        {stack.quantity}
+                        {stack.quantity === 0 ? (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-300">
+                                OUT OF STOCK
+                            </span>
+                        ) : (
+                            stack.quantity
+                        )}
                     </span>
                     <span>
                         <span className="font-semibold text-slate-700">

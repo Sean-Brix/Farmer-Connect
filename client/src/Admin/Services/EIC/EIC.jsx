@@ -99,6 +99,16 @@ export default function EIC() {
             return matchesSearch;
         })
         .sort((a, b) => {
+            // Define low stock threshold
+            const LOW_STOCK_THRESHOLD = 10;
+            const aIsLow = a.quantity <= LOW_STOCK_THRESHOLD;
+            const bIsLow = b.quantity <= LOW_STOCK_THRESHOLD;
+            
+            // Always show low stock items first
+            if (aIsLow && !bIsLow) return -1;
+            if (!aIsLow && bIsLow) return 1;
+            
+            // Then apply selected sorting
             switch (sortBy) {
                 case 'name':
                     return (a.item?.name || '').localeCompare(
@@ -109,7 +119,7 @@ export default function EIC() {
                         b.item?.category || ''
                     );
                 case 'quantity':
-                    return b.quantity - a.quantity; // Descending order
+                    return a.quantity - b.quantity; // Ascending for low stock visibility
                 case 'date':
                     return new Date(b.createdAt) - new Date(a.createdAt); // Newest first
                 case 'default':
@@ -1711,17 +1721,25 @@ function EICItemRow({ stack, onViewDetails, onEdit, imageUpdateTimestamp, isDark
 
                     {/* Quantity - Col 2 */}
                     <div className="col-span-2">
-                        <div className="flex items-center gap-1">
-                            <span className={`font-medium ${
-                                isDark ? 'text-gray-200' : 'text-gray-900'
-                            }`}>
-                                {stack.quantity}
-                            </span>
-                            <span className={`text-xs ${
-                                isDark ? 'text-gray-400' : 'text-gray-500'
-                            }`}>
-                                units
-                            </span>
+                        <div className="flex items-center gap-2">
+                            {stack.quantity === 0 ? (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-300">
+                                    OUT OF STOCK
+                                </span>
+                            ) : (
+                                <>
+                                    <span className={`font-medium ${
+                                        isDark ? 'text-gray-200' : 'text-gray-900'
+                                    }`}>
+                                        {stack.quantity}
+                                    </span>
+                                    <span className={`text-xs ${
+                                        isDark ? 'text-gray-400' : 'text-gray-500'
+                                    }`}>
+                                        units
+                                    </span>
+                                </>
+                            )}
                         </div>
                     </div>
 
@@ -2157,7 +2175,9 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
         const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
-            [name]: name === 'quantity' ? parseInt(value) || 0 : value,
+            [name]: name === 'quantity' 
+                ? (value === '' || value === null ? null : parseInt(value) || 0) 
+                : value,
         }));
     };
 

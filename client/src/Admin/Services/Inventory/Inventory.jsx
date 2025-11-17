@@ -1400,12 +1400,22 @@ function Content() {
                                                                                 </div>
 
                                                                                 <div className="text-center mb-2">
-                                                                                    <div className="text-lg font-bold text-gray-800 mb-0.5">
-                                                                                        {statusData.totalQuantity}
-                                                                                    </div>
-                                                                                    <div className="text-xs text-gray-600 font-medium">
-                                                                                        {statusData.totalQuantity === 1 ? 'unit' : 'units'}
-                                                                                    </div>
+                                                                                    {statusData.totalQuantity === 0 ? (
+                                                                                        <div className="mb-1">
+                                                                                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-300">
+                                                                                                OUT OF STOCK
+                                                                                            </span>
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <>
+                                                                                            <div className="text-lg font-bold text-gray-800 mb-0.5">
+                                                                                                {statusData.totalQuantity}
+                                                                                            </div>
+                                                                                            <div className="text-xs text-gray-600 font-medium">
+                                                                                                {statusData.totalQuantity === 1 ? 'unit' : 'units'}
+                                                                                            </div>
+                                                                                        </>
+                                                                                    )}
                                                                                 </div>
 
                                                                                 <div className="flex justify-center">
