@@ -396,13 +396,6 @@ function Seed_Track() {
       setReplyText('');
       setSelectedMessage(null);
       
-      // Collapse the crop message section after sending
-      if (cropId) {
-        const newCollapsed = new Set(collapsedCrops);
-        newCollapsed.add(cropId);
-        setCollapsedCrops(newCollapsed);
-      }
-      
       fetchPendingMessages(); // Refresh list
     } catch (error) {
       console.error('Error sending reply:', error);
@@ -896,7 +889,7 @@ function Seed_Track() {
                   <div className="flex items-center gap-4">
                     <button
                       onClick={exportOverviewData}
-                      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+                      className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
                     >
                       <span>📤</span>
                       Export Overview
@@ -1049,7 +1042,7 @@ function Seed_Track() {
               </div>
               <button
                 onClick={fetchPendingMessages}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" strokeLinecap="round" strokeLinejoin="round" />
@@ -1133,7 +1126,7 @@ function Seed_Track() {
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <button
                             onClick={() => openFarmerMessages(farmerData.user.id)}
-                            className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                            className="inline-flex items-center gap-1 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 font-medium"
                           >
                             View & Reply
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1871,12 +1864,12 @@ function Seed_Track() {
                       }, {});
 
                       return (
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                           {Object.values(messagesByCrop).map((cropData) => {
                             const isCollapsed = collapsedCrops.has(cropData.crop.id);
                             
                             return (
-                              <div key={cropData.crop.id} className={`rounded-lg shadow-lg ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
+                              <div key={cropData.crop.id} className={`rounded-lg border overflow-hidden ${isDark ? 'bg-gray-800/50 border-gray-700' : 'bg-white border-gray-200'}`}>
                                 {/* Collapsible Crop Header */}
                                 <button
                                   onClick={() => {
@@ -1888,83 +1881,95 @@ function Seed_Track() {
                                     }
                                     setCollapsedCrops(newCollapsed);
                                   }}
-                                  className={`w-full px-6 py-4 text-left transition-colors ${isDark ? 'hover:bg-gray-750' : 'hover:bg-gray-50'}`}
+                                  className={`w-full px-5 py-3.5 text-left transition-colors flex items-center justify-between ${isDark ? 'hover:bg-gray-700/50' : 'hover:bg-gray-50'}`}
                                 >
-                                  <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-3 flex-1">
+                                    <span className="text-2xl">🌾</span>
                                     <div className="flex-1">
-                                      <div className="flex items-center gap-3">
-                                        <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                                          🌾 {cropData.crop.cropType} - {cropData.crop.variety}
+                                      <div className="flex items-center gap-2">
+                                        <h3 className={`text-base font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                          {cropData.crop.cropType} - {cropData.crop.variety}
                                         </h3>
                                         {cropData.hasUnreplied && (
-                                          <span className="relative flex h-3 w-3">
-                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${isDark ? 'bg-red-900/40 text-red-300 border border-red-700' : 'bg-red-100 text-red-700 border border-red-300'}`}>
+                                            Needs Reply
                                           </span>
                                         )}
                                       </div>
-                                      <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                        {cropData.messages.length} {cropData.messages.length === 1 ? 'message' : 'messages'} • Stage: {cropData.crop.currentStageName || `Stage ${cropData.crop.currentStageIndex + 1}`}
+                                      <p className={`text-xs mt-0.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                        {cropData.messages.length} {cropData.messages.length === 1 ? 'message' : 'messages'} • {cropData.crop.currentStageName || `Stage ${cropData.crop.currentStageIndex + 1}`}
                                       </p>
                                     </div>
-                                    <svg 
-                                      className={`w-5 h-5 transition-transform ${isCollapsed ? '' : 'rotate-180'} ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
-                                      fill="none" 
-                                      stroke="currentColor" 
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                    </svg>
                                   </div>
+                                  <svg 
+                                    className={`w-5 h-5 transition-transform ${isCollapsed ? '' : 'rotate-180'} ${isDark ? 'text-gray-400' : 'text-gray-500'}`}
+                                    fill="none" 
+                                    stroke="currentColor" 
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                  </svg>
                                 </button>
 
                                 {/* Collapsible Content */}
                                 {!isCollapsed && (
                                   <div className={`border-t ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
                                     {/* Chat Thread */}
-                                    <div className="p-6 space-y-4">
-                                      <div className="space-y-3 max-h-96 overflow-y-auto">
+                                    <div className={`p-5 ${isDark ? 'bg-gray-800/30' : 'bg-gray-50/50'}`}>
+                                      <div className="space-y-2.5 max-h-96 overflow-y-auto pr-1">
                                         {cropData.allMessages.map((comment, idx) => (
-                                          <div key={idx} className={`p-3 rounded-lg ${
-                                            comment.isAdminReply 
-                                              ? isDark ? 'bg-green-900/30 border-l-4 border-green-500' : 'bg-green-50 border-l-4 border-green-500'
-                                              : isDark ? 'bg-gray-700' : 'bg-gray-100'
-                                          }`}>
-                                            <div className="flex items-center gap-2 mb-2">
-                                              <span className="text-sm font-semibold">
-                                                {comment.isAdminReply ? '👨‍💼 Admin' : `👤 ${currentFarmer.name}`}
-                                              </span>
-                                              <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                          <div key={idx} className={`flex gap-3 ${comment.isAdminReply ? 'flex-row-reverse' : 'flex-row'}`}>
+                                            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm ${
+                                              comment.isAdminReply 
+                                                ? 'bg-green-600 text-white' 
+                                                : isDark ? 'bg-green-600 text-white' : 'bg-green-500 text-white'
+                                            }`}>
+                                              {comment.isAdminReply ? '👨‍💼' : '👤'}
+                                            </div>
+                                            <div className={`flex-1 ${comment.isAdminReply ? 'items-end' : 'items-start'} flex flex-col`}>
+                                              <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
+                                                comment.isAdminReply 
+                                                  ? isDark ? 'bg-green-700 text-white' : 'bg-green-600 text-white'
+                                                  : isDark ? 'bg-gray-700 text-gray-100' : 'bg-white text-gray-900 border border-gray-200'
+                                              }`}>
+                                                <p className="text-sm leading-relaxed">
+                                                  {comment.message}
+                                                </p>
+                                              </div>
+                                              <span className={`text-xs mt-1 px-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
                                                 {new Date(comment.createdAt).toLocaleString()}
                                               </span>
                                             </div>
-                                            <p className={`text-sm ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
-                                              {comment.message}
-                                            </p>
                                           </div>
                                         ))}
                                       </div>
 
                                       {/* Reply Form */}
-                                      <div>
-                                        <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                          Your Reply
-                                        </label>
+                                      <div className="mt-4 pt-4 border-t border-gray-300 dark:border-gray-600">
                                         <textarea
                                           value={selectedMessage === cropData.crop.id ? replyText : ''}
                                           onChange={(e) => {
                                             setReplyText(e.target.value);
                                             setSelectedMessage(cropData.crop.id);
                                           }}
-                                          placeholder="Type your reply here..."
-                                          rows={4}
-                                          className={`w-full px-4 py-3 rounded-lg border text-sm ${
+                                          onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && !e.shiftKey) {
+                                              e.preventDefault();
+                                              if (replyText.trim()) {
+                                                const lastFarmerMsg = cropData.messages[cropData.messages.length - 1];
+                                                sendReply(lastFarmerMsg.id, cropData.crop.id);
+                                              }
+                                            }
+                                          }}
+                                          placeholder="Type your reply... (Press Enter to send, Shift+Enter for new line)"
+                                          rows={3}
+                                          className={`w-full px-3.5 py-2.5 rounded-lg border text-sm resize-none ${
                                             isDark
                                               ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-green-500'
-                                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-green-500'
-                                          } focus:outline-none focus:ring-2 focus:ring-green-500/50`}
+                                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400 focus:border-green-500'
+                                          } focus:outline-none focus:ring-2 focus:ring-green-500/30`}
                                         />
-                                        <div className="flex justify-end gap-3 mt-3">
+                                        <div className="flex justify-end mt-2.5">
                                           <button
                                             onClick={() => {
                                               // Send reply to the last farmer message in this crop
@@ -1972,13 +1977,16 @@ function Seed_Track() {
                                               sendReply(lastFarmerMsg.id, cropData.crop.id);
                                             }}
                                             disabled={!replyText.trim()}
-                                            className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
                                               replyText.trim()
-                                                ? 'bg-green-600 text-white hover:bg-green-700 shadow-lg'
-                                                : 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                                                ? 'bg-green-600 text-white hover:bg-green-700 shadow-sm hover:shadow'
+                                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                             }`}
                                           >
-                                            📤 Send Reply
+                                            <span>Send Reply</span>
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                              <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
                                           </button>
                                         </div>
                                       </div>
@@ -2000,7 +2008,7 @@ function Seed_Track() {
 
   {/* Professional Crop Reports Modal */}
         {showCropReportsModal && selectedCrop && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden shadow-xl border border-gray-300">
               {/* Modal Header */}
               <div className="bg-green-600 text-white p-4 border-b border-green-700">
@@ -2250,7 +2258,7 @@ function Seed_Track() {
 
         {/* Detailed Report View Modal */}
         {showDetailedReportModal && selectedReport && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60] p-4">
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[60] p-4">
             <div className="bg-white rounded-xl max-w-7xl w-full max-h-[95vh] overflow-hidden shadow-2xl border border-gray-300">
               {/* Modal Header */}
               <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-6 border-b border-green-800">
@@ -2605,7 +2613,7 @@ function Seed_Track() {
 
     {/* Delete Confirmation Modal */}
   {showDeleteModal && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg p-6 w-full max-w-md">
           <div className="flex items-center mb-4">
             <svg className="w-8 h-8 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2641,7 +2649,7 @@ function Seed_Track() {
 
     {/* Stage Editor Modal */}
     {showStageEditorModal && selectedCropForStageEdit && (
-      <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+      <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
         <div className={`rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
           {/* Modal Header */}
           <div className={`px-6 py-4 border-b ${isDark ? 'bg-gradient-to-r from-indigo-900 to-indigo-800 border-gray-700' : 'bg-gradient-to-r from-indigo-600 to-indigo-500 border-gray-200'}`}>
@@ -2828,7 +2836,7 @@ function Seed_Track() {
 
     {/* Stage Action Confirmation Modal */}
     {showStageConfirmModal && selectedCropForStageEdit && (
-      <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[60] p-4">
+      <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[60] p-4">
         <div className={`rounded-xl shadow-2xl w-full max-w-md ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
           {/* Warning Header */}
           <div className="bg-gradient-to-r from-yellow-500 to-orange-500 px-6 py-4 rounded-t-xl">
