@@ -31,7 +31,7 @@ export default function CitizensCharter() {
             <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
                 <main className="w-full">
                     {/* Hero Section */}
-                    <section className={`py-12 ${theme === 'dark' ? 'bg-gray-800' : 'bg-green-800'}`}>
+                    <section className={`py-12 ${theme === 'dark' ? 'bg-gray-800' : 'bg-green-700'}`}>
                         <div className="max-w-5xl mx-auto px-4 sm:px-6">
                             <div className="text-center">
                                 <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl mb-6 mt-15 ${theme === 'dark' ? 'bg-gray-700' : 'bg-white'}`}>

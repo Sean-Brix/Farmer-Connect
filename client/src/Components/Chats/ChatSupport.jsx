@@ -249,7 +249,7 @@ export default function ChatSupport() {
                                 ? 'bg-gray-800 border-gray-700' 
                                 : 'bg-white border-gray-200'
                         }`}>
-                            <div className="flex items-center gap-3 pt-4">
+                            <div className="flex items-center gap-3 pt-6">
                                 <div className="relative">
                                     <img src={botAvatar} alt="Support" className="w-10 h-10 rounded-full" />
                                     <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>

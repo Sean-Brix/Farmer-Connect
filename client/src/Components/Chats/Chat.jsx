@@ -1011,12 +1011,13 @@ export default function Chat() {
                                     {/* History Toggle */}
                                     <button
                                         onClick={toggleSidebar}
-                                        className="p-2 hover:bg-white/10 rounded-lg transition-all duration-200"
+                                        className="flex items-center gap-2 p-2 hover:bg-white/10 rounded-lg transition-all duration-200"
                                         aria-label="Toggle history"
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
+                                        <span className="hidden md:inline text-sm font-medium">History</span>
                                     </button>
                                     
                                     {/* New Message */}
