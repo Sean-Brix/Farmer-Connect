@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Bar, Line, Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -47,10 +48,32 @@ function Seed_Track() {
   const updateGuideline = useUpdateCropGuideline();
   const deleteGuideline = useDeleteCropGuideline();
 
-  // UI state
-  const [activeTab, setActiveTab] = useState('overview');
-  const [openFarmerTabs, setOpenFarmerTabs] = useState([]);
-  const [activeFarmerId, setActiveFarmerId] = useState(null);
+  // Query client for cache invalidation
+  const queryClient = useQueryClient();
+
+  // UI state - Restore last active tab from localStorage
+  const [activeTab, setActiveTab] = useState(() => {
+    try {
+      return localStorage.getItem('admin_seed_track_active_tab') || 'overview';
+    } catch {
+      return 'overview';
+    }
+  });
+  const [openFarmerTabs, setOpenFarmerTabs] = useState(() => {
+    try {
+      const saved = localStorage.getItem('admin_open_farmer_tabs');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [activeFarmerId, setActiveFarmerId] = useState(() => {
+    try {
+      return localStorage.getItem('admin_active_farmer_id') || null;
+    } catch {
+      return null;
+    }
+  });
   const [selectedFarmerTab, setSelectedFarmerTab] = useState('reports');
   const [showCropReportsModal, setShowCropReportsModal] = useState(false);
   const [selectedCrop, setSelectedCrop] = useState(null);
@@ -97,6 +120,41 @@ function Seed_Track() {
   const [showStageConfirmModal, setShowStageConfirmModal] = useState(false);
   const [stageAction, setStageAction] = useState(null); // 'skip', 'revert', 'delete-report'
   const [pendingActionData, setPendingActionData] = useState(null);
+  
+  // Report detail modal states
+  const [showReportDetailModal, setShowReportDetailModal] = useState(false);
+  const [selectedReportDetail, setSelectedReportDetail] = useState(null);
+
+  // Persist open farmer tabs to localStorage
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('admin_open_farmer_tabs', JSON.stringify(openFarmerTabs));
+    } catch (error) {
+      console.error('Failed to save farmer tabs:', error);
+    }
+  }, [openFarmerTabs]);
+
+  // Persist active farmer ID to localStorage
+  React.useEffect(() => {
+    try {
+      if (activeFarmerId) {
+        localStorage.setItem('admin_active_farmer_id', activeFarmerId);
+      } else {
+        localStorage.removeItem('admin_active_farmer_id');
+      }
+    } catch (error) {
+      console.error('Failed to save active farmer ID:', error);
+    }
+  }, [activeFarmerId]);
+
+  // Persist activeTab to localStorage
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('admin_seed_track_active_tab', activeTab);
+    } catch (error) {
+      console.error('Failed to save active tab:', error);
+    }
+  }, [activeTab]);
 
   // Fetch admin ID on mount
   React.useEffect(() => {
@@ -233,8 +291,13 @@ function Seed_Track() {
       
       const data = await res.json();
       showAlert(data.message || 'Stage skipped successfully', 'success');
-      // Refresh data
-      window.location.reload();
+      
+      // Refetch queries immediately for instant UI update
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ['seed-track'], type: 'active' }),
+        queryClient.refetchQueries({ queryKey: ['seed-track-crops'], type: 'active' }),
+        queryClient.refetchQueries({ queryKey: ['admin-accounts'], type: 'active' })
+      ]);
     } catch (error) {
       console.error('Skip stage error:', error);
       showAlert(error.message || 'Failed to skip stage', 'error');
@@ -256,8 +319,13 @@ function Seed_Track() {
       
       const data = await res.json();
       showAlert(data.message || 'Stage reverted successfully', 'success');
-      // Refresh data
-      window.location.reload();
+      
+      // Refetch queries immediately for instant UI update
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ['seed-track'], type: 'active' }),
+        queryClient.refetchQueries({ queryKey: ['seed-track-crops'], type: 'active' }),
+        queryClient.refetchQueries({ queryKey: ['admin-accounts'], type: 'active' })
+      ]);
     } catch (error) {
       console.error('Revert stage error:', error);
       showAlert(error.message || 'Failed to revert stage', 'error');
@@ -274,20 +342,27 @@ function Seed_Track() {
       
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.message || 'Failed to delete report');
+        throw new Error(errorData.message || 'Failed to reset report');
       }
       
-      showAlert('Report deleted successfully', 'success');
-      // Refresh data
-      window.location.reload();
+      showAlert('Report reset to pending. Farmer can now resubmit.', 'success');
+      
+      // Refetch queries immediately for instant UI update
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ['seed-track'], type: 'active' }),
+        queryClient.refetchQueries({ queryKey: ['seed-track-crops'], type: 'active' }),
+        queryClient.refetchQueries({ queryKey: ['admin-accounts'], type: 'active' })
+      ]);
     } catch (error) {
       console.error('Delete report error:', error);
-      showAlert(error.message || 'Failed to delete report', 'error');
+      showAlert(error.message || 'Failed to reset report', 'error');
     }
   };
 
   // Stage editor modal functions
   const openStageEditor = (crop) => {
+    console.log('[Seed Track] Opening stage editor for crop:', crop);
+    console.log('[Seed Track] Crop reports:', crop.reports);
     setSelectedCropForStageEdit(crop);
     setShowStageEditorModal(true);
   };
@@ -1351,6 +1426,7 @@ function Seed_Track() {
                               <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Crop</th>
                               <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Variety</th>
                               <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Stage</th>
+                              <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Reports Status</th>
                               <th className={`px-4 py-3 text-left text-xs font-medium ${isDark ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>Actions</th>
                             </tr>
                           </thead>
@@ -1387,6 +1463,40 @@ function Seed_Track() {
                                         )}
                                       </div>
                                     </td>
+                                    <td className={`px-4 py-3 whitespace-nowrap`}>
+                                      {(() => {
+                                        const allReports = crop.reports || [];
+                                        const pendingReports = allReports.filter(r => r.status === 'Pending').length;
+                                        const lateReports = allReports.filter(r => r.status === 'Late').length;
+                                        const submittedReports = allReports.filter(r => r.status === 'Submitted').length;
+                                        
+                                        if (lateReports > 0) {
+                                          return (
+                                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                              ⚠️ {lateReports} Overdue
+                                            </span>
+                                          );
+                                        } else if (pendingReports > 0) {
+                                          return (
+                                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                              📋 {pendingReports} Pending
+                                            </span>
+                                          );
+                                        } else if (submittedReports > 0) {
+                                          return (
+                                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                              ✅ All Submitted
+                                            </span>
+                                          );
+                                        } else {
+                                          return (
+                                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                              No Reports
+                                            </span>
+                                          );
+                                        }
+                                      })()}
+                                    </td>
                                     <td className={`px-4 py-3 whitespace-nowrap text-right text-sm font-medium`}>
                                       <div className="flex items-center gap-2 justify-end flex-wrap">
                                         {/* Stage Editor Button */}
@@ -1414,7 +1524,14 @@ function Seed_Track() {
                                               : 'bg-green-500 hover:bg-green-600 text-white'
                                           }`}
                                         >
-                                          {expandedCropId === crop.id ? 'Hide' : 'View'} Reports ({crop.reports?.length || 0})
+                                          {expandedCropId === crop.id ? 'Hide' : 'View'} Reports ({
+                                            crop.reports?.filter(r => {
+                                              const hasValidStatus = r.status === 'Submitted' || r.status === 'Late';
+                                              const hasData = r.submittedAt != null && (r.healthStatus != null || r.plantHeight != null);
+                                              const hasValidHealth = r.healthStatus && r.healthStatus !== 'Unknown';
+                                              return hasValidStatus && hasData && hasValidHealth;
+                                            }).length || 0
+                                          })
                                         </button>
                                         <button
                                           onClick={() => {
@@ -1435,7 +1552,15 @@ function Seed_Track() {
                                       </div>
                                     </td>
                                   </tr>
-                                  {expandedCropId === crop.id && crop.reports && crop.reports.length > 0 && (
+                                  {expandedCropId === crop.id && (() => {
+                                    const filteredReports = crop.reports?.filter(r => {
+                                      const hasValidStatus = r.status === 'Submitted' || r.status === 'Late';
+                                      const hasData = r.submittedAt != null && (r.healthStatus != null || r.plantHeight != null);
+                                      const hasValidHealth = r.healthStatus && r.healthStatus !== 'Unknown';
+                                      return hasValidStatus && hasData && hasValidHealth;
+                                    }) || [];
+                                    return filteredReports.length > 0;
+                                  })() && (
                                     <tr>
                                       <td colSpan="4" className={`px-4 py-3 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
                                         <div className="overflow-x-auto">
@@ -1443,7 +1568,6 @@ function Seed_Track() {
                                             <thead className={`${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}>
                                               <tr>
                                                 <th className="px-3 py-2 text-left font-medium">Date</th>
-                                                <th className="px-3 py-2 text-left font-medium">Growth Stage</th>
                                                 <th className="px-3 py-2 text-left font-medium">Health</th>
                                                 <th className="px-3 py-2 text-left font-medium">Height</th>
                                                 <th className="px-3 py-2 text-left font-medium">Issues</th>
@@ -1452,16 +1576,20 @@ function Seed_Track() {
                                               </tr>
                                             </thead>
                                             <tbody className={`divide-y ${isDark ? 'divide-gray-700' : 'divide-gray-200'}`}>
-                                              {crop.reports.map((report, idx) => (
+                                              {crop.reports?.filter(r => {
+                                                const hasValidStatus = r.status === 'Submitted' || r.status === 'Late';
+                                                const hasData = r.submittedAt != null && (r.healthStatus != null || r.plantHeight != null);
+                                                const hasValidHealth = r.healthStatus && r.healthStatus !== 'Unknown';
+                                                return hasValidStatus && hasData && hasValidHealth;
+                                              }).map((report, idx) => (
                                                 <tr key={idx} className={isDark ? 'hover:bg-gray-800' : 'hover:bg-white'}>
                                                   <td className="px-3 py-2 whitespace-nowrap">
-                                                    {new Date(report.createdAt || report.reportDate).toLocaleDateString('en-US', { 
+                                                    {new Date(report.submittedAt || report.createdAt).toLocaleDateString('en-US', { 
                                                       month: 'short', 
                                                       day: 'numeric',
                                                       year: 'numeric'
                                                     })}
                                                   </td>
-                                                  <td className="px-3 py-2">{report.growthStage || 'N/A'}</td>
                                                   <td className="px-3 py-2">
                                                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                                                       report.healthStatus === 'Healthy' ? 'bg-green-100 text-green-800' :
@@ -1473,24 +1601,40 @@ function Seed_Track() {
                                                     </span>
                                                   </td>
                                                   <td className="px-3 py-2">{report.plantHeight || 'N/A'} cm</td>
-                                                  <td className="px-3 py-2 max-w-xs truncate">{report.pestsAndDiseases || 'None'}</td>
+                                                  <td className="px-3 py-2 max-w-xs truncate">{report.pestsObserved || report.pestsAndDiseases || 'None'}</td>
                                                   <td className="px-3 py-2 max-w-xs truncate">{report.notes || '-'}</td>
                                                   <td className="px-3 py-2 whitespace-nowrap">
-                                                    <button
-                                                      onClick={() => {
-                                                        if (window.confirm(`⚠️ DELETE REPORT CONFIRMATION\n\nReport Date: ${new Date(report.createdAt || report.reportDate).toLocaleDateString()}\nGrowth Stage: ${report.growthStage || 'N/A'}\nHealth Status: ${report.healthStatus || 'Unknown'}\n\nThis action cannot be undone. Are you sure you want to delete this report?`)) {
-                                                          deleteReport(report.id);
-                                                        }
-                                                      }}
-                                                      className={`px-2 py-1 text-xs rounded-md transition-colors ${
-                                                        isDark 
-                                                          ? 'bg-red-600 hover:bg-red-700 text-white' 
-                                                          : 'bg-red-500 hover:bg-red-600 text-white'
-                                                      }`}
-                                                      title="Delete report"
-                                                    >
-                                                      🗑️ Delete
-                                                    </button>
+                                                    <div className="flex gap-1">
+                                                      <button
+                                                        onClick={() => {
+                                                          setSelectedReportDetail(report);
+                                                          setShowReportDetailModal(true);
+                                                        }}
+                                                        className={`px-2 py-1 text-xs rounded-md transition-colors ${
+                                                          isDark 
+                                                            ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                                                            : 'bg-blue-500 hover:bg-blue-600 text-white'
+                                                        }`}
+                                                        title="View report details"
+                                                      >
+                                                        👁️ View
+                                                      </button>
+                                                      <button
+                                                        onClick={() => {
+                                                          if (window.confirm(`⚠️ DELETE REPORT CONFIRMATION\n\nReport Date: ${new Date(report.submittedAt || report.createdAt).toLocaleDateString()}\nHealth Status: ${report.healthStatus || 'Unknown'}\n\nThis action cannot be undone. Are you sure you want to delete this report?`)) {
+                                                            deleteReport(report.id);
+                                                          }
+                                                        }}
+                                                        className={`px-2 py-1 text-xs rounded-md transition-colors ${
+                                                          isDark 
+                                                            ? 'bg-red-600 hover:bg-red-700 text-white' 
+                                                            : 'bg-red-500 hover:bg-red-600 text-white'
+                                                        }`}
+                                                        title="Delete report"
+                                                      >
+                                                        🗑️ Delete
+                                                      </button>
+                                                    </div>
                                                   </td>
                                                 </tr>
                                               ))}
@@ -2782,19 +2926,63 @@ function Seed_Track() {
             </div>
 
             {/* Reports Section */}
-            {selectedCropForStageEdit.reports && selectedCropForStageEdit.reports.length > 0 && (
+            {(() => {
+              console.log('[Seed Track] Reports section check:', {
+                hasReports: !!selectedCropForStageEdit.reports,
+                reportsLength: selectedCropForStageEdit.reports?.length,
+                reports: selectedCropForStageEdit.reports
+              });
+              return selectedCropForStageEdit.reports && selectedCropForStageEdit.reports.length > 0;
+            })() && (
               <div className={`rounded-lg p-4 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
-                <h4 className={`text-lg font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  📋 Recent Reports ({selectedCropForStageEdit.reports.length})
-                </h4>
-                <div className="space-y-2 max-h-64 overflow-y-auto">
-                  {selectedCropForStageEdit.reports.slice(-5).reverse().map((report, idx) => (
+                {(() => {
+                  // Log all reports for debugging
+                  console.log('[Seed Track] Rendering reports section, all reports:', selectedCropForStageEdit.reports);
+                  
+                  // Filter out Pending reports AND reports with no actual data (null/undefined fields)
+                  const submittedReports = selectedCropForStageEdit.reports.filter(report => {
+                    // Must be submitted or late
+                    const hasValidStatus = report.status === 'Submitted' || report.status === 'Late';
+                    // Must have at least one non-null data field and submittedAt timestamp
+                    const hasData = report.submittedAt != null && (report.healthStatus != null || report.plantHeight != null);
+                    // Don't show if health status is "Unknown"
+                    const hasValidHealth = report.healthStatus && report.healthStatus !== 'Unknown';
+                    
+                    console.log('[Seed Track] Filtering report:', {
+                      reportId: report.id,
+                      status: report.status,
+                      hasValidStatus,
+                      hasData,
+                      hasValidHealth,
+                      submittedAt: report.submittedAt,
+                      healthStatus: report.healthStatus,
+                      plantHeight: report.plantHeight,
+                      willShow: hasValidStatus && hasData && hasValidHealth
+                    });
+                    
+                    return hasValidStatus && hasData && hasValidHealth;
+                  });
+                  
+                  console.log('[Seed Track] Filtered submitted reports count:', submittedReports.length);
+                  return (
+                    <>
+                      <h4 className={`text-lg font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        📋 Recent Reports ({submittedReports.length})
+                      </h4>
+                      {submittedReports.length === 0 ? (
+                        <div className={`text-center py-8 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+                          <div className="text-4xl mb-2">📝</div>
+                          <p className="text-sm">No submitted reports yet</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-2 max-h-64 overflow-y-auto">
+                          {submittedReports.slice(-5).reverse().map((report, idx) => (
                     <div key={idx} className={`p-3 rounded-lg flex items-center justify-between ${
                       isDark ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
                     } transition-colors`}>
                       <div className="flex-1">
                         <div className={`font-medium ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
-                          {report.growthStage || 'N/A'} - {new Date(report.createdAt || report.reportDate).toLocaleDateString()}
+                          {report.stageName || 'N/A'} - {new Date(report.submittedAt || report.createdAt).toLocaleDateString()}
                         </div>
                         <div className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                           Health: {report.healthStatus || 'Unknown'} • Height: {report.plantHeight || 'N/A'} cm
@@ -2812,7 +3000,11 @@ function Seed_Track() {
                       </button>
                     </div>
                   ))}
-                </div>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             )}
           </div>
@@ -2928,6 +3120,229 @@ function Seed_Track() {
                 Confirm
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {/* Report Detail Modal */}
+    {showReportDetailModal && selectedReportDetail && (
+      <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[60] p-4">
+        <div className={`rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+          {/* Modal Header */}
+          <div className={`sticky top-0 px-6 py-4 border-b ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} flex justify-between items-center z-10`}>
+            <div>
+              <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                📊 Report Details
+              </h3>
+              <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                Submitted: {new Date(selectedReportDetail.submittedAt || selectedReportDetail.createdAt).toLocaleDateString('en-US', { 
+                  month: 'long', 
+                  day: 'numeric', 
+                  year: 'numeric' 
+                })}
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setShowReportDetailModal(false);
+                setSelectedReportDetail(null);
+              }}
+              className={`p-2 rounded-lg transition-colors ${
+                isDark ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
+              }`}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Modal Body */}
+          <div className="p-6 space-y-6">
+            {/* Report Status & Stage */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+                <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Stage</p>
+                <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  {selectedReportDetail.stageName || 'N/A'}
+                </p>
+              </div>
+              <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+                <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-1`}>Status</p>
+                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                  selectedReportDetail.status === 'Submitted' ? 'bg-green-100 text-green-800' :
+                  selectedReportDetail.status === 'Late' ? 'bg-red-100 text-red-800' :
+                  'bg-yellow-100 text-yellow-800'
+                }`}>
+                  {selectedReportDetail.status}
+                </span>
+              </div>
+            </div>
+
+            {/* Basic Info */}
+            <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+              <h4 className={`font-semibold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                🌱 Plant Information
+              </h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Health Status</p>
+                  <span className={`inline-flex items-center px-2 py-1 rounded text-sm font-medium ${
+                    selectedReportDetail.healthStatus === 'Healthy' ? 'bg-green-100 text-green-800' :
+                    selectedReportDetail.healthStatus === 'Warning' ? 'bg-yellow-100 text-yellow-800' :
+                    selectedReportDetail.healthStatus === 'Critical' ? 'bg-red-100 text-red-800' :
+                    'bg-gray-100 text-gray-600'
+                  }`}>
+                    {selectedReportDetail.healthStatus || 'Unknown'}
+                  </span>
+                </div>
+                <div>
+                  <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Plant Height</p>
+                  <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    {selectedReportDetail.plantHeight ? `${selectedReportDetail.plantHeight} cm` : 'N/A'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Farm Management */}
+            {(selectedReportDetail.pestsObserved || selectedReportDetail.diseasesObserved || 
+              selectedReportDetail.fertilizersApplied || selectedReportDetail.pesticideApplications) && (
+              <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+                <h4 className={`font-semibold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  🚜 Farm Management
+                </h4>
+                <div className="space-y-3">
+                  {selectedReportDetail.pestsObserved && (
+                    <div>
+                      <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Pests Observed:</p>
+                      <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{selectedReportDetail.pestsObserved}</p>
+                    </div>
+                  )}
+                  {selectedReportDetail.diseasesObserved && (
+                    <div>
+                      <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Diseases Observed:</p>
+                      <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{selectedReportDetail.diseasesObserved}</p>
+                    </div>
+                  )}
+                  {selectedReportDetail.fertilizersApplied && (
+                    <div>
+                      <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Fertilizers Applied:</p>
+                      <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{selectedReportDetail.fertilizersApplied}</p>
+                    </div>
+                  )}
+                  {selectedReportDetail.pesticideApplications && (
+                    <div>
+                      <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Pesticide Applications:</p>
+                      <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{selectedReportDetail.pesticideApplications}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Environmental Conditions */}
+            {(selectedReportDetail.irrigationFrequency || selectedReportDetail.soilCondition || 
+              selectedReportDetail.weatherImpact) && (
+              <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+                <h4 className={`font-semibold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  🌦️ Environmental Conditions
+                </h4>
+                <div className="space-y-3">
+                  {selectedReportDetail.irrigationFrequency && (
+                    <div>
+                      <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Irrigation Frequency:</p>
+                      <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{selectedReportDetail.irrigationFrequency}</p>
+                    </div>
+                  )}
+                  {selectedReportDetail.soilCondition && (
+                    <div>
+                      <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Soil Condition:</p>
+                      <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{selectedReportDetail.soilCondition}</p>
+                    </div>
+                  )}
+                  {selectedReportDetail.weatherImpact && (
+                    <div>
+                      <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Weather Impact:</p>
+                      <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{selectedReportDetail.weatherImpact}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Notes & Planned Actions */}
+            {(selectedReportDetail.notes || selectedReportDetail.plannedActions) && (
+              <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+                <h4 className={`font-semibold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  📝 Notes & Planning
+                </h4>
+                <div className="space-y-3">
+                  {selectedReportDetail.notes && (
+                    <div>
+                      <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Notes:</p>
+                      <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{selectedReportDetail.notes}</p>
+                    </div>
+                  )}
+                  {selectedReportDetail.plannedActions && (
+                    <div>
+                      <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Planned Actions:</p>
+                      <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{selectedReportDetail.plannedActions}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Yield & Costs */}
+            {(selectedReportDetail.actualYield || selectedReportDetail.costs) && (
+              <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
+                <h4 className={`font-semibold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  💰 Yield & Financial
+                </h4>
+                {selectedReportDetail.actualYield && (
+                  <div className="mb-3">
+                    <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Actual Yield:</p>
+                    <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                      {selectedReportDetail.actualYield} kg
+                    </p>
+                  </div>
+                )}
+                {selectedReportDetail.costs && typeof selectedReportDetail.costs === 'object' && (
+                  <div>
+                    <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>Costs Breakdown:</p>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      {Object.entries(selectedReportDetail.costs).map(([key, value]) => (
+                        value && (
+                          <div key={key} className="flex justify-between">
+                            <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>{key}:</span>
+                            <span className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>₱{value}</span>
+                          </div>
+                        )
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Modal Footer */}
+          <div className={`sticky bottom-0 px-6 py-4 border-t ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+            <button
+              onClick={() => {
+                setShowReportDetailModal(false);
+                setSelectedReportDetail(null);
+              }}
+              className={`w-full py-3 rounded-lg font-semibold transition-colors ${
+                isDark
+                  ? 'bg-gray-700 hover:bg-gray-600 text-white'
+                  : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+              }`}
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>

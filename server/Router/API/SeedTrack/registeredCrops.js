@@ -328,21 +328,14 @@ router.patch('/:id/skip-stage', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Already at the last stage' });
     }
 
-    const nextIndex = currentIndex + 1;
-    const nextStage = crop.guideline.stages[nextIndex];
-
-    const updated = await prisma.registeredCrop.update({
-      where: { id: req.params.id },
-      data: {
-        currentStageIndex: nextIndex,
-        currentStageName: nextStage.stageName,
-      },
-    });
+    // Use advanceToNextStage to properly create pending report for current stage
+    const { advanceToNextStage } = await import('../../../Services/stageProgressionService.js');
+    const result = await advanceToNextStage(req.params.id, true);
 
     res.json({ 
       success: true, 
-      data: updated, 
-      message: `Stage advanced to: ${nextStage.stageName}` 
+      data: result, 
+      message: `Stage advanced to: ${result.currentStageName}. Report for previous stage is now open.` 
     });
   } catch (error) {
     console.error('[SeedTrack][Crops][SKIP_STAGE] Error:', error);
@@ -382,6 +375,16 @@ router.patch('/:id/revert-stage', async (req, res) => {
     const prevIndex = currentIndex - 1;
     const prevStage = crop.guideline.stages[prevIndex];
 
+    // Delete all reports for stages >= the reverted stage (current and future)
+    await prisma.stageReport.deleteMany({
+      where: {
+        cropId: req.params.id,
+        stageIndex: {
+          gte: prevIndex // Delete reports from previous stage onwards
+        }
+      }
+    });
+
     const updated = await prisma.registeredCrop.update({
       where: { id: req.params.id },
       data: {
@@ -393,7 +396,7 @@ router.patch('/:id/revert-stage', async (req, res) => {
     res.json({ 
       success: true, 
       data: updated, 
-      message: `Stage reverted to: ${prevStage.stageName}` 
+      message: `Stage reverted to: ${prevStage.stageName}. Reports for this stage and onwards have been deleted.` 
     });
   } catch (error) {
     console.error('[SeedTrack][Crops][REVERT_STAGE] Error:', error);

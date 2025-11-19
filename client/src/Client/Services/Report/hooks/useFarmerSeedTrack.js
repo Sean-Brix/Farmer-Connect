@@ -15,7 +15,8 @@ export function useMyCrops(userId, { includeReports = true } = {}) {
       const json = await res.json();
       return Array.isArray(json.data) ? json.data : [];
     },
-    staleTime: 60 * 1000,
+    staleTime: 0, // Always refetch on invalidation
+    refetchOnMount: 'always',
   });
 }
 
@@ -32,11 +33,13 @@ export function useCreateCrop() {
       const json = await res.json();
       return json.data;
     },
-    onSuccess: (_data, variables) => {
-      // Invalidate this user's crops
+    onSuccess: async (_data, variables) => {
+      // Refetch this user's crops immediately
       if (variables?.userId) {
-        qc.invalidateQueries({ queryKey: ['seed-track', 'my-crops', { userId: variables.userId, includeReports: true }] });
-        qc.invalidateQueries({ queryKey: ['seed-track', 'my-crops'] });
+        await Promise.all([
+          qc.refetchQueries({ queryKey: ['seed-track', 'my-crops'], type: 'active' }),
+          qc.refetchQueries({ queryKey: ['seed-track-crops'], type: 'active' })
+        ]);
       }
     },
   });
@@ -55,9 +58,9 @@ export function useUpdateCrop() {
       const json = await res.json();
       return { ...json.data, userId };
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (data?.userId) {
-        qc.invalidateQueries({ queryKey: ['seed-track', 'my-crops'] });
+        await qc.refetchQueries({ queryKey: ['seed-track', 'my-crops'], type: 'active' });
       }
     },
   });
@@ -86,13 +89,26 @@ export function useCreateReport() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error(`Create report failed: ${res.status}`);
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        const errorMsg = errorData.message || `Create report failed: ${res.status}`;
+        const error = new Error(errorMsg);
+        error.field = errorData.field;
+        error.receivedType = errorData.receivedType;
+        throw error;
+      }
       const json = await res.json();
       return json.data;
     },
-    onSuccess: (_data, variables) => {
-      // Invalidate user's crops to refresh reports
-      if (variables?.userId) qc.invalidateQueries({ queryKey: ['seed-track', 'my-crops'] });
+    onSuccess: async (_data, variables) => {
+      // Refetch all related queries immediately for instant UI update
+      if (variables?.userId) {
+        await Promise.all([
+          qc.refetchQueries({ queryKey: ['seed-track', 'my-crops'], type: 'active' }),
+          qc.refetchQueries({ queryKey: ['seed-track'], type: 'active' }),
+          qc.refetchQueries({ queryKey: ['seed-track-crops'], type: 'active' })
+        ]);
+      }
     },
   });
 }
@@ -110,8 +126,8 @@ export function useUpdateReport() {
       const json = await res.json();
       return { ...json.data, userId };
     },
-    onSuccess: (data) => {
-      if (data?.userId) qc.invalidateQueries({ queryKey: ['seed-track', 'my-crops'] });
+    onSuccess: async (data) => {
+      if (data?.userId) await qc.refetchQueries({ queryKey: ['seed-track', 'my-crops'], type: 'active' });
     },
   });
 }
@@ -124,8 +140,8 @@ export function useDeleteReport() {
       if (!res.ok) throw new Error(`Delete report failed: ${res.status}`);
       return { id, userId };
     },
-    onSuccess: ({ userId }) => {
-      if (userId) qc.invalidateQueries({ queryKey: ['seed-track', 'my-crops'] });
+    onSuccess: async ({ userId }) => {
+      if (userId) await qc.refetchQueries({ queryKey: ['seed-track', 'my-crops'], type: 'active' });
     },
   });
 }

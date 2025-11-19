@@ -51,7 +51,7 @@ async function main() {
     // Clean existing data in correct order
     console.log('🧹 Cleaning existing data...');
     await prisma.reportFeedback.deleteMany({});
-    await prisma.cropMonthlyReport.deleteMany({});
+    await prisma.stageReport.deleteMany({});
     await prisma.registeredCrop.deleteMany({});
     await prisma.cropGuidelineStage.deleteMany({});
     await prisma.cropGuideline.deleteMany({});
@@ -71,7 +71,7 @@ async function main() {
       prisma.account.count(),
       prisma.cropGuideline.count(),
       prisma.registeredCrop.count(),
-      prisma.cropMonthlyReport.count(),
+      prisma.stageReport.count(),
       prisma.reportFeedback.count(),
     ]);
     

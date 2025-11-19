@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 /**
- * Stage Progression UI Component - NEW VERSION
- * Integrated with stage-based reporting system
- * Shows pending reports, report status, and submission deadlines
+ * Stage Progression UI Component
+ * Displays crop growth stages as a level-based progression system
+ * Shows completed, current, and upcoming stages with gamified visual design
+ * Now integrated with backend stage validation system
  */
 export default function StageProgressionUI({ 
   crop, 
@@ -14,6 +15,7 @@ export default function StageProgressionUI({
   const [stageInfo, setStageInfo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedTargetStage, setSelectedTargetStage] = useState(null);
 
   useEffect(() => {
     if (!crop?.id) return;
@@ -79,11 +81,9 @@ export default function StageProgressionUI({
 
   const isCompleted = currentStageIndex >= totalStages;
 
-  const getStageIcon = (status) => {
+  const getStageIcon = (status, index) => {
     if (status === 'completed') return '✅';
     if (status === 'current') return '🌟';
-    if (status === 'pending') return '📋';
-    if (status === 'late') return '⚠️';
     if (status === 'next') return '🔓';
     return '🔒';
   };
@@ -91,8 +91,6 @@ export default function StageProgressionUI({
   const getStageColor = (status) => {
     if (status === 'completed') return theme === 'dark' ? 'bg-green-900 border-green-500' : 'bg-green-50 border-green-400';
     if (status === 'current') return theme === 'dark' ? 'bg-blue-900 border-blue-400' : 'bg-blue-50 border-blue-400';
-    if (status === 'pending') return theme === 'dark' ? 'bg-yellow-900 border-yellow-500' : 'bg-yellow-50 border-yellow-400';
-    if (status === 'late') return theme === 'dark' ? 'bg-red-900 border-red-500' : 'bg-red-50 border-red-400';
     if (status === 'next') return theme === 'dark' ? 'bg-yellow-900 border-yellow-500' : 'bg-yellow-50 border-yellow-400';
     return theme === 'dark' ? 'bg-gray-800 border-gray-600' : 'bg-gray-100 border-gray-300';
   };
@@ -126,89 +124,72 @@ export default function StageProgressionUI({
         </div>
       )}
 
-      {/* Pending Reports Alert - Quick Summary */}
+      {/* Pending Reports Alert */}
       {pendingReports.length > 0 && (
-        <div className={`rounded-xl border-2 p-4 ${
+        <div className={`rounded-xl border-2 p-6 mb-6 ${{
           theme === 'dark' 
             ? 'bg-gradient-to-br from-yellow-900 to-yellow-800 border-yellow-400' 
             : 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-400'
         }`}>
-          <div className="flex items-center gap-3">
-            <div className="text-3xl">📋</div>
-            <div>
-              <h3 className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+          <div className="flex items-start gap-4">
+            <div className="text-4xl">📋</div>
+            <div className="flex-1">
+              <h3 className={`text-xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                 {pendingReports.length} Pending Report{pendingReports.length !== 1 ? 's' : ''}
               </h3>
-              <p className={`text-sm ${theme === 'dark' ? 'text-yellow-200' : 'text-yellow-800'}`}>
-                Scroll down to submit reports for each stage
-              </p>
+              <div className="space-y-3">
+                {pendingReports.map((report) => {
+                  const isOverdue = report.isOverdue;
+                  return (
+                    <div 
+                      key={report.id}
+                      className={`p-3 rounded-lg border ${{
+                        theme === 'dark' 
+                          ? isOverdue ? 'bg-red-900/30 border-red-500' : 'bg-yellow-900/30 border-yellow-500'
+                          : isOverdue ? 'bg-red-50 border-red-400' : 'bg-yellow-50 border-yellow-400'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="font-semibold text-sm">
+                            {report.stageName} Report
+                            {isOverdue && (
+                              <span className="ml-2 px-2 py-0.5 bg-red-500 text-white text-xs rounded-full">
+                                OVERDUE
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-xs opacity-80 mt-1">
+                            Due: {new Date(report.reportDueDate).toLocaleDateString()}
+                            {isOverdue && ` (${Math.abs(Math.ceil((new Date(report.reportDueDate) - new Date()) / (1000 * 60 * 60 * 24)))} days late)`}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setSelectedTargetStage(report.stageIndex);
+                            onSubmitReport && onSubmitReport(crop, report.stageIndex);
+                          }}
+                          className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${{
+                            theme === 'dark'
+                              ? isOverdue 
+                                ? 'bg-red-600 hover:bg-red-500 text-white'
+                                : 'bg-yellow-600 hover:bg-yellow-500 text-white'
+                              : isOverdue
+                                ? 'bg-red-600 hover:bg-red-700 text-white'
+                                : 'bg-yellow-600 hover:bg-yellow-700 text-white'
+                          }`}
+                        >
+                          Submit Now
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
       )}
-
-      {/* Previous Submitted Reports */}
-      {(() => {
-        const submittedReports = allStages.filter(stage => 
-          stage.hasReport && stage.reportStatus && stage.reportStatus !== 'Pending'
-        );
-        
-        if (submittedReports.length === 0) return null;
-
-        return (
-          <div className={`rounded-xl border-2 p-6 ${
-            theme === 'dark' 
-              ? 'bg-gradient-to-br from-green-900 to-green-800 border-green-400' 
-              : 'bg-gradient-to-br from-green-50 to-green-100 border-green-400'
-          }`}>
-            <div className="flex items-start gap-4">
-              <div className="text-4xl">📊</div>
-              <div className="flex-1">
-                <h3 className={`text-xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                  Previous Reports ({submittedReports.length})
-                </h3>
-                <div className="space-y-2">
-                  {submittedReports.map((stage) => {
-                    const isLate = stage.reportStatus === 'Late';
-                    return (
-                      <div 
-                        key={stage.index}
-                        className={`p-3 rounded-lg border ${
-                          theme === 'dark' 
-                            ? isLate ? 'bg-orange-900/30 border-orange-500' : 'bg-green-900/30 border-green-500'
-                            : isLate ? 'bg-orange-50 border-orange-400' : 'bg-green-50 border-green-400'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between gap-4 flex-wrap">
-                          <div className="flex-1 min-w-0">
-                            <div className={`font-semibold text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                              {stage.name} Report
-                              <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${
-                                isLate 
-                                  ? 'bg-orange-500 text-white'
-                                  : 'bg-green-500 text-white'
-                              }`}>
-                                {stage.reportStatus}
-                              </span>
-                            </div>
-                            <div className={`text-xs mt-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                              Submitted: {stage.reportSubmittedAt ? new Date(stage.reportSubmittedAt).toLocaleDateString() : 'N/A'}
-                              {stage.reportDueDate && ` • Due: ${new Date(stage.reportDueDate).toLocaleDateString()}`}
-                            </div>
-                          </div>
-                          <div className={`text-2xl ${isLate ? '⚠️' : '✅'}`}>
-                            {isLate ? '⚠️' : '✅'}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      })()}
 
       {/* Current Stage Highlight */}
       {!isCompleted && currentStageDetails && (
@@ -285,24 +266,45 @@ export default function StageProgressionUI({
                 </div>
               )}
 
-              {/* Stage Status Message */}
-              {daysRemaining > 0 && (
+              {/* Report Status Messages */}
+              {hasReportForCurrentStage && (
                 <div className={`mb-4 p-3 rounded-lg border ${
                   theme === 'dark' 
-                    ? 'bg-blue-900/30 border-blue-600 text-blue-200' 
-                    : 'bg-blue-50 border-blue-400 text-blue-800'
+                    ? 'bg-purple-900/30 border-purple-600 text-purple-200' 
+                    : 'bg-purple-50 border-purple-400 text-purple-800'
                 }`}>
                   <div className="flex items-center gap-2">
-                    <span className="text-xl">⏳</span>
+                    <span className="text-xl">✅</span>
                     <div className="text-sm">
-                      <div className="font-semibold">Stage in progress - {daysRemaining} day{daysRemaining !== 1 ? 's' : ''} remaining</div>
-                      <div className="text-xs opacity-80">Report submission opens when stage duration completes</div>
+                      <div className="font-semibold">Report submitted for this stage!</div>
+                      <div className="text-xs opacity-80">
+                        {daysRemaining > 0 
+                          ? `Wait ${daysRemaining} more day${daysRemaining !== 1 ? 's' : ''} before advancing to next stage`
+                          : 'Stage duration complete - will advance on next report submission'
+                        }
+                      </div>
                     </div>
                   </div>
                 </div>
               )}
 
-              {daysRemaining <= 0 && (
+              {!hasReportForCurrentStage && !canSubmitReport && daysRemaining > 0 && (
+                <div className={`mb-4 p-3 rounded-lg border ${
+                  theme === 'dark' 
+                    ? 'bg-yellow-900/30 border-yellow-600 text-yellow-200' 
+                    : 'bg-yellow-50 border-yellow-400 text-yellow-800'
+                }`}>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">⏳</span>
+                    <div className="text-sm">
+                      <div className="font-semibold">Report locked for {daysRemaining} more day{daysRemaining !== 1 ? 's' : ''}</div>
+                      <div className="text-xs opacity-80">Wait for the stage duration to pass before submitting</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {!hasReportForCurrentStage && canSubmitReport && (
                 <div className={`mb-4 p-3 rounded-lg border ${
                   theme === 'dark' 
                     ? 'bg-green-900/30 border-green-600 text-green-200' 
@@ -311,32 +313,52 @@ export default function StageProgressionUI({
                   <div className="flex items-center gap-2">
                     <span className="text-xl">✨</span>
                     <div className="text-sm">
-                      <div className="font-semibold">Stage duration complete!</div>
-                      <div className="text-xs opacity-80">Report will open when advancing to next stage</div>
+                      <div className="font-semibold">Ready to submit report!</div>
+                      <div className="text-xs opacity-80">Stage duration has passed - you can now submit your report</div>
                     </div>
                   </div>
                 </div>
               )}
 
+              {/* Submit Report Button */}
+              <button
+                onClick={() => canSubmitReport && !hasReportForCurrentStage && onSubmitReport && onSubmitReport(crop)}
+                disabled={!canSubmitReport || hasReportForCurrentStage}
+                className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all duration-200 ${
+                  canSubmitReport && !hasReportForCurrentStage
+                    ? theme === 'dark'
+                      ? 'bg-green-600 hover:bg-green-500 shadow-lg hover:shadow-green-500/50 transform hover:scale-105 cursor-pointer'
+                      : 'bg-green-600 hover:bg-green-700 shadow-lg hover:shadow-xl transform hover:scale-105 cursor-pointer'
+                    : theme === 'dark'
+                      ? 'bg-gray-700 text-gray-500 cursor-not-allowed opacity-50'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-50'
+                }`}
+              >
+                {hasReportForCurrentStage 
+                  ? '✅ Report Already Submitted' 
+                  : canSubmitReport 
+                    ? '📊 Submit Stage Report' 
+                    : '🔒 Report Not Available Yet'
+                }
+              </button>
+
               {/* Message Admin Button */}
-              {onMessageAdmin && (
-                <button
-                  onClick={() => onMessageAdmin(crop)}
-                  className={`w-full py-3 px-4 rounded-lg font-semibold transition-all duration-200 ${
-                    theme === 'dark'
-                      ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg hover:shadow-blue-500/50 transform hover:scale-105'
-                      : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
-                  }`}
-                >
-                  💬 Message Admin
-                </button>
-              )}
+              <button
+                onClick={() => onMessageAdmin && onMessageAdmin(crop)}
+                className={`w-full py-3 px-4 rounded-lg font-semibold transition-all duration-200 ${
+                  theme === 'dark'
+                    ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg hover:shadow-blue-500/50 transform hover:scale-105'
+                    : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
+                }`}
+              >
+                💬 Message Admin
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* All Stages Timeline */}
+      {/* Stage Progression Path */}
       {allStages.length > 0 && (
         <div className={`rounded-xl border p-6 ${
           theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
@@ -355,17 +377,17 @@ export default function StageProgressionUI({
               
               let status = 'locked';
               if (hasReport && reportStatus === 'Submitted') status = 'completed';
-              else if (reportStatus === 'Pending') status = 'pending';
-              else if (reportStatus === 'Late') status = 'late';
               else if (isCurrent) status = 'current';
               else if (isNext) status = 'next';
+              
+              const hasPendingReport = hasReport && (reportStatus === 'Pending' || reportStatus === 'Late');
 
               return (
                 <div key={index} className="relative">
                   {/* Connection Line */}
                   {index < allStages.length - 1 && (
                     <div className={`absolute left-8 top-16 w-0.5 h-8 ${
-                      hasReport && reportStatus === 'Submitted'
+                      isStageCompleted
                         ? 'bg-green-400' 
                         : theme === 'dark' ? 'bg-gray-600' : 'bg-gray-300'
                     }`} />
@@ -373,16 +395,16 @@ export default function StageProgressionUI({
                   
                   {/* Stage Card */}
                   <div className={`border-2 rounded-lg p-4 transition-all duration-300 ${
-                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-                  } ${isCurrent ? 'shadow-lg scale-105 border-blue-400' : ''}`}>
+                    getStageColor(status)
+                  } ${isCurrent ? 'shadow-lg scale-105' : ''}`}>
                     <div className="flex items-start gap-4">
-                      {/* Stage Number Icon */}
-                      <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold border-2 ${
-                        isCurrent 
-                          ? 'bg-blue-500 border-blue-600 text-white animate-pulse' 
-                          : theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600 text-gray-300' 
-                            : 'bg-gray-100 border-gray-300 text-gray-700'
+                      {/* Level Icon */}
+                      <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold border-2 ${{
+                        hasReport && reportStatus === 'Submitted' ? 'bg-green-500 border-green-600 text-white' :
+                        hasPendingReport ? 'bg-yellow-500 border-yellow-600 text-white' :
+                        isCurrent ? 'bg-blue-500 border-blue-600 text-white animate-pulse' :
+                        isNext ? 'bg-yellow-400 border-yellow-500 text-gray-900' :
+                        theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-500' : 'bg-gray-200 border-gray-300 text-gray-500'
                       }`}>
                         {isLocked ? '🔒' : index + 1}
                       </div>
@@ -390,22 +412,31 @@ export default function StageProgressionUI({
                       {/* Stage Info */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <span className="text-2xl">{getStageIcon(status, index)}</span>
                           <h4 className={`font-bold text-base ${
                             theme === 'dark' ? 'text-white' : 'text-gray-900'
                           }`}>
                             {stage.name}
                           </h4>
                           {isCurrent && (
-                            <span className="text-lg" title="Active Stage">🌟</span>
+                            <span className="px-2 py-0.5 bg-blue-500 text-white text-xs rounded-full font-semibold animate-pulse">
+                              ACTIVE
+                            </span>
                           )}
-                          {reportStatus === 'Submitted' && (
-                            <span className="text-lg" title="Report Submitted">✅</span>
+                          {hasReport && reportStatus === 'Submitted' && (
+                            <span className="px-2 py-0.5 bg-green-500 text-white text-xs rounded-full font-semibold">
+                              ✓ SUBMITTED
+                            </span>
                           )}
                           {reportStatus === 'Pending' && (
-                            <span className="text-lg" title="Report Pending">📋</span>
+                            <span className="px-2 py-0.5 bg-yellow-500 text-white text-xs rounded-full font-semibold">
+                              📋 PENDING
+                            </span>
                           )}
                           {reportStatus === 'Late' && (
-                            <span className="text-lg" title="Report Overdue">⚠️</span>
+                            <span className="px-2 py-0.5 bg-red-500 text-white text-xs rounded-full font-semibold">
+                              ⚠️ OVERDUE
+                            </span>
                           )}
                         </div>
 
@@ -420,7 +451,7 @@ export default function StageProgressionUI({
                                   {stage.duration}
                                 </span>
                               </div>
-                              {stage.reportDueDate && (reportStatus === 'Pending' || reportStatus === 'Late') && (
+                              {stage.reportDueDate && hasPendingReport && (
                                 <div>
                                   <span className={`font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
                                     Report Due: 
@@ -455,24 +486,6 @@ export default function StageProgressionUI({
                                 </div>
                               </div>
                             )}
-
-                            {/* Submit Report Button (for pending/late reports) */}
-                            {(reportStatus === 'Pending' || reportStatus === 'Late') && onSubmitReport && (
-                              <button
-                                onClick={() => onSubmitReport(crop, index)}
-                                className={`mt-3 w-full py-2 px-4 rounded-lg text-sm font-semibold transition-all ${
-                                  reportStatus === 'Late'
-                                    ? theme === 'dark'
-                                      ? 'bg-red-600 hover:bg-red-500 text-white'
-                                      : 'bg-red-600 hover:bg-red-700 text-white'
-                                    : theme === 'dark'
-                                      ? 'bg-yellow-600 hover:bg-yellow-500 text-white'
-                                      : 'bg-yellow-600 hover:bg-yellow-700 text-white'
-                                }`}
-                              >
-                                📝 Submit {stage.name} Report {reportStatus === 'Late' && '(OVERDUE)'}
-                              </button>
-                            )}
                           </>
                         )}
 
@@ -494,26 +507,26 @@ export default function StageProgressionUI({
       {/* Overall Progress Stats */}
       <div className={`rounded-xl border p-6 ${
         theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-        }`}>
+      }`}>
         <h3 className={`text-lg font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
           📈 Overall Progress
         </h3>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-green-900' : 'bg-green-50'}`}>
             <div className="text-2xl font-bold text-green-600">
-              {allStages.filter(s => s.reportStatus === 'Submitted').length}
+              {completedStages}
             </div>
-            <div className={`text-xs ${theme === 'dark' ? 'text-green-200' : 'text-green-700'}`}>Submitted</div>
+            <div className={`text-xs ${theme === 'dark' ? 'text-green-200' : 'text-green-700'}`}>Completed</div>
           </div>
-          <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-yellow-900' : 'bg-yellow-50'}`}>
-            <div className="text-2xl font-bold text-yellow-600">
-              {allStages.filter(s => s.reportStatus === 'Pending' || s.reportStatus === 'Late').length}
+          <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-blue-900' : 'bg-blue-50'}`}>
+            <div className="text-2xl font-bold text-blue-600">
+              {isCompleted ? 0 : 1}
             </div>
-            <div className={`text-xs ${theme === 'dark' ? 'text-yellow-200' : 'text-yellow-700'}`}>Pending</div>
+            <div className={`text-xs ${theme === 'dark' ? 'text-blue-200' : 'text-blue-700'}`}>Current</div>
           </div>
           <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}`}>
             <div className={`text-2xl font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-              {allStages.filter(s => !s.hasReport).length}
+              {totalStages - completedStages - (isCompleted ? 0 : 1)}
             </div>
             <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Upcoming</div>
           </div>
@@ -524,13 +537,13 @@ export default function StageProgressionUI({
           <div className="flex justify-between text-sm mb-1">
             <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>Overall Progress</span>
             <span className={`font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>
-              {Math.round((allStages.filter(s => s.reportStatus === 'Submitted').length / totalStages) * 100)}%
+              {Math.round((completedStages / totalStages) * 100)}%
             </span>
           </div>
           <div className={`h-4 rounded-full overflow-hidden ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`}>
             <div 
               className="h-full bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 transition-all duration-500"
-              style={{ width: `${(allStages.filter(s => s.reportStatus === 'Submitted').length / totalStages) * 100}%` }}
+              style={{ width: `${(completedStages / totalStages) * 100}%` }}
             />
           </div>
         </div>

@@ -1,5 +1,5 @@
 export async function seedCropReports(prisma) {
-  // Get all users with their crops
+  // Get all users with their crops and guidelines
   const usersWithCrops = await prisma.account.findMany({
     where: { access: 'User' },
     select: { 
@@ -9,7 +9,21 @@ export async function seedCropReports(prisma) {
         select: {
           id: true,
           cropType: true,
-          plantingDate: true
+          plantingDate: true,
+          currentStageIndex: true,
+          guideline: {
+            select: {
+              stages: {
+                select: {
+                  stageName: true,
+                  sequenceOrder: true
+                },
+                orderBy: {
+                  sequenceOrder: 'asc'
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -30,7 +44,11 @@ export async function seedCropReports(prisma) {
 
   for (const user of usersWithReports) {
     for (const crop of user.registeredCrops) {
-      // Create 2-4 reports per crop
+      // Get available stages for this crop
+      const stages = crop.guideline?.stages || [];
+      if (stages.length === 0) continue;
+
+      // Create 2-4 reports per crop, one per stage
       const numReports = Math.floor(Math.random() * 3) + 2; // 2-4 reports
       
       for (let i = 0; i < numReports; i++) {
@@ -38,9 +56,29 @@ export async function seedCropReports(prisma) {
         const reportDate = new Date();
         reportDate.setDate(reportDate.getDate() - daysAgo);
 
-        const report = await prisma.cropMonthlyReport.create({
+        // Each report is for a different stage (i is the stageIndex)
+        // Ensure we don't exceed available stages
+        if (i >= stages.length) break;
+        
+        const stageIndex = i; // Each iteration creates report for next stage
+        const stage = stages[stageIndex];
+
+        // Calculate report status and dates based on age
+        const isSubmitted = daysAgo > 30; // Reports older than 30 days are submitted
+        const reportDueDate = new Date(reportDate);
+        reportDueDate.setDate(reportDueDate.getDate() + 5); // Due 5 days after report date
+        
+        const isLate = isSubmitted && daysAgo > 35; // If submitted after 5-day grace period
+        const submittedAt = isSubmitted ? new Date(reportDate.getTime() + (isLate ? 6 : 3) * 24 * 60 * 60 * 1000) : null;
+
+        const report = await prisma.stageReport.create({
           data: {
             cropId: crop.id,
+            stageIndex: stageIndex,
+            stageName: stage.stageName,
+            status: isSubmitted ? (isLate ? 'Late' : 'Submitted') : 'Pending',
+            reportDueDate: reportDueDate,
+            submittedAt: submittedAt,
             plantHeight: 30 + (i * 15) + Math.random() * 10, // Growing over time
             healthStatus: ['Excellent', 'Good', 'Fair'][Math.floor(Math.random() * 3)],
             weatherImpact: ['None', 'Light Rain', 'Heavy Rain', 'Dry Spell'][Math.floor(Math.random() * 4)],

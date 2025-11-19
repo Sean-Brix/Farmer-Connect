@@ -369,14 +369,36 @@ export default function Dashboard() {
         }
     };
 
-    // Track the current page key for highlighting
-    const [currentPageKey, setCurrentPageKey] = useState('analytics');
+    // Track the current page key for highlighting with localStorage persistence
+    const [currentPageKey, setCurrentPageKey] = useState(() => {
+        try {
+            return localStorage.getItem('admin_current_page_key') || 'analytics';
+        } catch {
+            return 'analytics';
+        }
+    });
 
     // Update setPage to also update currentPageKey
     const handleSetPage = (key) => {
         setPage(elements.current[key]);
         setCurrentPageKey(key);
     };
+
+    // Persist currentPageKey to localStorage
+    useEffect(() => {
+        try {
+            localStorage.setItem('admin_current_page_key', currentPageKey);
+        } catch (error) {
+            console.error('Failed to save current page key:', error);
+        }
+    }, [currentPageKey]);
+
+    // Restore the correct page on mount based on localStorage
+    useEffect(() => {
+        if (elements.current[currentPageKey]) {
+            setPage(elements.current[currentPageKey]);
+        }
+    }, []);
 
     // Scroll to top on route change
     const { pathname } = window.location;

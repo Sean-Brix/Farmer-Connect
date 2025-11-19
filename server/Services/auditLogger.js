@@ -81,7 +81,7 @@ class AuditLogger {
                     targetId,
                     targetName,
                     details,
-            metadata: metadata ?? null,
+            metadata: metadata ? JSON.stringify(metadata) : null,
                     ipAddress,
                     userAgent,
                 },

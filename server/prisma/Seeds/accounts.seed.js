@@ -23,6 +23,27 @@ export async function seedAccounts(prisma) {
       civilStatus: 'Married',
     },
     {
+      username: 'user',
+      email: 'user@farmerconnect.com',
+      firstName: 'Test',
+      surname: 'User',
+      middleName: '',
+      access: 'User',
+      sex: 'Male',
+      mobileNumber: '09171234568',
+      province: 'Laguna',
+      municipality: 'Los Baños',
+      barangay: 'Anos',
+      region: 'Region IV-A',
+      client_profile: 'Other',
+      education: 'College_graduate',
+      dateOfBirth: new Date('1990-01-01'),
+      civilStatus: 'Single',
+      isHouseholdHead: true,
+      grossAnnualIncome: '100000-150000',
+      incomeSource: 'farming',
+    },
+    {
       username: 'juan.delacruz',
       email: 'juan.delacruz@farmer.ph',
       firstName: 'Juan',
@@ -236,4 +257,5 @@ export async function seedAccounts(prisma) {
   }
 
   console.log(`✅ Created ${accounts.length} accounts (1 Super_Admin, ${accounts.length - 1} Users)`);
+  console.log('📝 Quick Login: username=admin password=123456 OR username=user password=123456');
 }

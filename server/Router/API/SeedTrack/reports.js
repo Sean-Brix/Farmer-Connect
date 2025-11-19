@@ -98,7 +98,7 @@ router.get('/', async (req, res) => {
       include.crop = { select: { id: true, userId: true, cropType: true, variety: true } };
     }
 
-    let reports = await prisma.cropMonthlyReport.findMany({
+    let reports = await prisma.stageReport.findMany({
       where,
       orderBy: { createdAt: 'desc' },
       include,
@@ -121,7 +121,7 @@ router.get('/', async (req, res) => {
 // GET /api/seed-track/reports/:id
 router.get('/:id', async (req, res) => {
   try {
-    const report = await prisma.cropMonthlyReport.findUnique({ 
+    const report = await prisma.stageReport.findUnique({ 
       where: { id: req.params.id },
       include: {
         feedback: {
@@ -168,18 +168,42 @@ router.get('/:id', async (req, res) => {
 // POST /api/seed-track/reports
 router.post('/', async (req, res) => {
   try {
-    const { cropId, plantHeight, healthStatus, weatherImpact, notes, pestsObserved, diseasesObserved, fertilizersApplied, pesticideApplications, irrigationFrequency, soilCondition, plannedActions, actualYield, costs, weatherSnapshot } = req.body || {};
+    const { cropId, stageIndex, plantHeight, healthStatus, weatherImpact, notes, pestsObserved, diseasesObserved, fertilizersApplied, pesticideApplications, irrigationFrequency, soilCondition, plannedActions, actualYield, costs, weatherSnapshot } = req.body || {};
+    
+    // Detailed validation
     if (!cropId) {
-      return res.status(400).json({ success: false, message: 'cropId is required' });
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Validation Error: cropId is required',
+        field: 'cropId'
+      });
     }
 
-    // Get the crop with guideline to validate stage progression
+    if (typeof cropId !== 'string') {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Validation Error: cropId must be a string, received: ' + typeof cropId,
+        field: 'cropId',
+        receivedType: typeof cropId
+      });
+    }
+
+    if (!plantHeight) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Validation Error: plantHeight is required',
+        field: 'plantHeight'
+      });
+    }
+
+    // Get the crop to find the pending report for the target stage
     const crop = await prisma.registeredCrop.findUnique({
       where: { id: cropId },
       include: {
         guideline: {
-          include: { stages: { orderBy: { stageNumber: 'asc' } } }
-        }
+          include: { stages: { orderBy: { sequenceOrder: 'asc' } } }
+        },
+        reports: true
       }
     });
 
@@ -187,22 +211,28 @@ router.post('/', async (req, res) => {
       return res.status(404).json({ success: false, message: 'Crop not found' });
     }
 
-    // Validate if farmer can submit report for current stage
-    const validation = await canSubmitReportForStage(crop);
-    if (!validation.canSubmit) {
+    // Determine which stage to submit report for
+    const targetStage = stageIndex !== null && stageIndex !== undefined ? stageIndex : crop.currentStageIndex;
+    
+    // Find the pending report for this stage
+    const pendingReport = crop.reports.find(r => r.stageIndex === targetStage && r.status === 'Pending');
+    
+    if (!pendingReport) {
       return res.status(400).json({ 
         success: false, 
-        message: validation.reason,
-        daysRemaining: validation.daysRemaining,
+        message: `No pending report found for stage ${targetStage}. Report may already be submitted or not yet available.`,
+        targetStage,
         currentStage: crop.currentStageName,
         stageIndex: crop.currentStageIndex
       });
     }
 
-    const data = {
-      cropId,
-      stageIndex: crop.currentStageIndex,
-      stageName: crop.currentStageName,
+    // Check if report is overdue
+    const now = new Date();
+    const isLate = pendingReport.reportDueDate && now > new Date(pendingReport.reportDueDate);
+
+    // Update the pending report with submission data
+    const updateData = {
       plantHeight: plantHeight != null ? Number(plantHeight) : null,
       healthStatus: healthStatus || null,
       weatherImpact: weatherImpact || null,
@@ -217,25 +247,27 @@ router.post('/', async (req, res) => {
       actualYield: actualYield != null ? Number(actualYield) : null,
       costs: costs || null,
       weatherSnapshot: weatherSnapshot || null,
+      status: isLate ? 'Late' : 'Submitted',
+      submittedAt: now
     };
 
     // Stringify JSON fields for database storage
-    const stringifiedData = stringifyReportJsonFields(data);
+    const stringifiedData = stringifyReportJsonFields(updateData);
 
-    const created = await prisma.cropMonthlyReport.create({ data: stringifiedData });
-
-    // Advance to next stage after successful report submission
-    const updatedCrop = await advanceToNextStage(crop);
+    const updated = await prisma.stageReport.update({
+      where: { id: pendingReport.id },
+      data: stringifiedData
+    });
 
     // Get updated stage info
-    const stageInfo = await getCurrentStageInfo(updatedCrop);
+    const stageInfo = await getCurrentStageInfo(cropId);
 
     // Parse JSON fields back for response
-    const parsedCreated = parseReportJsonFields(created);
+    const parsedReport = parseReportJsonFields(updated);
 
     res.status(201).json({ 
       success: true, 
-      data: parsedCreated,
+      data: parsedReport,
       stageInfo: stageInfo,
       message: stageInfo.isCompleted 
         ? 'Report submitted successfully! All stages completed.' 
@@ -262,7 +294,7 @@ router.patch('/:id', async (req, res) => {
     // Stringify JSON fields for database storage
     const stringifiedData = stringifyReportJsonFields(data);
     
-    const updated = await prisma.cropMonthlyReport.update({ where: { id: req.params.id }, data: stringifiedData });
+    const updated = await prisma.stageReport.update({ where: { id: req.params.id }, data: stringifiedData });
     
     // Parse JSON fields back for response
     const parsedUpdated = parseReportJsonFields(updated);
@@ -275,15 +307,41 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
-// DELETE /api/seed-track/reports/:id
+// DELETE /api/seed-track/reports/:id - Resets report to Pending status for revision
 router.delete('/:id', async (req, res) => {
   try {
-    const deleted = await prisma.cropMonthlyReport.delete({ where: { id: req.params.id } });
-    res.json({ success: true, data: deleted });
+    // Instead of deleting, reset the report to Pending status
+    const resetReport = await prisma.stageReport.update({
+      where: { id: req.params.id },
+      data: {
+        status: 'Pending',
+        submittedAt: null,
+        // Clear submitted data to allow re-submission
+        plantHeight: null,
+        healthStatus: null,
+        weatherImpact: null,
+        notes: null,
+        pestsObserved: null,
+        diseasesObserved: null,
+        fertilizersApplied: null,
+        pesticideApplications: null,
+        irrigationFrequency: null,
+        soilCondition: null,
+        plannedActions: null,
+        actualYield: null,
+        costs: null,
+        weatherSnapshot: null
+      }
+    });
+    res.json({ 
+      success: true, 
+      data: resetReport,
+      message: 'Report reset to Pending status. Farmer can now resubmit.' 
+    });
   } catch (error) {
     console.error('[SeedTrack][Reports][DELETE] Error:', error);
     if (error.code === 'P2025') return res.status(404).json({ success: false, message: 'Report not found' });
-    res.status(500).json({ success: false, message: 'Failed to delete report' });
+    res.status(500).json({ success: false, message: 'Failed to reset report' });
   }
 });
 
@@ -298,7 +356,7 @@ router.post('/:reportId/feedback', async (req, res) => {
     }
 
     // Verify report exists
-    const report = await prisma.cropMonthlyReport.findUnique({ where: { id: reportId } });
+    const report = await prisma.stageReport.findUnique({ where: { id: reportId } });
     if (!report) {
       return res.status(404).json({ success: false, message: 'Report not found' });
     }

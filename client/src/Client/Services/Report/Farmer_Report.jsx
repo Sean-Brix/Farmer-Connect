@@ -14,7 +14,13 @@ import cropGuidelinesData from '../../../data/cropGuidelinesData.json';
 
 export default function Farmer_Report() {
   const { theme, isDark } = useTheme();
-  const [activeTab, setActiveTab] = useState('crops');
+  const [activeTab, setActiveTab] = useState(() => {
+    try {
+      return localStorage.getItem('farmer_active_tab') || 'crops';
+    } catch {
+      return 'crops';
+    }
+  });
   const [showCropRegistrationModal, setShowCropRegistrationModal] = useState(false);
   const [showMonthlyReportModal, setShowMonthlyReportModal] = useState(false);
   const [selectedCropForReport, setSelectedCropForReport] = useState(null);
@@ -40,8 +46,16 @@ export default function Farmer_Report() {
   const [selectedReportCrop, setSelectedReportCrop] = useState(null);
   
   // New sidebar states for Reports tab
-  const [selectedCropInSidebar, setSelectedCropInSidebar] = useState(null);
+  const [selectedCropInSidebar, setSelectedCropInSidebar] = useState(() => {
+    try {
+      const saved = localStorage.getItem('farmer_selected_crop_in_sidebar');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
   const [selectedStageView, setSelectedStageView] = useState(null); // For viewing past reports
+  const [targetStageIndex, setTargetStageIndex] = useState(null); // Track which stage to report
 
   // Stage comment system states
   const [showStageCommentModal, setShowStageCommentModal] = useState(false);
@@ -233,6 +247,28 @@ export default function Farmer_Report() {
     const interval = setInterval(fetchWeatherData, 30 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
+
+  // Persist activeTab to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('farmer_active_tab', activeTab);
+    } catch (error) {
+      console.error('Failed to save active tab:', error);
+    }
+  }, [activeTab]);
+
+  // Persist selectedCropInSidebar to localStorage
+  useEffect(() => {
+    try {
+      if (selectedCropInSidebar) {
+        localStorage.setItem('farmer_selected_crop_in_sidebar', JSON.stringify(selectedCropInSidebar));
+      } else {
+        localStorage.removeItem('farmer_selected_crop_in_sidebar');
+      }
+    } catch (error) {
+      console.error('Failed to save selected crop:', error);
+    }
+  }, [selectedCropInSidebar]);
 
   // Reset pagination when search term or category changes
   useEffect(() => {
@@ -457,9 +493,20 @@ export default function Farmer_Report() {
       return;
     }
 
+    // Ensure we're sending just the ID string
+    const cropIdToSend = typeof selectedCropForReport === 'string' 
+      ? selectedCropForReport 
+      : selectedCropForReport?.id;
+
+    if (!cropIdToSend) {
+      alert('Invalid crop selection');
+      return;
+    }
+
     try {
       await createReport.mutateAsync({
-        cropId: selectedCropForReport.id,
+        cropId: cropIdToSend,
+        stageIndex: targetStageIndex, // Include target stage index
         plantHeight: newReport.plantHeight ? Number(newReport.plantHeight) : null,
         healthStatus: newReport.healthStatus || null,
         weatherImpact: newReport.weatherImpact || null,
@@ -481,9 +528,28 @@ export default function Farmer_Report() {
         } : null,
         userId,
       });
+
+      // Success - close modal and reset form
+      alert('Report submitted successfully!');
+      setShowDetailedReportModal(false);
+      setSelectedCropForReport(null);
+      setTargetStageIndex(null);
     } catch (e) {
       console.error('Create report failed:', e);
-      alert('Failed to add report.');
+      
+      // Show detailed error message
+      let errorMessage = 'Failed to add report.';
+      if (e.message) {
+        errorMessage = e.message;
+        if (e.field) {
+          errorMessage += `\n\nInvalid field: ${e.field}`;
+          if (e.receivedType) {
+            errorMessage += `\nReceived type: ${e.receivedType}`;
+          }
+        }
+      }
+      
+      alert(errorMessage);
       return;
     }
 
@@ -513,6 +579,7 @@ export default function Farmer_Report() {
     setShowMonthlyReportModal(false);
     setShowDetailedReportModal(false);
     setSelectedCropForReport(null);
+    setTargetStageIndex(null); // Reset target stage
   };
 
   // Calculate crop rows for display
@@ -1065,8 +1132,9 @@ export default function Farmer_Report() {
                         <StageProgressionUI 
                           crop={selectedCropInSidebar}
                           theme={theme}
-                          onSubmitReport={(selectedCrop) => {
+                          onSubmitReport={(selectedCrop, stageIndex) => {
                             setSelectedCropForReport(selectedCrop);
+                            setTargetStageIndex(stageIndex); // Store which stage to report
                             setShowDetailedReportModal(true);
                           }}
                           onMessageAdmin={(selectedCrop) => {

@@ -122,6 +122,13 @@ export async function seedRegisteredCrops(prisma) {
       const expectedHarvest = new Date(plantingDate);
       expectedHarvest.setDate(expectedHarvest.getDate() + 120); // Default 120 days
 
+      // Calculate stage dates (assume currently in stage 2, started 20 days ago)
+      const currentStageStartDate = new Date(plantingDate);
+      currentStageStartDate.setDate(currentStageStartDate.getDate() + 40); // Stage 0 + Stage 1 duration
+      
+      const currentStageEndDate = new Date(currentStageStartDate);
+      currentStageEndDate.setDate(currentStageEndDate.getDate() + 30); // Stage 2 duration
+
       await prisma.registeredCrop.create({
         data: {
           userId: user.id,
@@ -134,7 +141,8 @@ export async function seedRegisteredCrops(prisma) {
           status: 'Active',
           currentStageIndex: 2,
           currentStageName: 'Vegetative',
-          completedStages: 2,
+          currentStageStartDate,
+          currentStageEndDate,
           totalStages: guideline.stages?.length || 0,
           notes: `Following ${cropData.guidelineName} guideline`,
         },

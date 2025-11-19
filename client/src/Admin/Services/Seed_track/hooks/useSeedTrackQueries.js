@@ -12,7 +12,8 @@ function useAccounts() {
       // API returns { list: accounts }
       return json.list || [];
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0, // Always refetch on invalidation
+    refetchOnMount: 'always',
   });
 }
 
@@ -27,7 +28,8 @@ function useCropsWithReports() {
       // API returns { success, data }
       return Array.isArray(json.data) ? json.data : [];
     },
-    staleTime: 60 * 1000,
+    staleTime: 0, // Always refetch on invalidation
+    refetchOnMount: 'always',
   });
 }
 
