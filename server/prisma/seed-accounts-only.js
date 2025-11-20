@@ -29,24 +29,19 @@ async function seedAccountsOnly() {
 
     const hashedPassword = await bcrypt.hash(defaultPassword, 10);
 
-    // Optional: attach sample image for the first few users if available
+    // Load user profile image (admin.jpg or user.jpg)
     let picture = null;
     let mimeType = null;
     try {
-      if (i < 13) {
-        const idx = i + 1;
-        let imageName = `sample${idx}`;
-        if (idx === 2) { imageName += '.jpeg'; mimeType = 'image/jpeg'; }
-        else if (idx === 3) { imageName += '.png'; mimeType = 'image/png'; }
-        else { imageName += '.jpg'; mimeType = 'image/jpeg'; }
-
-        // Prefer the actual folder name in repo: Data/Images/Accounts
-        const imagePath = path.join(__dirname, 'Data', 'Images', 'Accounts', imageName);
-        picture = await sharp(imagePath).resize(300).jpeg({ quality: 80 }).toBuffer();
-      }
+      const imageName = `${user.username.toLowerCase()}.jpg`;
+      const imagePath = path.join(__dirname, 'Data', 'Images', 'Accounts', imageName);
+      picture = await sharp(imagePath).resize(300).jpeg({ quality: 80 }).toBuffer();
+      mimeType = 'image/jpeg';
     } catch (e) {
-      // If image files are not available, continue without images
-      picture = null; mimeType = null;
+      // If image file is not available, continue without image
+      console.log(`No image found for ${user.username}, skipping picture upload`);
+      picture = null;
+      mimeType = null;
     }
 
     try {
@@ -103,12 +98,22 @@ async function seedAccountsOnly() {
           // Education
           education: user.education,
 
-          // Livelihood Profile (as JSON)
-          livelihoodProfile: user.livelihoodProfile,
-          farmingActivities: user.farmingActivities,
-          fishingActivities: user.fishingActivities,
-          farmworkActivities: user.farmworkActivities,
-          youthActivities: user.youthActivities,
+          // Livelihood Profile (convert arrays to JSON strings)
+          livelihoodProfile: Array.isArray(user.livelihoodProfile) 
+            ? JSON.stringify(user.livelihoodProfile) 
+            : user.livelihoodProfile,
+          farmingActivities: Array.isArray(user.farmingActivities)
+            ? JSON.stringify(user.farmingActivities)
+            : user.farmingActivities,
+          fishingActivities: Array.isArray(user.fishingActivities)
+            ? JSON.stringify(user.fishingActivities)
+            : user.fishingActivities,
+          farmworkActivities: Array.isArray(user.farmworkActivities)
+            ? JSON.stringify(user.farmworkActivities)
+            : user.farmworkActivities,
+          youthActivities: Array.isArray(user.youthActivities)
+            ? JSON.stringify(user.youthActivities)
+            : user.youthActivities,
 
           // Livelihood Specifications
           otherCropsSpecify: user.otherCropsSpecify,

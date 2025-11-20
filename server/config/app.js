@@ -22,10 +22,17 @@ const reactIndexPath = path.join(reactAppPath, 'index.html');
 // Request Handler
 const app = express();
 
+// Import request queue middleware
+import { requestQueueMiddleware, requestTimingMiddleware, getHealthStats } from '../Middlewares/requestQueue.js';
+
 // Middleware
 app.use(urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
+
+// Request timing and queue management (before routes)
+app.use(requestTimingMiddleware);
+app.use(requestQueueMiddleware);
 
 // Serve static files from public directory (images, uploads, etc.)
 app.use('/public', express.static(publicPath));
@@ -43,6 +50,15 @@ app.use(
         credentials: true,
     })
 );
+
+// Health check endpoint (before routes)
+app.get('/health', (req, res) => {
+    res.json({
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        ...getHealthStats()
+    });
+});
 
 // API Route
 import index from '../Router/index.js';

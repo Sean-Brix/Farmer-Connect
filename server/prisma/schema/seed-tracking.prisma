@@ -26,7 +26,7 @@ model RegisteredCrop {
   @@index([guidelineId])
   @@index([currentStageIndex])
   @@index([plantingDate])
-  @@map("registered_crops")
+  @@map("RegisteredCrop")
 }
 
 // One report per stage - required for each stage
@@ -63,7 +63,7 @@ model StageReport {
   @@unique([cropId, stageIndex]) // One report per stage per crop
   @@index([cropId, stageIndex])
   @@index([status, reportDueDate])
-  @@map("stage_reports")
+  @@map("StageReport")
 }
 
 model ReportFeedback {
@@ -81,7 +81,7 @@ model ReportFeedback {
 
   @@index([reportId, createdAt])
   @@index([parentId])
-  @@map("report_feedback")
+  @@map("ReportFeedback")
 }
 
 model CropStageMessage {
@@ -103,7 +103,7 @@ model CropStageMessage {
   @@index([cropId, createdAt])
   @@index([cropId, stageIndex])
   @@index([parentId])
-  @@map("crop_stage_messages")
+  @@map("CropStageMessage")
 }
 
 enum CropStatus {

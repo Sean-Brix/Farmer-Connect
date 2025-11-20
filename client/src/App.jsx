@@ -31,6 +31,7 @@ import ForgotPassword from './Authentication/Components/ForgotPassword';
 import ResetPassword from './Authentication/Components/ResetPassword.jsx';
 import Farmer_Report from './Client/Services/Report/Farmer_Report.jsx';
 import FillSurvey from './Components/Survey/FillSurvey.jsx';
+import NotFound from './Components/Common/NotFound.jsx';
 
 function App() {
     return (
@@ -69,6 +70,8 @@ function App() {
                     <Route path="/testing/request" element={<API_Request />} />
                     <Route path="/testing/details" element={<Details_php />} />
                     
+                    {/* 404 - Catch all unmatched routes */}
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>
         </SocketProvider>
