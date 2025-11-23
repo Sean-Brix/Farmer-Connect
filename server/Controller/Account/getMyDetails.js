@@ -20,9 +20,8 @@ async function getMyDetails(req, res) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        user.password = undefined; 
-        user.picture = undefined;
-        user.mimeType = undefined;
+        // Remove sensitive fields from response
+        user.password = undefined;
 
         return res.status(200).json(user);
 

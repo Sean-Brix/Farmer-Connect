@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { SocketProvider } from './contexts/SocketContext.jsx';
 import { ThemeProvider } from './contexts/ThemeContext.jsx';
+import { Toaster } from 'react-hot-toast';
 
 
 // COMPONENTS
@@ -29,15 +30,16 @@ import Settings from './Components/settings/Settings.jsx';
 import My_Profile from './Admin/Components/Profile/My_Profile.jsx';
 import ForgotPassword from './Authentication/Components/ForgotPassword';
 import ResetPassword from './Authentication/Components/ResetPassword.jsx';
-import Farmer_Report from './Client/Services/Report/Farmer_Report.jsx';
 import FillSurvey from './Components/Survey/FillSurvey.jsx';
 import NotFound from './Components/Common/NotFound.jsx';
+import DevPage from './Dev/DevPage.jsx';
 
 function App() {
     return (
         <ThemeProvider>
             <SocketProvider>
                 <BrowserRouter>
+                    <Toaster position="top-right" />
                     <Routes>
                     {/* AUTHENTICATION */}
                     <Route path="/login" element={<Login />} />
@@ -60,12 +62,14 @@ function App() {
                     <Route path="/survey/fill/:surveyId" element={<FillSurvey />} />
                     <Route path="/chat" element={<Chat />} />
                     <Route path="/chat-support" element={<ChatSupport />} />
-                    <Route path="/report" element={<Farmer_Report />} />
 
                     {/* ADMIN ROUTES */}
                     <Route path="/admin" element={<Dashboard />} />
                     <Route path="/admin/profile" element={<My_Profile />} />
 
+                    {/* DEVELOPER TOOLS */}
+                    <Route path="/dev" element={<DevPage />} />
+                    
                     {/* SERVER TESTING */}
                     <Route path="/testing/request" element={<API_Request />} />
                     <Route path="/testing/details" element={<Details_php />} />

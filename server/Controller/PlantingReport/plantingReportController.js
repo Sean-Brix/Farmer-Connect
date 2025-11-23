@@ -1,0 +1,549 @@
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+
+// Helper function to calculate yield (mt/ha) 
+function calculateYield(harvestArea, numberOfBags, weightPerBag) {
+    if (!harvestArea || !numberOfBags || !weightPerBag) return null;
+    return (harvestArea * numberOfBags * weightPerBag) / 1000;
+}
+
+// Helper function to calculate expected harvest date
+async function calculateExpectedHarvest(varietyId, dateOfPlanting) {
+    try {
+        const variety = await prisma.seedVariety.findUnique({
+            where: { id: varietyId },
+            select: { DAS: true, cropType: true }
+        });
+
+        // Only calculate for Rice crops
+        if (!variety || variety.cropType !== 'Rice') return null;
+
+        const plantingDate = new Date(dateOfPlanting);
+        const expectedDate = new Date(plantingDate);
+        expectedDate.setDate(plantingDate.getDate() + variety.DAS);
+        
+        return expectedDate;
+    } catch (error) {
+        console.error('Error calculating expected harvest:', error);
+        return null;
+    }
+}
+
+// CREATE - Create a new planting report
+export async function createPlantingReport(req, res) {
+    try {
+        const {
+            farmerName,
+            farmLocation,
+            rsbsaNumber,
+            croppingSeasonId,
+            areaPlanted,
+            seedClassification,
+            typeOfCrop,
+            riceIrrigation,
+            varietyId,
+            dateOfPlanting,
+            plantingMethod,
+            cropInsurance,
+            harvestArea,
+            numberOfBags,
+            weightPerBag
+        } = req.body;
+
+        // Validate required fields
+        if (!farmerName || !farmLocation || !croppingSeasonId || 
+            !areaPlanted || !seedClassification || !typeOfCrop || !varietyId || 
+            !dateOfPlanting || !plantingMethod) {
+            return res.status(400).json({
+                success: false,
+                message: 'Missing required fields'
+            });
+        }
+
+        // Calculate yield if harvest data is provided
+        const yieldMtPerHa = calculateYield(harvestArea, numberOfBags, weightPerBag);
+
+        // Calculate expected harvest date for Rice crops
+        const dateOfExpectedHarvest = await calculateExpectedHarvest(varietyId, dateOfPlanting);
+
+        // Create the planting report
+        const report = await prisma.plantingReport.create({
+            data: {
+                farmerName,
+                farmLocation,
+                rsbsaNumber: rsbsaNumber || null,
+                croppingSeasonId,
+                areaPlanted: parseFloat(areaPlanted),
+                seedClassification,
+                typeOfCrop,
+                riceIrrigation: riceIrrigation || null,
+                varietyId,
+                dateOfPlanting: new Date(dateOfPlanting),
+                plantingMethod,
+                cropInsurance: cropInsurance || false,
+                harvestArea: harvestArea ? parseFloat(harvestArea) : null,
+                numberOfBags: numberOfBags ? parseInt(numberOfBags) : null,
+                weightPerBag: weightPerBag ? parseFloat(weightPerBag) : null,
+                yieldMtPerHa,
+                dateOfExpectedHarvest
+            },
+            include: {
+                croppingSeason: true,
+                variety: true
+            }
+        });
+
+        console.log('✅ [Planting Report] Created:', report.id);
+
+        return res.status(201).json({
+            success: true,
+            message: 'Planting report created successfully',
+            report
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Create error:', error);
+        
+        if (error.code === 'P2003') {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid user, season, or variety ID'
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to create planting report',
+            error: error.message
+        });
+    }
+}
+
+// READ - Get all planting reports with filters and pagination
+export async function getAllPlantingReports(req, res) {
+    try {
+        const {
+            page = 1,
+            limit = 10,
+            userId,
+            typeOfCrop,
+            croppingSeasonId,
+            startDate,
+            endDate,
+            search
+        } = req.query;
+
+        const skip = (parseInt(page) - 1) * parseInt(limit);
+
+        // Build where clause
+        const where = {};
+
+        if (userId) where.userId = userId;
+        if (typeOfCrop) where.typeOfCrop = typeOfCrop;
+        if (croppingSeasonId) where.croppingSeasonId = croppingSeasonId;
+
+        // Date range filter
+        if (startDate || endDate) {
+            where.dateOfPlanting = {};
+            if (startDate) where.dateOfPlanting.gte = new Date(startDate);
+            if (endDate) where.dateOfPlanting.lte = new Date(endDate);
+        }
+
+        // Search by farmer name or location
+        if (search) {
+            where.OR = [
+                { farmerName: { contains: search, mode: 'insensitive' } },
+                { farmLocation: { contains: search, mode: 'insensitive' } },
+                { rsbsaNumber: { contains: search, mode: 'insensitive' } }
+            ];
+        }
+
+        // Get total count
+        const total = await prisma.plantingReport.count({ where });
+
+        // Get paginated reports
+        const reports = await prisma.plantingReport.findMany({
+            where,
+            skip,
+            take: parseInt(limit),
+            include: {
+                croppingSeason: true,
+                variety: true
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+
+        console.log(`📋 [Planting Report] Retrieved ${reports.length} of ${total} reports`);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Planting reports retrieved successfully',
+            reports,
+            pagination: {
+                total,
+                page: parseInt(page),
+                limit: parseInt(limit),
+                totalPages: Math.ceil(total / parseInt(limit))
+            }
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Get all error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to retrieve planting reports',
+            error: error.message
+        });
+    }
+}
+
+// READ - Get single planting report by ID
+export async function getPlantingReportById(req, res) {
+    try {
+        const { id } = req.params;
+
+        const report = await prisma.plantingReport.findUnique({
+            where: { id },
+            include: {
+                croppingSeason: true,
+                variety: true
+            }
+        });
+
+        if (!report) {
+            return res.status(404).json({
+                success: false,
+                message: 'Planting report not found'
+            });
+        }
+
+        console.log('📄 [Planting Report] Retrieved:', report.id);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Planting report retrieved successfully',
+            report
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Get by ID error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to retrieve planting report',
+            error: error.message
+        });
+    }
+}
+
+// UPDATE - Update a planting report
+export async function updatePlantingReport(req, res) {
+    try {
+        const { id } = req.params;
+        const updateData = { ...req.body };
+
+        // Check if report exists
+        const existingReport = await prisma.plantingReport.findUnique({
+            where: { id }
+        });
+
+        if (!existingReport) {
+            return res.status(404).json({
+                success: false,
+                message: 'Planting report not found'
+            });
+        }
+
+        // Parse numeric fields
+        if (updateData.areaPlanted) updateData.areaPlanted = parseFloat(updateData.areaPlanted);
+        if (updateData.harvestArea) updateData.harvestArea = parseFloat(updateData.harvestArea);
+        if (updateData.numberOfBags) updateData.numberOfBags = parseInt(updateData.numberOfBags);
+        if (updateData.weightPerBag) updateData.weightPerBag = parseFloat(updateData.weightPerBag);
+
+        // Parse dates
+        if (updateData.dateOfPlanting) updateData.dateOfPlanting = new Date(updateData.dateOfPlanting);
+
+        // Recalculate yield if harvest data is updated
+        const harvestArea = updateData.harvestArea || existingReport.harvestArea;
+        const numberOfBags = updateData.numberOfBags || existingReport.numberOfBags;
+        const weightPerBag = updateData.weightPerBag || existingReport.weightPerBag;
+        
+        if (harvestArea || numberOfBags || weightPerBag) {
+            updateData.yieldMtPerHa = calculateYield(harvestArea, numberOfBags, weightPerBag);
+        }
+
+        // Recalculate expected harvest if variety or planting date changed
+        const varietyId = updateData.varietyId || existingReport.varietyId;
+        const dateOfPlanting = updateData.dateOfPlanting || existingReport.dateOfPlanting;
+        
+        if (updateData.varietyId || updateData.dateOfPlanting) {
+            const expectedHarvest = await calculateExpectedHarvest(varietyId, dateOfPlanting);
+            if (expectedHarvest) {
+                updateData.dateOfExpectedHarvest = expectedHarvest;
+            }
+        }
+
+        // Update the report
+        const report = await prisma.plantingReport.update({
+            where: { id },
+            data: updateData,
+            include: {
+                croppingSeason: true,
+                variety: true
+            }
+        });
+
+        console.log('✅ [Planting Report] Updated:', report.id);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Planting report updated successfully',
+            report
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Update error:', error);
+        
+        if (error.code === 'P2003') {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid user, season, or variety ID'
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to update planting report',
+            error: error.message
+        });
+    }
+}
+
+// DELETE - Delete a planting report
+export async function deletePlantingReport(req, res) {
+    try {
+        const { id } = req.params;
+
+        // Check if report exists
+        const existingReport = await prisma.plantingReport.findUnique({
+            where: { id }
+        });
+
+        if (!existingReport) {
+            return res.status(404).json({
+                success: false,
+                message: 'Planting report not found'
+            });
+        }
+
+        // Delete the report
+        await prisma.plantingReport.delete({
+            where: { id }
+        });
+
+        console.log('🗑️ [Planting Report] Deleted:', id);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Planting report deleted successfully'
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Delete error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to delete planting report',
+            error: error.message
+        });
+    }
+}
+
+// SPECIAL - Get reports by RSBSA Number (Farmer tracking)
+export async function getReportsByRSBSA(req, res) {
+    try {
+        const { rsbsaNumber } = req.params;
+        const {
+            page = 1,
+            limit = 10,
+            startDate,
+            endDate,
+            typeOfCrop
+        } = req.query;
+
+        if (!rsbsaNumber) {
+            return res.status(400).json({
+                success: false,
+                message: 'RSBSA number is required'
+            });
+        }
+
+        const skip = (parseInt(page) - 1) * parseInt(limit);
+
+        // Build where clause
+        const where = {
+            rsbsaNumber: {
+                equals: rsbsaNumber,
+                mode: 'insensitive'
+            }
+        };
+
+        // Date range filter
+        if (startDate || endDate) {
+            where.dateOfPlanting = {};
+            if (startDate) where.dateOfPlanting.gte = new Date(startDate);
+            if (endDate) where.dateOfPlanting.lte = new Date(endDate);
+        }
+
+        // Crop type filter
+        if (typeOfCrop) {
+            where.typeOfCrop = typeOfCrop;
+        }
+
+        // Get total count
+        const total = await prisma.plantingReport.count({ where });
+
+        // Get paginated reports
+        const reports = await prisma.plantingReport.findMany({
+            where,
+            skip,
+            take: parseInt(limit),
+            include: {
+                croppingSeason: true,
+                variety: true
+            },
+            orderBy: {
+                dateOfPlanting: 'desc'
+            }
+        });
+
+        // Calculate summary statistics
+        const statistics = {
+            totalReports: total,
+            totalAreaPlanted: reports.reduce((sum, r) => sum + (r.areaPlanted || 0), 0),
+            totalHarvestArea: reports.reduce((sum, r) => sum + (r.harvestArea || 0), 0),
+            averageYield: reports.length > 0 
+                ? reports.reduce((sum, r) => sum + (r.yieldMtPerHa || 0), 0) / reports.filter(r => r.yieldMtPerHa).length
+                : 0,
+            cropTypes: [...new Set(reports.map(r => r.typeOfCrop))]
+        };
+
+        console.log(`🌾 [Planting Report] Retrieved ${reports.length} reports for RSBSA: ${rsbsaNumber}`);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Farmer reports retrieved successfully',
+            rsbsaNumber,
+            reports,
+            statistics,
+            pagination: {
+                total,
+                page: parseInt(page),
+                limit: parseInt(limit),
+                totalPages: Math.ceil(total / parseInt(limit))
+            }
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Get by RSBSA error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to retrieve farmer reports',
+            error: error.message
+        });
+    }
+}
+
+// ARCHIVE - Toggle archive status of a planting report
+export async function archivePlantingReport(req, res) {
+    try {
+        const { id } = req.params;
+
+        // Check if report exists
+        const existingReport = await prisma.plantingReport.findUnique({
+            where: { id }
+        });
+
+        if (!existingReport) {
+            return res.status(404).json({
+                success: false,
+                message: 'Planting report not found'
+            });
+        }
+
+        // Toggle archive status
+        const report = await prisma.plantingReport.update({
+            where: { id },
+            data: { isArchived: !existingReport.isArchived },
+            include: {
+                croppingSeason: true,
+                variety: true
+            }
+        });
+
+        console.log(`📦 [Planting Report] ${report.isArchived ? 'Archived' : 'Unarchived'}:`, report.id);
+
+        return res.status(200).json({
+            success: true,
+            message: `Planting report ${report.isArchived ? 'archived' : 'unarchived'} successfully`,
+            report
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Archive error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to archive planting report',
+            error: error.message
+        });
+    }
+}
+
+// UTILITY - Calculate yield for existing report
+export async function recalculateYield(req, res) {
+    try {
+        const { id } = req.params;
+
+        const report = await prisma.plantingReport.findUnique({
+            where: { id }
+        });
+
+        if (!report) {
+            return res.status(404).json({
+                success: false,
+                message: 'Planting report not found'
+            });
+        }
+
+        const yieldMtPerHa = calculateYield(
+            report.harvestArea,
+            report.numberOfBags,
+            report.weightPerBag
+        );
+
+        if (yieldMtPerHa === null) {
+            return res.status(400).json({
+                success: false,
+                message: 'Cannot calculate yield - missing harvest data'
+            });
+        }
+
+        const updatedReport = await prisma.plantingReport.update({
+            where: { id },
+            data: { yieldMtPerHa },
+            include: {
+                croppingSeason: true,
+                variety: true
+            }
+        });
+
+        console.log(`📊 [Planting Report] Recalculated yield for ${id}: ${yieldMtPerHa} mt/ha`);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Yield calculated successfully',
+            report: updatedReport,
+            yieldMtPerHa
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Recalculate yield error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to calculate yield',
+            error: error.message
+        });
+    }
+}

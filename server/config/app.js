@@ -43,11 +43,14 @@ app.use(express.static(reactAppPath));
 // i18n middleware - temporarily disabled
 // app.use(i18nMiddleware.handle);
 
+// CORS configuration - allow specific origin with credentials
+const APP_URL = process.env.APP_URL || 'http://localhost:5173';
 app.use(
     cors({
-        origin: '*',
-        allowedHeaders: ['POST', 'GET', 'DELETE', 'PUT'],
+        origin: [APP_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+        methods: ['POST', 'GET', 'DELETE', 'PUT', 'PATCH'],
         credentials: true,
+        allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
     })
 );
 

@@ -1,0 +1,20 @@
+rules_version = '2';
+
+// Firebase Storage rules for client SDK uploads from server
+// Security Model:
+// - Server uses Firebase Client SDK with API key (less secure but simpler)
+// - Access control enforced by Express middleware (authenticate, requireRole)
+// - Public read access for profile pictures
+// - Authenticated write (request.auth == null allows server without Firebase Auth)
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Public read access for all files
+    // Write access without authentication (allows server-side client SDK)
+    match /{allPaths=**} {
+      allow read: if true;  // Public read
+      allow write: if request.auth == null;  // Allow unauthenticated writes (server)
+    }
+  }
+}

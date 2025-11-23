@@ -58,8 +58,8 @@ export const menuItems = [
         icon: <i className="fas fa-history w-5 h-5"></i>,
     },
     {
-        key: 'seed',
-        label: 'Seed Growth Tracking',
+        key: 'plantingReports',
+        label: 'Planting Reports',
         icon: <i className="fas fa-seedling w-5 h-5"></i>,
     },
     {

@@ -53,24 +53,22 @@ async function register(req, res) {
         // Hash password
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-        // Create new user
+        // Create new user with simplified 13-field schema
         const newUser = await prisma.account.create({
             data: {
-                firstName: req.body.firstName,
-                surname: req.body.surname,
-                gender: req.body.gender,
-                client_profile: req.body.clientProfile,
-                address: req.body.address,
-                telephone_no: req.body.telephoneNumber,
-                cellphone_no: req.body.cellphoneNumber,
-                occupation: req.body.occupation,
-                position: req.body.position,
-                institution: req.body.institution,
-                email: req.body.email,
                 username: req.body.username,
                 password: hashedPassword,
-                middleName: req.body.middleName, 
-                access: 'User'
+                access: 'User',
+                email: req.body.email || null,
+                firstName: req.body.firstName,
+                middleName: req.body.middleName || null,
+                surname: req.body.surname,
+                extensionName: req.body.extensionName || null,
+                sex: req.body.sex || 'Male',
+                contactNumber: req.body.contactNumber || null,
+                dateOfBirth: req.body.dateOfBirth ? new Date(req.body.dateOfBirth) : null,
+                picturePath: null,
+                client_profile: req.body.clientProfile || 'Other',
             },
         });
 

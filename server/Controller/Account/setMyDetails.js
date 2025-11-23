@@ -8,71 +8,13 @@ async function setMyDetails(req, res) {
         username,
         email,
         firstName,
-        surname,
         middleName,
+        surname,
         extensionName,
         sex,
-        client_profile,
-        
-        // Contact Information
-        mobileNumber,
-        landlineNumber,
-        
-        // Address Information
-        street,
-        barangay,
-        municipality,
-        province,
-        region,
-        houseNumber,
-        address,
-        
-        // Birth Information
-        birthMunicipality,
-        birthProvince,
-        birthCountry,
+        contactNumber,
         dateOfBirth,
-        
-        // Personal Details
-        religion,
-        otherReligionSpecify,
-        civilStatus,
-        spouseName,
-        
-        // Household Information
-        femaleHouseholdMembers,
-        maleHouseholdMembers,
-        isHouseholdHead,
-        householdHeadName,
-        relationshipToHead,
-        
-        // Government ID Information
-        hasGovId,
-        govIdType,
-        govIdNumber,
-        
-        // Education
-        education,
-        
-        // PWD Information
-        isPWD,
-        disabilityType,
-        
-        // Livelihood Information
-        livelihoodProfile,
-        farmingActivities,
-        fishingActivities,
-        farmworkActivities,
-        youthActivities,
-        otherCropsSpecify,
-        livestockSpecify,
-        fishingOthersSpecify,
-        farmworkOthersSpecify,
-        youthOthersSpecify,
-        
-        // Income Information
-        grossAnnualIncome,
-        incomeSource,
+        client_profile,
     } = req.body;
 
     const validationResult = filterUpdateData(req.body);
@@ -88,80 +30,20 @@ async function setMyDetails(req, res) {
             },
             data: {
                 username,
-                email,
+                email: email || null,
                 firstName,
-                surname,
                 middleName: middleName || null,
+                surname,
                 extensionName: extensionName || null,
                 sex,
-                client_profile,
-                
-                // Contact Information
-                mobileNumber,
-                landlineNumber: landlineNumber || null,
-                
-                // Address Information
-                street: street || null,
-                barangay: barangay || null,
-                municipality: municipality || null,
-                province: province || null,
-                region: region || null,
-                houseNumber: houseNumber || null,
-                address: address || null,
-                
-                // Birth Information
-                birthMunicipality: birthMunicipality || null,
-                birthProvince: birthProvince || null,
-                birthCountry: birthCountry || null,
+                contactNumber: contactNumber || null,
                 dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
-                
-                // Personal Details
-                religion: religion || null,
-                otherReligionSpecify: otherReligionSpecify || null,
-                civilStatus: civilStatus || null,
-                spouseName: spouseName || null,
-                
-                // Household Information
-                femaleHouseholdMembers: femaleHouseholdMembers || null,
-                maleHouseholdMembers: maleHouseholdMembers || null,
-                isHouseholdHead: isHouseholdHead === 'true' || isHouseholdHead === true,
-                householdHeadName: householdHeadName || null,
-                relationshipToHead: relationshipToHead || null,
-                
-                // Government ID Information
-                hasGovId: hasGovId === 'true' || hasGovId === true,
-                govIdType: govIdType || null,
-                govIdNumber: govIdNumber || null,
-                
-                // Education
-                education: education || null,
-                
-                // PWD Information
-                isPWD: isPWD === 'true' || isPWD === true,
-                disabilityType: disabilityType || null,
-                
-                // Livelihood Information
-                livelihoodProfile: Array.isArray(livelihoodProfile) ? livelihoodProfile : (livelihoodProfile ? [livelihoodProfile] : []),
-                farmingActivities: Array.isArray(farmingActivities) ? farmingActivities : (farmingActivities ? [farmingActivities] : []),
-                fishingActivities: Array.isArray(fishingActivities) ? fishingActivities : (fishingActivities ? [fishingActivities] : []),
-                farmworkActivities: Array.isArray(farmworkActivities) ? farmworkActivities : (farmworkActivities ? [farmworkActivities] : []),
-                youthActivities: Array.isArray(youthActivities) ? youthActivities : (youthActivities ? [youthActivities] : []),
-                otherCropsSpecify: otherCropsSpecify || null,
-                livestockSpecify: livestockSpecify || null,
-                fishingOthersSpecify: fishingOthersSpecify || null,
-                farmworkOthersSpecify: farmworkOthersSpecify || null,
-                youthOthersSpecify: youthOthersSpecify || null,
-                
-                // Income Information
-                grossAnnualIncome: grossAnnualIncome || null,
-                incomeSource: incomeSource || null,
+                client_profile,
             },
         });
 
         // Exclude sensitive fields from the response
         updatedUser.password = undefined;
-        updatedUser.picture = undefined;
-        updatedUser.mimeType = undefined;
 
         res.status(200).json({
             message: 'Details updated successfully.',
@@ -223,77 +105,45 @@ function filterUpdateData(data) {
         'Other',
     ];
 
-    const sex_option = ['Male', 'Female', 'Other'];
-    const education_option = [
-        'No_formal_education',
-        'Kinder',
-        'Elementary_level',
-        'Elementary_graduate',
-        'High_school_level',
-        'High_school_graduate',
-        'Senior_high_school_level',
-        'Senior_high_school_graduate',
-        'College_level',
-        'College_graduate',
-        'Post_graduate_studies',
-        'Vocational_Technical'
-    ];
+    const sex_option = ['Male', 'Female'];
 
     const {
         username,
-        email,
         firstName,
         surname,
         sex,
         client_profile,
-        mobileNumber,
-        landlineNumber,
-        isHouseholdHead,
-        householdHeadName,
-        relationshipToHead,
+        email,
+        contactNumber,
     } = data;
 
     try {
         // Required fields validation
-        if (!username || !email || !firstName || !surname || !sex || !client_profile || !mobileNumber) {
-            return 'Required fields: username, email, firstName, surname, sex, client_profile, and mobileNumber.';
+        if (!username || !firstName || !surname || !sex || !client_profile) {
+            return 'Required fields: username, firstName, surname, sex, and client_profile.';
         }
 
         // Validate enum values
         if (!sex_option.includes(sex)) {
-            return 'Invalid sex value.';
+            return 'Invalid sex value. Must be Male or Female.';
         }
         if (!ClientProfiles_option.includes(client_profile)) {
             return 'Invalid client profile.';
         }
 
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return 'Invalid email format.';
-        }
-
-        // Mobile number validation (Philippine format)
-        const mobileRegex = /^09\d{9}$/;
-        if (!mobileRegex.test(mobileNumber)) {
-            return 'Invalid mobile number format. Must start with 09 and be 11 digits long.';
-        }
-
-        // Landline validation (if provided)
-        if (landlineNumber && landlineNumber.trim()) {
-            const landlineRegex = /^\d{3}-\d{3}-\d{4}$/;
-            if (!landlineRegex.test(landlineNumber)) {
-                return 'Invalid landline number format. Must be in XXX-XXX-XXXX format.';
+        // Email validation (if provided)
+        if (email && email.trim()) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return 'Invalid email format.';
             }
         }
 
-        // Household validation logic
-        const isHead = isHouseholdHead === 'true' || isHouseholdHead === true;
-        
-        if (!isHead) {
-            // If not household head, check if required fields are provided when they should be
-            if (householdHeadName && householdHeadName.trim() && (!relationshipToHead || !relationshipToHead.trim())) {
-                return 'Relationship to household head is required when household head name is provided.';
+        // Contact number validation (if provided - Philippine format)
+        if (contactNumber && contactNumber.trim()) {
+            const mobileRegex = /^09\d{9}$/;
+            if (!mobileRegex.test(contactNumber)) {
+                return 'Invalid contact number format. Must start with 09 and be 11 digits long.';
             }
         }
 

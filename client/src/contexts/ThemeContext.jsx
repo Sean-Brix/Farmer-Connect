@@ -12,56 +12,68 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ children }) => {
   const [themePreference, setThemePreference] = useState(() => {
-    // Default to light mode
+    // Always default to light mode
     const savedTheme = localStorage.getItem('theme');
-    return savedTheme || 'light';
+    console.log('🎨 [ThemeContext] Initial theme from localStorage:', savedTheme);
+    // Force light mode if no saved theme or if it's auto/dark
+    if (!savedTheme || savedTheme === 'auto') {
+      localStorage.setItem('theme', 'light');
+      return 'light';
+    }
+    return savedTheme;
   });
 
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const initialDark = savedTheme === 'dark';
+    console.log('🎨 [ThemeContext] Initial isDark:', initialDark);
+    return initialDark;
+  });
 
   // Function to apply theme to DOM
   const applyTheme = (themeValue) => {
-    let shouldBeDark = false;
+    console.log('🎨 [ThemeContext] applyTheme called with:', themeValue);
+    
+    // Only allow light or dark, no auto mode
+    const shouldBeDark = themeValue === 'dark';
 
-    if (themeValue === 'dark') {
-      shouldBeDark = true;
-    } else if (themeValue === 'light') {
-      shouldBeDark = false;
-    } else {
-      // Auto - check system preference
-      shouldBeDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-
+    console.log('🎨 [ThemeContext] shouldBeDark:', shouldBeDark);
     setIsDark(shouldBeDark);
 
     if (shouldBeDark) {
       document.documentElement.classList.add('dark');
       document.body.classList.add('dark');
+      console.log('🎨 [ThemeContext] Applied dark classes');
     } else {
       document.documentElement.classList.remove('dark');
       document.body.classList.remove('dark');
+      console.log('🎨 [ThemeContext] Removed dark classes');
     }
   };
 
   // Load theme preference from database when user is authenticated
   const loadThemePreference = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/preferences/theme', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+      console.log('🎨 [ThemeContext] Loading theme preference from API...');
+      const response = await fetch('/api/preferences/theme', {
+        credentials: 'include',
       });
       
       if (response.ok) {
         const data = await response.json();
+        console.log('🎨 [ThemeContext] API response:', data);
         if (data.success && data.theme) {
+          console.log('🎨 [ThemeContext] Setting theme from API:', data.theme);
           setThemePreference(data.theme);
           localStorage.setItem('theme', data.theme);
+          applyTheme(data.theme);
           return data.theme;
         }
+      } else {
+        console.log('🎨 [ThemeContext] API response not OK:', response.status);
       }
     } catch (error) {
-      console.error('Error loading theme preference:', error);
+      console.log('🎨 [ThemeContext] Error loading theme (API might not exist):', error.message);
     }
     return themePreference;
   };
@@ -69,76 +81,77 @@ export const ThemeProvider = ({ children }) => {
   // Save theme preference to database
   const saveThemePreference = async (newTheme) => {
     try {
-      await fetch('http://localhost:8080/api/preferences/theme', {
+      console.log('🎨 [ThemeContext] Saving theme preference to API:', newTheme);
+      const response = await fetch('/api/preferences/theme', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
+        credentials: 'include',
         body: JSON.stringify({ theme: newTheme }),
       });
+      
+      if (response.ok) {
+        console.log('🎨 [ThemeContext] Theme saved to API successfully');
+      } else {
+        console.log('🎨 [ThemeContext] Failed to save theme to API:', response.status);
+      }
     } catch (error) {
-      console.error('Error saving theme preference:', error);
+      console.log('🎨 [ThemeContext] Error saving theme (API might not exist):', error.message);
     }
   };
 
   // Function to change theme
   const changeTheme = async (newTheme) => {
+    console.log('🎨 [ThemeContext] changeTheme called with:', newTheme);
     setThemePreference(newTheme);
     localStorage.setItem('theme', newTheme);
     applyTheme(newTheme);
-    await saveThemePreference(newTheme);
+    // Save to API asynchronously (don't wait for it)
+    saveThemePreference(newTheme).catch(err => {
+      console.log('🎨 [ThemeContext] Failed to save to API, but local change applied');
+    });
   };
 
   // Apply theme on mount and when theme changes
   useEffect(() => {
+    console.log('🎨 [ThemeContext] useEffect triggered, themePreference:', themePreference);
     applyTheme(themePreference);
-
-    // Listen for system theme changes when theme is set to auto
-    if (themePreference === 'auto') {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      const handleSystemThemeChange = (e) => {
-        applyTheme(themePreference); // Re-apply with current theme to check system preference
-      };
-
-      mediaQuery.addEventListener('change', handleSystemThemeChange);
-      return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
-    }
   }, [themePreference]);
 
-  // Load theme preference on authentication changes
+  // Load theme preference on mount (once)
   useEffect(() => {
-    const handleAuthChange = async () => {
-      // Check if user is authenticated and load their theme preference
+    console.log('🎨 [ThemeContext] Initial mount - applying theme');
+    // Always apply light theme on mount, ignore API
+    applyTheme('light');
+    
+    // Optionally try to load from API but don't auto-apply
+    const loadUserTheme = async () => {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
       if (user.id) {
+        console.log('🎨 [ThemeContext] User found, attempting to load theme from API');
         try {
-          const userTheme = await loadThemePreference();
-          if (userTheme !== themePreference) {
-            setThemePreference(userTheme);
-            applyTheme(userTheme);
+          const response = await fetch('/api/preferences/theme', {
+            credentials: 'include',
+          });
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success && data.theme && data.theme !== 'auto') {
+              // Only apply if it's explicitly set and not auto
+              console.log('🎨 [ThemeContext] Loaded theme from API:', data.theme);
+              setThemePreference(data.theme);
+              localStorage.setItem('theme', data.theme);
+              applyTheme(data.theme);
+            }
           }
         } catch (error) {
-          // If there's an error, just use the current theme
-          applyTheme(themePreference);
+          console.log('🎨 [ThemeContext] Could not load theme from API');
         }
       }
     };
 
-    // Initial load
-    handleAuthChange();
-
-    // Listen for authentication state changes
-    window.addEventListener('auth-changed', handleAuthChange);
-    
-    // Listen for focus events to re-check auth state
-    window.addEventListener('focus', handleAuthChange);
-    
-    return () => {
-      window.removeEventListener('auth-changed', handleAuthChange);
-      window.removeEventListener('focus', handleAuthChange);
-    };
-  }, [themePreference]); // Add themePreference as dependency
+    loadUserTheme();
+  }, []); // Only run once on mount
 
   const value = {
     theme: themePreference, // Return the preference setting for toggle UI

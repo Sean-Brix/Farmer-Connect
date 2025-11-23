@@ -31,7 +31,7 @@ async function getAllRequest(req, res) {
                         surname: true,
                         email: true,
                         username: true,
-                        mobileNumber: true,
+                        contactNumber: true,
                         access: true,
                         client_profile: true,
                     },
@@ -81,7 +81,7 @@ async function getAllRequest(req, res) {
             requestorName: `${request.account.firstName} ${request.account.surname}`,
             requestorEmail: request.account.email,
             requestorUsername: request.account.username,
-            requestorPhone: request.account.mobileNumber,
+            requestorPhone: request.account.contactNumber,
             requestorAccess: request.account.access,
             requestorProfile: request.account.client_profile,
             // Admin information (if any)

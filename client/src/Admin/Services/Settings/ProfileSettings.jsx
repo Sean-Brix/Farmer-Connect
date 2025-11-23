@@ -9,16 +9,14 @@ const ProfileSettings = () => {
     firstName: '',
     lastName: '',
     middleName: '',
+    extensionName: '',
     username: '',
     email: '',
     phone: '',
-    bio: '',
     position: '',
-    address: '',
     dateOfBirth: '',
     gender: '',
-    civilStatus: '',
-    occupation: ''
+    client_profile: ''
   });
   const [tempUserInfo, setTempUserInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +28,9 @@ const ProfileSettings = () => {
     const loadUserData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch('/api/account/details/me');
+        const response = await fetch('/api/account/details/me', {
+          credentials: 'include'
+        });
         const data = await response.json();
         
         if (response.ok) {
@@ -38,16 +38,14 @@ const ProfileSettings = () => {
             firstName: data.firstName || '',
             lastName: data.surname || '',
             middleName: data.middleName || '',
+            extensionName: data.extensionName || '',
             username: data.username || '',
             email: data.email || '',
-            phone: data.mobileNumber || '',
-            bio: data.bio || '',
-            position: data.client_profile || 'Administrator',
-            address: data.address || '',
+            phone: data.contactNumber || '',
+            position: data.client_profile || 'Govt_Employee',
             dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth).toISOString().split('T')[0] : '',
-            gender: data.sex || '',
-            civilStatus: data.civilStatus || '',
-            occupation: data.occupation || ''
+            gender: data.sex || 'Male',
+            client_profile: data.client_profile || 'Govt_Employee'
           };
           setUserInfo(profileData);
           setTempUserInfo(profileData);
@@ -105,19 +103,18 @@ const ProfileSettings = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           firstName: tempUserInfo.firstName,
           surname: tempUserInfo.lastName,
-          middleName: tempUserInfo.middleName,
-          email: tempUserInfo.email,
-          mobileNumber: tempUserInfo.phone,
+          middleName: tempUserInfo.middleName || null,
+          extensionName: tempUserInfo.extensionName || null,
+          email: tempUserInfo.email || null,
+          contactNumber: tempUserInfo.phone || null,
           username: tempUserInfo.username,
-          sex: tempUserInfo.gender,
-          address: tempUserInfo.address,
-          dateOfBirth: tempUserInfo.dateOfBirth,
-          civilStatus: tempUserInfo.civilStatus,
-          // Required fields for admin
-          client_profile: 'Administrator'
+          sex: tempUserInfo.gender || 'Male',
+          dateOfBirth: tempUserInfo.dateOfBirth || null,
+          client_profile: tempUserInfo.client_profile || 'Govt_Employee'
         }),
       });
 
@@ -127,9 +124,9 @@ const ProfileSettings = () => {
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 3000);
       } else {
-        const errorText = await response.text();
-        console.error('Failed to save profile:', errorText);
-        alert('Failed to save profile. Please check the console for details.');
+        const errorData = await response.json();
+        console.error('Failed to save profile:', errorData);
+        alert(`Failed to save profile: ${errorData.message || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -280,7 +277,7 @@ const ProfileSettings = () => {
                 isDark ? 'text-gray-400' : 'text-gray-600'
               }`}
             >
-              {userInfo.position || 'Administrator'}
+              {userInfo.client_profile?.replace(/_/g, ' ') || 'Government Employee'}
             </p>
           </div>
         </div>
@@ -426,26 +423,36 @@ const ProfileSettings = () => {
                 isDark ? 'text-gray-300' : 'text-gray-700'
               }`}
             >
-              Position
+              Client Profile
             </label>
             {isEditing ? (
-              <input
-                type="text"
-                value={tempUserInfo.position || ''}
-                onChange={(e) => handleInputChange('position', e.target.value)}
+              <select
+                value={tempUserInfo.client_profile || 'Govt_Employee'}
+                onChange={(e) => handleInputChange('client_profile', e.target.value)}
                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
                   isDark 
                     ? 'bg-gray-700 border-gray-600 text-white' 
                     : 'bg-white border-gray-300 text-gray-900'
                 }`}
-              />
+              >
+                <option value="Govt_Employee">Government Employee</option>
+                <option value="Fishfolk">Fishfolk</option>
+                <option value="Rural_Based_Org">Rural Based Organization</option>
+                <option value="Student">Student</option>
+                <option value="Agricultural_Fisheries_Technician">Agricultural/Fisheries Technician</option>
+                <option value="Youth">Youth</option>
+                <option value="Women">Women</option>
+                <option value="PWD">Person with Disability (PWD)</option>
+                <option value="Indigenous_People">Indigenous People</option>
+                <option value="Other">Other</option>
+              </select>
             ) : (
               <div 
                 className={`px-3 py-2 rounded-lg border ${
                   isDark ? 'bg-gray-700 border-gray-600 text-gray-300' : 'bg-gray-100 border-gray-200 text-gray-600'
                 }`}
               >
-                {userInfo.position || 'Administrator'}
+                {userInfo.client_profile?.replace(/_/g, ' ') || 'Not specified'}
               </div>
             )}
           </div>
@@ -468,35 +475,67 @@ const ProfileSettings = () => {
           </div>
         </div>
 
-        <div className="mt-6">
-          <label 
-            className={`block text-sm font-medium mb-2 ${
-              isDark ? 'text-gray-300' : 'text-gray-700'
-            }`}
-          >
-            Bio
-          </label>
-          {isEditing ? (
-            <textarea
-              value={tempUserInfo.bio || ''}
-              onChange={(e) => handleInputChange('bio', e.target.value)}
-              rows={3}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none ${
-                isDark 
-                  ? 'bg-gray-700 border-gray-600 text-white' 
-                  : 'bg-white border-gray-300 text-gray-900'
-              }`}
-              placeholder="Tell us about yourself..."
-            />
-          ) : (
-            <div 
-              className={`px-3 py-2 min-h-[80px] rounded-lg border ${
-                isDark ? 'bg-gray-700 border-gray-600 text-gray-300' : 'bg-gray-100 border-gray-200 text-gray-600'
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div>
+            <label 
+              className={`block text-sm font-medium mb-2 ${
+                isDark ? 'text-gray-300' : 'text-gray-700'
               }`}
             >
-              {userInfo.bio || 'No bio available'}
-            </div>
-          )}
+              Gender
+            </label>
+            {isEditing ? (
+              <select
+                value={tempUserInfo.gender || 'Male'}
+                onChange={(e) => handleInputChange('gender', e.target.value)}
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
+                  isDark 
+                    ? 'bg-gray-700 border-gray-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
+              >
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            ) : (
+              <div 
+                className={`px-3 py-2 rounded-lg border ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-gray-300' : 'bg-gray-100 border-gray-200 text-gray-600'
+                }`}
+              >
+                {userInfo.gender || 'Not specified'}
+              </div>
+            )}
+          </div>
+          <div>
+            <label 
+              className={`block text-sm font-medium mb-2 ${
+                isDark ? 'text-gray-300' : 'text-gray-700'
+              }`}
+            >
+              Date of Birth
+            </label>
+            {isEditing ? (
+              <input
+                type="date"
+                value={tempUserInfo.dateOfBirth || ''}
+                onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
+                  isDark 
+                    ? 'bg-gray-700 border-gray-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
+              />
+            ) : (
+              <div 
+                className={`px-3 py-2 rounded-lg border ${
+                  isDark ? 'bg-gray-700 border-gray-600 text-gray-300' : 'bg-gray-100 border-gray-200 text-gray-600'
+                }`}
+              >
+                {userInfo.dateOfBirth ? new Date(userInfo.dateOfBirth).toLocaleDateString() : 'Not specified'}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

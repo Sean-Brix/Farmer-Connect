@@ -14,18 +14,16 @@ function register_wrapper() {
 // Register Component
 
 class Register extends Component {
-    // Fields
+    // Fields - Updated to simplified 13-field schema
     inputs = {
         firstName: '',
-        lastName: '',
-        gender: '',
+        middleName: '',
+        surname: '',
+        extensionName: '',
+        sex: '',
+        contactNumber: '',
+        dateOfBirth: '',
         clientProfile: '',
-        address: '',
-        telephoneNumber: '',
-        cellphoneNumber: '',
-        occupation: '',
-        position: '',
-        institution: '',
         email: '',
         username: '',
         password: '',
@@ -111,15 +109,13 @@ class Register extends Component {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 firstName: this.inputs.firstName,
-                lastName: this.inputs.lastName,
-                gender: this.inputs.gender,
+                middleName: this.inputs.middleName,
+                surname: this.inputs.surname,
+                extensionName: this.inputs.extensionName,
+                sex: this.inputs.sex,
+                contactNumber: this.inputs.contactNumber,
+                dateOfBirth: this.inputs.dateOfBirth,
                 clientProfile: this.inputs.clientProfile,
-                address: this.inputs.address,
-                telephoneNum: this.inputs.telephoneNumber,
-                cellphoneNum: this.inputs.cellphoneNumber,
-                occupation: this.inputs.occupation,
-                position: this.inputs.position,
-                institution: this.inputs.institution,
                 email: this.inputs.email,
                 username: this.inputs.username,
                 password: this.inputs.password,
@@ -289,7 +285,7 @@ class Register extends Component {
                 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <label htmlFor="fname" className="block text-sm font-semibold text-gray-700 tracking-wide">First Name</label>
+                        <label htmlFor="fname" className="block text-sm font-semibold text-gray-700 tracking-wide">First Name <span className="text-red-500">*</span></label>
                         <input 
                             type="text" 
                             id="fname" 
@@ -302,25 +298,52 @@ class Register extends Component {
                         />
                     </div>
                     <div className="space-y-3">
-                        <label htmlFor="lname" className="block text-sm font-semibold text-gray-700 tracking-wide">Last Name</label>
+                        <label htmlFor="mname" className="block text-sm font-semibold text-gray-700 tracking-wide">Middle Name</label>
                         <input 
                             type="text" 
-                            id="lname" 
-                            name="lastName" 
+                            id="mname" 
+                            name="middleName" 
+                            onChange={this.onChange_input} 
+                            autoComplete="off"
+                            className="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md font-medium placeholder-gray-400"
+                            placeholder="Optional"
+                        />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                        <label htmlFor="surname" className="block text-sm font-semibold text-gray-700 tracking-wide">Surname <span className="text-red-500">*</span></label>
+                        <input 
+                            type="text" 
+                            id="surname" 
+                            name="surname" 
                             onChange={this.onChange_input} 
                             required 
                             autoComplete="off"
                             className="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md font-medium placeholder-gray-400"
-                            placeholder="Enter your last name"
+                            placeholder="Enter your surname"
+                        />
+                    </div>
+                    <div className="space-y-3">
+                        <label htmlFor="extensionName" className="block text-sm font-semibold text-gray-700 tracking-wide">Extension Name</label>
+                        <input 
+                            type="text" 
+                            id="extensionName" 
+                            name="extensionName" 
+                            onChange={this.onChange_input} 
+                            autoComplete="off"
+                            className="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md font-medium placeholder-gray-400"
+                            placeholder="Jr., Sr., III (optional)"
                         />
                     </div>
                 </div>
 
                 <div className="space-y-4">
-                    <label className="block text-sm font-semibold text-gray-700 tracking-wide">Gender</label>
-                    <div className="grid grid-cols-3 gap-4">
+                    <label className="block text-sm font-semibold text-gray-700 tracking-wide">Sex <span className="text-red-500">*</span></label>
+                    <div className="grid grid-cols-2 gap-4">
                         <label className="relative flex items-center justify-center py-4 px-5 border-2 border-gray-200 rounded-2xl cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-all duration-300 group backdrop-blur-sm bg-white/60">
-                            <input type="radio" name="gender" value="Male" onChange={this.onChange_input} required className="sr-only" />
+                            <input type="radio" name="sex" value="Male" onChange={this.onChange_input} required className="sr-only" />
                             <div className="flex items-center space-x-3">
                                 <div className="w-5 h-5 border-2 border-gray-300 rounded-full group-hover:border-green-500 flex items-center justify-center transition-all duration-300">
                                     <div className="w-2.5 h-2.5 bg-green-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 scale-0 group-hover:scale-100"></div>
@@ -329,7 +352,7 @@ class Register extends Component {
                             </div>
                         </label>
                         <label className="relative flex items-center justify-center py-4 px-5 border-2 border-gray-200 rounded-2xl cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-all duration-300 group backdrop-blur-sm bg-white/60">
-                            <input type="radio" name="gender" value="Female" onChange={this.onChange_input} required className="sr-only" />
+                            <input type="radio" name="sex" value="Female" onChange={this.onChange_input} required className="sr-only" />
                             <div className="flex items-center space-x-3">
                                 <div className="w-5 h-5 border-2 border-gray-300 rounded-full group-hover:border-green-500 flex items-center justify-center transition-all duration-300">
                                     <div className="w-2.5 h-2.5 bg-green-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 scale-0 group-hover:scale-100"></div>
@@ -337,16 +360,19 @@ class Register extends Component {
                                 <span className="text-sm font-semibold text-gray-700 group-hover:text-green-700 transition-colors duration-300">Female</span>
                             </div>
                         </label>
-                        <label className="relative flex items-center justify-center py-4 px-5 border-2 border-gray-200 rounded-2xl cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-all duration-300 group backdrop-blur-sm bg-white/60">
-                            <input type="radio" name="gender" value="Other" onChange={this.onChange_input} required className="sr-only" />
-                            <div className="flex items-center space-x-3">
-                                <div className="w-5 h-5 border-2 border-gray-300 rounded-full group-hover:border-green-500 flex items-center justify-center transition-all duration-300">
-                                    <div className="w-2.5 h-2.5 bg-green-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 scale-0 group-hover:scale-100"></div>
-                                </div>
-                                <span className="text-sm font-semibold text-gray-700 group-hover:text-green-700 transition-colors duration-300">Other</span>
-                            </div>
-                        </label>
                     </div>
+                </div>
+
+                <div className="space-y-3">
+                    <label htmlFor="dateOfBirth" className="block text-sm font-semibold text-gray-700 tracking-wide">Date of Birth</label>
+                    <input 
+                        type="date" 
+                        id="dateOfBirth" 
+                        name="dateOfBirth" 
+                        onChange={this.onChange_input} 
+                        autoComplete="off"
+                        className="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md font-medium placeholder-gray-400"
+                    />
                 </div>
 
                 <div className="pt-6">
@@ -377,13 +403,13 @@ class Register extends Component {
         return (
             <form className="space-y-8" onSubmit={(e) => this.onNext(e, 'third')}>
                 <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3">Contact & Professional Info</h2>
+                    <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3">Contact & Profile Info</h2>
                     <div className="h-1 w-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto mb-3"></div>
-                    <p className="text-gray-600 text-base font-medium">Help us understand your background</p>
+                    <p className="text-gray-600 text-base font-medium">How can we reach you?</p>
                 </div>
 
                 <div className="space-y-3">
-                    <label htmlFor="clientProfile" className="block text-sm font-semibold text-gray-700 tracking-wide">Client Profile</label>
+                    <label htmlFor="clientProfile" className="block text-sm font-semibold text-gray-700 tracking-wide">Client Profile <span className="text-red-500">*</span></label>
                     <div className="relative">
                         <select 
                             id="clientProfile" 
@@ -410,6 +436,29 @@ class Register extends Component {
                             </svg>
                         </div>
                     </div>
+                </div>
+
+                <div className="space-y-3">
+                    <label htmlFor="contactNumber" className="block text-sm font-semibold text-gray-700 tracking-wide">Mobile Number</label>
+                    <div className="relative">
+                        <div className="absolute inset-y-0 left-0 flex items-center px-4 pointer-events-none">
+                            <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <input 
+                            type="tel" 
+                            id="contactNumber" 
+                            name="contactNumber" 
+                            onChange={this.onChange_input} 
+                            autoComplete="off"
+                            pattern="09[0-9]{9}"
+                            title="Must start with 09 and be 11 digits long"
+                            className="w-full pl-14 pr-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md font-medium placeholder-gray-400"
+                            placeholder="09XXXXXXXXX (optional)"
+                        />
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">Format: 09XXXXXXXXX (11 digits starting with 09)</p>
                 </div>
 
                 <div className="space-y-3">
@@ -459,128 +508,6 @@ class Register extends Component {
                             <span className="text-sm font-semibold">{this.state.email_prompt}</span>
                         </div>
                     )}
-                </div>
-
-                <div className="space-y-3">
-                    <label htmlFor="address" className="block text-sm font-semibold text-gray-700 tracking-wide">Address</label>
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 flex items-center px-4 pointer-events-none">
-                            <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                        </div>
-                        <input 
-                            type="text" 
-                            id="address" 
-                            name="address" 
-                            onChange={this.onChange_input} 
-                            required 
-                            autoComplete="off"
-                            className="w-full pl-14 pr-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md font-medium placeholder-gray-400"
-                            placeholder="Enter your complete address"
-                        />
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                        <label htmlFor="telephone" className="block text-sm font-semibold text-gray-700 tracking-wide">Telephone No.</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 flex items-center px-4 pointer-events-none">
-                                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                </svg>
-                            </div>
-                            <input 
-                                type="tel" 
-                                id="telephone" 
-                                name="telephoneNumber" 
-                                onChange={this.onChange_input} 
-                                required 
-                                autoComplete="off"
-                                className="w-full pl-14 pr-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md font-medium placeholder-gray-400"
-                                placeholder="(02) 123-4567"
-                            />
-                        </div>
-                    </div>
-                    <div className="space-y-3">
-                        <label htmlFor="cellphone" className="block text-sm font-semibold text-gray-700 tracking-wide">Mobile No.</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 flex items-center px-4 pointer-events-none">
-                                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <input 
-                                type="tel" 
-                                id="cellphone" 
-                                name="cellphoneNumber" 
-                                onChange={this.onChange_input} 
-                                required 
-                                autoComplete="off"
-                                className="w-full pl-14 pr-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md font-medium placeholder-gray-400"
-                                placeholder="+63 912 345 6789"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                        <label htmlFor="occupation" className="block text-sm font-semibold text-gray-700 tracking-wide">Occupation</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 flex items-center px-4 pointer-events-none">
-                                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 002 2M8 6v2a2 2 0 01-2 2m0 0H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2v-6a2 2 0 00-2-2h-2m-8 0V8a2 2 0 012-2h4a2 2 0 012 2v8M8 12h.01" />
-                                </svg>
-                            </div>
-                            <input 
-                                type="text" 
-                                id="occupation" 
-                                name="occupation" 
-                                onChange={this.onChange_input} 
-                                required 
-                                autoComplete="off"
-                                className="w-full pl-14 pr-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md font-medium placeholder-gray-400"
-                                placeholder="Your occupation"
-                            />
-                        </div>
-                    </div>
-                    <div className="space-y-3">
-                        <label htmlFor="position" className="block text-sm font-semibold text-gray-700 tracking-wide">Position</label>
-                        <input 
-                            type="text" 
-                            id="position" 
-                            name="position" 
-                            onChange={this.onChange_input} 
-                            required 
-                            autoComplete="off"
-                            className="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md font-medium placeholder-gray-400"
-                            placeholder="Your position/title"
-                        />
-                    </div>
-                </div>
-
-                <div className="space-y-3">
-                    <label htmlFor="institution" className="block text-sm font-semibold text-gray-700 tracking-wide">Institution/Organization</label>
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 flex items-center px-4 pointer-events-none">
-                            <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                            </svg>
-                        </div>
-                        <input 
-                            type="text" 
-                            id="institution" 
-                            name="institution" 
-                            onChange={this.onChange_input} 
-                            required 
-                            autoComplete="off"
-                            className="w-full pl-14 pr-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-md font-medium placeholder-gray-400"
-                            placeholder="Your institution or organization"
-                        />
-                    </div>
                 </div>
 
                 <div className="pt-6">

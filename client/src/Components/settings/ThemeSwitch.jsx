@@ -2,13 +2,22 @@ import React from 'react';
 import './ThemeSwitch.css';
 
 const ThemeSwitch = ({ isDark, onChange, disabled = false }) => {
+  const handleChange = (e) => {
+    console.log('🔄 [ThemeSwitch] Toggle clicked, checked:', e.target.checked);
+    if (!disabled) {
+      onChange(e.target.checked);
+    }
+  };
+
+  console.log('🔄 [ThemeSwitch] Rendering with isDark:', isDark, 'disabled:', disabled);
+
   return (
     <label className="theme-switch">
       <input 
         type="checkbox" 
         className="theme-switch__checkbox"
         checked={isDark}
-        onChange={(e) => onChange(e.target.checked)}
+        onChange={handleChange}
         disabled={disabled}
       />
       <div className="theme-switch__container">

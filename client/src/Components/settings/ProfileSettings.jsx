@@ -1,58 +1,64 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
+import axios from 'axios';
+import useImageCache, { clearImageCache } from '../../hooks/useImageCache';
 
 const ProfileSettings = () => {
   const { isDark } = useTheme();
-  const [profileImage, setProfileImage] = useState('/api/account/picture/me');
+  const [userId, setUserId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [userInfo, setUserInfo] = useState({
     firstName: '',
     lastName: '',
     middleName: '',
+    extensionName: '',
     username: '',
     email: '',
     phone: '',
-    bio: '',
-    position: '',
-    address: '',
     dateOfBirth: '',
     gender: '',
-    civilStatus: '',
-    occupation: ''
+    client_profile: ''
   });
   const [tempUserInfo, setTempUserInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [uploadError, setUploadError] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Use image cache for profile picture
+  const { imageUrl, refresh: refreshImage } = useImageCache(userId, true);
 
   // Load user data
   useEffect(() => {
     const loadUserData = async () => {
       setIsLoading(true);
       try {
+        console.log('📋 [ProfileSettings] Loading user data...');
         const response = await fetch('/api/account/details/me');
         const data = await response.json();
         
         if (response.ok) {
+          console.log('📋 [ProfileSettings] User data loaded:', data);
+          setUserId(data.id);
           const profileData = {
-            firstName: data.firstname || data.firstName || '',
-            lastName: data.lastname || data.surname || '',
-            middleName: data.middlename || data.middleName || '',
+            firstName: data.firstName || '',
+            lastName: data.surname || '',
+            middleName: data.middleName || '',
+            extensionName: data.extensionName || '',
             username: data.username || '',
-            email: data.email_address || data.email || '',
-            phone: data.cellphone_no || data.mobileNumber || '',
-            bio: data.bio || '',
-            position: data.position || '',
-            address: data.address || '',
+            email: data.email || '',
+            phone: data.contactNumber || '',
             dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth).toISOString().split('T')[0] : '',
-            gender: data.sex || data.gender || '',
-            civilStatus: data.civilStatus || '',
-            occupation: data.occupation || ''
+            gender: data.sex || 'Male',
+            client_profile: data.client_profile || 'Other'
           };
           setUserInfo(profileData);
           setTempUserInfo(profileData);
         }
       } catch (error) {
-        console.error('Error loading user data:', error);
+        console.error('📋 [ProfileSettings] ✗ Error loading user data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -80,34 +86,204 @@ const ProfileSettings = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setProfileImage(event.target?.result);
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    console.log('🖼️ [ProfileSettings] File selected:', file.name, `(${(file.size / 1024).toFixed(2)} KB)`);
+    
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      const error = 'Invalid file type. Only JPEG, PNG, and WebP are allowed.';
+      console.error('🖼️ [ProfileSettings] ✗', error);
+      setUploadError(error);
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      const error = 'File too large. Maximum size is 5MB.';
+      console.error('🖼️ [ProfileSettings] ✗', error);
+      setUploadError(error);
+      return;
+    }
+
+    setSelectedFile(file);
+    setUploadError(null);
+    
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setPreviewUrl(event.target?.result);
+      console.log('🖼️ [ProfileSettings] Preview created');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleUploadPicture = async () => {
+    if (!selectedFile) {
+      console.warn('🖼️ [ProfileSettings] No file selected for upload');
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadError(null);
+
+    try {
+      console.log('🖼️ [ProfileSettings] Starting upload...');
+      console.log('🖼️ [ProfileSettings] File:', selectedFile.name);
+      console.log('🖼️ [ProfileSettings] User ID:', userId);
+      
+      const formData = new FormData();
+      formData.append('photo', selectedFile);
+
+      console.log('🖼️ [ProfileSettings] Uploading to /api/account/picture/me');
+      const response = await axios.post('/api/account/picture/me', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        withCredentials: true,
+      });
+
+      console.log('🖼️ [ProfileSettings] ✓ Upload successful!');
+      console.log('🖼️ [ProfileSettings] Response:', response.data);
+      if (response.data.picturePath) {
+        console.log('🖼️ [ProfileSettings] Firebase path:', response.data.picturePath);
+      }
+
+      // Clear cache and refresh image
+      console.log('🖼️ [ProfileSettings] Clearing cache for user:', userId);
+      clearImageCache(userId);
+      
+      console.log('🖼️ [ProfileSettings] Refreshing image in 100ms...');
+      setTimeout(async () => {
+        console.log('🖼️ [ProfileSettings] Calling refreshImage()...');
+        await refreshImage();
+        console.log('🖼️ [ProfileSettings] Image refresh complete');
+      }, 100);
+
+      // Clear selection
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      
+      alert('Profile picture updated successfully!');
+    } catch (error) {
+      const errorMsg = error.response?.data?.error || error.message;
+      console.error('🖼️ [ProfileSettings] ✗ Upload failed:', errorMsg);
+      setUploadError(errorMsg);
+      alert('Failed to upload picture: ' + errorMsg);
+    } finally {
+      setIsUploading(false);
     }
   };
 
   const handleSave = async () => {
+    console.log('💾 [ProfileSettings] handleSave called');
+    console.log('💾 [ProfileSettings] isEditing:', isEditing);
+    console.log('💾 [ProfileSettings] selectedFile:', selectedFile);
+    console.log('💾 [ProfileSettings] userId:', userId);
+    
     setIsSaving(true);
     try {
-      // Here you would typically make an API call to save the data
-      // const response = await fetch('/api/account/update', {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(tempUserInfo)
-      // });
+      // Upload picture first if selected
+      if (selectedFile) {
+        console.log('🖼️ [ProfileSettings] ==================== STARTING IMAGE UPLOAD ====================');
+        console.log('🖼️ [ProfileSettings] File name:', selectedFile.name);
+        console.log('🖼️ [ProfileSettings] File size:', (selectedFile.size / 1024).toFixed(2), 'KB');
+        console.log('🖼️ [ProfileSettings] File type:', selectedFile.type);
+        console.log('🖼️ [ProfileSettings] User ID:', userId);
+        
+        const formData = new FormData();
+        formData.append('photo', selectedFile);
+        console.log('🖼️ [ProfileSettings] FormData created with photo field');
+
+        console.log('🖼️ [ProfileSettings] Sending POST to /api/account/picture/me');
+        const uploadResponse = await axios.post('/api/account/picture/me', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        });
+
+        console.log('🖼️ [ProfileSettings] ==================== UPLOAD RESPONSE ====================');
+        console.log('🖼️ [ProfileSettings] Status:', uploadResponse.status);
+        console.log('🖼️ [ProfileSettings] Response data:', uploadResponse.data);
+        if (uploadResponse.data.picturePath) {
+          console.log('🖼️ [ProfileSettings] Firebase path:', uploadResponse.data.picturePath);
+        }
+
+        // Clear cache and refresh image
+        console.log('🖼️ [ProfileSettings] ==================== CLEARING CACHE ====================');
+        console.log('🖼️ [ProfileSettings] Clearing cache for user:', userId);
+        clearImageCache(userId);
+        console.log('🖼️ [ProfileSettings] Cache cleared');
+        
+        console.log('🖼️ [ProfileSettings] Scheduling image refresh in 100ms...');
+        setTimeout(async () => {
+          console.log('🖼️ [ProfileSettings] Now calling refreshImage()...');
+          await refreshImage();
+          console.log('🖼️ [ProfileSettings] ✓ Image refresh complete');
+        }, 100);
+
+        // Clear selection
+        setSelectedFile(null);
+        setPreviewUrl(null);
+        setUploadError(null);
+        console.log('🖼️ [ProfileSettings] ==================== IMAGE UPLOAD COMPLETE ====================');
+      } else {
+        console.log('💾 [ProfileSettings] No image selected, skipping upload');
+      }
+
+      const updateData = {
+        firstName: tempUserInfo.firstName,
+        middleName: tempUserInfo.middleName || null,
+        surname: tempUserInfo.lastName,
+        extensionName: tempUserInfo.extensionName || null,
+        username: tempUserInfo.username,
+        email: tempUserInfo.email || null,
+        contactNumber: tempUserInfo.phone || null,
+        sex: tempUserInfo.gender || 'Male',
+        dateOfBirth: tempUserInfo.dateOfBirth || null,
+        client_profile: tempUserInfo.client_profile || 'Other'
+      };
+
+      console.log('💾 [ProfileSettings] Saving profile data...');
+      console.log('💾 [ProfileSettings] Data:', updateData);
+
+      const response = await fetch('/api/account/details/me', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(updateData)
+      });
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setUserInfo({ ...tempUserInfo });
-      setIsEditing(false);
+      if (response.ok) {
+        const result = await response.json();
+        console.log('💾 [ProfileSettings] ✓ Profile saved successfully:', result);
+        setUserInfo({ ...tempUserInfo });
+        setIsEditing(false);
+        alert('Profile updated successfully!');
+      } else {
+        const errorData = await response.json();
+        console.error('💾 [ProfileSettings] ✗ Failed to save profile:', errorData);
+        alert(`Failed to save: ${errorData.message || 'Unknown error'}`);
+      }
     } catch (error) {
-      console.error('Error saving profile:', error);
+      console.error('💾 [ProfileSettings] ==================== ERROR ====================');
+      console.error('💾 [ProfileSettings] Error type:', error.name);
+      console.error('💾 [ProfileSettings] Error message:', error.message);
+      console.error('💾 [ProfileSettings] Error response:', error.response?.data);
+      console.error('💾 [ProfileSettings] Full error:', error);
+      
+      if (error.response?.data?.error) {
+        setUploadError(error.response.data.error);
+        alert('Error: ' + error.response.data.error);
+      } else {
+        setUploadError(error.message);
+        alert('Error saving profile. Please try again.');
+      }
     } finally {
       setIsSaving(false);
+      console.log('💾 [ProfileSettings] handleSave completed, isSaving set to false');
     }
   };
 
@@ -197,48 +373,82 @@ const ProfileSettings = () => {
         >
           Profile Picture
         </h3>
-        <div className="flex items-center space-x-6">
-          <div className="relative">
-            <img
-              src={profileImage}
-              alt="Profile"
-              className="w-20 h-20 rounded-full object-cover border-4 border-emerald-200"
-              onError={(e) => {
-                e.target.src = '/src/Assets/default_picture.png';
-              }}
-            />
-            {isEditing && (
-              <button
-                onClick={() => document.getElementById('profile-image-input').click()}
-                className="absolute bottom-0 right-0 p-2 rounded-full bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
-              >
-                <i className="fas fa-camera text-sm"></i>
-              </button>
-            )}
-            {isEditing && (
-              <input
-                id="profile-image-input"
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageChange}
+        <div className="space-y-4">
+          <div className="flex items-center space-x-6">
+            <div className="relative">
+              <img
+                src={previewUrl || imageUrl}
+                alt="Profile"
+                className="w-20 h-20 rounded-full object-cover border-4 border-emerald-200"
+                onError={(e) => {
+                  e.target.src = '/src/Assets/default_picture.png';
+                }}
               />
-            )}
+              {isEditing && (
+                <>
+                  <button
+                    onClick={() => document.getElementById('profile-image-input').click()}
+                    className="absolute bottom-0 right-0 p-2 rounded-full bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
+                  >
+                    <i className="fas fa-camera text-sm"></i>
+                  </button>
+                  <input
+                    id="profile-image-input"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+                </>
+              )}
+            </div>
+            <div className="flex-1">
+              <p 
+                className="text-sm font-medium mb-1"
+                style={{ color: isDark ? '#d1d5db' : '#374151' }}
+              >
+                {userInfo.firstName} {userInfo.lastName}
+              </p>
+              <p 
+                className="text-sm"
+                style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
+              >
+                {userInfo.client_profile || 'Member'}
+              </p>
+            </div>
           </div>
-          <div>
-            <p 
-              className="text-sm font-medium mb-1"
-              style={{ color: isDark ? '#d1d5db' : '#374151' }}
-            >
-              {userInfo.firstName} {userInfo.lastName}
+          
+          {isEditing && selectedFile && (
+            <div className="flex items-center space-x-3">
+              <div className="text-sm" style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>
+                <i className="fas fa-info-circle mr-1"></i>
+                Selected: {selectedFile.name} - Click "Save Changes" to upload
+              </div>
+              <button
+                onClick={() => {
+                  setSelectedFile(null);
+                  setPreviewUrl(null);
+                  setUploadError(null);
+                  console.log('🖼️ [ProfileSettings] File selection cancelled');
+                }}
+                className="px-3 py-1 rounded-lg font-medium border transition-colors text-sm"
+                style={{
+                  borderColor: isDark ? '#4b5563' : '#d1d5db',
+                  color: isDark ? '#d1d5db' : '#374151',
+                }}
+              >
+                <i className="fas fa-times mr-1"></i>
+                Clear
+              </button>
+            </div>
+          )}
+          
+          {uploadError && (
+            <p className="text-sm text-red-500">
+              <i className="fas fa-exclamation-circle mr-1"></i>
+              {uploadError}
             </p>
-            <p 
-              className="text-sm"
-              style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
-            >
-              {userInfo.position || 'Member'}
-            </p>
-          </div>
+          )}
         </div>
       </div>
 

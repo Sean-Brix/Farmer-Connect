@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import sharp from 'sharp';
+import fs from 'fs/promises';
 
 // Load account data
 import users from './Data/account.json' with { type: 'json' };
@@ -29,113 +29,50 @@ async function seedAccountsOnly() {
 
     const hashedPassword = await bcrypt.hash(defaultPassword, 10);
 
-    // Load user profile image (admin.jpg or user.jpg)
-    let picture = null;
-    let mimeType = null;
+    // Set picturePath for Firebase Cloud Storage reference
+    // Format: accounts/{username}.jpg (will be uploaded to Firebase separately)
+    let picturePath = null;
     try {
       const imageName = `${user.username.toLowerCase()}.jpg`;
       const imagePath = path.join(__dirname, 'Data', 'Images', 'Accounts', imageName);
-      picture = await sharp(imagePath).resize(300).jpeg({ quality: 80 }).toBuffer();
-      mimeType = 'image/jpeg';
+      // Check if file exists
+      await fs.access(imagePath);
+      // Store the relative path for future Firebase upload
+      picturePath = `accounts/${imageName}`;
+      console.log(`Profile picture path set for ${user.username}: ${picturePath}`);
     } catch (e) {
-      // If image file is not available, continue without image
-      console.log(`No image found for ${user.username}, skipping picture upload`);
-      picture = null;
-      mimeType = null;
+      // If image file is not available, leave picturePath as null
+      console.log(`No image found for ${user.username}, picturePath will be null`);
+      picturePath = null;
     }
 
     try {
       await prisma.account.create({
         data: {
+          // Credentials
           username: user.username,
-          email: user.email,
           password: hashedPassword,
           access: user.access,
+          email: user.email || null,
 
           // Personal Information
           firstName: user.firstName,
-          middleName: user.middleName,
+          middleName: user.middleName || null,
           surname: user.surname,
-          extensionName: user.extensionName,
-          sex: user.sex,
-
-          // Address Information
-          street: user.street,
-          barangay: user.barangay,
-          municipality: user.municipality,
-          province: user.province,
-          region: user.region,
-          houseNumber: user.houseNumber,
-
-          // Contact Information
-          mobileNumber: user.mobileNumber,
-          landlineNumber: user.landlineNumber,
-
-          // Birth Information
-          birthMunicipality: user.birthMunicipality,
-          birthProvince: user.birthProvince,
-          birthCountry: user.birthCountry,
+          extensionName: user.extensionName || null,
+          sex: user.sex || 'Male',
+          contactNumber: user.contactNumber || null,
           dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : null,
 
-          // Personal Details
-          religion: user.religion,
-          otherReligionSpecify: user.otherReligionSpecify,
-          civilStatus: user.civilStatus,
-          spouseName: user.spouseName,
+          // Profile Picture (Firebase path)
+          picturePath,
 
-          // Household Information
-          femaleHouseholdMembers: user.femaleHouseholdMembers,
-          maleHouseholdMembers: user.maleHouseholdMembers,
-          isHouseholdHead: user.isHouseholdHead === 'Yes',
-          householdHeadName: user.householdHeadName,
-          relationshipToHead: user.relationshipToHead,
-
-          // Government ID Information
-          hasGovId: user.hasGovId === 'Yes',
-          govIdType: user.govIdType,
-          govIdNumber: user.govIdNumber,
-
-          // Education
-          education: user.education,
-
-          // Livelihood Profile (convert arrays to JSON strings)
-          livelihoodProfile: Array.isArray(user.livelihoodProfile) 
-            ? JSON.stringify(user.livelihoodProfile) 
-            : user.livelihoodProfile,
-          farmingActivities: Array.isArray(user.farmingActivities)
-            ? JSON.stringify(user.farmingActivities)
-            : user.farmingActivities,
-          fishingActivities: Array.isArray(user.fishingActivities)
-            ? JSON.stringify(user.fishingActivities)
-            : user.fishingActivities,
-          farmworkActivities: Array.isArray(user.farmworkActivities)
-            ? JSON.stringify(user.farmworkActivities)
-            : user.farmworkActivities,
-          youthActivities: Array.isArray(user.youthActivities)
-            ? JSON.stringify(user.youthActivities)
-            : user.youthActivities,
-
-          // Livelihood Specifications
-          otherCropsSpecify: user.otherCropsSpecify,
-          livestockSpecify: user.livestockSpecify,
-          fishingOthersSpecify: user.fishingOthersSpecify,
-          farmworkOthersSpecify: user.farmworkOthersSpecify,
-          youthOthersSpecify: user.youthOthersSpecify,
-
-          // Income Information
-          grossAnnualIncome: user.grossAnnualIncome,
-          incomeSource: user.incomeSource,
-
-          // Profile Photo
-          picture,
-          mimeType,
-
-          // Legacy fields (for compatibility)
-          client_profile: user.client_profile,
-          address: user.address,
+          // Profile Type
+          client_profile: user.client_profile || 'Other',
         }
       });
 
+      console.log(`✓ Created account: ${user.username}`);
       await safeWait(50);
     } catch (e) {
       console.error(`Failed to create user ${user.username}:`, e?.message || e);

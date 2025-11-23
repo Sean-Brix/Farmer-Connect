@@ -1,8 +1,10 @@
 import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient()
+import { deleteFile } from '../../config/firebase.js';
+import { clearFileCache } from '../../config/firebaseCache.js';
 
+const prisma = new PrismaClient();
 
-// Function to delete a user's profile photo
+// Function to delete a user's profile photo from Firebase Storage
 async function deleteMyPhoto(req, res) {
     try {
         const userId = req.user.id;
@@ -12,18 +14,29 @@ async function deleteMyPhoto(req, res) {
             return res.status(400).json({ message: 'User ID is required' });
         }
 
-        // Update the user's photo in the database
-        const updatedUser = await prisma.account.update({
+        // Get user's current photo path
+        const user = await prisma.account.findUnique({
             where: { id: userId },
-            data: { 
-                picture: null,
-                mimeType: null,
-            },
+            select: { picturePath: true },
         });
 
-        if (!updatedUser) {
+        if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
+
+        // Delete from Firebase if exists
+        if (user.picturePath) {
+            await deleteFile(user.picturePath).catch(err => 
+                console.warn('Failed to delete photo from Firebase:', err)
+            );
+            clearFileCache(user.picturePath);
+        }
+
+        // Update database to remove path
+        await prisma.account.update({
+            where: { id: userId },
+            data: { picturePath: null },
+        });
 
         return res.status(200).json({ message: 'Photo deleted successfully' });
     } 

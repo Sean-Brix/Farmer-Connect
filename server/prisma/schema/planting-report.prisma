@@ -1,0 +1,104 @@
+// Planting Report System - Complete Redesign
+// Tracks planting and harvesting information for farmers
+
+model PlantingReport {
+  id                     String          @id @default(cuid())
+  
+  // Farmer Information
+  farmerName             String
+  farmLocation           String
+  rsbsaNumber            String?         // Optional RSBSA Number
+  
+  // Seeding Information
+  croppingSeasonId       String
+  areaPlanted            Float           // in hectares
+  seedClassification     SeedClassification
+  typeOfCrop             CropType
+  riceIrrigation         riceIrrigation?  // Specific irrigation type if typeOfCrop is Rice
+  varietyId              String
+  dateOfPlanting         DateTime
+  plantingMethod         PlantingMethod
+  cropInsurance          Boolean         @default(false) // Crop insurance application checkbox
+  
+  // Harvesting Information
+  harvestArea            Float?          // in hectares
+  numberOfBags           Int?
+  weightPerBag           Float?          // in kg
+  yieldMtPerHa           Float?          // Yield in mt/ha (metric tons per hectare)
+  dateOfExpectedHarvest  DateTime?
+  
+  // System fields
+  isArchived             Boolean         @default(false)
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+  
+  // Relations
+  croppingSeason         PlantingSeason  @relation(fields: [croppingSeasonId], references: [id], onDelete: Restrict)
+  variety                SeedVariety     @relation(fields: [varietyId], references: [id], onDelete: Restrict)
+
+  @@index([croppingSeasonId])
+  @@index([varietyId])
+  @@index([typeOfCrop])
+  @@index([dateOfPlanting])
+  @@map("planting_reports")
+}
+
+// Planting Season Reference Table
+model PlantingSeason {
+  id                String           @id @default(cuid())
+  name              String           @unique // e.g., "Wet Season 2024", "Dry Season 2025"
+  description       String?
+  startDate         DateTime
+  endDate           DateTime
+  isActive          Boolean          @default(true)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  plantingReports   PlantingReport[]
+  
+  @@index([isActive])
+  @@index([startDate, endDate])
+  @@map("planting_seasons")
+}
+
+// Seed Variety Reference Table
+model SeedVariety {
+  id                String           @id @default(cuid())
+  name              String           // e.g., "NSIC Rc222", "Pioneer 30G87"
+  cropType          CropType
+  directSeededDAS   Int              // Days After Sowing
+  transplantedDAS   Int              // Days After Sowing
+  description       String?          @db.Text
+  isActive          Boolean          @default(true)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  plantingReports   PlantingReport[]
+  
+  @@unique([name, cropType]) // Prevent duplicate varieties for same crop
+  @@index([cropType, isActive])
+  @@map("seed_varieties")
+}
+
+// Enumerations
+
+enum riceIrrigation {
+  Irrigated
+  RainfedLowland @map("Rainfed Lowland")
+}
+
+enum SeedClassification {
+  Inbred_Certified    // Inbred (Certified Seeds)
+  Hybrid_F1           // Hybrid (F1)
+  Inbred_Good         // Inbred (Good Seeds)
+  Inbred_Farmers      // Inbred (Farmer's Seed)
+}
+
+enum CropType {
+  Rice
+  Corn
+  High_Value_Crops
+}
+
+enum PlantingMethod {
+  Direct_Seeded
+  Transplanting
+}

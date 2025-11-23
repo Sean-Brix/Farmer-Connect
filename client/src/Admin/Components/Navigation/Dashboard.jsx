@@ -14,8 +14,9 @@ import Content from '../../Services/Inventory/Inventory.jsx';
 import Distribution from '../../Services/Distribution/Distribution.jsx';
 import Chat from '../../Services/Customer_Service/Chat_Module.jsx';
 import Survey from '../../Services/Survey/Survey.jsx';
-import Seed_Track from '../../Services/Seed_track/Seed.jsx';
+import PlantingReports from '../../Services/PlantingReport/PlantingReports.jsx';
 import Settings from '../../Services/Settings/Settings.jsx';
+import { PlantingReportProvider } from '../../../contexts/PlantingReportContext.jsx';
 
 // GLOBAL
 import AccountProfile from '../../../Components/settings/AccountProfile/AccountProfile.jsx';
@@ -53,7 +54,11 @@ export default function Dashboard() {
         audit: () => Audit,
         survey: () => Survey,
         chat: () => Chat,
-        seed: () => Seed_Track,
+        plantingReports: () => (props) => (
+            <PlantingReportProvider>
+                <PlantingReports {...props} />
+            </PlantingReportProvider>
+        ),
         settings: () => Settings,
 
         // GLOBAL
@@ -642,8 +647,8 @@ export default function Dashboard() {
                                 <ul className="space-y-2 px-6 py-4">
                                     {(() => {
                                         const filteredMenuItems = menuItems.filter(item => item.key !== 'home');
-                                        const beforeServices = filteredMenuItems.filter(item => !['distribution','enrollment','eic','seed','content'].includes(item.key) && !['settings','profile','logout'].includes(item.key));
-                                        const services = filteredMenuItems.filter(item => ['distribution','enrollment','eic','seed','content'].includes(item.key));
+                                        const beforeServices = filteredMenuItems.filter(item => !['distribution','enrollment','eic','content'].includes(item.key) && !['settings','profile','logout'].includes(item.key));
+                                        const services = filteredMenuItems.filter(item => ['distribution','enrollment','eic','content'].includes(item.key));
                                         return (
                                             <>
                                                 {/* Menu separator above Analytics */}

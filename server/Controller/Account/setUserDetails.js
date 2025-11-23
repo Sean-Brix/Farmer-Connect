@@ -11,15 +11,12 @@ async function setUserDetails(req, res) {
         firstName,
         surname,
         middleName,
+        extensionName,
+        sex,
+        contactNumber,
+        dateOfBirth,
         access,
-        gender,
         client_profile,
-        cellphone_no,
-        telephone_no,
-        occupation,
-        position,
-        institution,
-        address,
     } = req.body;
 
     const validationResult = filterUpdateData(req.body);
@@ -47,26 +44,21 @@ async function setUserDetails(req, res) {
         },
         data: {
             username,
-            email,
+            email: email || null,
             firstName,
             surname,
-            middleName,
-            gender,
+            middleName: middleName || null,
+            extensionName: extensionName || null,
+            sex,
+            contactNumber: contactNumber || null,
+            dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
             access,
             client_profile,
-            cellphone_no,
-            telephone_no,
-            occupation,
-            position,
-            institution,
-            address,
         },
     });
 
     // Exclude sensitive fields from the response
     updatedUser.password = undefined;
-    updatedUser.picture = undefined;
-    updatedUser.mimeType = undefined;
 
     // Track what fields were updated for audit log
     const updatedFields = [];
@@ -75,19 +67,13 @@ async function setUserDetails(req, res) {
     if (currentUser.firstName !== firstName) updatedFields.push('firstName');
     if (currentUser.surname !== surname) updatedFields.push('surname');
     if (currentUser.middleName !== middleName) updatedFields.push('middleName');
+    if (currentUser.extensionName !== extensionName) updatedFields.push('extensionName');
+    if (currentUser.sex !== sex) updatedFields.push('sex');
+    if (currentUser.contactNumber !== contactNumber) updatedFields.push('contactNumber');
+    if (currentUser.dateOfBirth !== dateOfBirth) updatedFields.push('dateOfBirth');
     if (currentUser.access !== access) updatedFields.push('access');
-    if (currentUser.gender !== gender) updatedFields.push('gender');
     if (currentUser.client_profile !== client_profile)
         updatedFields.push('client_profile');
-    if (currentUser.cellphone_no !== cellphone_no)
-        updatedFields.push('cellphone_no');
-    if (currentUser.telephone_no !== telephone_no)
-        updatedFields.push('telephone_no');
-    if (currentUser.occupation !== occupation) updatedFields.push('occupation');
-    if (currentUser.position !== position) updatedFields.push('position');
-    if (currentUser.institution !== institution)
-        updatedFields.push('institution');
-    if (currentUser.address !== address) updatedFields.push('address');
 
     // Log the account update action
     const auditAction =
@@ -131,65 +117,61 @@ async function setUserDetails(req, res) {
 function filterUpdateData(data) {
     const ClientProfiles_option = [
         'Fishfolk',
-        'Rural Based Org',
+        'Rural_Based_Org',
         'Student',
-        'Agricultural/Fisheries Technician',
+        'Agricultural_Fisheries_Technician',
         'Youth',
         'Women',
-        'Govt Employee',
+        'Govt_Employee',
         'PWD',
-        'Indigenous People',
+        'Indigenous_People',
         'Other',
     ];
 
-    const gender_option = ['Male', 'Female', 'Other'];
+    const sex_option = ['Male', 'Female'];
 
     const {
         username,
-        email,
         firstName,
         surname,
-        gender,
+        sex,
         client_profile,
-        cellphone_no,
-        telephone_no,
-        address,
+        email,
+        contactNumber,
     } = data;
 
     try {
         if (
             !username ||
-            !email ||
             !firstName ||
             !surname ||
-            !gender ||
-            !client_profile ||
-            !cellphone_no ||
-            !address
+            !sex ||
+            !client_profile
         ) {
-            return 'All fields are required.';
+            return 'Required fields: username, firstName, surname, sex, and client_profile.';
         }
 
-        if (!gender_option.includes(gender)) {
-            return 'Invalid gender.';
+        if (!sex_option.includes(sex)) {
+            return 'Invalid sex value. Must be Male or Female.';
         }
         if (!ClientProfiles_option.includes(client_profile)) {
             return 'Invalid client profile.';
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return 'Invalid email format.';
+        // Email validation (if provided)
+        if (email && email.trim()) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return 'Invalid email format.';
+            }
         }
 
-        const cellphoneRegex = /^09\d{9}$/;
-        if (!cellphoneRegex.test(cellphone_no)) {
-            return 'Invalid cellphone number format. Must start with 09 and be 11 digits long.';
-        }
-
-        const telephoneRegex = /^\d{3}-\d{3}-\d{4}$/;
-        if (!telephoneRegex.test(telephone_no)) {
-            return 'Invalid telephone number format. Must be in XXX-XXX-XXXX format.';
+        // Contact number validation (if provided)
+        if (contactNumber && contactNumber.trim()) {
+            const contactRegex = /^09\d{9}$/;
+            if (!contactRegex.test(contactNumber)) {
+                return 'Invalid contact number format. Must start with 09 and be 11 digits long.';
+            }
         }
 
         return true;

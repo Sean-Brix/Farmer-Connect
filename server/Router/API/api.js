@@ -37,9 +37,8 @@ router.use('/bot', bot);
 import surveyForms from './Survey_Forms/index.js';
 router.use('/survey-forms', surveyForms);
 
-// Seed Tracking API
-import seedTrack from './SeedTrack/index.js';
-router.use('/seed-track', seedTrack);
+import plantingReport from './PlantingReport/index.js';
+router.use('/planting-reports', plantingReport);
 
 // Simple preferences endpoints (temporary)
 router.get('/preferences/language', (req, res) => {

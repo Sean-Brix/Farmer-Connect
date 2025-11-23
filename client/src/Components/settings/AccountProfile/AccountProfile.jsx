@@ -1,30 +1,24 @@
-import { Link } from 'react-router-dom';
-import default_picture from '../../../Assets/default_picture.png';
 import { useEffect, useState } from 'react';
 import { useTheme } from '../../../contexts/ThemeContext';
-
 import Info_Block from './Info_Block';
 
-export default function AccountProfile({ admin_navigate, details }) {
+export default function AccountProfile({ admin_navigate }) {
     const { theme } = useTheme();
-    // Default Value
+    // Simplified schema - only 13 fields
     const [user, setUser] = useState({
-        access: 'Admin',
-        address: 'Address',
-        cellphone_no: '00000000000',
-        client_profile: 'Citizen',
-        created_at: '0000-00-00 00:00:00',
-        email_address: 'userAccount@gmail.com',
-        firstname: 'First Name',
-        lastname: 'Last Name',
-        gender: 'Gender',
         id: '0',
-        institution: 'User Institution',
-        occupation: 'Occupation',
-        position: 'Position',
-        telephone_no: '0000-0000',
+        firstName: 'First Name',
+        middleName: '',
+        surname: 'Last Name',
+        extensionName: '',
+        sex: 'Male',
+        contactNumber: '00000000000',
+        dateOfBirth: '2000-01-01',
         username: 'Account Username',
-        picture: details.picture,
+        email: 'user@example.com',
+        access: 'Admin',
+        client_profile: 'Citizen',
+        picturePath: null,
     });
 
     useEffect(() => {
@@ -36,17 +30,17 @@ export default function AccountProfile({ admin_navigate, details }) {
                 const data = await response.json();
 
                 if (!response.ok) {
-                    console.error('Account profile error:', data.payload.error);
+                    console.error('Account profile error:', data.payload?.error || data.error);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                setUser({ ...data.payload, picture: details.picture });
+                setUser(data.payload || data);
             } catch (error) {
                 console.error('Error fetching user details:', error);
                 admin_navigate('analytics');
             }
         })();
-    }, []);
+    }, [admin_navigate]);
 
     return (
         <>
