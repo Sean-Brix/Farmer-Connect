@@ -46,26 +46,20 @@ export default function User_Details({ user, isEdit, refetchRow}) {
 
     const updateUserDetails = useMutation({
         mutationFn: async (updatedUser) => {
-            // Clean up data before sending
-            const cleanedUser = { ...updatedUser };
-            
-            // Convert empty strings to null for optional fields
-            Object.keys(cleanedUser).forEach(key => {
-                if (cleanedUser[key] === '') {
-                    cleanedUser[key] = null;
-                }
-            });
-
-            // Handle boolean fields
-            if (typeof cleanedUser.isHouseholdHead === 'string') {
-                cleanedUser.isHouseholdHead = cleanedUser.isHouseholdHead === 'true';
-            }
-            if (typeof cleanedUser.hasGovId === 'string') {
-                cleanedUser.hasGovId = cleanedUser.hasGovId === 'true';
-            }
-            if (typeof cleanedUser.isPWD === 'string') {
-                cleanedUser.isPWD = cleanedUser.isPWD === 'true';
-            }
+            // Clean up data before sending - only include valid Account fields
+            const cleanedUser = {
+                firstName: updatedUser.firstName || null,
+                middleName: updatedUser.middleName || null,
+                surname: updatedUser.surname || null,
+                extensionName: updatedUser.extensionName || null,
+                sex: updatedUser.sex || null,
+                dateOfBirth: updatedUser.dateOfBirth || null,
+                contactNumber: updatedUser.contactNumber || null,
+                email: updatedUser.email || null,
+                username: updatedUser.username || null,
+                client_profile: updatedUser.client_profile || null,
+                access: updatedUser.access || 'User',
+            };
 
             const response = await fetch(
                 `/api/account/all/details/${user.id}`,
@@ -160,34 +154,12 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                     </option>
                                 ))}
                             </select>
-                            {/* Only one custom arrow, not duplicated */}
                             <span className="pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                                 </svg>
                             </span>
                         </div>
-                    </div>
-                );
-            } else if (type === 'boolean') {
-                return (
-                    <div className="space-y-2">
-                        <label className={`block text-xs font-medium ${
-                            isDark ? 'text-gray-300' : 'text-gray-600'
-                        }`}>{label}</label>
-                        <select
-                            value={editValue === true ? 'true' : editValue === false ? 'false' : ''}
-                            onChange={(e) => handleChange(fieldName, e.target.value === 'true')}
-                            className={`w-full border px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition ${
-                                isDark 
-                                    ? 'bg-gray-700 border-gray-600 text-white' 
-                                    : 'bg-white border-gray-300 text-gray-900'
-                            }`}
-                        >
-                            <option value="">Select</option>
-                            <option value="true">Yes</option>
-                            <option value="false">No</option>
-                        </select>
                     </div>
                 );
             } else {
@@ -214,9 +186,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
             // Display mode
             let displayValue = value;
             
-            if (type === 'boolean') {
-                displayValue = value === true ? 'Yes' : value === false ? 'No' : '-';
-            } else if (type === 'date' && value) {
+            if (type === 'date' && value) {
                 displayValue = new Date(value).toLocaleDateString('en-US', { 
                     year: 'numeric', month: 'long', day: 'numeric' 
                 });
@@ -243,7 +213,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
 
     const renderDisplayMode = () => (
         <div className="max-w-6xl mx-auto">
-            {/* User Profile Header - Updated with green theme */}
+            {/* User Profile Header */}
             <div className={`text-white py-3 rounded-lg shadow-md mb-3 ${
                 isDark 
                     ? 'bg-gradient-to-r from-green-700 via-green-800 to-green-900' 
@@ -271,13 +241,13 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                     </div>
                     <div className="text-right">
                         <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold shadow-md border ${
-                            userDetail?.access === 'Super_Admin'
+                            userDetail?.access === 'Super Admin'
                                 ? 'bg-red-600 text-white border-red-500'
                                 : userDetail?.access === 'Admin'
                                 ? 'bg-blue-600 text-white border-blue-500'
                                 : 'bg-green-600 text-white border-green-500'
                         }`}>
-                            {userDetail?.access?.replace('_', ' ') || 'User'}
+                            {userDetail?.access || 'User'}
                         </span>
                         <p className="text-xs text-white mt-0.5 font-medium">ID: {userDetail?.id}</p>
                     </div>
@@ -295,12 +265,8 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                 }`}>
                     <nav className="flex space-x-8 px-6" aria-label="Tabs">
                         {[
-                            { id: 'personal', name: 'Personal Info', icon: 'fa-user' },
-                            { id: 'contact', name: 'Contact & Address', icon: 'fa-map-marker-alt' },
-                            { id: 'family', name: 'Family & Background', icon: 'fa-users' },
-                            { id: 'professional', name: 'Professional Info', icon: 'fa-briefcase' },
-                            { id: 'government', name: 'Government & IDs', icon: 'fa-id-card' },
-                            { id: 'system', name: 'System Info', icon: 'fa-cog' }
+                            { id: 'personal', name: 'Personal Information', icon: 'fa-user' },
+                            { id: 'system', name: 'System Information', icon: 'fa-cog' }
                         ].map((tab) => (
                             <button
                                 key={tab.id}
@@ -337,258 +303,39 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                     {renderField('First Name', userDetail?.firstName, 'firstName')}
                                     {renderField('Middle Name', userDetail?.middleName, 'middleName')}
                                     {renderField('Surname', userDetail?.surname, 'surname')}
-                                    {renderField('Extension Name', userDetail?.extensionName, 'extensionName', 'select', [
-                                        { value: 'Jr.', label: 'Jr.' },
-                                        { value: 'Sr.', label: 'Sr.' },
-                                        { value: 'II', label: 'II' },
-                                        { value: 'III', label: 'III' },
-                                        { value: 'IV', label: 'IV' },
-                                        { value: 'V', label: 'V' }
-                                    ])}
+                                    {renderField('Extension Name', userDetail?.extensionName, 'extensionName')}
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     {renderField('Username', userDetail?.username, 'username')}
                                     {renderField('Email Address', userDetail?.email, 'email', 'email')}
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    {renderField('Sex', userDetail?.sex, 'sex', 'select', [
-                                        { value: 'Male', label: 'Male' },
-                                        { value: 'Female', label: 'Female' },
-                                        { value: 'Other', label: 'Other' }
-                                    ])}
+                                <div className="grid grid-cols-3 gap-4">
+                                    {renderField('Sex', userDetail?.sex, 'sex')}
                                     {renderField('Date of Birth', userDetail?.dateOfBirth, 'dateOfBirth', 'date')}
+                                    {renderField('Contact Number', userDetail?.contactNumber, 'contactNumber', 'tel')}
+                                </div>
+                                <div className="grid grid-cols-1 gap-4">
+                                    {renderField('Client Profile', userDetail?.client_profile, 'client_profile')}
                                 </div>
                             </div>
                         </div>
                     )}
 
-                    {/* Contact & Address Tab */}
-                    {activeTab === 'contact' && (
+                    {/* System Information Tab */}
+                    {activeTab === 'system' && (
                         <div className="space-y-8">
                             <div className="flex items-center gap-3 mb-6">
-                                <i className="fa-solid fa-map-marker-alt text-green-600 text-xl"></i>
+                                <i className="fa-solid fa-cog text-green-600 text-xl"></i>
                                 <h2 className={`text-2xl font-bold ${
                                     isDark ? 'text-white' : 'text-gray-900'
-                                }`}>Contact & Address Information</h2>
+                                }`}>System Information</h2>
                             </div>
-                            
                             <div>
-                                <h3 className={`text-lg font-semibold mb-4 ${
-                                    isDark ? 'text-gray-200' : 'text-gray-800'
-                                }`}>Contact Details</h3>
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                    {renderField('Mobile Number', userDetail?.mobileNumber, 'mobileNumber')}
-                                    {renderField('Landline Number', userDetail?.landlineNumber, 'landlineNumber')}
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 className={`text-lg font-semibold mb-4 ${
-                                    isDark ? 'text-gray-200' : 'text-gray-800'
-                                }`}>Address Details</h3>
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                    {renderField('House Number', userDetail?.houseNumber, 'houseNumber')}
-                                    {renderField('Street', userDetail?.street, 'street')}
-                                    {renderField('Barangay', userDetail?.barangay, 'barangay')}
-                                    {renderField('Municipality', userDetail?.municipality, 'municipality')}
-                                    {renderField('Province', userDetail?.province, 'province')}
-                                    {renderField('Region', userDetail?.region, 'region')}
-                                    {renderField('Complete Address', userDetail?.address, 'address')}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Family & Background Tab */}
-                    {activeTab === 'family' && (
-                        <div className="space-y-8">
-                            <div className="flex items-center gap-3 mb-6">
-                                <i className="fa-solid fa-users text-green-600 text-xl"></i>
-                                <h2 className={`text-2xl font-bold ${
-                                    isDark ? 'text-white' : 'text-gray-900'
-                                }`}>Family & Background Information</h2>
-                            </div>
-
-                            <div>
-                                <h3 className={`text-lg font-semibold mb-4 ${
-                                    isDark ? 'text-gray-200' : 'text-gray-800'
-                                }`}>Birth Information</h3>
-                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                                    {renderField('Birth Municipality', userDetail?.birthMunicipality, 'birthMunicipality')}
-                                    {renderField('Birth Province', userDetail?.birthProvince, 'birthProvince')}
-                                    {renderField('Birth Country', userDetail?.birthCountry, 'birthCountry')}
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 className={`text-lg font-semibold mb-4 ${
-                                    isDark ? 'text-gray-200' : 'text-gray-800'
-                                }`}>Personal & Family Details</h3>
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                    {renderField('Religion', userDetail?.religion, 'religion')}
-                                    {renderField('Other Religion (Specify)', userDetail?.otherReligionSpecify, 'otherReligionSpecify')}
-                                    {renderField('Civil Status', userDetail?.civilStatus, 'civilStatus', 'select', [
-                                        { value: 'Single', label: 'Single' },
-                                        { value: 'Married', label: 'Married' },
-                                        { value: 'Separated', label: 'Separated' },
-                                        { value: 'Divorced', label: 'Divorced' },
-                                        { value: 'Widowed', label: 'Widowed' },
-                                        { value: 'Live-in', label: 'Live-in' }
-                                    ])}
-                                    {renderField('Spouse Name', userDetail?.spouseName, 'spouseName')}
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 className={`text-lg font-semibold mb-4 ${
-                                    isDark ? 'text-gray-200' : 'text-gray-800'
-                                }`}>Household Information</h3>
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                    {renderField('Female Household Members', userDetail?.femaleHouseholdMembers, 'femaleHouseholdMembers', 'number')}
-                                    {renderField('Male Household Members', userDetail?.maleHouseholdMembers, 'maleHouseholdMembers', 'number')}
-                                    {renderField('Is Household Head', userDetail?.isHouseholdHead, 'isHouseholdHead', 'boolean')}
-                                    {renderField('Household Head Name', userDetail?.householdHeadName, 'householdHeadName')}
-                                    {renderField('Relationship to Head', userDetail?.relationshipToHead, 'relationshipToHead', 'select', [
-                                        { value: 'Son', label: 'Son' },
-                                        { value: 'Daughter', label: 'Daughter' },
-                                        { value: 'Spouse', label: 'Spouse' },
-                                        { value: 'Father', label: 'Father' },
-                                        { value: 'Mother', label: 'Mother' },
-                                        { value: 'Brother', label: 'Brother' },
-                                        { value: 'Sister', label: 'Sister' },
-                                        { value: 'Grandchild', label: 'Grandchild' },
-                                        { value: 'Son-in-law', label: 'Son-in-law' },
-                                        { value: 'Daughter-in-law', label: 'Daughter-in-law' },
-                                        { value: 'Other relative', label: 'Other relative' }
-                                    ])}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Professional Information Tab */}
-                    {activeTab === 'professional' && (
-                        <div className="space-y-8">
-                            <div className="flex items-center gap-3 mb-6">
-                                <i className="fa-solid fa-briefcase text-green-600 text-xl"></i>
-                                <h2 className={`text-2xl font-bold ${
-                                    isDark ? 'text-white' : 'text-gray-900'
-                                }`}>Professional Information</h2>
-                            </div>
-
-                            <div>
-                                <h3 className={`text-lg font-semibold mb-4 ${
-                                    isDark ? 'text-gray-200' : 'text-gray-800'
-                                }`}>Education & Profile</h3>
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                    {renderField('Education Level', userDetail?.education, 'education', 'select', [
-                                        { value: 'No_formal_education', label: 'No formal education' },
-                                        { value: 'Kinder', label: 'Kinder' },
-                                        { value: 'Elementary_level', label: 'Elementary level' },
-                                        { value: 'Elementary_graduate', label: 'Elementary graduate' },
-                                        { value: 'High_school_level', label: 'High school level' },
-                                        { value: 'High_school_graduate', label: 'High school graduate' },
-                                        { value: 'Senior_high_school_level', label: 'Senior high school level' },
-                                        { value: 'Senior_high_school_graduate', label: 'Senior high school graduate' },
-                                        { value: 'College_level', label: 'College level' },
-                                        { value: 'College_graduate', label: 'College graduate' },
-                                        { value: 'Post_graduate_studies', label: 'Post-graduate studies' },
-                                        { value: 'Vocational_Technical', label: 'Vocational/Technical' }
-                                    ])}
-                                    {renderField('Client Profile', userDetail?.client_profile, 'client_profile', 'select', [
-                                        { value: 'Fishfolk', label: 'Fishfolk' },
-                                        { value: 'Rural_Based_Org', label: 'Rural Based Org' },
-                                        { value: 'Student', label: 'Student' },
-                                        { value: 'Agricultural_Fisheries_Technician', label: 'Agricultural/Fisheries Technician' },
-                                        { value: 'Youth', label: 'Youth' },
-                                        { value: 'Women', label: 'Women' },
-                                        { value: 'Govt_Employee', label: 'Govt Employee' },
-                                        { value: 'PWD', label: 'PWD' },
-                                        { value: 'Indigenous_People', label: 'Indigenous People' },
-                                        { value: 'Other', label: 'Other' }
-                                    ])}
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 className={`text-lg font-semibold mb-4 ${
-                                    isDark ? 'text-gray-200' : 'text-gray-800'
-                                }`}>Disability Information</h3>
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                    {renderField('Person with Disability (PWD)', userDetail?.isPWD, 'isPWD', 'boolean')}
-                                    {renderField('Disability Type', userDetail?.disabilityType, 'disabilityType')}
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 className={`text-lg font-semibold mb-4 ${
-                                    isDark ? 'text-gray-200' : 'text-gray-800'
-                                }`}>Income Information</h3>
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                    {renderField('Gross Annual Income', userDetail?.grossAnnualIncome, 'grossAnnualIncome')}
-                                    {renderField('Income Source', userDetail?.incomeSource, 'incomeSource', 'select', [
-                                        { value: 'farming', label: 'Farming' },
-                                        { value: 'non_farming', label: 'Non-farming' }
-                                    ])}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Government & IDs Tab */}
-                    {activeTab === 'government' && (
-                        <div className="space-y-8">
-                            <div className="flex items-center gap-3 mb-6">
-                                <i className="fa-solid fa-id-card text-green-600 text-xl"></i>
-                                <h2 className={`text-2xl font-bold ${
-                                    isDark ? 'text-white' : 'text-gray-900'
-                                }`}>Government & ID Information</h2>
-                            </div>
-
-                            <div>
-                                <h3 className={`text-lg font-semibold mb-4 ${
-                                    isDark ? 'text-gray-200' : 'text-gray-800'
-                                }`}>Government Identification</h3>
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                    {renderField('Has Government ID', userDetail?.hasGovId, 'hasGovId', 'boolean')}
-                                    {renderField('Government ID Type', userDetail?.govIdType, 'govIdType', 'select', [
-                                        { value: 'National_ID', label: 'National ID' },
-                                        { value: 'Drivers_License', label: 'Drivers License' },
-                                        { value: 'Passport', label: 'Passport' },
-                                        { value: 'Voters_ID', label: 'Voters ID' },
-                                        { value: 'School_ID', label: 'School ID' },
-                                        { value: 'SSS_ID', label: 'SSS ID' },
-                                        { value: 'PhilHealth_ID', label: 'PhilHealth ID' },
-                                        { value: 'TIN_ID', label: 'TIN ID' },
-                                        { value: 'PRC_ID', label: 'PRC ID' },
-                                        { value: 'Senior_Citizen_ID', label: 'Senior Citizen ID' },
-                                        { value: 'PWD_ID', label: 'PWD ID' },
-                                        { value: 'Other', label: 'Other' }
-                                    ])}
-                                    {renderField('Government ID Number', userDetail?.govIdNumber, 'govIdNumber')}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                        {/* System Information Tab */}
-                        {activeTab === 'system' && (
-                            <div className="space-y-8">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <i className="fa-solid fa-cog text-green-600 text-xl"></i>
-                                    <h2 className={`text-2xl font-bold ${
-                                        isDark ? 'text-white' : 'text-gray-900'
-                                    }`}>System Information</h2>
-                                </div>                            <div>
                                 <h3 className={`text-lg font-semibold mb-4 ${
                                     isDark ? 'text-gray-200' : 'text-gray-800'
                                 }`}>Account Details</h3>
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                    {renderField('Access Level', userDetail?.access, 'access', 'select', [
-                                        { value: 'User', label: 'User' },
-                                        { value: 'Admin', label: 'Admin' },
-                                        { value: 'Super_Admin', label: 'Super Admin' }
-                                    ])}
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                    {renderField('Access Level', userDetail?.access, 'access')}
                                     <div className="space-y-2">
                                         <label className={`block text-xs font-medium ${
                                             isDark ? 'text-gray-300' : 'text-gray-600'
@@ -644,7 +391,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
     const renderEditMode = () => (
         <div className="max-w-6xl mx-auto">
             {/* Form Content */}
-            <form onSubmit={handleSave} className="space-y-6">
+            <form onSubmit={(e) => { e.preventDefault(); handleSave(); }} className="space-y-6">
                 {/* Tab Navigation */}
                 <div className={`rounded-2xl shadow-lg border overflow-hidden ${
                     isDark 
@@ -656,12 +403,8 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                     }`}>
                         <nav className="flex space-x-8 px-6" aria-label="Tabs">
                             {[
-                                { id: 'personal', name: 'Personal Info', icon: 'fa-user' },
-                                { id: 'contact', name: 'Contact & Address', icon: 'fa-map-marker-alt' },
-                                { id: 'family', name: 'Family & Background', icon: 'fa-users' },
-                                { id: 'professional', name: 'Professional Info', icon: 'fa-briefcase' },
-                                { id: 'government', name: 'Government & IDs', icon: 'fa-id-card' },
-                                { id: 'system', name: 'System Info', icon: 'fa-cog' }
+                                { id: 'personal', name: 'Personal Information', icon: 'fa-user' },
+                                { id: 'system', name: 'System Information', icon: 'fa-cog' }
                             ].map((tab) => (
                                 <button
                                     key={tab.id}
@@ -669,8 +412,12 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                     onClick={() => setActiveTab(tab.id)}
                                     className={`${
                                         activeTab === tab.id
-                                            ? 'border-green-500 text-green-600 bg-green-50'
-                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            ? isDark
+                                                ? 'border-green-400 text-green-400 bg-green-900 bg-opacity-30'
+                                                : 'border-green-500 text-green-600 bg-green-50'
+                                            : isDark
+                                                ? 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500'
+                                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                     } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-all duration-200 flex items-center gap-2 rounded-t-lg`}
                                 >
                                     <i className={`fa-solid ${tab.icon}`}></i>
@@ -694,7 +441,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                         {renderField('Middle Name', editedUser?.middleName, 'middleName')}
                                         {renderField('Surname', editedUser?.surname, 'surname')}
                                         {renderField('Extension Name', editedUser?.extensionName, 'extensionName', 'select', [
-                                            { value: '', label: 'Select Extension' },
+                                            { value: '', label: 'None' },
                                             { value: 'Jr.', label: 'Jr.' },
                                             { value: 'Sr.', label: 'Sr.' },
                                             { value: 'II', label: 'II' },
@@ -707,227 +454,29 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                         {renderField('Username', editedUser?.username, 'username')}
                                         {renderField('Email Address', editedUser?.email, 'email', 'email')}
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-3 gap-4">
                                         {renderField('Sex', editedUser?.sex, 'sex', 'select', [
                                             { value: '', label: 'Select Sex' },
                                             { value: 'Male', label: 'Male' },
-                                            { value: 'Female', label: 'Female' },
-                                            { value: 'Other', label: 'Other' }
+                                            { value: 'Female', label: 'Female' }
                                         ])}
                                         {renderField('Date of Birth', editedUser?.dateOfBirth, 'dateOfBirth', 'date')}
+                                        {renderField('Contact Number', editedUser?.contactNumber, 'contactNumber', 'tel')}
                                     </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Contact & Address Tab */}
-                        {activeTab === 'contact' && (
-                            <div className="space-y-8">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <i className="fa-solid fa-map-marker-alt text-green-600 text-xl"></i>
-                                    <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Contact & Address Information</h2>
-                                </div>
-                                
-                                <div>
-                                    <h3 className={`text-lg font-semibold mb-4 ${
-                                        isDark ? 'text-gray-200' : 'text-gray-800'
-                                    }`}>Contact Details</h3>
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                        {renderField('Mobile Number', editedUser?.mobileNumber, 'mobileNumber')}
-                                        {renderField('Landline Number', editedUser?.landlineNumber, 'landlineNumber')}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h3 className={`text-lg font-semibold mb-4 ${
-                                        isDark ? 'text-gray-200' : 'text-gray-800'
-                                    }`}>Address Details</h3>
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                        {renderField('House Number', editedUser?.houseNumber, 'houseNumber')}
-                                        {renderField('Street', editedUser?.street, 'street')}
-                                        {renderField('Barangay', editedUser?.barangay, 'barangay')}
-                                        {renderField('Municipality', editedUser?.municipality, 'municipality')}
-                                        {renderField('Province', editedUser?.province, 'province')}
-                                        {renderField('Region', editedUser?.region, 'region')}
-                                        {renderField('Complete Address', editedUser?.address, 'address')}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Family & Background Tab */}
-                        {activeTab === 'family' && (
-                            <div className="space-y-8">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <i className="fa-solid fa-users text-green-600 text-xl"></i>
-                                    <h2 className={`text-2xl font-bold ${
-                                        isDark ? 'text-white' : 'text-gray-900'
-                                    }`}>Family & Background Information</h2>
-                                </div>
-
-                                <div>
-                                    <h3 className={`text-lg font-semibold mb-4 ${
-                                        isDark ? 'text-gray-200' : 'text-gray-800'
-                                    }`}>Birth Information</h3>
-                                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                                        {renderField('Birth Municipality', editedUser?.birthMunicipality, 'birthMunicipality')}
-                                        {renderField('Birth Province', editedUser?.birthProvince, 'birthProvince')}
-                                        {renderField('Birth Country', editedUser?.birthCountry, 'birthCountry')}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h3 className={`text-lg font-semibold mb-4 ${
-                                        isDark ? 'text-gray-200' : 'text-gray-800'
-                                    }`}>Personal & Family Details</h3>
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                        {renderField('Religion', editedUser?.religion, 'religion')}
-                                        {renderField('Other Religion (Specify)', editedUser?.otherReligionSpecify, 'otherReligionSpecify')}
-                                        {renderField('Civil Status', editedUser?.civilStatus, 'civilStatus', 'select', [
-                                            { value: '', label: 'Select Civil Status' },
-                                            { value: 'Single', label: 'Single' },
-                                            { value: 'Married', label: 'Married' },
-                                            { value: 'Separated', label: 'Separated' },
-                                            { value: 'Divorced', label: 'Divorced' },
-                                            { value: 'Widowed', label: 'Widowed' },
-                                            { value: 'Live-in', label: 'Live-in' }
-                                        ])}
-                                        {renderField('Spouse Name', editedUser?.spouseName, 'spouseName')}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h3 className={`text-lg font-semibold mb-4 ${
-                                        isDark ? 'text-gray-200' : 'text-gray-800'
-                                    }`}>Household Information</h3>
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                        {renderField('Female Household Members', editedUser?.femaleHouseholdMembers, 'femaleHouseholdMembers', 'number')}
-                                        {renderField('Male Household Members', editedUser?.maleHouseholdMembers, 'maleHouseholdMembers', 'number')}
-                                        {renderField('Is Household Head', editedUser?.isHouseholdHead, 'isHouseholdHead', 'boolean')}
-                                        {renderField('Household Head Name', editedUser?.householdHeadName, 'householdHeadName')}
-                                        {renderField('Relationship to Head', editedUser?.relationshipToHead, 'relationshipToHead', 'select', [
-                                            { value: '', label: 'Select Relationship' },
-                                            { value: 'Son', label: 'Son' },
-                                            { value: 'Daughter', label: 'Daughter' },
-                                            { value: 'Spouse', label: 'Spouse' },
-                                            { value: 'Father', label: 'Father' },
-                                            { value: 'Mother', label: 'Mother' },
-                                            { value: 'Brother', label: 'Brother' },
-                                            { value: 'Sister', label: 'Sister' },
-                                            { value: 'Grandchild', label: 'Grandchild' },
-                                            { value: 'Son-in-law', label: 'Son-in-law' },
-                                            { value: 'Daughter-in-law', label: 'Daughter-in-law' },
-                                            { value: 'Other relative', label: 'Other relative' }
-                                        ])}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Professional Information Tab */}
-                        {activeTab === 'professional' && (
-                            <div className="space-y-8">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <i className="fa-solid fa-briefcase text-green-600 text-xl"></i>
-                                    <h2 className={`text-2xl font-bold ${
-                                        isDark ? 'text-white' : 'text-gray-900'
-                                    }`}>Professional Information</h2>
-                                </div>
-
-                                <div>
-                                    <h3 className={`text-lg font-semibold mb-4 ${
-                                        isDark ? 'text-gray-200' : 'text-gray-800'
-                                    }`}>Education & Profile</h3>
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                        {renderField('Education Level', editedUser?.education, 'education', 'select', [
-                                            { value: '', label: 'Select Education Level' },
-                                            { value: 'No_formal_education', label: 'No formal education' },
-                                            { value: 'Kinder', label: 'Kinder' },
-                                            { value: 'Elementary_level', label: 'Elementary level' },
-                                            { value: 'Elementary_graduate', label: 'Elementary graduate' },
-                                            { value: 'High_school_level', label: 'High school level' },
-                                            { value: 'High_school_graduate', label: 'High school graduate' },
-                                            { value: 'Senior_high_school_level', label: 'Senior high school level' },
-                                            { value: 'Senior_high_school_graduate', label: 'Senior high school graduate' },
-                                            { value: 'College_level', label: 'College level' },
-                                            { value: 'College_graduate', label: 'College graduate' },
-                                            { value: 'Post_graduate_studies', label: 'Post-graduate studies' },
-                                            { value: 'Vocational_Technical', label: 'Vocational/Technical' }
-                                        ])}
+                                    <div className="grid grid-cols-1 gap-4">
                                         {renderField('Client Profile', editedUser?.client_profile, 'client_profile', 'select', [
-                                            { value: '', label: 'Select Client Profile' },
+                                            { value: '', label: 'Select Profile' },
                                             { value: 'Fishfolk', label: 'Fishfolk' },
-                                            { value: 'Rural_Based_Org', label: 'Rural Based Org' },
+                                            { value: 'Rural Based Org', label: 'Rural Based Organization' },
                                             { value: 'Student', label: 'Student' },
-                                            { value: 'Agricultural_Fisheries_Technician', label: 'Agricultural/Fisheries Technician' },
+                                            { value: 'Agricultural/Fisheries Technician', label: 'Agricultural/Fisheries Technician' },
                                             { value: 'Youth', label: 'Youth' },
                                             { value: 'Women', label: 'Women' },
-                                            { value: 'Govt_Employee', label: 'Govt Employee' },
-                                            { value: 'PWD', label: 'PWD' },
-                                            { value: 'Indigenous_People', label: 'Indigenous People' },
+                                            { value: "Gov't Employee", label: 'Government Employee' },
+                                            { value: 'PWD', label: 'Person with Disability' },
+                                            { value: 'Indigenous People', label: 'Indigenous People' },
                                             { value: 'Other', label: 'Other' }
                                         ])}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h3 className={`text-lg font-semibold mb-4 ${
-                                        isDark ? 'text-gray-200' : 'text-gray-800'
-                                    }`}>Disability Information</h3>
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                        {renderField('Person with Disability (PWD)', editedUser?.isPWD, 'isPWD', 'boolean')}
-                                        {renderField('Disability Type', editedUser?.disabilityType, 'disabilityType')}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h3 className={`text-lg font-semibold mb-4 ${
-                                        isDark ? 'text-gray-200' : 'text-gray-800'
-                                    }`}>Income Information</h3>
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                        {renderField('Gross Annual Income', editedUser?.grossAnnualIncome, 'grossAnnualIncome')}
-                                        {renderField('Income Source', editedUser?.incomeSource, 'incomeSource', 'select', [
-                                            { value: '', label: 'Select Income Source' },
-                                            { value: 'farming', label: 'Farming' },
-                                            { value: 'non_farming', label: 'Non-farming' }
-                                        ])}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Government & IDs Tab */}
-                        {activeTab === 'government' && (
-                            <div className="space-y-8">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <i className="fa-solid fa-id-card text-green-600 text-xl"></i>
-                                    <h2 className={`text-2xl font-bold ${
-                                        isDark ? 'text-white' : 'text-gray-900'
-                                    }`}>Government & ID Information</h2>
-                                </div>
-
-                                <div>
-                                    <h3 className={`text-lg font-semibold mb-4 ${
-                                        isDark ? 'text-gray-200' : 'text-gray-800'
-                                    }`}>Government Identification</h3>
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                        {renderField('Has Government ID', editedUser?.hasGovId, 'hasGovId', 'boolean')}
-                                        {renderField('Government ID Type', editedUser?.govIdType, 'govIdType', 'select', [
-                                            { value: '', label: 'Select ID Type' },
-                                            { value: 'National_ID', label: 'National ID' },
-                                            { value: 'Drivers_License', label: 'Drivers License' },
-                                            { value: 'Passport', label: 'Passport' },
-                                            { value: 'Voters_ID', label: 'Voters ID' },
-                                            { value: 'School_ID', label: 'School ID' },
-                                            { value: 'SSS_ID', label: 'SSS ID' },
-                                            { value: 'PhilHealth_ID', label: 'PhilHealth ID' },
-                                            { value: 'TIN_ID', label: 'TIN ID' },
-                                            { value: 'PRC_ID', label: 'PRC ID' },
-                                            { value: 'Senior_Citizen_ID', label: 'Senior Citizen ID' },
-                                            { value: 'PWD_ID', label: 'PWD ID' },
-                                            { value: 'Other', label: 'Other' }
-                                        ])}
-                                        {renderField('Government ID Number', editedUser?.govIdNumber, 'govIdNumber')}
                                     </div>
                                 </div>
                             </div>
@@ -947,15 +496,15 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                     <h3 className={`text-lg font-semibold mb-4 ${
                                         isDark ? 'text-gray-200' : 'text-gray-800'
                                     }`}>Account Details</h3>
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                         {renderField('Access Level', editedUser?.access, 'access', 'select', [
                                             { value: 'User', label: 'User' },
                                             { value: 'Admin', label: 'Admin' },
-                                            { value: 'Super_Admin', label: 'Super Admin' }
+                                            { value: 'Super Admin', label: 'Super Admin' }
                                         ])}
                                         <div className="space-y-2">
-                                            <label className={`block text-sm font-medium ${
-                                                isDark ? 'text-gray-300' : 'text-gray-700'
+                                            <label className={`block text-xs font-medium ${
+                                                isDark ? 'text-gray-300' : 'text-gray-600'
                                             }`}>Created At</label>
                                             <div className={`border rounded-lg px-3 py-2 text-sm ${
                                                 isDark 
@@ -963,6 +512,21 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                                     : 'bg-gray-100 border-gray-300 text-gray-600'
                                             }`}>
                                                 {editedUser?.createdAt ? new Date(editedUser?.createdAt).toLocaleDateString('en-US', { 
+                                                    year: 'numeric', month: 'long', day: 'numeric', 
+                                                    hour: '2-digit', minute: '2-digit' 
+                                                }) : '-'}
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className={`block text-xs font-medium ${
+                                                isDark ? 'text-gray-300' : 'text-gray-600'
+                                            }`}>Last Updated</label>
+                                            <div className={`border rounded-lg px-3 py-2 text-sm ${
+                                                isDark 
+                                                    ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                                    : 'bg-gray-100 border-gray-300 text-gray-600'
+                                            }`}>
+                                                {editedUser?.updatedAt ? new Date(editedUser?.updatedAt).toLocaleDateString('en-US', { 
                                                     year: 'numeric', month: 'long', day: 'numeric', 
                                                     hour: '2-digit', minute: '2-digit' 
                                                 }) : '-'}
@@ -977,8 +541,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                 {/* Action Buttons at the bottom */}
                 <div className="flex justify-end gap-3 mt-8">
                     <button
-                        type="button"
-                        onClick={handleSave}
+                        type="submit"
                         disabled={updateUserDetails.isLoading}
                         className={`px-6 py-2 font-semibold text-base rounded-lg transition-colors duration-200 disabled:opacity-50 shadow-md border ${isDark ? 'bg-green-600 text-white hover:bg-green-700 border-green-500' : 'bg-green-600 text-white hover:bg-green-700 border-green-500'}`}
                     >
@@ -1042,7 +605,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                     }`}>
                         <div className="text-green-600 text-2xl mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 mx-auto">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 6h.01M6.938 20h10.124c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 17c-.77 1.333.192 3 1.732 3z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
                         <h3 className={`text-lg font-bold mb-2 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>Confirm Save</h3>

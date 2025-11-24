@@ -121,7 +121,7 @@ export default function User({ user, details, refetchRow, tabular = true }) {
                             }`}>{account?.username}</h3>
                             <p className={`text-sm truncate ${
                                 isDark ? 'text-gray-300' : 'text-gray-700'
-                            }`}>{account?.firstName} {account?.lastName}</p>
+                            }`}>{account?.firstName} {account?.surname}</p>
                         </div>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 sm:items-center">
@@ -214,7 +214,7 @@ export default function User({ user, details, refetchRow, tabular = true }) {
             }`}>
                 <span className={`truncate max-w-[180px] block align-middle text-base font-medium ${
                     isDark ? 'text-gray-200' : 'text-gray-800'
-                }`}>{account?.firstName} {account?.lastName}</span>
+                }`}>{account?.firstName} {account?.surname}</span>
             </td>
             <td className={`px-4 py-3 whitespace-nowrap align-middle text-center border-b ${
                 isDark 

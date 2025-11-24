@@ -47,12 +47,12 @@ export default function My_Profile({ user }) {
                     <div>
                         <label className={`block text-sm font-semibold mb-1 ${
                             isDark ? 'text-green-300' : 'text-blue-700'
-                        }`}>Gender</label>
+                        }`}>Sex</label>
                         <div className={`w-full border rounded-lg px-3 py-2 ${
                             isDark 
                                 ? 'bg-gray-700 border-gray-600 text-gray-200' 
                                 : 'bg-white border-blue-200 text-blue-900'
-                        }`}>{userDetail?.gender || ''}</div>
+                        }`}>{userDetail?.sex || ''}</div>
                     </div>
                     <div>
                         <label className={`block text-sm font-semibold mb-1 ${
@@ -67,81 +67,99 @@ export default function My_Profile({ user }) {
                     <div>
                         <label className={`block text-sm font-semibold mb-1 ${
                             isDark ? 'text-green-300' : 'text-blue-700'
-                        }`}>Occupation</label>
+                        }`}>Date of Birth</label>
                         <div className={`w-full border rounded-lg px-3 py-2 ${
                             isDark 
                                 ? 'bg-gray-700 border-gray-600 text-gray-200' 
                                 : 'bg-white border-blue-200 text-blue-900'
-                        }`}>{userDetail?.occupation || ''}</div>
-                    </div>
-                    <div>
-                        <label className={`block text-sm font-semibold mb-1 ${
-                            isDark ? 'text-green-300' : 'text-blue-700'
-                        }`}>Position</label>
-                        <div className={`w-full border rounded-lg px-3 py-2 ${
-                            isDark 
-                                ? 'bg-gray-700 border-gray-600 text-gray-200' 
-                                : 'bg-white border-blue-200 text-blue-900'
-                        }`}>{userDetail?.position || ''}</div>
+                        }`}>{userDetail?.dateOfBirth ? new Date(userDetail.dateOfBirth).toLocaleDateString() : ''}</div>
                     </div>
                 </div>
                 <div className="space-y-4">
                     <div>
                         <label className={`block text-sm font-semibold mb-1 ${
                             isDark ? 'text-green-300' : 'text-blue-700'
-                        }`}>Full Name</label>
-                        <div className="flex gap-2">
-                            <div className={`flex-1 border rounded-lg px-3 py-2 ${
-                                isDark 
-                                    ? 'bg-gray-700 border-gray-600 text-gray-200' 
-                                    : 'bg-white border-blue-200 text-blue-900'
-                            }`} title="First Name">{userDetail?.firstName || ''}</div>
-                            <div className={`flex-1 border rounded-lg px-3 py-2 ${
-                                isDark 
-                                    ? 'bg-gray-700 border-gray-600 text-gray-200' 
-                                    : 'bg-white border-blue-200 text-blue-900'
-                            }`} title="Middle Name">{userDetail?.middleName || ''}</div>
-                            <div className={`flex-1 border rounded-lg px-3 py-2 ${
-                                isDark 
-                                    ? 'bg-gray-700 border-gray-600 text-gray-200' 
-                                    : 'bg-white border-blue-200 text-blue-900'
-                            }`} title="Last Name">{userDetail?.lastName || ''}</div>
-                        </div>
+                        }`}>First Name</label>
+                        <div className={`w-full border rounded-lg px-3 py-2 ${
+                            isDark 
+                                ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                : 'bg-white border-blue-200 text-blue-900'
+                        }`}>{userDetail?.firstName || ''}</div>
                     </div>
                     <div>
                         <label className={`block text-sm font-semibold mb-1 ${
                             isDark ? 'text-green-300' : 'text-blue-700'
-                        }`}>Address</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.address || ''}</div>
+                        }`}>Middle Name</label>
+                        <div className={`w-full border rounded-lg px-3 py-2 ${
+                            isDark 
+                                ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                : 'bg-white border-blue-200 text-blue-900'
+                        }`}>{userDetail?.middleName || ''}</div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Telephone No</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.telephone_no || ''}</div>
+                        <label className={`block text-sm font-semibold mb-1 ${
+                            isDark ? 'text-green-300' : 'text-blue-700'
+                        }`}>Surname</label>
+                        <div className={`w-full border rounded-lg px-3 py-2 ${
+                            isDark 
+                                ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                : 'bg-white border-blue-200 text-blue-900'
+                        }`}>{userDetail?.surname || ''}</div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Cellphone No</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.cellphone_no || ''}</div>
+                        <label className={`block text-sm font-semibold mb-1 ${
+                            isDark ? 'text-green-300' : 'text-blue-700'
+                        }`}>Extension Name</label>
+                        <div className={`w-full border rounded-lg px-3 py-2 ${
+                            isDark 
+                                ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                : 'bg-white border-blue-200 text-blue-900'
+                        }`}>{userDetail?.extensionName || ''}</div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Institution</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.institution || ''}</div>
+                        <label className={`block text-sm font-semibold mb-1 ${
+                            isDark ? 'text-green-300' : 'text-blue-700'
+                        }`}>Contact Number</label>
+                        <div className={`w-full border rounded-lg px-3 py-2 ${
+                            isDark 
+                                ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                : 'bg-white border-blue-200 text-blue-900'
+                        }`}>{userDetail?.contactNumber || ''}</div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Email Address</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.email || ''}</div>
+                        <label className={`block text-sm font-semibold mb-1 ${
+                            isDark ? 'text-green-300' : 'text-blue-700'
+                        }`}>Email Address</label>
+                        <div className={`w-full border rounded-lg px-3 py-2 ${
+                            isDark 
+                                ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                : 'bg-white border-blue-200 text-blue-900'
+                        }`}>{userDetail?.email || ''}</div>
                     </div>
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                 <div>
-                    <label className="block text-xs text-blue-700 font-semibold mb-1">Created At</label>
-                    <div className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-gray-700">
+                    <label className={`block text-xs font-semibold mb-1 ${
+                        isDark ? 'text-green-300' : 'text-blue-700'
+                    }`}>Created At</label>
+                    <div className={`w-full border rounded-lg px-3 py-2 ${
+                        isDark 
+                            ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                            : 'bg-white border-gray-200 text-gray-700'
+                    }`}>
                         {userDetail?.createdAt ? new Date(userDetail?.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : ''}
                     </div>
                 </div>
                 <div>
-                    <label className="block text-xs text-blue-700 font-semibold mb-1">Updated At</label>
-                    <div className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-gray-700">
+                    <label className={`block text-xs font-semibold mb-1 ${
+                        isDark ? 'text-green-300' : 'text-blue-700'
+                    }`}>Updated At</label>
+                    <div className={`w-full border rounded-lg px-3 py-2 ${
+                        isDark 
+                            ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                            : 'bg-white border-gray-200 text-gray-700'
+                    }`}>
                         {userDetail?.updatedAt ? new Date(userDetail?.updatedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : ''}
                     </div>
                 </div>

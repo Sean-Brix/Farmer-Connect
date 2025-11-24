@@ -36,16 +36,18 @@ async function adminRegister(req, res) {
             return res.status(409).json({ message: 'Username already exists', error: 'username' });
         }
 
-        // check if email already exists
-        const existingEmail = await prisma.account.findUnique({
-            where: {
-                email: req.body.email,
-            },
-        });
+        // check if email already exists (use findFirst since email is not unique in schema)
+        if (req.body.email) {
+            const existingEmail = await prisma.account.findFirst({
+                where: {
+                    email: req.body.email,
+                },
+            });
 
-        // If email exists, return error
-        if (existingEmail) {
-            return res.status(409).json({ message: 'Email already exists', error: 'email' });
+            // If email exists, return error
+            if (existingEmail) {
+                return res.status(409).json({ message: 'Email already exists', error: 'email' });
+            }
         }
 
         // Hash password
@@ -56,8 +58,8 @@ async function adminRegister(req, res) {
             data: {
                 username: req.body.username,
                 password: hashedPassword,
-                access: 'User',
-                email: req.body.email,
+                access: req.body.access || 'User',
+                email: req.body.email || null,
                 firstName: req.body.firstName,
                 middleName: req.body.middleName || null,
                 surname: req.body.surname,

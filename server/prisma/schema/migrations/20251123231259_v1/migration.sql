@@ -1,65 +1,23 @@
 -- CreateTable
 CREATE TABLE `accounts` (
     `id` VARCHAR(191) NOT NULL,
-    `access` ENUM('Admin', 'User', 'Super Admin') NOT NULL DEFAULT 'User',
-    `username` VARCHAR(191) NOT NULL,
-    `email` VARCHAR(191) NOT NULL,
-    `password` VARCHAR(191) NOT NULL,
     `firstName` VARCHAR(191) NOT NULL,
     `middleName` VARCHAR(191) NULL,
     `surname` VARCHAR(191) NOT NULL,
     `extensionName` VARCHAR(191) NULL,
-    `sex` ENUM('Male', 'Female', 'Other') NOT NULL DEFAULT 'Other',
-    `street` VARCHAR(191) NULL,
-    `barangay` VARCHAR(191) NULL,
-    `municipality` VARCHAR(191) NULL,
-    `province` VARCHAR(191) NULL,
-    `region` VARCHAR(191) NULL,
-    `houseNumber` VARCHAR(191) NULL,
-    `mobileNumber` VARCHAR(191) NULL,
-    `landlineNumber` VARCHAR(191) NULL,
-    `birthMunicipality` VARCHAR(191) NULL,
-    `birthProvince` VARCHAR(191) NULL,
-    `birthCountry` VARCHAR(191) NULL,
+    `sex` ENUM('Male', 'Female') NOT NULL DEFAULT 'Male',
+    `contactNumber` VARCHAR(191) NULL,
     `dateOfBirth` DATETIME(3) NULL,
-    `religion` VARCHAR(191) NULL,
-    `otherReligionSpecify` VARCHAR(191) NULL,
-    `civilStatus` VARCHAR(191) NULL,
-    `spouseName` VARCHAR(191) NULL,
-    `femaleHouseholdMembers` VARCHAR(191) NULL,
-    `maleHouseholdMembers` VARCHAR(191) NULL,
-    `isHouseholdHead` BOOLEAN NULL,
-    `householdHeadName` VARCHAR(191) NULL,
-    `relationshipToHead` ENUM('Son', 'Daughter', 'Spouse', 'Father', 'Mother', 'Brother', 'Sister', 'Grandchild', 'Son-in-law', 'Daughter-in-law', 'Other relative') NULL,
-    `hasGovId` BOOLEAN NULL,
-    `govIdType` ENUM('National ID', 'Drivers License', 'Passport', 'Voters ID', 'School ID', 'SSS ID', 'PhilHealth ID', 'TIN ID', 'PRC ID', 'Senior Citizen ID', 'PWD ID', 'Other') NULL,
-    `govIdNumber` VARCHAR(191) NULL,
-    `education` ENUM('No formal education', 'Kinder', 'Elementary level', 'Elementary graduate', 'High school level', 'High school graduate', 'Senior high school level', 'Senior high school graduate', 'College level', 'College graduate', 'Post-graduate studies', 'Vocational/Technical') NULL,
-    `isPWD` BOOLEAN NULL,
-    `disabilityType` VARCHAR(191) NULL,
-    `livelihoodProfile` LONGTEXT NULL,
-    `farmingActivities` LONGTEXT NULL,
-    `fishingActivities` LONGTEXT NULL,
-    `farmworkActivities` LONGTEXT NULL,
-    `youthActivities` LONGTEXT NULL,
-    `otherCropsSpecify` VARCHAR(191) NULL,
-    `livestockSpecify` VARCHAR(191) NULL,
-    `fishingOthersSpecify` VARCHAR(191) NULL,
-    `farmworkOthersSpecify` VARCHAR(191) NULL,
-    `youthOthersSpecify` VARCHAR(191) NULL,
-    `grossAnnualIncome` VARCHAR(191) NULL,
-    `incomeSource` ENUM('farming', 'non-farming') NULL,
-    `picture` LONGBLOB NULL,
-    `mimeType` VARCHAR(191) NULL,
-    `resetTokenHash` VARCHAR(191) NULL,
-    `resetTokenExpiry` DATETIME(3) NULL,
+    `picturePath` VARCHAR(191) NULL,
+    `username` VARCHAR(191) NOT NULL,
+    `password` VARCHAR(191) NOT NULL,
+    `access` ENUM('Admin', 'User', 'Super Admin') NOT NULL DEFAULT 'User',
+    `email` VARCHAR(191) NULL,
     `client_profile` ENUM('Fishfolk', 'Rural Based Org', 'Student', 'Agricultural/Fisheries Technician', 'Youth', 'Women', 'Govt Employee', 'PWD', 'Indigenous People', 'Other') NOT NULL DEFAULT 'Other',
-    `address` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `accounts_username_key`(`username`),
-    UNIQUE INDEX `accounts_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -162,51 +120,6 @@ CREATE TABLE `chat_read_receipts` (
     INDEX `chat_read_receipts_messageId_idx`(`messageId`),
     INDEX `chat_read_receipts_userId_idx`(`userId`),
     UNIQUE INDEX `chat_read_receipts_messageId_userId_key`(`messageId`, `userId`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `crop_guidelines` (
-    `id` VARCHAR(191) NOT NULL,
-    `name` VARCHAR(191) NOT NULL,
-    `category` ENUM('Cereals', 'Vegetables', 'Fruits', 'Legumes', 'Root_Crops', 'Herbs_Spices') NOT NULL,
-    `varieties` LONGTEXT NOT NULL,
-    `plantingSeasons` LONGTEXT NOT NULL,
-    `growingPeriod` VARCHAR(191) NOT NULL,
-    `waterRequirements` VARCHAR(191) NOT NULL,
-    `expectedYield` VARCHAR(191) NOT NULL,
-    `soilType` VARCHAR(191) NOT NULL,
-    `climate` VARCHAR(191) NOT NULL,
-    `spacing` VARCHAR(191) NOT NULL,
-    `fertilizer` VARCHAR(191) NOT NULL,
-    `keyTips` LONGTEXT NOT NULL,
-    `commonPests` LONGTEXT NOT NULL,
-    `diseases` LONGTEXT NOT NULL,
-    `marketPrice` VARCHAR(191) NOT NULL,
-    `profitability` ENUM('Low', 'Moderate', 'High', 'Very_High') NOT NULL,
-    `difficulty` ENUM('Easy', 'Moderate', 'Moderate_High', 'High') NOT NULL,
-    `isActive` BOOLEAN NOT NULL DEFAULT true,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-
-    UNIQUE INDEX `crop_guidelines_name_key`(`name`),
-    INDEX `crop_guidelines_category_isActive_idx`(`category`, `isActive`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `crop_guideline_stages` (
-    `id` VARCHAR(191) NOT NULL,
-    `guidelineId` VARCHAR(191) NOT NULL,
-    `stageName` VARCHAR(191) NOT NULL,
-    `duration` VARCHAR(191) NOT NULL,
-    `description` TEXT NOT NULL,
-    `activities` LONGTEXT NOT NULL,
-    `sequenceOrder` INTEGER NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-
-    INDEX `crop_guideline_stages_guidelineId_sequenceOrder_idx`(`guidelineId`, `sequenceOrder`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -360,6 +273,71 @@ CREATE TABLE `item_transactions` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `planting_reports` (
+    `id` VARCHAR(191) NOT NULL,
+    `farmerName` VARCHAR(191) NOT NULL,
+    `farmLocation` VARCHAR(191) NOT NULL,
+    `rsbsaNumber` VARCHAR(191) NULL,
+    `croppingSeasonId` VARCHAR(191) NOT NULL,
+    `areaPlanted` DOUBLE NOT NULL,
+    `seedClassification` ENUM('Inbred_Certified', 'Hybrid_F1', 'Inbred_Good', 'Inbred_Farmers') NOT NULL,
+    `typeOfCrop` ENUM('Rice', 'Corn', 'High_Value_Crops') NOT NULL,
+    `riceIrrigation` ENUM('Irrigated', 'Rainfed Lowland') NULL,
+    `varietyId` VARCHAR(191) NOT NULL,
+    `dateOfPlanting` DATETIME(3) NOT NULL,
+    `plantingMethod` ENUM('Direct_Seeded', 'Transplanting') NOT NULL,
+    `cropInsurance` BOOLEAN NOT NULL DEFAULT false,
+    `harvestArea` DOUBLE NULL,
+    `numberOfBags` INTEGER NULL,
+    `weightPerBag` DOUBLE NULL,
+    `yieldMtPerHa` DOUBLE NULL,
+    `dateOfExpectedHarvest` DATETIME(3) NULL,
+    `isArchived` BOOLEAN NOT NULL DEFAULT false,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    INDEX `planting_reports_croppingSeasonId_idx`(`croppingSeasonId`),
+    INDEX `planting_reports_varietyId_idx`(`varietyId`),
+    INDEX `planting_reports_typeOfCrop_idx`(`typeOfCrop`),
+    INDEX `planting_reports_dateOfPlanting_idx`(`dateOfPlanting`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `planting_seasons` (
+    `id` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `description` VARCHAR(191) NULL,
+    `startDate` DATETIME(3) NOT NULL,
+    `endDate` DATETIME(3) NOT NULL,
+    `isActive` BOOLEAN NOT NULL DEFAULT true,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `planting_seasons_name_key`(`name`),
+    INDEX `planting_seasons_isActive_idx`(`isActive`),
+    INDEX `planting_seasons_startDate_endDate_idx`(`startDate`, `endDate`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `seed_varieties` (
+    `id` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `cropType` ENUM('Rice', 'Corn', 'High_Value_Crops') NOT NULL,
+    `directSeededDAS` INTEGER NOT NULL,
+    `transplantedDAS` INTEGER NOT NULL,
+    `description` TEXT NULL,
+    `isActive` BOOLEAN NOT NULL DEFAULT true,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    INDEX `seed_varieties_cropType_isActive_idx`(`cropType`, `isActive`),
+    UNIQUE INDEX `seed_varieties_name_cropType_key`(`name`, `cropType`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `user_preferences` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` VARCHAR(191) NOT NULL,
@@ -369,98 +347,6 @@ CREATE TABLE `user_preferences` (
     `updatedAt` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `user_preferences_userId_key_key`(`userId`, `key`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `registered_crops` (
-    `id` VARCHAR(191) NOT NULL,
-    `userId` VARCHAR(191) NOT NULL,
-    `guidelineId` VARCHAR(191) NOT NULL,
-    `cropType` VARCHAR(191) NOT NULL,
-    `variety` VARCHAR(191) NOT NULL,
-    `plantingDate` DATETIME(3) NOT NULL,
-    `expectedHarvest` DATETIME(3) NULL,
-    `area` DOUBLE NULL,
-    `status` ENUM('Active', 'Inactive', 'Completed', 'Archived') NOT NULL DEFAULT 'Active',
-    `currentStageIndex` INTEGER NOT NULL DEFAULT 0,
-    `currentStageName` VARCHAR(191) NULL,
-    `currentStageStartDate` DATETIME(3) NULL,
-    `currentStageEndDate` DATETIME(3) NULL,
-    `canSubmitReport` BOOLEAN NOT NULL DEFAULT true,
-    `lastReportDate` DATETIME(3) NULL,
-    `totalStages` INTEGER NULL,
-    `completedStages` INTEGER NOT NULL DEFAULT 0,
-    `notes` VARCHAR(191) NULL,
-    `archiveReason` VARCHAR(191) NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-
-    INDEX `registered_crops_userId_cropType_status_idx`(`userId`, `cropType`, `status`),
-    INDEX `registered_crops_guidelineId_idx`(`guidelineId`),
-    INDEX `registered_crops_currentStageIndex_canSubmitReport_idx`(`currentStageIndex`, `canSubmitReport`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `crop_monthly_reports` (
-    `id` VARCHAR(191) NOT NULL,
-    `cropId` VARCHAR(191) NOT NULL,
-    `stageIndex` INTEGER NOT NULL,
-    `stageName` VARCHAR(191) NOT NULL,
-    `plantHeight` DOUBLE NULL,
-    `healthStatus` VARCHAR(191) NULL,
-    `weatherImpact` VARCHAR(191) NULL,
-    `notes` VARCHAR(191) NULL,
-    `pestsObserved` VARCHAR(191) NULL,
-    `diseasesObserved` VARCHAR(191) NULL,
-    `fertilizersApplied` VARCHAR(191) NULL,
-    `pesticideApplications` VARCHAR(191) NULL,
-    `irrigationFrequency` VARCHAR(191) NULL,
-    `soilCondition` VARCHAR(191) NULL,
-    `plannedActions` VARCHAR(191) NULL,
-    `actualYield` DOUBLE NULL,
-    `costs` LONGTEXT NULL,
-    `weatherSnapshot` LONGTEXT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-
-    INDEX `crop_monthly_reports_cropId_createdAt_idx`(`cropId`, `createdAt`),
-    INDEX `crop_monthly_reports_cropId_stageIndex_idx`(`cropId`, `stageIndex`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `report_feedback` (
-    `id` VARCHAR(191) NOT NULL,
-    `reportId` VARCHAR(191) NOT NULL,
-    `authorId` VARCHAR(191) NOT NULL,
-    `message` TEXT NOT NULL,
-    `parentId` VARCHAR(191) NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-
-    INDEX `report_feedback_reportId_createdAt_idx`(`reportId`, `createdAt`),
-    INDEX `report_feedback_parentId_idx`(`parentId`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `crop_stage_messages` (
-    `id` VARCHAR(191) NOT NULL,
-    `cropId` VARCHAR(191) NOT NULL,
-    `userId` VARCHAR(191) NOT NULL,
-    `stageIndex` INTEGER NOT NULL,
-    `stageName` VARCHAR(191) NOT NULL,
-    `message` TEXT NOT NULL,
-    `isAdminReply` BOOLEAN NOT NULL DEFAULT false,
-    `parentId` VARCHAR(191) NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-
-    INDEX `crop_stage_messages_cropId_createdAt_idx`(`cropId`, `createdAt`),
-    INDEX `crop_stage_messages_cropId_stageIndex_idx`(`cropId`, `stageIndex`),
-    INDEX `crop_stage_messages_parentId_idx`(`parentId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -608,9 +494,6 @@ ALTER TABLE `chat_read_receipts` ADD CONSTRAINT `chat_read_receipts_messageId_fk
 ALTER TABLE `chat_read_receipts` ADD CONSTRAINT `chat_read_receipts_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `crop_guideline_stages` ADD CONSTRAINT `crop_guideline_stages_guidelineId_fkey` FOREIGN KEY (`guidelineId`) REFERENCES `crop_guidelines`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `inquiries` ADD CONSTRAINT `inquiries_assignedToId_fkey` FOREIGN KEY (`assignedToId`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -656,34 +539,13 @@ ALTER TABLE `item_transactions` ADD CONSTRAINT `item_transactions_adminId_fkey` 
 ALTER TABLE `item_transactions` ADD CONSTRAINT `item_transactions_itemStackId_fkey` FOREIGN KEY (`itemStackId`) REFERENCES `item_stacks`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `planting_reports` ADD CONSTRAINT `planting_reports_croppingSeasonId_fkey` FOREIGN KEY (`croppingSeasonId`) REFERENCES `planting_seasons`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `planting_reports` ADD CONSTRAINT `planting_reports_varietyId_fkey` FOREIGN KEY (`varietyId`) REFERENCES `seed_varieties`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `user_preferences` ADD CONSTRAINT `user_preferences_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `registered_crops` ADD CONSTRAINT `registered_crops_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `registered_crops` ADD CONSTRAINT `registered_crops_guidelineId_fkey` FOREIGN KEY (`guidelineId`) REFERENCES `crop_guidelines`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `crop_monthly_reports` ADD CONSTRAINT `crop_monthly_reports_cropId_fkey` FOREIGN KEY (`cropId`) REFERENCES `registered_crops`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `report_feedback` ADD CONSTRAINT `report_feedback_reportId_fkey` FOREIGN KEY (`reportId`) REFERENCES `crop_monthly_reports`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `report_feedback` ADD CONSTRAINT `report_feedback_authorId_fkey` FOREIGN KEY (`authorId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `report_feedback` ADD CONSTRAINT `report_feedback_parentId_fkey` FOREIGN KEY (`parentId`) REFERENCES `report_feedback`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `crop_stage_messages` ADD CONSTRAINT `crop_stage_messages_cropId_fkey` FOREIGN KEY (`cropId`) REFERENCES `registered_crops`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `crop_stage_messages` ADD CONSTRAINT `crop_stage_messages_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `crop_stage_messages` ADD CONSTRAINT `crop_stage_messages_parentId_fkey` FOREIGN KEY (`parentId`) REFERENCES `crop_stage_messages`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `seminars` ADD CONSTRAINT `seminars_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

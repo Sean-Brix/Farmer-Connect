@@ -35,7 +35,7 @@
         "sharp": "^0.34.2"
     },
     "scripts": {
-        "start": "node server.js",
+        "start": "prisma generate && node server.js",
         "dev": "prisma migrate deploy && nodemon server.js",
         "setup": "prisma generate && prisma migrate deploy && node prisma/Seeds/index.js",
         "fill": "node prisma/Seeds/index.js",

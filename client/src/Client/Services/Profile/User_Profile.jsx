@@ -48,6 +48,7 @@ export default function Account() {
     useEffect(() => {
         if (profile && !editMode) {
             setTempProfile({
+                // Account Schema Fields Only
                 username: profile.username || '',
                 email: profile.email || '',
                 firstName: profile.firstName || '',
@@ -55,50 +56,9 @@ export default function Account() {
                 middleName: profile.middleName || '',
                 extensionName: profile.extensionName || '',
                 sex: profile.sex || 'Male',
-                client_profile: profile.client_profile || 'Student',
-                
-                // Contact Information
-                mobileNumber: profile.mobileNumber || '',
-                landlineNumber: profile.landlineNumber || '',
-                
-                // Address Information
-                street: profile.street || '',
-                barangay: profile.barangay || '',
-                municipality: profile.municipality || '',
-                province: profile.province || '',
-                region: profile.region || '',
-                houseNumber: profile.houseNumber || '',
-                address: profile.address || '',
-                
-                // Birth Information
-                birthMunicipality: profile.birthMunicipality || '',
-                birthProvince: profile.birthProvince || '',
-                birthCountry: profile.birthCountry || '',
+                client_profile: profile.client_profile || 'Other',
+                contactNumber: profile.contactNumber || '',
                 dateOfBirth: profile.dateOfBirth ? new Date(profile.dateOfBirth).toISOString().split('T')[0] : '',
-                
-                // Personal Details
-                religion: profile.religion || '',
-                otherReligionSpecify: profile.otherReligionSpecify || '',
-                civilStatus: profile.civilStatus || '',
-                spouseName: profile.spouseName || '',
-                
-                // Household Information
-                femaleHouseholdMembers: profile.femaleHouseholdMembers || '',
-                maleHouseholdMembers: profile.maleHouseholdMembers || '',
-                isHouseholdHead: profile.isHouseholdHead || false,
-                householdHeadName: profile.householdHeadName || '',
-                relationshipToHead: profile.relationshipToHead || '',
-                
-                // Government ID Information
-                hasGovId: profile.hasGovId || false,
-                govIdType: profile.govIdType || '',
-                govIdNumber: profile.govIdNumber || '',
-                
-                // Education
-                education: profile.education || '',
-                
-                // PWD Information
-                isPWD: profile.isPWD || false,
                 disabilityType: profile.disabilityType || '',
                 
                 // Livelihood Information
@@ -437,67 +397,9 @@ export default function Account() {
             middleName: profile.middleName || '',
             extensionName: profile.extensionName || '',
             sex: profile.sex || 'Male',
-            client_profile: profile.client_profile || 'Student',
-            
-            // Contact Information
-            mobileNumber: profile.mobileNumber || '',
-            landlineNumber: profile.landlineNumber || '',
-            
-            // Address Information
-            street: profile.street || '',
-            barangay: profile.barangay || '',
-            municipality: profile.municipality || '',
-            province: profile.province || '',
-            region: profile.region || '',
-            houseNumber: profile.houseNumber || '',
-            address: profile.address || '',
-            
-            // Birth Information
-            birthMunicipality: profile.birthMunicipality || '',
-            birthProvince: profile.birthProvince || '',
-            birthCountry: profile.birthCountry || '',
+            client_profile: profile.client_profile || 'Other',
+            contactNumber: profile.contactNumber || '',
             dateOfBirth: profile.dateOfBirth ? new Date(profile.dateOfBirth).toISOString().split('T')[0] : '',
-            
-            // Personal Details
-            religion: profile.religion || '',
-            otherReligionSpecify: profile.otherReligionSpecify || '',
-            civilStatus: profile.civilStatus || '',
-            spouseName: profile.spouseName || '',
-            
-            // Household Information
-            femaleHouseholdMembers: profile.femaleHouseholdMembers || '',
-            maleHouseholdMembers: profile.maleHouseholdMembers || '',
-            isHouseholdHead: profile.isHouseholdHead || false,
-            householdHeadName: profile.householdHeadName || '',
-            relationshipToHead: profile.relationshipToHead || '',
-            
-            // Government ID Information
-            hasGovId: profile.hasGovId || false,
-            govIdType: profile.govIdType || '',
-            govIdNumber: profile.govIdNumber || '',
-            
-            // Education
-            education: profile.education || '',
-            
-            // PWD Information
-            isPWD: profile.isPWD || false,
-            disabilityType: profile.disabilityType || '',
-            
-            // Livelihood Information
-            livelihoodProfile: profile.livelihoodProfile || [],
-            farmingActivities: profile.farmingActivities || [],
-            fishingActivities: profile.fishingActivities || [],
-            farmworkActivities: profile.farmworkActivities || [],
-            youthActivities: profile.youthActivities || [],
-            otherCropsSpecify: profile.otherCropsSpecify || '',
-            livestockSpecify: profile.livestockSpecify || '',
-            fishingOthersSpecify: profile.fishingOthersSpecify || '',
-            farmworkOthersSpecify: profile.farmworkOthersSpecify || '',
-            youthOthersSpecify: profile.youthOthersSpecify || '',
-            
-            // Income Information
-            grossAnnualIncome: profile.grossAnnualIncome || '',
-            incomeSource: profile.incomeSource || '',
         });
         setFormErrors({});
         setEditMode(true);
