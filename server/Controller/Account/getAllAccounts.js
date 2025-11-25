@@ -3,6 +3,11 @@ const prisma = new PrismaClient();
 
 async function getAllAccounts(req, res) {
     try {
+        // Pagination parameters
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
         const filters = {
             roles: req.query.roles,
             client_profile: req.query.client_profile,
@@ -38,53 +43,65 @@ async function getAllAccounts(req, res) {
 
         if (filters.search) {
             where.OR = [
-                { username: { contains: filters.search } },
-                {
-                    firstName: {
-                        contains: filters.search,
-                    },
-                },
-                { surname: { contains: filters.search } },
-                { email: { contains: filters.search } },
+                { username: { contains: filters.search, mode: 'insensitive' } },
+                { firstName: { contains: filters.search, mode: 'insensitive' } },
+                { surname: { contains: filters.search, mode: 'insensitive' } },
+                { email: { contains: filters.search, mode: 'insensitive' } },
             ];
         }
 
         if (filters.order) {
-            if (filters.order === 'Username') {
+            if (filters.order === 'username') {
                 orderBy.username = 'asc';
-            } else if (filters.order === 'Firstname') {
+            } else if (filters.order === 'firstname') {
                 orderBy.firstName = 'asc';
-            } else if (filters.order === 'surname') {
+            } else if (filters.order === 'lastname') {
                 orderBy.surname = 'asc';
-            } else if (filters.order === 'Date Created') {
-                orderBy.createdAt = 'asc';
-            } else if (filters.order === 'Recently Updated') {
+            } else if (filters.order === 'created_at') {
+                orderBy.createdAt = 'desc';
+            } else if (filters.order === 'updated_at') {
                 orderBy.updatedAt = 'desc';
             }
         } else {
-            orderBy.createdAt = 'asc';
+            orderBy.createdAt = 'desc';
         }
-        const accounts = await prisma.account.findMany({
-            select: {
-                id: true,
-                username: true,
-                firstName: true,
-                surname: true,
-                email: true,
-                access: true,
-                client_profile: true,
-            },
-            where: where,
-            orderBy: orderBy,
-        });
 
+        // Execute both queries in parallel for better performance
+        const [accounts, totalCount] = await Promise.all([
+            prisma.account.findMany({
+                select: {
+                    id: true,
+                    username: true,
+                    firstName: true,
+                    surname: true,
+                    email: true,
+                    access: true,
+                    client_profile: true,
+                },
+                where: where,
+                orderBy: orderBy,
+                skip: skip,
+                take: limit,
+            }),
+            prisma.account.count({ where: where })
+        ]);
+
+        // Transform access field for display
         accounts.forEach((account) => {
             if (account.access === 'Super_Admin') {
                 account.access = 'Super Admin';
             }
         });
 
-        return res.status(200).json({ list: accounts });
+        return res.status(200).json({ 
+            list: accounts,
+            pagination: {
+                page: page,
+                limit: limit,
+                total: totalCount,
+                totalPages: Math.ceil(totalCount / limit)
+            }
+        });
     } 
     
     catch (error) {

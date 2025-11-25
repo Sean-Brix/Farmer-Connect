@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTheme } from '../../../../contexts/ThemeContext';
 
@@ -29,7 +30,7 @@ export default function User({ user, details, refetchRow, tabular = true }) {
 
     const Modal = ({ open, onClose, children }) => {
         if (!open) return null;
-        return (
+        return createPortal(
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 transition-all duration-300 p-4">
                 <div className={`rounded-xl sm:rounded-2xl shadow-2xl max-w-6xl w-full relative animate-fade-in max-h-[90vh] flex flex-col border ${
                     isDark 
@@ -99,7 +100,8 @@ export default function User({ user, details, refetchRow, tabular = true }) {
                         {children}
                     </div>
                 </div>
-            </div>
+            </div>,
+            document.body
         );
     };
 

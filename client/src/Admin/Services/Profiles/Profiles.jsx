@@ -1,64 +1,72 @@
 
 import User from './User/User.jsx';
 import RegisterUserModal from './RegisterUserModal.jsx';
+import AccountTableSkeleton from './AccountTableSkeleton.jsx';
 import { useEffect, useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTheme } from '../../../contexts/ThemeContext';
+import { useDebounce } from '../../../hooks/useDebounce';
 
 export default function Profiles({ details }) {
     const { theme, isDark } = useTheme();
     const queryClient = useQueryClient();
-    const [refreshToken, setRefreshToken] = useState(Date.now());
     const [showRegisterModal, setShowRegisterModal] = useState(false);
+    
+    // Pagination state
+    const [page, setPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    
     const [filter, setFilter] = useState({
         roles: 'none',
         client_profile: 'none',
         order: 'none',
-        search: 'none',
+        search: '',
     });
 
-    const { isLoading, error, data, refetch } = useQuery({
-        queryKey: ['accounts', filter, refreshToken],
+    // Debounce search to reduce API calls
+    const debouncedSearch = useDebounce(filter.search, 300);
+
+    // Build query parameters
+    const buildQueryParams = () => {
+        const params = new URLSearchParams();
+        params.append('page', page);
+        params.append('limit', itemsPerPage);
+        
+        if (filter.roles !== 'none') params.append('roles', filter.roles);
+        if (filter.client_profile !== 'none') params.append('client_profile', filter.client_profile);
+        if (filter.order !== 'none') params.append('order', filter.order);
+        if (debouncedSearch && debouncedSearch !== 'none') params.append('search', debouncedSearch);
+        
+        return params.toString();
+    };
+
+    // Fetch accounts with pagination
+    const { isLoading, error, data, isPreviousData } = useQuery({
+        queryKey: ['accounts', { ...filter, search: debouncedSearch, page, itemsPerPage }],
         queryFn: async () => {
-            const queryString = Object.entries(filter)
-                .filter(([key, value]) => value !== 'none' && value !== '')
-                .map(([key, value]) => `${key}=${value}`)
-                .join('&');
-
-            const url = `/api/account/all?${queryString}`;
-
-            if (Object.values(filter).every((value) => value === 'none')) {
-                const response = await fetch('/api/account/all');
-                if (!response.ok) {
-                    throw new Error('Something went wrong');
-                }
-                return response.json();
-            } else {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error('Something went wrong');
-                }
-                return response.json();
+            const queryString = buildQueryParams();
+            const response = await fetch(`/api/account/all?${queryString}`);
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch accounts');
             }
+            
+            return response.json();
         },
+        keepPreviousData: true, // Keep old data while fetching new data
+        staleTime: 5 * 60 * 1000, // Data is fresh for 5 minutes
+        cacheTime: 10 * 60 * 1000, // Cache data for 10 minutes
     });
 
-    useEffect(() => {
-        refetch();
-    }, [filter, refetch]);
-
-
-    // Pagination state
-    const [page, setPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
-    const userList = data?.list || [];
-    const totalPages = Math.ceil(userList.length / itemsPerPage);
-    const paginatedList = userList.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-
-    // Reset to first page if filter changes or userList changes
+    // Reset to first page when filters change
     useEffect(() => {
         setPage(1);
-    }, [filter, userList.length, itemsPerPage]);
+    }, [filter.roles, filter.client_profile, filter.order, debouncedSearch, itemsPerPage]);
+
+    // Extract data
+    const userList = data?.list || [];
+    const pagination = data?.pagination || { total: 0, totalPages: 0 };
+    const totalPages = pagination.totalPages;
 
     return (
         <div className={`min-h-screen pt-6 px-2 sm:px-4 md:px-6 lg:px-0 ${
@@ -160,16 +168,7 @@ export default function Profiles({ details }) {
                 <div className={`rounded-xl shadow-lg border overflow-hidden ${
                     isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-green-100'
                 }`} style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
-                    {isLoading ? (
-                        <div className={`text-center py-12 font-medium text-base ${
-                            isDark ? 'text-gray-400 bg-gray-800' : 'text-gray-500 bg-green-50'
-                        }`}>
-                            <div className="inline-flex items-center gap-3">
-                                <div className="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-                                Loading profiles...
-                            </div>
-                        </div>
-                    ) : error ? (
+                    {error ? (
                         <div className={`text-center py-12 font-medium text-base ${
                             isDark ? 'text-red-400 bg-gray-800' : 'text-red-500 bg-red-50'
                         }`}>
@@ -219,24 +218,27 @@ export default function Profiles({ details }) {
                                     <tbody className={`divide-y ${
                                         isDark ? 'bg-gray-800 divide-gray-700' : 'bg-white divide-green-100'
                                     }`}>
-                                        {paginatedList.map((user, idx) => (
-                                            <tr
-                                                key={user.id}
-                                                className={`transition-colors duration-200 ${
-                                                    isDark 
-                                                        ? (idx % 2 === 0 ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-750 hover:bg-gray-700')
-                                                        : (idx % 2 === 0 ? 'bg-white hover:bg-green-50' : 'bg-green-25 hover:bg-green-75')
-                                                } hover:shadow-sm`} 
-                                                style={{ lineHeight: '1.25' }}
-                                            >
-                                                <User
-                                                    user={user}
-                                                    details={details}
-                                                    refetchRow={() => setRefreshToken(Date.now())}
-                                                    tabular={true}
-                                                />
-                                            </tr>
-                                        ))}
+                                        {isLoading || isPreviousData ? (
+                                            <AccountTableSkeleton rows={itemsPerPage} isDark={isDark} />
+                                        ) : (
+                                            userList.map((user, idx) => (
+                                                <tr
+                                                    key={user.id}
+                                                    className={`transition-colors duration-200 ${
+                                                        isDark 
+                                                            ? 'hover:bg-gray-700' 
+                                                            : 'hover:bg-green-50'
+                                                    }`}
+                                                >
+                                                    <User
+                                                        user={user}
+                                                        details={details}
+                                                        refetchRow={() => queryClient.invalidateQueries({ queryKey: ['accounts'] })}
+                                                        tabular={true}
+                                                    />
+                                                </tr>
+                                            ))
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -251,7 +253,7 @@ export default function Profiles({ details }) {
                             <span className={`text-xs ${
                                 isDark ? 'text-gray-400' : 'text-gray-500'
                             }`}>
-                                Showing {paginatedList.length} of {userList.length} profiles
+                                Showing {userList.length} of {pagination.total} profiles (Page {page} of {totalPages})
                             </span>
                             
                             <div className="flex items-center gap-2">
@@ -488,8 +490,8 @@ export default function Profiles({ details }) {
                 open={showRegisterModal}
                 onClose={() => setShowRegisterModal(false)}
                 onSuccess={() => {
-                    setRefreshToken(Date.now());
-                    queryClient.invalidateQueries(['accounts']);
+                    queryClient.invalidateQueries({ queryKey: ['accounts'] });
+                    setShowRegisterModal(false);
                 }}
                 isDark={isDark}
             />
