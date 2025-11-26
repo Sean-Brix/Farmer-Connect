@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../config/database.js';
 import auditLogger from '../../Services/auditLogger.js';
-
-const prisma = new PrismaClient();
 
 async function updateParticipant(req, res) {
     const { new_status } = req.body;

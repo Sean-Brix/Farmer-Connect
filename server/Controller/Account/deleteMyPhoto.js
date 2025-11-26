@@ -1,8 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+// PrismaClient import removed - using centralized db
+import prisma from '../../config/database.js';
 import { deleteFile } from '../../config/firebase.js';
 import { clearFileCache } from '../../config/firebaseCache.js';
 
-const prisma = new PrismaClient();
+// Using centralized prisma instance
 
 // Function to delete a user's profile photo from Firebase Storage
 async function deleteMyPhoto(req, res) {

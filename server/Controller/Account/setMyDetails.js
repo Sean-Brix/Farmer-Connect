@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import prisma from '../../config/database.js';
 
 async function setMyDetails(req, res) {
     const userId = req.user.id;

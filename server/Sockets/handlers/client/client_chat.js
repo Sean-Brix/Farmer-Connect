@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../../../config/database.js';
 
 function client_chat(io, socket) {
     console.log(`💬 Chat client connected: ${socket.user?.username || socket.user?.id} (ID: ${socket.id})`);

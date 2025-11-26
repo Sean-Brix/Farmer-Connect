@@ -1,10 +1,11 @@
+import prisma from '../../config/database.js';
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { PrismaClient } from '@prisma/client'
+// PrismaClient import removed - using centralized db
 import { isAuthenticated } from '../../Utils/jwt_token.js'
 import { getFileUrlCached } from '../../config/firebaseCache.js'
 
-const prisma = new PrismaClient();
+// Using centralized prisma instance
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

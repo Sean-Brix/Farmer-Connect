@@ -1,8 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+// PrismaClient import removed - using centralized db
+import prisma from '../../config/database.js';
 import socketLogoutService from '../../Services/socketLogoutService.js';
 import auditLogger from '../../Services/auditLogger.js';
 
-const prisma = new PrismaClient();
+// Using centralized prisma instance
 
 export const resolveInquiry = async (req, res) => {
     try {

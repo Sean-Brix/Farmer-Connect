@@ -1,24 +1,8 @@
-import { PrismaClient } from '@prisma/client';
+// Using centralized database instance
+import prisma from '../config/database.js';
 
-// Singleton Prisma instance with optimized pool settings for Aiven free tier
-let prisma = null;
-
+// Export the centralized prisma instance for compatibility
 export function getPrismaClient() {
-    if (!prisma) {
-        // Pool settings are configured via connection string parameters
-        // For Aiven: connection_limit, pool_timeout, etc. are in DATABASE_URL
-        prisma = new PrismaClient({
-            log: ['error']
-        });
-
-        // Graceful shutdown
-        process.on('SIGTERM', async () => {
-            await prisma?.$disconnect();
-        });
-        process.on('SIGINT', async () => {
-            await prisma?.$disconnect();
-        });
-    }
     return prisma;
 }
 

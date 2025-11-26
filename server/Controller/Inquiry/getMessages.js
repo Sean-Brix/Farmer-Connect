@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../../config/database.js';
 
 /**
  * Get messages for an inquiry (replaces socket polling)

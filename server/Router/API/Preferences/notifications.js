@@ -1,8 +1,9 @@
+import prisma from '../../../config/database.js';
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+// PrismaClient import removed - using centralized db
 import { isAuthenticated } from '../../../Utils/jwt_token.js';
 
-const prisma = new PrismaClient();
+// Using centralized prisma instance
 const router = express.Router();
 
 // GET /api/preferences/notifications - Get user notification preferences

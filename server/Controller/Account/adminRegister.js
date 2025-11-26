@@ -1,9 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+// PrismaClient import removed - using centralized db
+import prisma from '../../config/database.js';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const prisma = new PrismaClient();
+// Using centralized prisma instance
 
 async function adminRegister(req, res) {
     // Validate input

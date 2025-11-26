@@ -1,8 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient({
-    log: ['error'],
-});
+import prisma from '../../config/database.js';
 
 /**
  * Get Audit Logs with Pagination and Filtering (OPTIMIZED)

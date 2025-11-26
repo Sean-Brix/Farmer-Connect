@@ -1,11 +1,12 @@
+import prisma from '../../config/database.js';
 import auditLogger from '../../Services/auditLogger.js';
 import socketLogoutService from '../../Services/socketLogoutService.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
+// PrismaClient import removed - using centralized db
 
 dotenv.config();
-const prisma = new PrismaClient();
+// Using centralized prisma instance
 
 async function logout(req, res) {
     try {

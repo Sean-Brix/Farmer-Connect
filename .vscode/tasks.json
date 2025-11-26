@@ -46,6 +46,22 @@
 			"command": "cd server; npx prisma migrate dev --name add_inquiry_survey_seed_audit_actions --skip-generate",
 			"isBackground": false,
 			"group": "build"
+		},
+		{
+			"label": "Start Server",
+			"type": "shell",
+			"command": "cd server && npm start",
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Start Server",
+			"type": "shell",
+			"command": "cd server; npm start",
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
 		}
 	]
 }

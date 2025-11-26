@@ -3,9 +3,7 @@
  * Handles the bot interaction flow for presenting FAQ categories to users
  */
 
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../config/database.js';
 
 class BotService {
     constructor() {

@@ -1,9 +1,10 @@
+import prisma from '../../../config/database.js';
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+// PrismaClient import removed - using centralized db
 import { cookieAuth } from '../../../Middlewares/Auth/cookieAuth.js';
 
 const router = express.Router();
-const prisma = new PrismaClient();
+// Using centralized prisma instance
 
 router.get('/details/me', cookieAuth, async (req, res) => {
   try {

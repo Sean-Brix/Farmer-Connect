@@ -1,8 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+// PrismaClient import removed - using centralized db
+import prisma from '../../config/database.js';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
-const prisma = new PrismaClient();
+// Using centralized prisma instance
 
 export default async function resetPassword(req, res) {
   try {

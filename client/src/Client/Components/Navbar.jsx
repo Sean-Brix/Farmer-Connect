@@ -804,7 +804,7 @@ export default function Navbar({refresh}) {
                                         </NavLink>
                                     </li>
 
-                                    <li>
+                                    {/* <li>
                                         <NavLink
                                             to="/chat-support"
                                             className={({ isActive }) =>
@@ -829,35 +829,8 @@ export default function Navbar({refresh}) {
                                             </svg>
                                             Chat Support
                                         </NavLink>
-                                    </li>
+                                    </li> */}
 
-                                    <li>
-                                        <NavLink
-                                            to="/report"
-                                            className={({ isActive }) =>
-                                                `flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-200 font-medium ${isActive ? 
-                                                    (theme === 'dark' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-emerald-100 text-emerald-900') : 
-                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-gray-700 hover:bg-emerald-50')
-                                                }`
-                                            }
-                                        >
-                                            <svg
-                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    d="M9 17h6l3 3v-3h2V9h-2M4 4h11v8H9l-3 3v-3H4V4z"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                            Report
-                                        </NavLink>
-                                    </li>
-                                    
                             {/* Survey link removed */}
                                 </ul>
                             </li>

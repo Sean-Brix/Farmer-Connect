@@ -1,9 +1,10 @@
+import prisma from '../../../config/database.js';
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+// PrismaClient import removed - using centralized db
 import { authenticateToken } from '../../../Middlewares/JWT/authenticateToken.js';
 
 const router = express.Router();
-const prisma = new PrismaClient();
+// Using centralized prisma instance
 
 // GET /api/preferences/theme - Get user's theme preference
 router.get('/', authenticateToken, async (req, res) => {

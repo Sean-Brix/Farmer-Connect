@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../../config/database.js';
 
 // Return the latest active inquiry (PENDING or IN_PROGRESS) for the logged-in user
 export const getActiveInquiryForUser = async (req, res) => {

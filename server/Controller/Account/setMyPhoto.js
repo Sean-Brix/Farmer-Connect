@@ -1,9 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+// PrismaClient import removed - using centralized db
+import prisma from '../../config/database.js';
 import { uploadFile, deleteFile } from '../../config/firebase.js';
 import { clearFileCache } from '../../config/firebaseCache.js';
 import sharp from 'sharp';
 
-const prisma = new PrismaClient();
+// Using centralized prisma instance
 
 // Function to set a user's profile photo using Firebase Storage
 async function setMyPhoto(req, res) {

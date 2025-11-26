@@ -1,6 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+// PrismaClient import removed - using centralized db
+import prisma from '../../config/database.js';
 import auditLogger from '../../Services/auditLogger.js';
-const prisma = new PrismaClient();
+// Using centralized prisma instance
 
 async function addItem(req, res) {
     try {

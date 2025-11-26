@@ -1,10 +1,11 @@
-import { PrismaClient } from '@prisma/client';
+// PrismaClient import removed - using centralized db
+import prisma from '../../config/database.js';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
 import { sendMail } from '../../Services/emailService.js';
 
 dotenv.config();
-const prisma = new PrismaClient();
+// Using centralized prisma instance
 
 export default async function forgotPassword(req, res) {
   try {

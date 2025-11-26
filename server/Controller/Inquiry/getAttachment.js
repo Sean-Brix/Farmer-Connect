@@ -1,9 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+// PrismaClient import removed - using centralized db
+import prisma from '../../config/database.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const prisma = new PrismaClient();
+// Using centralized prisma instance
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

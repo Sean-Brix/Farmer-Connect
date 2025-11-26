@@ -1,8 +1,6 @@
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../../config/database.js';
 
 export function socketAuth(socket, next) {
     try {

@@ -1,5 +1,6 @@
 
-import { PrismaClient } from '@prisma/client';
+// PrismaClient import removed - using centralized db
+import prisma from '../../../config/database.js';
 import { CLIENT_EVENTS, CLIENT_LISTENERS, ADMIN_EVENTS, ROOMS, ERROR_MESSAGES } from '../../utils/socket-events.js';
 import { 
     getUnreadCount, 
@@ -8,7 +9,7 @@ import {
     autoAssignInquiry 
 } from '../../utils/inquiry-helpers.js';
 
-const prisma = new PrismaClient();
+// Using centralized prisma instance
 
 function client_inquiry(io, socket) {
     console.log(`Client connected: ${socket.user?.username || socket.user?.id} (ID: ${socket.id})`);

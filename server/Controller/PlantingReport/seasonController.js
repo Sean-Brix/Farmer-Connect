@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import prisma from '../../config/database.js';
 
 // CREATE - Create a new planting season
 export async function createPlantingSeason(req, res) {

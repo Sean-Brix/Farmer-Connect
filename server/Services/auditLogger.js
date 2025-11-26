@@ -1,8 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient({
-    log: ['error'],
-});
+import prisma from '../config/database.js';
 
 // Batch writing configuration for high-traffic scenarios
 const BATCH_ENABLED = true; // Set to false to disable batching

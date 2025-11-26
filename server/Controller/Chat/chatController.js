@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../../config/database.js';
 
 // Get all users for chat (to start conversations)
 export const getUsers = async (req, res) => {

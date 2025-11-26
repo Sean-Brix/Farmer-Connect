@@ -1,6 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../config/database.js';
 import auditLogger from '../../Services/auditLogger.js';
-const prisma = new PrismaClient();
 
 async function addSeminar(req, res) {
     try {
