@@ -8,7 +8,7 @@ export function getPrismaClient() {
         // Pool settings are configured via connection string parameters
         // For Aiven: connection_limit, pool_timeout, etc. are in DATABASE_URL
         prisma = new PrismaClient({
-            log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error']
+            log: ['error']
         });
 
         // Graceful shutdown
@@ -141,16 +141,7 @@ export function requestTimingMiddleware(req, res, next) {
     
     res.on('finish', () => {
         const duration = Date.now() - startTime;
-        
-        // Log slow requests (> 1 second)
-        if (duration > 1000) {
-            console.warn('[SLOW REQUEST]', {
-                method: req.method,
-                path: req.path,
-                duration: `${duration}ms`,
-                queueStats: requestQueue.getStats()
-            });
-        }
+        // Slow request monitoring disabled for cleaner logs
     });
     
     next();

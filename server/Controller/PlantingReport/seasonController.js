@@ -70,8 +70,6 @@ export async function getAllPlantingSeasons(req, res) {
             }
         });
 
-        console.log(`📅 [Planting Season] Retrieved ${seasons.length} seasons`);
-
         return res.status(200).json({
             success: true,
             message: 'Planting seasons retrieved successfully',
@@ -99,9 +97,7 @@ export async function getActiveSeasons(req, res) {
             }
         });
 
-        console.log(`📅 [Planting Season] Retrieved ${seasons.length} active seasons`);
-
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
             message: 'Active planting seasons retrieved successfully',
             seasons

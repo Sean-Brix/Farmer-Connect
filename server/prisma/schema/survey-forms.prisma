@@ -12,6 +12,10 @@ model SurveyForm {
   responses   SurveyResponse[]
   statistics  SurveyStatistic[] @relation("SurveyStatistics")
 
+  @@index([status])
+  @@index([category])
+  @@index([createdAt])
+  @@index([status, category]) // Composite index for filtered queries
   @@index([createdById], map: "survey_forms_createdById_fkey")
   @@map("survey_forms")
 }
@@ -44,6 +48,8 @@ model SurveyResponse {
   surveyForm   SurveyForm     @relation(fields: [surveyFormId], references: [id], onDelete: Cascade)
   user         Account?       @relation("SurveyResponses", fields: [userId], references: [id])
 
+  @@index([surveyFormId])
+  @@index([submittedAt])
   @@index([surveyFormId], map: "survey_responses_surveyFormId_fkey")
   @@index([userId], map: "survey_responses_userId_fkey")
   @@map("survey_responses")

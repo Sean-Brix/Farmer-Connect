@@ -15,11 +15,7 @@ export const getSurveyResponses = async (req, res) => {
         const skip = (parseInt(page) - 1) * parseInt(limit);
         const take = parseInt(limit);
 
-        // Check if survey form exists
-        const surveyForm = await prisma.surveyForm.findUnique({
-            where: { id: surveyFormId },
-            select: { id: true, title: true }
-        });
+
 
         if (!surveyForm) {
             return res.status(404).json({
@@ -32,30 +28,56 @@ export const getSurveyResponses = async (req, res) => {
         const orderBy = {};
         orderBy[sortBy] = sortOrder.toLowerCase();
 
-        // Get total count for pagination
-        const total = await prisma.surveyResponse.count({
-            where: { surveyFormId }
-        });
-
-        // Get survey responses
-        const responsesRaw = await prisma.surveyResponse.findMany({
-            where: { surveyFormId },
-            skip,
-            take,
-            orderBy,
-            include: {
-                user: {
-                    select: { id: true, firstName: true, surname: true, email: true }
-                },
-                answers: {
-                    include: {
-                        field: {
-                            select: { id: true, label: true, type: true, options: true }
+        // Execute queries in parallel for better performance
+        const [surveyForm, total, responsesRaw] = await Promise.all([
+            // Check if survey form exists
+            prisma.surveyForm.findUnique({
+                where: { id: surveyFormId },
+                select: { id: true, title: true }
+            }),
+            
+            // Get total count
+            prisma.surveyResponse.count({
+                where: { surveyFormId }
+            }),
+            
+            // Get survey responses with selective fields
+            prisma.surveyResponse.findMany({
+                where: { surveyFormId },
+                skip,
+                take,
+                orderBy,
+                select: {
+                    id: true,
+                    surveyFormId: true,
+                    userId: true,
+                    submittedAt: true,
+                    user: {
+                        select: { 
+                            id: true, 
+                            firstName: true, 
+                            surname: true, 
+                            email: true 
+                        }
+                    },
+                    answers: {
+                        select: {
+                            id: true,
+                            fieldId: true,
+                            answer: true,
+                            field: {
+                                select: { 
+                                    id: true, 
+                                    label: true, 
+                                    type: true, 
+                                    options: true 
+                                }
+                            }
                         }
                     }
                 }
-            }
-        });
+            })
+        ]);
 
         const parseOptions = (opts) => {
             if (opts == null) return null;

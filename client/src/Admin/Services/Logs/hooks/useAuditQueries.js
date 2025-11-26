@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 // =================================================================
-// AUDIT LOGS QUERY
+// AUDIT LOGS QUERY (OPTIMIZED)
 // =================================================================
 
 export const useAuditLogs = (filters = {}) => {
@@ -69,17 +69,17 @@ export const useAuditLogs = (filters = {}) => {
 
             return result.data;
         },
-        staleTime: 60 * 1000, // 60 seconds - reduce unnecessary refetches
-        gcTime: 10 * 60 * 1000, // 10 minutes cache (formerly cacheTime)
-        keepPreviousData: true, // Keep previous data while fetching new page
-        refetchOnWindowFocus: false, // Don't refetch on window focus to reduce load
+        staleTime: 2 * 60 * 1000, // 2 minutes - optimized for batched writes
+        gcTime: 10 * 60 * 1000, // 10 minutes cache
+        placeholderData: (previousData) => previousData, // Keep previous data while loading
+        refetchOnWindowFocus: false, // Don't refetch on window focus
         refetchOnMount: false, // Don't refetch if data is fresh
-        retry: 1, // Reduce retry attempts for faster failure
+        retry: 1, // Reduce retry attempts
     });
 };
 
 // =================================================================
-// AUDIT LOG STATISTICS QUERY
+// AUDIT LOG STATISTICS QUERY (OPTIMIZED)
 // =================================================================
 
 export const useAuditLogStats = (timeRange = '30d') => {
@@ -115,13 +115,14 @@ export const useAuditLogStats = (timeRange = '30d') => {
 
             return result.data;
         },
-        staleTime: 60 * 1000, // 1 minute
-        cacheTime: 5 * 60 * 1000, // 5 minutes
+        staleTime: 5 * 60 * 1000, // 5 minutes - stats don't change often
+        gcTime: 15 * 60 * 1000, // 15 minutes cache
+        refetchOnWindowFocus: false, // Reduce unnecessary refetches
     });
 };
 
 // =================================================================
-// AUDIT LOG FILTERS QUERY
+// AUDIT LOG FILTERS QUERY (OPTIMIZED WITH CACHE HINT)
 // =================================================================
 
 export const useAuditLogFilters = () => {
@@ -151,8 +152,10 @@ export const useAuditLogFilters = () => {
 
             return result.data;
         },
-        staleTime: 5 * 60 * 1000, // 5 minutes - filters don't change often
-        cacheTime: 15 * 60 * 1000, // 15 minutes
+        staleTime: 10 * 60 * 1000, // 10 minutes - filters cached server-side
+        gcTime: 30 * 60 * 1000, // 30 minutes cache
+        refetchOnWindowFocus: false, // Filters rarely change
+        refetchOnMount: false, // Use cached data if available
     });
 };
 

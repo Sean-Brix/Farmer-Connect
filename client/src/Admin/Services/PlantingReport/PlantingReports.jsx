@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Plus, Search, FileText, Calendar, TrendingUp, Users, Filter, Archive, Eye, Settings, Loader } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import ReportModal from './ReportModal';
@@ -36,7 +36,7 @@ const PlantingReports = () => {
         loadData();
     }, []);
 
-    const loadData = async () => {
+    const loadData = useCallback(async () => {
         setIsLoading(true);
         setError(null);
         try {
@@ -55,35 +55,45 @@ const PlantingReports = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [fetchReports, fetchSeasons, fetchVarieties]);
 
-    // Statistics - Only count active (non-archived) reports
-    const activeReports = reports.filter(r => !r.isArchived);
-    const archivedReports = reports.filter(r => r.isArchived);
-    
-    const stats = {
-        totalReports: activeReports.length,
-        totalAreaPlanted: activeReports.reduce((sum, r) => sum + r.areaPlanted, 0).toFixed(2),
-        harvestedReports: activeReports.filter(r => r.dateOfHarvest).length,
-        averageYield: activeReports.filter(r => r.yieldMtPerHa).length > 0
-            ? (activeReports.reduce((sum, r) => sum + (r.yieldMtPerHa || 0), 0) / activeReports.filter(r => r.yieldMtPerHa).length).toFixed(2)
-            : '0.00'
-    };
-
-    // Filter reports based on view mode (active or archived)
-    const reportsToDisplay = viewMode === 'active' ? activeReports : archivedReports;
-    
-    const filteredReports = reportsToDisplay.filter(report => {
-        const matchesSearch = !searchTerm || 
-            report.farmerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            report.farmLocation.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (report.rsbsaNumber && report.rsbsaNumber.toLowerCase().includes(searchTerm.toLowerCase()));
+    // Statistics - Memoized for performance - Only count active (non-archived) reports
+    const { activeReports, archivedReports, stats } = useMemo(() => {
+        const active = reports.filter(r => !r.isArchived);
+        const archived = reports.filter(r => r.isArchived);
         
-        const matchesCropType = !filterCropType || report.typeOfCrop === filterCropType;
-        const matchesSeason = !filterSeason || report.croppingSeasonId === filterSeason;
+        const statistics = {
+            totalReports: active.length,
+            totalAreaPlanted: active.reduce((sum, r) => sum + r.areaPlanted, 0).toFixed(2),
+            harvestedReports: active.filter(r => r.dateOfHarvest).length,
+            averageYield: active.filter(r => r.yieldMtPerHa).length > 0
+                ? (active.reduce((sum, r) => sum + (r.yieldMtPerHa || 0), 0) / active.filter(r => r.yieldMtPerHa).length).toFixed(2)
+                : '0.00'
+        };
 
-        return matchesSearch && matchesCropType && matchesSeason;
-    });
+        return {
+            activeReports: active,
+            archivedReports: archived,
+            stats: statistics
+        };
+    }, [reports]);
+
+    // Filter reports based on view mode (active or archived) - Memoized
+    const filteredReports = useMemo(() => {
+        const reportsToDisplay = viewMode === 'active' ? activeReports : archivedReports;
+        
+        return reportsToDisplay.filter(report => {
+            const matchesSearch = !searchTerm || 
+                report.farmerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                report.farmLocation.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (report.rsbsaNumber && report.rsbsaNumber.toLowerCase().includes(searchTerm.toLowerCase()));
+            
+            const matchesCropType = !filterCropType || report.typeOfCrop === filterCropType;
+            const matchesSeason = !filterSeason || report.croppingSeasonId === filterSeason;
+
+            return matchesSearch && matchesCropType && matchesSeason;
+        });
+    }, [activeReports, archivedReports, viewMode, searchTerm, filterCropType, filterSeason]);
 
     const handleCreateReport = () => {
         setSelectedReport(null);
@@ -95,7 +105,7 @@ const PlantingReports = () => {
         setIsModalOpen(true);
     };
 
-    const handleSaveReport = async (reportData) => {
+    const handleSaveReport = useCallback(async (reportData) => {
         try {
             if (selectedReport) {
                 // Update existing report
@@ -116,10 +126,9 @@ const PlantingReports = () => {
             toast.error(error.message || 'Failed to save report');
             throw error; // Re-throw to let modal handle it if needed
         }
-    };
+    }, [selectedReport, updateReport, createReport]);
 
-    const handleArchiveReport = async (reportId) => {
-
+    const handleArchiveReport = useCallback(async (reportId) => {
         try {
             const archivedReport = await archiveReport(reportId);
             setReports(prev => prev.map(r => 
@@ -131,7 +140,7 @@ const PlantingReports = () => {
             console.error('Error archiving report:', error);
             toast.error(error.message || 'Failed to archive report');
         }
-    };
+    }, [archiveReport]);
 
     const getCropTypeColor = (cropType) => {
         switch (cropType) {

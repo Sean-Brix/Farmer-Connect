@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { 
     TrendingUp, 
     Users, 
@@ -26,11 +26,7 @@ function PlantingReportAnalytics() {
     const [seasons, setSeasons] = useState([]);
     const [varieties, setVarieties] = useState([]);
 
-    useEffect(() => {
-        loadData();
-    }, []);
-
-    const loadData = async () => {
+    const loadData = useCallback(async () => {
         setIsLoading(true);
         try {
             const [reportsData, seasonsData, varietiesData] = await Promise.all([
@@ -47,7 +43,11 @@ function PlantingReportAnalytics() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [fetchReports, fetchSeasons, fetchVarieties]);
+
+    useEffect(() => {
+        loadData();
+    }, [loadData]);
 
     const filteredReports = useMemo(() => {
         let filtered = reports.filter(r => !r.isArchived);

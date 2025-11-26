@@ -104,8 +104,6 @@ export async function getAllSeedVarieties(req, res) {
             orderBy: { [orderByField]: orderByDirection }
         });
 
-        console.log(`🌱 [Seed Variety] Retrieved ${varieties.length} varieties`);
-
         return res.status(200).json({
             success: true,
             message: 'Seed varieties retrieved successfully',
@@ -137,9 +135,7 @@ export async function getVarietiesByCropType(req, res) {
             }
         });
 
-        console.log(`🌱 [Seed Variety] Retrieved ${varieties.length} ${cropType} varieties`);
-
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
             message: `${cropType} varieties retrieved successfully`,
             varieties

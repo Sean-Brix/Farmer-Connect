@@ -27,7 +27,7 @@ class SocketLogoutService {
      */
     disconnectUserOnLogout(userId, reason = 'logout') {
         if (!this.io) {
-            console.error('Socket Logout Service not initialized');
+            // Service not initialized
             return 0;
         }
         
@@ -64,7 +64,7 @@ class SocketLogoutService {
      */
     forceDisconnectUser(userId, adminId, reason = 'admin_action') {
         if (!this.io) {
-            console.error('Socket Logout Service not initialized');
+            // Service not initialized
             return 0;
         }
 
@@ -114,7 +114,7 @@ class SocketLogoutService {
      */
     sendToUser(userId, event, data) {
         if (!this.io) {
-            console.error('Socket Logout Service not initialized');
+            // Service not initialized
             return false;
         }
 

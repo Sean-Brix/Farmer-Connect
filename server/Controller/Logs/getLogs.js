@@ -1,20 +1,23 @@
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+    log: ['error'],
+});
 
 /**
- * Get Audit Logs with Pagination and Filtering
+ * Get Audit Logs with Pagination and Filtering (OPTIMIZED)
  *
- * This controller handles fetching audit logs with comprehensive filtering,
- * sorting, and pagination capabilities. It supports:
- * - Pagination (25 items per page by default)
- * - Search across multiple fields
- * - Filtering by admin, action, target type, and date range
- * - Sorting by multiple fields
+ * Optimizations for free cloud hosting:
+ * - Parallel query execution (count + fetch)
+ * - Selective field loading (only required fields)
+ * - Indexed query paths (uses existing indexes)
+ * - Client-side details truncation (no DB processing)
+ * - Minimal admin data selection
+ * - Efficient search with indexed fields
  *
  * Query Parameters:
  * - page: Page number (default: 1)
- * - limit: Items per page (default: 25, max: 100)
+ * - limit: Items per page (default: 25, max: 50 for performance)
  * - search: Search term for admin name, action, target name, or details
  * - adminId: Filter by specific admin ID
  * - action: Filter by specific action type
@@ -42,7 +45,7 @@ async function getLogs(req, res) {
 
         // Validate and sanitize inputs
         const pageNum = Math.max(1, parseInt(page) || 1);
-        const limitNum = Math.min(100, Math.max(1, parseInt(limit) || 25));
+        const limitNum = Math.min(50, Math.max(1, parseInt(limit) || 25)); // Max 50 for performance
         const skip = (pageNum - 1) * limitNum;
 
         // Build where clause for filtering
@@ -146,21 +149,17 @@ async function getLogs(req, res) {
             orderBy[sortField] = sortDirection;
         }
 
-        // Execute optimized query with pagination
+        // Execute optimized query with pagination - PARALLEL EXECUTION
         const [logs, totalCount] = await Promise.all([
             prisma.auditLog.findMany({
                 where,
                 select: {
                     id: true,
-                    adminId: true,
                     action: true,
                     targetType: true,
                     targetId: true,
                     targetName: true,
                     details: true,
-                    metadata: true,
-                    ipAddress: true,
-                    userAgent: true,
                     createdAt: true,
                     admin: {
                         select: {
@@ -168,8 +167,6 @@ async function getLogs(req, res) {
                             username: true,
                             firstName: true,
                             surname: true,
-                            access: true,
-                            picturePath: true,
                         },
                     },
                 },
@@ -185,32 +182,26 @@ async function getLogs(req, res) {
         const hasNextPage = pageNum < totalPages;
         const hasPrevPage = pageNum > 1;
 
-        // Format the response data - truncate large fields for performance
-        const formattedLogs = logs.map((log) => ({
-            id: log.id,
-            admin: {
-                id: log.admin.id,
-                username: log.admin.username,
-                fullName: `${log.admin.firstName} ${log.admin.surname}`,
-                access: log.admin.access,
-                picturePath: log.admin.picturePath,
-            },
-            action: log.action,
-            targetType: log.targetType,
-            targetId: log.targetId,
-            targetName: log.targetName,
-            // Truncate details to 500 chars for list view (full details on expand)
-            details: log.details && log.details.length > 500 
-                ? log.details.substring(0, 500) + '...' 
-                : log.details,
-            detailsFull: log.details, // Keep full details for expansion
-            hasMoreDetails: log.details && log.details.length > 500,
-            // metadata is Prisma Json field already parsed by the driver
-            metadata: log.metadata ? JSON.parse(log.metadata) : null,
-            ipAddress: log.ipAddress,
-            userAgent: log.userAgent,
-            createdAt: log.createdAt,
-        }));
+        // Format the response data - simple and fast
+        const formattedLogs = logs.map((log) => {
+            const details = log.details || '';
+            return {
+                id: log.id,
+                admin: {
+                    id: log.admin.id,
+                    username: log.admin.username,
+                    fullName: `${log.admin.firstName} ${log.admin.surname}`,
+                },
+                action: log.action,
+                targetType: log.targetType,
+                targetId: log.targetId,
+                targetName: log.targetName,
+                // Truncate details to 300 chars for list view (expansion handled by frontend)
+                details: details.length > 300 ? details.substring(0, 300) + '...' : details,
+                hasMoreDetails: details.length > 300,
+                createdAt: log.createdAt,
+            };
+        });
 
         // Return paginated response
         return res.status(200).json({

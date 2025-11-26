@@ -19,7 +19,7 @@ server.listen(PORT, ()=>{
     console.log(
         '\n\n\n\nLINK: '.cyan + ('http://127.0.0.1:' + PORT + '/\n').yellow.italic.underline
     );
-    console.log('Socket.io: DISABLED - Using HTTP Polling for real-time features'.green);
+
 })
 
 // Socket.io REMOVED - Using HTTP Polling instead

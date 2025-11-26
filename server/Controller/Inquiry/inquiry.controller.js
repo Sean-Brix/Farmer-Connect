@@ -66,13 +66,13 @@ export const createInquiry = async (req, res) => {
             }
         });
 
-        // Audit log
-        await auditLogger.log(
+        // Non-blocking audit log (fire-and-forget)
+        auditLogger.log(
             'Inquiry_Created',
             `inquiry:${inquiry.id}`,
             { inquiryId: inquiry.id, subject },
             userId
-        );
+        ).catch(err => console.error('Audit log failed:', err));
 
         return res.status(201).json({
             success: true,
@@ -223,13 +223,13 @@ export const sendMessage = async (req, res) => {
             }
         });
 
-        // Audit log
-        await auditLogger.log(
+        // Non-blocking audit log (fire-and-forget)
+        auditLogger.log(
             senderType === 'ADMIN' ? 'Inquiry_Admin_Reply' : 'Inquiry_Message_Sent',
             `inquiry:${inquiryId}`,
             { inquiryId, messageId: newMessage.id, attachments: attachmentRecords.length },
             userId
-        );
+        ).catch(err => console.error('Audit log failed:', err));
 
         return res.status(201).json({
             success: true,
@@ -609,13 +609,13 @@ export const resolveInquiry = async (req, res) => {
             }
         });
 
-        // Audit log
-        await auditLogger.log(
+        // Non-blocking audit log (fire-and-forget)
+        auditLogger.log(
             'Inquiry_Resolved',
             `inquiry:${inquiryId}`,
             { inquiryId },
             userId
-        );
+        ).catch(err => console.error('Audit log failed:', err));
 
         return res.status(200).json({
             success: true,

@@ -1,5 +1,15 @@
 import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+    log: ['error'],
+});
+
+// Note: Ensure these indexes exist in your Prisma schema for optimal performance:
+// @@index([dateOfPlanting])
+// @@index([typeOfCrop])
+// @@index([croppingSeasonId])
+// @@index([varietyId])
+// @@index([isArchived])
+// @@index([rsbsaNumber])
 
 // Helper function to calculate yield (mt/ha) 
 function calculateYield(harvestArea, numberOfBags, weightPerBag) {
@@ -128,19 +138,25 @@ export async function getAllPlantingReports(req, res) {
     try {
         const {
             page = 1,
-            limit = 10,
+            limit = 1000, // Increased default for analytics
             userId,
             typeOfCrop,
             croppingSeasonId,
             startDate,
             endDate,
-            search
+            search,
+            includeArchived = 'false' // Don't include archived by default
         } = req.query;
 
         const skip = (parseInt(page) - 1) * parseInt(limit);
 
         // Build where clause
         const where = {};
+
+        // Exclude archived by default for performance
+        if (includeArchived === 'false') {
+            where.isArchived = false;
+        }
 
         if (userId) where.userId = userId;
         if (typeOfCrop) where.typeOfCrop = typeOfCrop;
@@ -162,24 +178,59 @@ export async function getAllPlantingReports(req, res) {
             ];
         }
 
-        // Get total count
-        const total = await prisma.plantingReport.count({ where });
-
-        // Get paginated reports
-        const reports = await prisma.plantingReport.findMany({
-            where,
-            skip,
-            take: parseInt(limit),
-            include: {
-                croppingSeason: true,
-                variety: true
-            },
-            orderBy: {
-                createdAt: 'desc'
-            }
-        });
-
-        console.log(`📋 [Planting Report] Retrieved ${reports.length} of ${total} reports`);
+        // Parallel execution for better performance
+        const [total, reports] = await Promise.all([
+            prisma.plantingReport.count({ where }),
+            prisma.plantingReport.findMany({
+                where,
+                skip,
+                take: parseInt(limit),
+                select: {
+                    id: true,
+                    farmerName: true,
+                    farmLocation: true,
+                    rsbsaNumber: true,
+                    croppingSeasonId: true,
+                    areaPlanted: true,
+                    seedClassification: true,
+                    typeOfCrop: true,
+                    riceIrrigation: true,
+                    varietyId: true,
+                    dateOfPlanting: true,
+                    dateOfExpectedHarvest: true,
+                    plantingMethod: true,
+                    cropInsurance: true,
+                    harvestArea: true,
+                    numberOfBags: true,
+                    weightPerBag: true,
+                    yieldMtPerHa: true,
+                    isArchived: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    croppingSeason: {
+                        select: {
+                            id: true,
+                            name: true,
+                            startDate: true,
+                            endDate: true,
+                            isActive: true
+                        }
+                    },
+                    variety: {
+                        select: {
+                            id: true,
+                            name: true,
+                            cropType: true,
+                            directSeededDAS: true,
+                            transplantedDAS: true
+                        }
+                    }
+                },
+                orderBy: {
+                    dateOfPlanting: 'desc' // Changed from createdAt for better analytics sorting
+                }
+            })
+        ]);
 
         return res.status(200).json({
             success: true,

@@ -16,6 +16,7 @@ export default function Login() {
     const password = useRef(null);
     const [rememberMe, setRememberMe] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const savedUsername = localStorage.getItem('rememberedUsername');
@@ -64,6 +65,7 @@ export default function Login() {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
+            willChange: 'transform',
         }}>
             <div className={`relative flex flex-col md:flex-row w-full max-w-5xl md:h-[600px] rounded-3xl shadow-2xl overflow-hidden border ${
                 theme === 'dark' 
@@ -117,6 +119,7 @@ export default function Login() {
                         className="space-y-6 w-full max-w-md mx-auto"
                         onSubmit={async (event) => {
                             event.preventDefault();
+                            setIsLoading(true);
                             let response;
                             try {
                                 response = await fetch('/auth/login', {
@@ -130,10 +133,12 @@ export default function Login() {
                                 });
                             } catch (error) {
                                 showAlert('Network error, please try again later.', 'error');
+                                setIsLoading(false);
                                 return;
                             }
                             const data = await response.json();
                             if (!response.ok) {
+                                setIsLoading(false);
                                 if (response.status === 400) {
                                     showAlert('Username and password are required.', 'error');
                                     return;
@@ -245,7 +250,23 @@ export default function Login() {
                             </label>
                             <Link to="/forgot-password" className="text-sm text-green-600 hover:underline">Forgot password?</Link>
                         </div>
-                        <button type="submit" className="w-full py-3 mt-4 mb-6 text-white bg-green-600 rounded-lg font-semibold shadow hover:bg-green-700 transition">Sign In</button>
+                        <button 
+                            type="submit" 
+                            disabled={isLoading}
+                            className={`w-full py-3 mt-4 mb-6 text-white rounded-lg font-semibold shadow transition-all flex items-center justify-center gap-2 ${
+                                isLoading 
+                                    ? 'bg-green-500 cursor-not-allowed' 
+                                    : 'bg-green-600 hover:bg-green-700 hover:shadow-lg transform hover:scale-[1.02]'
+                            }`}
+                        >
+                            {isLoading && (
+                                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            )}
+                            <span>{isLoading ? 'Signing In...' : 'Sign In'}</span>
+                        </button>
                         {/* <div className="flex items-center gap-2  w-full">
                             <span className="flex-grow border-t border-gray-300"></span>
                             <span className="mx-2 text-gray-500 text-sm">or</span>
@@ -267,6 +288,8 @@ export default function Login() {
                             <img
                                 src={pipol}
                                 alt="side"
+                                loading="lazy"
+                                decoding="async"
                                 className="w-full h-full object-cover rounded-tl-[120px] rounded-br-[120px] rounded-tr-none rounded-bl-none shadow-2xl absolute top-0 left-0"
                                 style={{position:'absolute', objectPosition: 'center top'}} 
                             />

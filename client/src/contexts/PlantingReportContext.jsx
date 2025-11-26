@@ -22,8 +22,8 @@ export const PlantingReportProvider = ({ children }) => {
     const [loadingVarieties, setLoadingVarieties] = useState(false);
     const [loadingReports, setLoadingReports] = useState(false);
 
-    // Cache TTL (Time To Live) - 5 minutes
-    const CACHE_TTL = 5 * 60 * 1000;
+    // Cache TTL (Time To Live) - 10 minutes for better performance
+    const CACHE_TTL = 10 * 60 * 1000;
 
     // Check if cache is valid
     const isCacheValid = (timestamp) => {

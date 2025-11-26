@@ -18,11 +18,20 @@ async function login(req, res) {
     }
 
     try {
-        // Find user by username
+        // Find user by username - select only needed fields for faster query
         const user = await prisma.account.findUnique({
             where: {
                 username: username,
             },
+            select: {
+                id: true,
+                username: true,
+                password: true,
+                access: true,
+                firstName: true,
+                surname: true,
+                email: true
+            }
         });
 
         // Check if user exists
@@ -56,14 +65,13 @@ async function login(req, res) {
             maxAge: cookieMaxAge,
         });
 
-        // Remove password from user object before sending response
-        user.password = undefined;
-        user.picture = undefined;
-        user.mimeType = undefined;
+        // Remove sensitive fields from user object before sending response
+        const { password: _, ...userWithoutPassword } = user;
 
-        // Log the login action only for admin/super admin users
+        // Log the login action asynchronously (don't block response)
         if (user.access === 'Admin' || user.access === 'Super_Admin') {
-            await auditLogger.log({
+            // Fire and forget - don't await
+            auditLogger.log({
                 adminId: user.id,
                 action: 'LOGIN',
                 details: `Admin ${user.username} logged in successfully`,
@@ -74,13 +82,13 @@ async function login(req, res) {
                     userRole: user.access,
                 },
                 req: req,
-            });
+            }).catch(err => console.error('Audit log error:', err));
         }
 
-        // Send response
+        // Send response immediately
         return res.status(200).json({
             message: 'Login successful',
-            user: user,
+            user: userWithoutPassword,
         });
     } catch (error) {
         console.error('Error during login:', error);

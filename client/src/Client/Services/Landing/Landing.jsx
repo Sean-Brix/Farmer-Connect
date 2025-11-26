@@ -25,25 +25,33 @@ import i4 from './Assets/i4.webp'
 export default function Landing() {
     const { theme } = useTheme()
     
-    // Preload hero images to prevent white flash on transition
+    // Preload only first hero image immediately, lazy load others
     useEffect(() => {
-        const images = [
-            // If heroSlides is not yet defined, use the same image variables as in heroSlides
-            i1, i3, i2, i4
-        ];
-        images.forEach(src => {
-            const img = new window.Image();
-            img.src = src;
-        });
+        // Preload first image immediately
+        const firstImg = new window.Image();
+        firstImg.src = i1;
+        
+        // Lazy load other images after a short delay
+        const timer = setTimeout(() => {
+            const images = [i3, i2, i4];
+            images.forEach(src => {
+                const img = new window.Image();
+                img.src = src;
+            });
+        }, 1000);
+        
+        return () => clearTimeout(timer);
     }, []);
-    // Inject Google Fonts Poppins if not already present
-    if (typeof document !== 'undefined' && !document.getElementById('poppins-font')) {
-        const link = document.createElement('link');
-        link.id = 'poppins-font';
-        link.rel = 'stylesheet';
-        link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap';
-        document.head.appendChild(link);
-    }
+    // Lazy load Google Fonts Poppins for better performance
+    useEffect(() => {
+        if (typeof document !== 'undefined' && !document.getElementById('poppins-font')) {
+            const link = document.createElement('link');
+            link.id = 'poppins-font';
+            link.rel = 'stylesheet';
+            link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap';
+            document.head.appendChild(link);
+        }
+    }, []);
     // Responsive card count state
     const [cardsToShow, setCardsToShow] = useState(window.innerWidth < 640 ? 1 : 4);
 

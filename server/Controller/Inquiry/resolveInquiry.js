@@ -56,7 +56,7 @@ export const resolveInquiry = async (req, res) => {
                     updatedAt: new Date().toISOString()
                 });
             } else {
-                console.error('Socket IO not available in socketLogoutService');
+                // Socket IO not available
             }
         } catch (error) {
             console.error('Error emitting status update:', error);

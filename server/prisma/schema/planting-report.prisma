@@ -40,6 +40,10 @@ model PlantingReport {
   @@index([varietyId])
   @@index([typeOfCrop])
   @@index([dateOfPlanting])
+  @@index([isArchived])
+  @@index([rsbsaNumber])
+  @@index([typeOfCrop, croppingSeasonId])
+  @@index([dateOfPlanting, isArchived])
   @@map("planting_reports")
 }
 

@@ -9,52 +9,93 @@ const prisma = new PrismaClient();
  */
 export const getActiveInquiries = async (req, res) => {
     try {
-        // Fetch all active inquiries with user details and replies
-        const inquiries = await prisma.inquiry.findMany({
-            where: {
-                status: {
-                    in: ['PENDING', 'IN_PROGRESS', 'WAITING_USER']
-                }
-            },
-            include: {
-                user: {
-                    select: {
-                        id: true,
-                        firstName: true,
-                        surname: true,
-                        email: true
+        // Optimize with parallel queries and selective fields
+        const [inquiries, unreadCounts] = await Promise.all([
+            // Fetch active inquiries with selective fields
+            prisma.inquiry.findMany({
+                where: {
+                    status: {
+                        in: ['PENDING', 'IN_PROGRESS', 'WAITING_USER']
                     }
                 },
-                replies: {
-                    orderBy: {
-                        createdAt: 'asc'
+                select: {
+                    id: true,
+                    subject: true,
+                    message: true,
+                    status: true,
+                    userId: true,
+                    guestName: true,
+                    guestEmail: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    user: {
+                        select: {
+                            id: true,
+                            firstName: true,
+                            surname: true,
+                            email: true
+                        }
                     },
-                    include: {
-                        sender: {
-                            select: {
-                                firstName: true,
-                                surname: true
+                    replies: {
+                        select: {
+                            id: true,
+                            message: true,
+                            senderType: true,
+                            senderName: true,
+                            senderId: true,
+                            createdAt: true,
+                            sender: {
+                                select: {
+                                    firstName: true,
+                                    surname: true
+                                }
                             }
+                        },
+                        orderBy: {
+                            createdAt: 'asc'
+                        }
+                    },
+                    attachments: {
+                        select: { 
+                            id: true, 
+                            filename: true, 
+                            mimetype: true, 
+                            filesize: true, 
+                            uploadedById: true, 
+                            createdAt: true 
+                        },
+                        orderBy: { createdAt: 'asc' }
+                    },
+                    assignedTo: {
+                        select: {
+                            firstName: true,
+                            surname: true
                         }
                     }
                 },
-                attachments: {
-                    orderBy: { createdAt: 'asc' },
-                    select: { id: true, filename: true, mimetype: true, filesize: true, uploadedById: true, createdAt: true }
-                },
-                assignedTo: {
-                    select: {
-                        firstName: true,
-                        surname: true
-                    }
+                orderBy: {
+                    updatedAt: 'desc'
                 }
-            },
-            orderBy: {
-                updatedAt: 'desc'
-            }
-        });
+            }),
+            // Get unread counts in parallel
+            prisma.inquiryReply.groupBy({
+                by: ['inquiryId'],
+                where: {
+                    readByAdmin: false,
+                    senderType: 'USER'
+                },
+                _count: true
+            })
+        ]);
 
-        // Format inquiries for frontend consumption
+        ]);
+
+        // Create unread count map for faster lookup
+        const unreadMap = new Map(
+            unreadCounts.map(item => [item.inquiryId, item._count])
+        );
+
+        // Format inquiries for frontend consumption with unread counts
         const formattedInquiries = inquiries.map(inquiry => ({
             id: inquiry.id,
             subject: inquiry.subject,
@@ -67,6 +108,7 @@ export const getActiveInquiries = async (req, res) => {
             assignedTo: inquiry.assignedTo,
             createdAt: inquiry.createdAt,
             updatedAt: inquiry.updatedAt,
+            unreadCount: unreadMap.get(inquiry.id) || 0,
             replies: inquiry.replies.map(reply => ({
                 id: reply.id,
                 message: reply.message,

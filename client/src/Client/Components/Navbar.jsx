@@ -191,10 +191,11 @@ export default function Navbar({refresh}) {
 
     // Add a state to simulate logout
     const [showAlert, setShowAlert] = useState(false);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     // Helper for logout
     const handleLogout = async () => {
-
+        setIsLoggingOut(true);
         try {
             const response = await fetch('/auth/logout', {
                 method: 'DELETE',
@@ -213,6 +214,7 @@ export default function Navbar({refresh}) {
             setLoggedIn(false);
             setOpen(false);
             setShowAlert(true);
+            setIsLoggingOut(false);
 
             // Show alert for 10 seconds, then fade out smoothly
             setTimeout(() => {
@@ -229,6 +231,7 @@ export default function Navbar({refresh}) {
         } 
         catch (error) {
             console.error('Logout error:', error);
+            setIsLoggingOut(false);
             setShowAlert(true);
             setTimeout(() => {
                 setShowAlert(false);
@@ -443,10 +446,21 @@ export default function Navbar({refresh}) {
                         <span className="block text-gray-500 text-sm text-center">You will need to login again.</span>
                         <div className="flex gap-2 mt-1">
                         <button
-                            className="px-5 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400"
+                            disabled={isLoggingOut}
+                            className={`px-5 py-2 text-white rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400 flex items-center gap-2 ${
+                                isLoggingOut 
+                                    ? 'bg-green-500 cursor-not-allowed' 
+                                    : 'bg-green-600 hover:bg-green-700'
+                            }`}
                                 onClick={handleLogout}
                             >
-                                Logout
+                                {isLoggingOut && (
+                                    <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                )}
+                                <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
                             </button>
                             <button
                                 className="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 focus:outline-none"
@@ -997,42 +1011,56 @@ export default function Navbar({refresh}) {
                                         )}
                                         <li>
                                             <button
+                                                disabled={isLoggingOut}
                                                 className="w-full text-left flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-200 font-medium"
                                                 style={{
                                                     color: isDark ? '#ef4444' : '#dc2626',
-                                                    backgroundColor: 'transparent'
+                                                    backgroundColor: 'transparent',
+                                                    opacity: isLoggingOut ? 0.6 : 1,
+                                                    cursor: isLoggingOut ? 'not-allowed' : 'pointer'
                                                 }}
                                                 onMouseEnter={(e) => {
-                                                    e.currentTarget.style.backgroundColor = isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)';
+                                                    if (!isLoggingOut) {
+                                                        e.currentTarget.style.backgroundColor = isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)';
+                                                    }
                                                 }}
                                                 onMouseLeave={(e) => {
                                                     e.currentTarget.style.backgroundColor = 'transparent';
                                                 }}
                                                 onClick={() => {
-                                                    setShowAlert(true);
-                                                    setOpen(false);
+                                                    if (!isLoggingOut) {
+                                                        setShowAlert(true);
+                                                        setOpen(false);
+                                                    }
                                                 }}
                                             >
-                                                <svg
-                                                    className="w-5 h-5"
-                                                    style={{ color: isDark ? '#ef4444' : '#dc2626' }}
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        d="M17 16l4-4m0 0l-4-4m4 4H7"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                    <path
-                                                        d="M3 12a9 9 0 0118 0"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                </svg>
-                                                Logout
+                                                {isLoggingOut ? (
+                                                    <svg className="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                    </svg>
+                                                ) : (
+                                                    <svg
+                                                        className="w-5 h-5"
+                                                        style={{ color: isDark ? '#ef4444' : '#dc2626' }}
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            d="M17 16l4-4m0 0l-4-4m4 4H7"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                        <path
+                                                            d="M3 12a9 9 0 0118 0"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                    </svg>
+                                                )}
+                                                <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
                                             </button>
                                         </li>
                                     </ul>
@@ -1041,10 +1069,10 @@ export default function Navbar({refresh}) {
                         ) : (
                             <Link
                                 to="/login"
-                                className="hidden md:flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 font-medium shadow-md hover:shadow-lg transform hover:scale-[1.02] border border-green-500 hover:border-green-400"
+                                className="hidden md:flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 font-medium shadow-md hover:shadow-lg transform hover:scale-[1.02] border border-green-500 hover:border-green-400 group"
                             >
                                 <svg
-                                    className="w-4 h-4"
+                                    className="w-4 h-4 group-hover:animate-pulse"
                                     fill="none"
                                     stroke="currentColor"
                                     strokeWidth="2"
@@ -1644,31 +1672,45 @@ export default function Navbar({refresh}) {
                                                     
                                                     {/* Professional Logout Button */}
                                                     <button 
+                                                        disabled={isLoggingOut}
                                                         onClick={() => {
-                                                            setShowAlert(true);
-                                                            setOpen(false);
+                                                            if (!isLoggingOut) {
+                                                                setShowAlert(true);
+                                                                setOpen(false);
+                                                            }
                                                         }}
-                                                        className="mobile-menu-item flex items-center justify-center space-x-3 py-4 px-4 rounded-xl transition-all duration-200 font-semibold text-white bg-red-600 hover:bg-red-700 shadow-lg hover:shadow-xl transform hover:scale-105 w-full"
+                                                        className={`mobile-menu-item flex items-center justify-center space-x-3 py-4 px-4 rounded-xl transition-all duration-200 font-semibold text-white shadow-lg hover:shadow-xl w-full ${
+                                                            isLoggingOut 
+                                                                ? 'bg-red-500 cursor-not-allowed opacity-70' 
+                                                                : 'bg-red-600 hover:bg-red-700 transform hover:scale-105'
+                                                        }`}
                                                     >
-                                                        <svg
-                                                            className="w-5 h-5 text-white"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                d="M17 16l4-4m0 0l-4-4m4 4H7"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                            />
-                                                            <path
-                                                                d="M3 12a9 9 0 0118 0"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                            />
-                                                        </svg>
-                                                        <span>Logout</span>
+                                                        {isLoggingOut ? (
+                                                            <svg className="animate-spin w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                            </svg>
+                                                        ) : (
+                                                            <svg
+                                                                className="w-5 h-5 text-white"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                strokeWidth="2"
+                                                                viewBox="0 0 24 24"
+                                                            >
+                                                                <path
+                                                                    d="M17 16l4-4m0 0l-4-4m4 4H7"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                />
+                                                                <path
+                                                                    d="M3 12a9 9 0 0118 0"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                />
+                                                            </svg>
+                                                        )}
+                                                        <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
                                                     </button>
                                                 </>
                                             ) : (

@@ -1,32 +1,97 @@
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+    log: ['error'],
+});
+
+// Batch writing configuration for high-traffic scenarios
+const BATCH_ENABLED = true; // Set to false to disable batching
+const BATCH_SIZE = 10; // Write every 10 logs
+const BATCH_TIMEOUT = 5000; // Or every 5 seconds (whichever comes first)
+
+let auditBatch = [];
+let batchTimer = null;
 
 /**
- * Audit Logger Service
+ * Flush batch to database
+ */
+async function flushBatch() {
+    if (auditBatch.length === 0) return;
+
+    const logsToWrite = [...auditBatch];
+    auditBatch = [];
+
+    if (batchTimer) {
+        clearTimeout(batchTimer);
+        batchTimer = null;
+    }
+
+    try {
+        await prisma.auditLog.createMany({
+            data: logsToWrite,
+            skipDuplicates: true,
+        });
+    } catch (error) {
+        console.error('Failed to write audit log batch:', error);
+    }
+}
+
+/**
+ * Add log to batch
+ */
+function addToBatch(logData) {
+    auditBatch.push(logData);
+
+    // Flush if batch size reached
+    if (auditBatch.length >= BATCH_SIZE) {
+        flushBatch().catch(err => console.error('Batch flush error:', err));
+        return;
+    }
+
+    // Set timer to flush if not already set
+    if (!batchTimer) {
+        batchTimer = setTimeout(() => {
+            flushBatch().catch(err => console.error('Batch timer flush error:', err));
+        }, BATCH_TIMEOUT);
+    }
+}
+
+// Graceful shutdown - flush remaining logs
+process.on('SIGTERM', async () => {
+    await flushBatch();
+});
+process.on('SIGINT', async () => {
+    await flushBatch();
+});
+
+/**
+ * Audit Logger Service (OPTIMIZED)
  *
  * This service is responsible for creating audit log entries for all admin actions
  * throughout the Farmer Connect platform. It captures who performed what action,
  * when it was performed, and provides detailed context about the changes.
  *
+ * Optimizations for free cloud hosting:
+ * - Batch writing (10 logs or 5 seconds, whichever comes first)
+ * - Non-blocking operations (fire-and-forget by default)
+ * - Minimal metadata storage
+ * - Efficient error handling without breaking main flow
+ *
  * Usage Example:
  * ```javascript
  * import auditLogger from '../Services/auditLogger.js';
  *
- * // Log an inventory item creation
- * await auditLogger.log({
+ * // Log an inventory item creation (non-blocking)
+ * auditLogger.log({
  *     adminId: req.user.id,
  *     action: 'INVENTORY_CREATE',
  *     targetType: 'InventoryItem',
  *     targetId: newItem.id,
  *     targetName: newItem.name,
- *     details: `Created new inventory item: ${newItem.name} in category ${newItem.category}`,
- *     metadata: {
- *         itemData: newItem,
- *         category: newItem.category
- *     },
- *     req: req // Optional - for IP and User Agent capture
- * });
+ *     details: `Created new inventory item: ${newItem.name}`,
+ *     metadata: { category: newItem.category },
+ *     req: req
+ * }).catch(err => console.error('Audit log failed:', err));
  * ```
  */
 
@@ -67,49 +132,43 @@ class AuditLogger {
                     req.socket?.remoteAddress ||
                     req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
                     req.headers['x-real-ip'] ||
-                    'unknown';
+                    null;
 
-                userAgent = req.get('User-Agent') || 'unknown';
+                userAgent = req.get('User-Agent') || null;
             }
 
-            // Create the audit log entry
-        const auditLog = await prisma.auditLog.create({
-                data: {
-                    adminId,
-                    action,
-                    targetType,
-                    targetId,
-                    targetName,
-                    details,
-            metadata: metadata ? JSON.stringify(metadata) : null,
-                    ipAddress,
-                    userAgent,
-                },
-                include: {
-                    admin: {
-                        select: {
-                            id: true,
-                            username: true,
-                            firstName: true,
-                            surname: true,
-                            access: true,
-                        },
-                    },
-                },
-            });
-
-            return auditLog;
-        } catch (error) {
-            // Log error but don't throw - audit logging should not break main functionality
-            console.error('Failed to create audit log:', error);
-            console.error('Audit log data:', {
+            const logData = {
                 adminId,
                 action,
                 targetType,
                 targetId,
                 targetName,
                 details,
+                metadata: metadata ? JSON.stringify(metadata) : null,
+                ipAddress,
+                userAgent,
+            };
+
+            // Use batching if enabled
+            if (BATCH_ENABLED) {
+                addToBatch(logData);
+                return { batched: true };
+            }
+
+            // Otherwise, write immediately
+            const auditLog = await prisma.auditLog.create({
+                data: logData,
+                select: {
+                    id: true,
+                    action: true,
+                    createdAt: true,
+                },
             });
+
+            return auditLog;
+        } catch (error) {
+            // Log error but don't throw - audit logging should not break main functionality
+            console.error('Failed to create audit log:', error.message);
 
             // Return null to indicate logging failed
             return null;

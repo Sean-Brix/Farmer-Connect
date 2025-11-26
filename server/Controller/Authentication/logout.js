@@ -23,14 +23,12 @@ async function logout(req, res) {
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
                 if (decoded.userId) {
-                    // Fetch user data from database using the userId from token
+                    // Fetch only essential user data from database
                     const user = await prisma.account.findUnique({
                         where: { id: decoded.userId },
                         select: {
                             id: true,
                             username: true,
-                            firstName: true,
-                            surname: true,
                             access: true,
                         },
                     });
@@ -45,29 +43,24 @@ async function logout(req, res) {
             // Continue with logout even if token is invalid
         }
 
-        // Log the logout action only for admin/super admin users
+        // Log the logout action asynchronously (don't block response)
         if (
             userInfo &&
             (userInfo.access === 'Admin' || userInfo.access === 'Super_Admin')
         ) {
-            try {
-                await auditLogger.log({
-                    adminId: userInfo.id,
-                    action: 'LOGOUT',
-                    details: `Admin ${userInfo.username} logged out`,
-                    metadata: {
-                        logoutMethod: 'manual',
-                        sessionDuration: null, // Could calculate this if you track login time
-                    },
-                    req: req,
-                });
-            } catch (auditError) {
-                console.error(
-                    '[ERROR] Failed to log logout audit:',
-                    auditError
-                );
-                // Continue with logout even if audit fails
-            }
+            // Fire and forget - don't await
+            auditLogger.log({
+                adminId: userInfo.id,
+                action: 'LOGOUT',
+                details: `Admin ${userInfo.username} logged out`,
+                metadata: {
+                    logoutMethod: 'manual',
+                    sessionDuration: null,
+                },
+                req: req,
+            }).catch(auditError => {
+                console.error('[ERROR] Failed to log logout audit:', auditError);
+            });
         }
 
         // Clear the cookie
@@ -77,17 +70,17 @@ async function logout(req, res) {
             sameSite: 'Strict',
         });
 
-        // Disconnect user's socket connections if user info available
+        // Disconnect user's socket connections asynchronously if user info available
         if (userInfo) {
-            try {
-                const disconnectedSockets = socketLogoutService.disconnectUserOnLogout(
+            // Fire and forget - don't await
+            Promise.resolve().then(() => {
+                socketLogoutService.disconnectUserOnLogout(
                     userInfo.id,
                     'manual_logout'
                 );
-            } catch (socketError) {
+            }).catch(socketError => {
                 console.error('[ERROR] Failed to disconnect user sockets on logout:', socketError);
-                // Continue with logout even if socket disconnection fails
-            }
+            });
         }
 
         // Send response

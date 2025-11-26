@@ -63,33 +63,53 @@ export const getAllSurveyForms = async (req, res) => {
         const orderBy = {};
         orderBy[sortBy] = sortOrder.toLowerCase();
 
-        // Get total count for pagination
-        const total = await prisma.surveyForm.count({ where });
-
-        // Get survey forms
-        const surveyForms = await prisma.surveyForm.findMany({
-            where,
-            skip,
-            take,
-            orderBy,
-            include: {
-                fields: {
-                    orderBy: { order: 'asc' }
-                },
-                responses: {
-                    select: { id: true }
-                },
-                creator: {
-                    select: { id: true, firstName: true, surname: true }
-                },
-                _count: {
-                    select: {
-                        responses: true,
-                        fields: true
+        // Execute queries in parallel for better performance
+        const [total, surveyForms] = await Promise.all([
+            // Get total count
+            prisma.surveyForm.count({ where }),
+            
+            // Get survey forms with selective fields
+            prisma.surveyForm.findMany({
+                where,
+                skip,
+                take,
+                orderBy,
+                select: {
+                    id: true,
+                    title: true,
+                    description: true,
+                    status: true,
+                    category: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    creator: {
+                        select: { 
+                            id: true, 
+                            firstName: true, 
+                            surname: true 
+                        }
+                    },
+                    fields: {
+                        select: {
+                            id: true,
+                            label: true,
+                            type: true,
+                            required: true,
+                            placeholder: true,
+                            order: true,
+                            options: true
+                        },
+                        orderBy: { order: 'asc' }
+                    },
+                    _count: {
+                        select: {
+                            responses: true,
+                            fields: true
+                        }
                     }
                 }
-            }
-        });
+            })
+        ]);
 
         // Helper to safely parse options JSON strings
         const parseOptions = (opts) => {

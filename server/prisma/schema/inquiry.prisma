@@ -21,6 +21,8 @@ model Inquiry {
   @@index([userId])
   @@index([assignedToId])
   @@index([createdAt])
+  @@index([updatedAt])
+  @@index([status, updatedAt]) // Composite index for sorted active queries
   @@index([resolvedById], map: "inquiries_resolvedById_fkey")
   @@map("inquiries")
 }
@@ -47,6 +49,8 @@ model InquiryReply {
   @@index([senderId])
   @@index([createdAt])
   @@index([senderType])
+  @@index([readByAdmin, senderType]) // Composite index for unread admin messages
+  @@index([readByUser, senderType]) // Composite index for unread user messages
   @@index([parentReplyId], map: "inquiry_replies_parentReplyId_fkey")
   @@map("inquiry_replies")
 }
