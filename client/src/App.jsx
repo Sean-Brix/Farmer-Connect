@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { SocketProvider } from './contexts/SocketContext.jsx';
 import { ThemeProvider } from './contexts/ThemeContext.jsx';
 import { Toaster } from 'react-hot-toast';
 
@@ -37,7 +36,6 @@ import DevPage from './Dev/DevPage.jsx';
 function App() {
     return (
         <ThemeProvider>
-            <SocketProvider>
                 <BrowserRouter>
                     <Toaster position="top-right" />
                     <Routes>
@@ -78,7 +76,6 @@ function App() {
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>
-        </SocketProvider>
         </ThemeProvider>
     );
 }

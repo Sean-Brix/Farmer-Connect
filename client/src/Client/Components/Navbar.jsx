@@ -3,8 +3,8 @@ import { createPortal } from 'react-dom';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import logo from '../../Assets/Logo.png';
+import defaultAvatar from '../../Assets/default_picture.png';
 import Chat from '../../Components/Chats/Chat.jsx';
-import { connectSocket } from '../../utils/socket.js';
 import { useCustomTranslation } from '../../hooks/useCustomTranslation.js';
 import { useTheme } from '../../contexts/ThemeContext.jsx';
 
@@ -26,6 +26,7 @@ export default function Navbar({refresh}) {
     const [open, setOpen] = useState(false);
     const [servicesOpen, setServicesOpen] = useState(false);
 
+    const [avatarTimestamp, setAvatarTimestamp] = useState(Date.now());
     const [user, setUser] = useState({
         avatar: '/api/account/picture/me',
         name: 'Guest User',
@@ -47,14 +48,13 @@ export default function Navbar({refresh}) {
                 throw new Error(data.message || 'Authentication check failed');
             }
 
-            // Connect Socket
-            connectSocket(data.payload.access || 'guest');
+            // Socket.io removed - using HTTP polling for real-time features
 
             return data;
         },
-        refetchInterval: 30 * 1000, // Refetch every 30 seconds for better responsiveness
-        staleTime: 10 * 1000, // Consider data stale after 10 seconds
-        refetchOnWindowFocus: true, // Refetch when window gains focus
+        refetchInterval: 60 * 1000, // Reduced from 30s to 60s
+        staleTime: 5 * 1000, // Reduced to 5s for more responsive navigation
+        refetchOnWindowFocus: false, // Disabled to prevent excessive checks
     });
 
     // TanStack Query for user account details (only when authenticated)
@@ -66,9 +66,9 @@ export default function Navbar({refresh}) {
             return data;
         },
         enabled: authData?.check === true, // Only run when authenticated
-        refetchInterval: 30 * 1000, // Refetch every 30 seconds
-        staleTime: 10 * 1000, // Consider data stale after 10 seconds
-        refetchOnWindowFocus: true, // Refetch when window gains focus
+        refetchInterval: 60 * 1000, // Reduced from 30s to 60s
+        staleTime: 5 * 1000, // Reduced to 5s for more responsive navigation
+        refetchOnWindowFocus: false, // Disabled to prevent excessive checks
     });
 
     // Helper to determine if we are in the "mid" screen size (750px - 1050px)
@@ -87,16 +87,8 @@ export default function Navbar({refresh}) {
     useEffect(() => {
         window.refreshAuthData = refreshAuthData;
         
-        // Add window focus listener for additional cache invalidation
-        const handleWindowFocus = () => {
-            refreshAuthData();
-        };
-        
-        window.addEventListener('focus', handleWindowFocus);
-        
         return () => {
             delete window.refreshAuthData;
-            window.removeEventListener('focus', handleWindowFocus);
         };
     }, []);
 
@@ -111,17 +103,22 @@ export default function Navbar({refresh}) {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Invalidate cache when navigating to home or when authentication state might have changed
+    // Track previous pathname to detect navigation TO home
+    const prevPathRef = useRef(location.pathname);
+    
+    // Invalidate auth cache when navigating TO home page (not when already on home)
     useEffect(() => {
-        const invalidateAuthQueries = () => {
+        const prevPath = prevPathRef.current;
+        const currentPath = location.pathname;
+        
+        // Only invalidate when COMING TO home from another page
+        if (currentPath === '/' && prevPath !== '/') {
             queryClient.invalidateQueries({ queryKey: ['auth-check'] });
             queryClient.invalidateQueries({ queryKey: ['account-details'] });
-        };
-
-        // Invalidate cache when navigating to home
-        if (location.pathname === '/') {
-            invalidateAuthQueries();
         }
+        
+        // Update ref for next comparison
+        prevPathRef.current = currentPath;
     }, [location.pathname, queryClient]);
 
     // Also invalidate cache when refresh prop changes (indicating potential login/logout)
@@ -148,26 +145,48 @@ export default function Navbar({refresh}) {
                 userAccess = accountData.access;
             }
 
-            setUser({
-                avatar: '/api/account/picture/me?refresh=' + new Date().getTime(),
-                name: authData.payload?.username || 'User',
-                access: userAccess,
+            setUser(prev => {
+                const newAvatar = `/api/account/picture/me?v=${avatarTimestamp}`;
+                const newName = authData.payload?.username || 'User';
+                
+                // Only update if values actually changed
+                if (prev.avatar === newAvatar && prev.name === newName && prev.access === userAccess) {
+                    return prev;
+                }
+                
+                return {
+                    avatar: newAvatar,
+                    name: newName,
+                    access: userAccess,
+                };
             });
         } else {
             setLoggedIn(false);
-            setUser({
-                avatar: '/api/account/picture/me?refresh=' + new Date().getTime(),
-                name: 'Guest User',
-                access: 'User',
+            setUser(prev => {
+                const guestAvatar = `/api/account/picture/me?v=${avatarTimestamp}`;
+                
+                // Only update if values actually changed
+                if (prev.avatar === guestAvatar && prev.name === 'Guest User' && prev.access === 'User') {
+                    return prev;
+                }
+                
+                return {
+                    avatar: guestAvatar,
+                    name: 'Guest User',
+                    access: 'User',
+                };
             });
         }
-    }, [authData, accountData]);
+    }, [authData, accountData, avatarTimestamp]);
 
     useEffect(() => {
-        setUser((prev) => ({
-            ...prev,
-            avatar: '/api/account/picture/me?refresh=' + new Date().getTime(),
-        }));
+        if (refresh) {
+            setAvatarTimestamp(Date.now());
+            setUser((prev) => ({
+                ...prev,
+                avatar: `/api/account/picture/me?v=${Date.now()}`,
+            }));
+        }
     }, [refresh]);
 
     // Add a state to simulate logout
@@ -854,6 +873,7 @@ export default function Navbar({refresh}) {
                                         src={user.avatar}
                                         alt="User Avatar"
                                         className="w-9 h-9 rounded-full object-cover"
+                                        onError={(e) => { e.target.src = defaultAvatar; }}
                                     />
                                 </button>
                                 {open && (
@@ -1534,6 +1554,7 @@ export default function Navbar({refresh}) {
                                                                 src={user.avatar} 
                                                                 alt="User" 
                                                                 className="w-12 h-12 rounded-full border-2 border-emerald-200 object-cover"
+                                                                onError={(e) => { e.target.src = defaultAvatar; }}
                                                             />
                                                             <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"></div>
                                                         </div>

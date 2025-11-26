@@ -62,7 +62,7 @@ export async function getFileUrl(path) {
     return url;
   } catch (error) {
     if (error.code === 'storage/object-not-found') {
-      console.warn(`File not found in Firebase: ${path}`);
+      // Silently return null - warnings are logged once by cache layer
       return null;
     }
     console.error('Firebase getDownloadURL error:', error);

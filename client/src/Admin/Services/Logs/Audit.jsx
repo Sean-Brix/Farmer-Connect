@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTheme } from '../../../contexts/ThemeContext';
 import {
     useAuditLogs,
@@ -79,6 +79,7 @@ function AuditLogsTable({ admin_navigate }) {
     const [page, setPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [search, setSearch] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
     const [sortBy, setSortBy] = useState('createdAt');
     const [sortOrder, setSortOrder] = useState('desc');
 
@@ -93,6 +94,18 @@ function AuditLogsTable({ admin_navigate }) {
     // State for expandable details
     const [expandedDetails, setExpandedDetails] = useState(new Set());
 
+    // Debounce search input to reduce API calls
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(search);
+            if (search !== debouncedSearch) {
+                setPage(1); // Reset to first page on new search
+            }
+        }, 500); // 500ms debounce
+
+        return () => clearTimeout(timer);
+    }, [search]);
+
     // Toggle expanded details for a specific log
     const toggleDetails = (logId) => {
         const newExpanded = new Set(expandedDetails);
@@ -104,11 +117,11 @@ function AuditLogsTable({ admin_navigate }) {
         setExpandedDetails(newExpanded);
     };
 
-    // Prepare filters object
-    const filters = {
+    // Prepare filters object - use debounced search
+    const filters = useMemo(() => ({
         page,
         limit: itemsPerPage,
-        search,
+        search: debouncedSearch,
         adminId,
         action,
         targetType,
@@ -116,7 +129,7 @@ function AuditLogsTable({ admin_navigate }) {
         dateTo,
         sortBy,
         sortOrder,
-    };
+    }), [page, itemsPerPage, debouncedSearch, adminId, action, targetType, dateFrom, dateTo, sortBy, sortOrder]);
 
     // Hooks
     const {
@@ -142,10 +155,9 @@ function AuditLogsTable({ admin_navigate }) {
         setPage(1); // Reset to first page when sorting changes
     };
 
-    // Handle search change
+    // Handle search change - debouncing is handled in useEffect
     const handleSearchChange = (value) => {
         setSearch(value);
-        setPage(1); // Reset to first page when search changes
     };
 
     // Handle filter changes
@@ -170,8 +182,8 @@ function AuditLogsTable({ admin_navigate }) {
         setPage(1); // Reset to first page when filters change
     };
 
-    // Clear all filters
-    const clearFilters = () => {
+    // Clear all filters - use useCallback for performance
+    const clearFilters = useCallback(() => {
         setSearch('');
         setAdminId('');
         setAction('');
@@ -179,10 +191,10 @@ function AuditLogsTable({ admin_navigate }) {
         setDateFrom('');
         setDateTo('');
         setPage(1);
-    };
+    }, []);
 
-    // Get action display name
-    const getActionDisplayName = (actionCode) => {
+    // Get action display name - memoized
+    const getActionDisplayName = useCallback((actionCode) => {
         return actionCode
             .split('_')
             .map(
@@ -190,10 +202,10 @@ function AuditLogsTable({ admin_navigate }) {
                     word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
             )
             .join(' ');
-    };
+    }, []);
 
-    // Get action badge color
-    const getActionBadgeColor = (actionCode) => {
+    // Get action badge color - memoized
+    const getActionBadgeColor = useCallback((actionCode) => {
         if (actionCode.includes('CREATE'))
             return isDark ? 'bg-green-900/50 text-green-300 border-green-700' : 'bg-green-100 text-green-800 border-green-200';
         if (actionCode.includes('UPDATE'))
@@ -207,10 +219,10 @@ function AuditLogsTable({ admin_navigate }) {
         if (actionCode.includes('REJECT'))
             return isDark ? 'bg-orange-900/50 text-orange-300 border-orange-700' : 'bg-orange-100 text-orange-800 border-orange-200';
         return isDark ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-gray-100 text-gray-800 border-gray-200';
-    };
+    }, [isDark]);
 
-    // Format timestamp
-    const formatTimestamp = (timestamp) => {
+    // Format timestamp - memoized
+    const formatTimestamp = useCallback((timestamp) => {
         const date = new Date(timestamp);
         const now = new Date();
         const diffInSeconds = Math.floor((now - date) / 1000);
@@ -233,7 +245,7 @@ function AuditLogsTable({ admin_navigate }) {
             hour: '2-digit',
             minute: '2-digit',
         });
-    };
+    }, []);
 
     // Loading state
     if (isLoading) {
@@ -715,7 +727,7 @@ function AuditLogsTable({ admin_navigate }) {
                                         <div className={`text-xs sm:text-sm font-medium ${
                                             isDark ? 'text-gray-200' : 'text-gray-900'
                                         }`}>
-                                            {log.targetName || 'N/A'}
+                                            {log.targetName || 'none'}
                                         </div>
                                         {log.targetType && (
                                             <div className={`text-xs mt-1 ${
@@ -778,13 +790,6 @@ function AuditLogsTable({ admin_navigate }) {
                                                 );
                                             })()}
                                         </div>
-                                        {log.ipAddress && (
-                                            <div className={`text-xs mt-1 ${
-                                                isDark ? 'text-gray-500' : 'text-neutral-400'
-                                            }`}>
-                                                IP: {log.ipAddress}
-                                            </div>
-                                        )}
                                     </td>
                                 </tr>
                             ))
@@ -1210,50 +1215,7 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                 </div>
             </div>
 
-            {/* Daily Activity Chart */}
-            <div className={`rounded-lg p-4 sm:p-6 shadow-sm ${
-                isDark ? 'bg-gray-800' : 'bg-white'
-            }`}>
-                <h4 className={`text-base sm:text-lg font-semibold mb-4 ${
-                    isDark ? 'text-white' : 'text-gray-900'
-                }`}>
-                    Daily Activity (Last 30 Days)
-                </h4>
-                <div className="h-64 flex items-end space-x-1">
-                    {dailyActivity.map((day, index) => {
-                        const maxCount = Math.max(
-                            ...dailyActivity.map((d) => d.count)
-                        );
-                        const height =
-                            maxCount > 0 ? (day.count / maxCount) * 100 : 0;
-
-                        return (
-                            <div
-                                key={day.date}
-                                className="flex-1 flex flex-col items-center"
-                            >
-                                <div
-                                    className="w-full bg-green-500 rounded-t min-h-[4px] transition-all hover:bg-green-600"
-                                    style={{
-                                        height: `${Math.max(4, height)}%`,
-                                    }}
-                                    title={`${day.date}: ${day.count} activities`}
-                                ></div>
-                                {index % 5 === 0 && (
-                                    <div className={`text-xs mt-1 transform -rotate-45 origin-top-left ${
-                                        isDark ? 'text-gray-400' : 'text-gray-500'
-                                    }`}>
-                                        {new Date(day.date).toLocaleDateString(
-                                            'en-US',
-                                            { month: 'short', day: 'numeric' }
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
+            
         </div>
     );
 }

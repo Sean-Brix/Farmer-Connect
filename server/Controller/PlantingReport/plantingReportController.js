@@ -8,19 +8,24 @@ function calculateYield(harvestArea, numberOfBags, weightPerBag) {
 }
 
 // Helper function to calculate expected harvest date
-async function calculateExpectedHarvest(varietyId, dateOfPlanting) {
+async function calculateExpectedHarvest(varietyId, dateOfPlanting, plantingMethod) {
     try {
         const variety = await prisma.seedVariety.findUnique({
             where: { id: varietyId },
-            select: { DAS: true, cropType: true }
+            select: { directSeededDAS: true, transplantedDAS: true, cropType: true }
         });
 
         // Only calculate for Rice crops
         if (!variety || variety.cropType !== 'Rice') return null;
 
+        // Use appropriate DAS based on planting method
+        const das = plantingMethod === 'Transplanted' 
+            ? variety.transplantedDAS 
+            : variety.directSeededDAS;
+
         const plantingDate = new Date(dateOfPlanting);
         const expectedDate = new Date(plantingDate);
-        expectedDate.setDate(plantingDate.getDate() + variety.DAS);
+        expectedDate.setDate(plantingDate.getDate() + das);
         
         return expectedDate;
     } catch (error) {
@@ -64,7 +69,7 @@ export async function createPlantingReport(req, res) {
         const yieldMtPerHa = calculateYield(harvestArea, numberOfBags, weightPerBag);
 
         // Calculate expected harvest date for Rice crops
-        const dateOfExpectedHarvest = await calculateExpectedHarvest(varietyId, dateOfPlanting);
+        const dateOfExpectedHarvest = await calculateExpectedHarvest(varietyId, dateOfPlanting, plantingMethod);
 
         // Create the planting report
         const report = await prisma.plantingReport.create({
@@ -76,7 +81,7 @@ export async function createPlantingReport(req, res) {
                 areaPlanted: parseFloat(areaPlanted),
                 seedClassification,
                 typeOfCrop,
-                riceIrrigation: riceIrrigation || null,
+                riceIrrigation: (riceIrrigation && riceIrrigation.trim() !== '') ? riceIrrigation : null,
                 varietyId,
                 dateOfPlanting: new Date(dateOfPlanting),
                 plantingMethod,
@@ -270,12 +275,20 @@ export async function updatePlantingReport(req, res) {
             updateData.yieldMtPerHa = calculateYield(harvestArea, numberOfBags, weightPerBag);
         }
 
+        // Handle empty riceIrrigation string
+        if (updateData.riceIrrigation !== undefined) {
+            updateData.riceIrrigation = (updateData.riceIrrigation && updateData.riceIrrigation.trim() !== '') 
+                ? updateData.riceIrrigation 
+                : null;
+        }
+
         // Recalculate expected harvest if variety or planting date changed
         const varietyId = updateData.varietyId || existingReport.varietyId;
         const dateOfPlanting = updateData.dateOfPlanting || existingReport.dateOfPlanting;
+        const plantingMethod = updateData.plantingMethod || existingReport.plantingMethod;
         
-        if (updateData.varietyId || updateData.dateOfPlanting) {
-            const expectedHarvest = await calculateExpectedHarvest(varietyId, dateOfPlanting);
+        if (updateData.varietyId || updateData.dateOfPlanting || updateData.plantingMethod) {
+            const expectedHarvest = await calculateExpectedHarvest(varietyId, dateOfPlanting, plantingMethod);
             if (expectedHarvest) {
                 updateData.dateOfExpectedHarvest = expectedHarvest;
             }

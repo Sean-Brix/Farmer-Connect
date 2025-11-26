@@ -69,9 +69,12 @@ export const useAuditLogs = (filters = {}) => {
 
             return result.data;
         },
-        staleTime: 30 * 1000, // 30 seconds - audit logs should be relatively fresh
-        cacheTime: 5 * 60 * 1000, // 5 minutes
+        staleTime: 60 * 1000, // 60 seconds - reduce unnecessary refetches
+        gcTime: 10 * 60 * 1000, // 10 minutes cache (formerly cacheTime)
         keepPreviousData: true, // Keep previous data while fetching new page
+        refetchOnWindowFocus: false, // Don't refetch on window focus to reduce load
+        refetchOnMount: false, // Don't refetch if data is fresh
+        retry: 1, // Reduce retry attempts for faster failure
     });
 };
 

@@ -151,7 +151,11 @@ const FillSurveyModal = ({ isOpen, onClose, surveyId, title }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[100000] p-4" onClick={onClose}>
+    <div 
+      className="fixed inset-0 bg-black/30 flex items-center justify-center z-[100000] p-4" 
+      style={{ backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+      onClick={onClose}
+    >
       <div className="bg-white rounded-xl max-w-3xl w-full max-h-[90vh] overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}>
     <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div>

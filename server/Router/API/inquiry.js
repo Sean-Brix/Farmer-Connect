@@ -1,39 +1,56 @@
 import express from 'express';
-import { getActiveInquiries } from '../../Controller/Inquiry/getActiveInquiries.js';
-import getUserInquiries from '../../Controller/Inquiry/getUserInquiries.js';
-import { resolveInquiry } from '../../Controller/Inquiry/resolveInquiry.js';
-import { getActiveInquiryForUser } from '../../Controller/Inquiry/getActiveInquiryForUser.js';
-import { getInquiriesByStatus } from '../../Controller/Inquiry/getInquiriesByStatus.js';
-import { createInquiry } from '../../Controller/Inquiry/createInquiry.js';
 import { cookieAuth } from '../../Middlewares/Auth/cookieAuth.js';
 import uploadInquiry from '../../Utils/multer_inquiry.js';
 import { uploadInquiryAttachment as uploadAttachmentHandler } from '../../Controller/Inquiry/uploadAttachment.js';
 import { getInquiryAttachment } from '../../Controller/Inquiry/getAttachment.js';
 
+// New unified controller (HTTP Polling - no Socket.io)
+import {
+    createInquiry,
+    sendMessage,
+    getMessages,
+    getInquiriesByStatus,
+    getUserInquiries,
+    getActiveInquiry,
+    resolveInquiry,
+    getUnreadCount
+} from '../../Controller/Inquiry/inquiry.controller.js';
+
 const router = express.Router();
+
+/**
+ * HTTP Polling Inquiry System Routes
+ * All Socket.io functionality replaced with REST API
+ */
 
 // Create a new inquiry
 router.post('/', cookieAuth, createInquiry);
 
-// Get all active inquiries for admin chat interface
-router.get('/active', cookieAuth, getActiveInquiries);
+// Send a message (user/admin) - now supports file attachments
+router.post('/:inquiryId/messages', cookieAuth, uploadInquiry.array('files', 5), sendMessage);
 
-// Admin: get inquiries by status (tabs)
+// Get messages with polling support (?since=timestamp)
+router.get('/:inquiryId/messages', cookieAuth, getMessages);
+
+// Get unread message count (for badges)
+router.get('/messages/unread-count', cookieAuth, getUnreadCount);
+
+// Admin: Get inquiries by status (tabs)
 router.get('/by-status', cookieAuth, getInquiriesByStatus);
 
-// Get user's own inquiries for client-side history
+// User: Get own inquiries
 router.get('/my-inquiries', cookieAuth, getUserInquiries);
 
-// Get user's current active inquiry
-router.get('/active/me', cookieAuth, getActiveInquiryForUser);
+// User: Get active inquiry
+router.get('/active/me', cookieAuth, getActiveInquiry);
 
-// Mark inquiry as resolved
+// User: Resolve inquiry
 router.patch('/:inquiryId/resolve', cookieAuth, resolveInquiry);
 
-// Upload an attachment for an inquiry (user-owned)
+// Upload attachment
 router.post('/:inquiryId/attachments', cookieAuth, uploadInquiry.single('file'), uploadAttachmentHandler);
 
-// Stream an attachment (inline) by attachment ID
+// Get attachment
 router.get('/attachments/:attachmentId', cookieAuth, getInquiryAttachment);
 
 export default router;

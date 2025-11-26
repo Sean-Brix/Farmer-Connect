@@ -116,13 +116,62 @@ export const ThemeProvider = ({ children }) => {
   // Apply theme on mount and when theme changes
   useEffect(() => {
     console.log('🎨 [ThemeContext] useEffect triggered, themePreference:', themePreference);
+    
+    // Check if we're on admin pages - always force light mode
+    const isAdminPage = window.location.pathname.startsWith('/admin') || 
+                        window.location.pathname.startsWith('/dashboard');
+    
+    if (isAdminPage) {
+      console.log('🎨 [ThemeContext] Admin page - enforcing light mode');
+      applyTheme('light');
+      return;
+    }
+    
     applyTheme(themePreference);
   }, [themePreference]);
+
+  // Watch for pathname changes to enforce admin light mode
+  useEffect(() => {
+    const checkAdminMode = () => {
+      const isAdminPage = window.location.pathname.startsWith('/admin') || 
+                          window.location.pathname.startsWith('/dashboard');
+      
+      if (isAdminPage && isDark) {
+        console.log('🎨 [ThemeContext] Navigated to admin - forcing light mode');
+        setThemePreference('light');
+        localStorage.setItem('theme', 'light');
+        applyTheme('light');
+      }
+    };
+
+    // Check on mount
+    checkAdminMode();
+
+    // Listen for navigation events
+    window.addEventListener('popstate', checkAdminMode);
+    
+    return () => {
+      window.removeEventListener('popstate', checkAdminMode);
+    };
+  }, [isDark]);
 
   // Load theme preference on mount (once)
   useEffect(() => {
     console.log('🎨 [ThemeContext] Initial mount - applying theme');
-    // Always apply light theme on mount, ignore API
+    
+    // Check if we're on admin pages - force light mode
+    const isAdminPage = window.location.pathname.startsWith('/admin') || 
+                        window.location.pathname.startsWith('/dashboard');
+    
+    if (isAdminPage) {
+      console.log('🎨 [ThemeContext] Admin page detected - forcing light mode');
+      setThemePreference('light');
+      localStorage.setItem('theme', 'light');
+      applyTheme('light');
+      return; // Don't load from API
+    }
+    
+    // Always apply light theme on mount for non-admin, ignore API
     applyTheme('light');
     
     // Optionally try to load from API but don't auto-apply

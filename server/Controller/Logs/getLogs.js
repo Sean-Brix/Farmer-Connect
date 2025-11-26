@@ -146,11 +146,22 @@ async function getLogs(req, res) {
             orderBy[sortField] = sortDirection;
         }
 
-        // Execute query with pagination
+        // Execute optimized query with pagination
         const [logs, totalCount] = await Promise.all([
             prisma.auditLog.findMany({
                 where,
-                include: {
+                select: {
+                    id: true,
+                    adminId: true,
+                    action: true,
+                    targetType: true,
+                    targetId: true,
+                    targetName: true,
+                    details: true,
+                    metadata: true,
+                    ipAddress: true,
+                    userAgent: true,
+                    createdAt: true,
                     admin: {
                         select: {
                             id: true,
@@ -158,8 +169,7 @@ async function getLogs(req, res) {
                             firstName: true,
                             surname: true,
                             access: true,
-                            picture: true,
-                            mimeType: true,
+                            picturePath: true,
                         },
                     },
                 },
@@ -175,7 +185,7 @@ async function getLogs(req, res) {
         const hasNextPage = pageNum < totalPages;
         const hasPrevPage = pageNum > 1;
 
-        // Format the response data
+        // Format the response data - truncate large fields for performance
         const formattedLogs = logs.map((log) => ({
             id: log.id,
             admin: {
@@ -183,18 +193,20 @@ async function getLogs(req, res) {
                 username: log.admin.username,
                 fullName: `${log.admin.firstName} ${log.admin.surname}`,
                 access: log.admin.access,
-                hasPicture: !!(
-                    log.admin.picture && log.admin.picture.length > 0
-                ), // Boolean flag instead of binary data
-                mimeType: log.admin.mimeType,
+                picturePath: log.admin.picturePath,
             },
             action: log.action,
             targetType: log.targetType,
             targetId: log.targetId,
             targetName: log.targetName,
-            details: log.details,
+            // Truncate details to 500 chars for list view (full details on expand)
+            details: log.details && log.details.length > 500 
+                ? log.details.substring(0, 500) + '...' 
+                : log.details,
+            detailsFull: log.details, // Keep full details for expansion
+            hasMoreDetails: log.details && log.details.length > 500,
             // metadata is Prisma Json field already parsed by the driver
-            metadata: log.metadata ?? null,
+            metadata: log.metadata ? JSON.parse(log.metadata) : null,
             ipAddress: log.ipAddress,
             userAgent: log.userAgent,
             createdAt: log.createdAt,

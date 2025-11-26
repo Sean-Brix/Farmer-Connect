@@ -27,7 +27,9 @@ async function getMyPhoto(req, res) {
             select: { picturePath: true },
         });
 
-        if (!user || !user.picturePath) {
+        // Skip Firebase lookup for known default/non-existent paths
+        const defaultPaths = ['accounts/user.jpg', 'default_picture.png'];
+        if (!user || !user.picturePath || defaultPaths.includes(user.picturePath)) {
             res.set("Content-Type", "image/png");
             return res.sendFile(defaultImagePath);
         }

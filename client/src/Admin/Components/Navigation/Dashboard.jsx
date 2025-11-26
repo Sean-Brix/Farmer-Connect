@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import logo from '../../../Assets/Logo.png';
 import { useNavigate } from 'react-router-dom';
 import default_picture from '../../../Assets/default_picture.png';
-import { connectSocket } from '../../../utils/socket.js';
 import { useTheme } from '../../../contexts/ThemeContext.jsx';
 
 // SERVICES
@@ -45,7 +44,11 @@ export default function Dashboard() {
     // Content State
     const elements = useRef({
         // SERVICES
-        analytics: () => Analytics,
+        analytics: () => (props) => (
+            <PlantingReportProvider>
+                <Analytics {...props} />
+            </PlantingReportProvider>
+        ),
         profiles: () => Profiles,
         enrollment: () => Seminar,
         eic: () => EIC,
@@ -85,8 +88,7 @@ export default function Dashboard() {
                     throw new Error(data.error);
                 }
 
-                // Connect Socket
-                connectSocket(data.access || 'guest');
+                // Socket.io removed - using HTTP polling for real-time features
 
                 // Render State
                 setDetails({

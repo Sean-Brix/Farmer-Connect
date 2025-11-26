@@ -28,18 +28,30 @@ const fetchSeminars = async ({ queryKey }) => {
     }));
 };
 
-const fetchAppliedSeminars = async () => {
-    let user = {};
-    try {
-        const userRes = await fetch('/auth/is-authenticated');
-        user = await userRes.json();
-    } catch (err) {
-        user = { check: false };
-    }
+// Cache auth status to avoid repeated checks
+let cachedAuthStatus = null;
+let cacheTimestamp = 0;
+const CACHE_DURATION = 30000; // 30 seconds
 
-    if (!user.check) {
-        // User not authenticated, skip second API call
-        return [];
+const fetchAppliedSeminars = async () => {
+    const now = Date.now();
+    
+    // Use cached auth status if available and fresh
+    if (cachedAuthStatus !== null && (now - cacheTimestamp) < CACHE_DURATION) {
+        if (!cachedAuthStatus) return [];
+    } else {
+        // Fetch and cache auth status
+        try {
+            const userRes = await fetch('/auth/is-authenticated');
+            const user = await userRes.json();
+            cachedAuthStatus = user.check || false;
+            cacheTimestamp = now;
+        } catch (err) {
+            cachedAuthStatus = false;
+            cacheTimestamp = now;
+        }
+        
+        if (!cachedAuthStatus) return [];
     }
 
     const res = await fetch(`/api/seminar/participants/user`);
@@ -56,9 +68,22 @@ const fetchAppliedSeminars = async () => {
 
 // NEW: Fetch user's registered seminars (full info)
 const fetchUserRegisteredSeminars = async () => {
-    const userRes = await fetch('/auth/is-authenticated');
-    const user = await userRes.json();
-    if (!user.check) return [];
+    const now = Date.now();
+    
+    // Use cached auth status
+    if (cachedAuthStatus === null || (now - cacheTimestamp) >= CACHE_DURATION) {
+        try {
+            const userRes = await fetch('/auth/is-authenticated');
+            const user = await userRes.json();
+            cachedAuthStatus = user.check || false;
+            cacheTimestamp = now;
+        } catch (err) {
+            cachedAuthStatus = false;
+            cacheTimestamp = now;
+        }
+    }
+    
+    if (!cachedAuthStatus) return [];
 
     const res = await fetch('/api/seminar/participants/user');
     const data = await res.json();
@@ -79,10 +104,22 @@ const fetchUserRegisteredSeminars = async () => {
 };
 
 const applySeminar = async (seminarId) => {
-    const userRes = await fetch('/auth/is-authenticated');
-    const user = await userRes.json();
-
-    if (!user.check) throw new Error('Login First');
+    const now = Date.now();
+    
+    // Use cached auth status
+    if (cachedAuthStatus === null || (now - cacheTimestamp) >= CACHE_DURATION) {
+        try {
+            const userRes = await fetch('/auth/is-authenticated');
+            const user = await userRes.json();
+            cachedAuthStatus = user.check || false;
+            cacheTimestamp = now;
+        } catch (err) {
+            cachedAuthStatus = false;
+            cacheTimestamp = now;
+        }
+    }
+    
+    if (!cachedAuthStatus) throw new Error('Login First');
 
     const res = await fetch(`/api/seminar/participants/apply/${seminarId}`, {
         method: 'POST',
@@ -95,10 +132,22 @@ const applySeminar = async (seminarId) => {
 };
 
 const cancelSeminar = async (seminarId) => {
-    const userRes = await fetch('/auth/is-authenticated');
-    const user = await userRes.json();
-
-    if (!user.check) throw new Error('Login First');
+    const now = Date.now();
+    
+    // Use cached auth status
+    if (cachedAuthStatus === null || (now - cacheTimestamp) >= CACHE_DURATION) {
+        try {
+            const userRes = await fetch('/auth/is-authenticated');
+            const user = await userRes.json();
+            cachedAuthStatus = user.check || false;
+            cacheTimestamp = now;
+        } catch (err) {
+            cachedAuthStatus = false;
+            cacheTimestamp = now;
+        }
+    }
+    
+    if (!cachedAuthStatus) throw new Error('Login First');
 
     const res = await fetch(`/api/seminar/participants/cancel/${seminarId}`, {
         method: 'POST',

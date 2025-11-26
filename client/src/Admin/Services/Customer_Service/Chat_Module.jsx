@@ -1,847 +1,684 @@
+/**
+ * Chat_Module - Admin Chat Interface (Complete Rebuild)
+ * Pure HTTP Polling Implementation - No Socket.io
+ * 
+ * Features:
+ * - Three-tab system (PENDING, IN_PROGRESS, RESOLVED)
+ * - Real-time inquiry list updates via HTTP polling
+ * - Real-time message updates via HTTP polling
+ * - Admin reply functionality
+ * - Attachment support
+ * - Search/filter inquiries
+ * - Unread badges
+ * - Pagination
+ */
+
 import React, { useEffect, useRef, useState } from 'react';
-import { useSocket } from '../../../contexts/SocketContext.jsx';
-import { useTheme } from '../../../contexts/ThemeContext.jsx';
-import ChatWindow from './components/ChatWindow.jsx';
-import ConversationModal from './ConversationModal.jsx';
-import InquiryListItem from './components/InquiryListItem.jsx';
-import DashboardStats from './components/DashboardStats.jsx';
+import { useAdminInquiries, useInquiryMessages } from '../../../hooks/useInquiryPolling.js';
+import ImagePreview from '../../../Components/Chats/ImagePreview.jsx';
+import FillSurveyModal from '../../../Components/Survey/FillSurveyModal.jsx';
+import { surveyFormsAPI } from '../Survey/surveyFormsAPI.js';
 
-function Chat_Module() {
-  // Pagination states for each tab
-  const [pendingPage, setPendingPage] = useState(1);
-  const [inProgressPage, setInProgressPage] = useState(1);
-  const [resolvedPage, setResolvedPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(8);
-  const { isDark } = useTheme();
-  // Three-tab lists
-  const [pending, setPending] = useState([]);
-  const [inProgress, setInProgress] = useState([]);
-  const [resolved, setResolved] = useState([]);
-  const [activeTab, setActiveTab] = useState('PENDING'); // PENDING | IN_PROGRESS | RESOLVED
-  const [selectedChat, setSelectedChat] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
-
-  // Refs
-  const messagesEndRef = useRef(null);
-  const messagesContainerRef = useRef(null);
-  const selectedChatRef = useRef(null);
-  const activeTabRef = useRef(activeTab);
-
-  const { socket, isConnected, connectSocket } = useSocket();
-  const [toast, setToast] = useState(null); // {type,title,message,action}
-
-  // Connect socket as admin when component mounts
-  useEffect(() => {
-    if (!isConnected) connectSocket('Admin');
-  }, [isConnected, connectSocket]);
-
-  // Keep refs in sync
-  useEffect(() => { selectedChatRef.current = selectedChat; }, [selectedChat]);
-  useEffect(() => { activeTabRef.current = activeTab; }, [activeTab]);
-
-  // Auto-hide toast after 4s
-  useEffect(() => {
-    if (!toast) return;
-    const t = setTimeout(() => setToast(null), 4000);
-    return () => clearTimeout(t);
-  }, [toast]);
-
-  // Track the last resolved inquiry for auto-selection
-  const [lastResolvedInquiryId, setLastResolvedInquiryId] = useState(null);
-
-  // Refetch resolved list when switching to RESOLVED tab
-  useEffect(() => {
-    if (activeTab === 'RESOLVED' && isConnected && socket) {
-      const refetchResolvedList = async () => {
-        try {
-          const res = await fetchByStatus('RESOLVED');
-          setResolved(res.items || []);
-          
-          // Auto-select the last resolved inquiry if available
-          if (lastResolvedInquiryId && res.items && res.items.length > 0) {
-            const foundInquiry = res.items.find(item => 
-              item.id === lastResolvedInquiryId || item.inquiryId === lastResolvedInquiryId
-            );
-            if (foundInquiry) {
-              setSelectedChat(foundInquiry);
-              setLastResolvedInquiryId(null); // Clear after selecting
-            }
-          }
-        } catch (error) {
-          console.error('Failed to refetch resolved list:', error);
-        }
-      };
-      
-      refetchResolvedList();
-    }
-  }, [activeTab, isConnected, socket, lastResolvedInquiryId]);
-
-  // Load inquiries for tabs
-  useEffect(() => {
-    if (isConnected && socket) loadTabs();
-  }, [isConnected, socket]);
-
-  const fetchByStatus = async (status) => {
-    const res = await fetch(`/api/inquiries/by-status?status=${status}`, { credentials: 'include' });
-    if (!res.ok) return { items: [] };
-    return res.json();
-  };
-
-  const loadTabs = async () => {
-    try {
-      setLoading(true);
-      const [p, ip, r] = await Promise.all([
-        fetchByStatus('PENDING'),
-        fetchByStatus('IN_PROGRESS'),
-        fetchByStatus('RESOLVED'),
-      ]);
-      setPending(p.items || []);
-      setInProgress(ip.items || []);
-      setResolved(r.items || []);
-    } catch (e) {
-      console.error('Failed to load inquiry tabs', e);
-      setPending([]); setInProgress([]); setResolved([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Helpers
-  const upsert = (list, item) => {
-    const itemId = item.id || item.inquiryId;
-    const idx = list.findIndex(c => c.id === itemId || c.inquiryId === itemId);
-    if (idx >= 0) {
-      const copy = [...list];
-      copy[idx] = { ...copy[idx], ...item };
-      console.log(`Admin: Updated existing item in list at index ${idx}`);
-      return copy;
-    }
-    console.log(`Admin: Adding new item to list`);
-    return [item, ...list];
-  };
-
-  // Helper function to find inquiry data and create updated item
-  const upsertInquiry = (list, inquiryId, patch, newStatus) => {
-    // Try to find the inquiry in any of the current lists
-    const findInList = (searchList) => searchList.find(c => c.id === inquiryId || c.inquiryId === inquiryId);
-    const currentSelected = selectedChatRef.current;
-    const found = findInList(pending) || findInList(inProgress) || findInList(resolved) ||
-                  (currentSelected && (currentSelected.id === inquiryId || currentSelected.inquiryId === inquiryId) ? currentSelected : null);
-
-    // Fallback: if not found anywhere, create a minimal placeholder so the item appears in the destination list
-    const base = found || { id: inquiryId, inquiryId };
-    const updated = { ...base, status: newStatus, ...patch };
-    return upsert(list, updated);
-  };
-  const removeFrom = (list, id) => {
-    const filtered = list.filter(c => c.id !== id && c.inquiryId !== id);
-    console.log(`Admin: removeFrom - original length: ${list.length}, after removal: ${filtered.length}, removing id: ${id}`);
-    return filtered;
-  };
-
-  const moveInquiry = (inquiryId, toStatus, patch = {}) => {
-    console.log(`Admin: Moving inquiry ${inquiryId} to ${toStatus}`);
+export default function Chat_Module() {
+    // Admin is always in light mode - no theme needed
     
-    // Create a single state update that handles all three arrays atomically
-    const updateAllLists = () => {
-      setPending(prevPending => {
-        const pendingWithoutTarget = prevPending.filter(c => c.id !== inquiryId && c.inquiryId !== inquiryId);
-        return toStatus === 'PENDING' ? upsertInquiry(pendingWithoutTarget, inquiryId, patch, toStatus) : pendingWithoutTarget;
-      });
-      
-      setInProgress(prevInProgress => {
-        const inProgressWithoutTarget = prevInProgress.filter(c => c.id !== inquiryId && c.inquiryId !== inquiryId);
-        return toStatus === 'IN_PROGRESS' ? upsertInquiry(inProgressWithoutTarget, inquiryId, patch, toStatus) : inProgressWithoutTarget;
-      });
-      
-      setResolved(prevResolved => {
-        const resolvedWithoutTarget = prevResolved.filter(c => c.id !== inquiryId && c.inquiryId !== inquiryId);
-        if (toStatus === 'RESOLVED') {
-          const result = upsertInquiry(resolvedWithoutTarget, inquiryId, patch, toStatus);
-          console.log(`Admin: Added to resolved list, new length: ${result.length}`);
-          return result;
-        }
-        return resolvedWithoutTarget;
-      });
-    };
+    // State
+    const [activeTab, setActiveTab] = useState('PENDING');
+    const [selectedChat, setSelectedChat] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [messageText, setMessageText] = useState('');
+    const [attachments, setAttachments] = useState([]);
+    const [toast, setToast] = useState(null);
+    const [imagePreview, setImagePreview] = useState({ open: false, src: '', filename: '' });
+    const [surveyModal, setSurveyModal] = useState({ open: false, surveyId: null, title: '' });
+    const [showSurveyPicker, setShowSurveyPicker] = useState(false);
+    const [surveys, setSurveys] = useState([]);
+    const [loadingSurveys, setLoadingSurveys] = useState(false);
     
-    updateAllLists();
-
-    // Keep selected chat's message thread/details
-    setSelectedChat(prev => {
-      if (!prev) return prev;
-      const matches = prev.id === inquiryId || prev.inquiryId === inquiryId;
-      if (!matches) return prev;
-      const updated = { ...prev, status: toStatus, ...patch };
-      return {
-        ...updated,
-        replies: prev.replies || updated.replies || [],
-        message: prev.message || updated.message,
-        createdAt: prev.createdAt || updated.createdAt,
-      };
-    });
-  };
-
-  // Socket event listeners
-  useEffect(() => {
-    if (!socket) return;
-
-    // New user message
-    socket.on('chat_message_received', (data) => {
-      // Prevent echoes from the same socket if server broadcasts to all
-      if (data?.socketId && socket?.id && data.socketId === socket.id) {
-        return; // skip self-emitted broadcast
-      }
-      const inquiryId = data.inquiryId;
-      const status = data.status || 'PENDING';
-      const item = {
-        id: inquiryId,
-        inquiryId,
-        userId: data.userId,
-        user: { firstName: (data.userName || 'User').split(' ')[0], surname: (data.userName || '').split(' ').slice(1).join(' ') },
-        userEmail: data.userEmail,
-        subject: data.subject,
-        message: data.message,
-        createdAt: data.timestamp || new Date().toISOString(),
-        lastMessage: data.message,
-        lastMessageTime: data.timestamp,
-        updatedAt: data.timestamp,
-        status,
-        isOnline: true,
-      };
-      if (status === 'IN_PROGRESS') setInProgress(prev => upsert(prev, item));
-      else setPending(prev => upsert(prev, item));
-
-      // If viewing the same inquiry, append incoming user message to the thread
-      setSelectedChat(prev => {
-        if (!prev) return prev;
-        const matches = prev.id === inquiryId || prev.inquiryId === inquiryId;
-        if (!matches) return prev;
-        // Deduplicate by approximate time + same sender + same message
-        const exists = (prev.replies || []).some(r => r.senderType === 'USER' && r.message === data.message && Math.abs(new Date(r.createdAt) - new Date(data.timestamp || Date.now())) < 5000);
-        if (exists) return prev;
-        const reply = {
-          id: `${data.userId}-${data.timestamp || Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          message: data.message,
-          createdAt: data.timestamp || new Date().toISOString(),
-          senderType: 'USER'
-        };
-        return {
-          ...prev,
-          lastMessage: data.message,
-          lastMessageTime: data.timestamp || new Date().toISOString(),
-          updatedAt: data.timestamp || new Date().toISOString(),
-          replies: [...(prev.replies || []), reply]
-        };
-      });
-    });
-
-    // New support request (ensure it's visible in PENDING)
-    socket.on('admin_support_requested', (data) => {
-      const inquiryId = data.inquiryId;
-      const item = {
-        id: inquiryId,
-        inquiryId,
-        userId: data.userId,
-        user: { firstName: (data.userName || 'User').split(' ')[0], surname: (data.userName || '').split(' ').slice(1).join(' ') },
-        userEmail: data.userEmail,
-        subject: data.subject || `Support Request`,
-        message: data.message,
-        createdAt: data.timestamp || new Date().toISOString(),
-        lastMessage: data.message,
-        lastMessageTime: data.timestamp,
-        updatedAt: data.timestamp,
-        status: 'PENDING',
-        isOnline: true,
-      };
-      setPending(prev => upsert(prev, item));
-    });
-
-    // Status change (e.g., admin first reply -> IN_PROGRESS, user resolve -> RESOLVED)
-    socket.on('admin_inquiry:status_update', (payload) => {
-      console.log('Admin received status update:', payload);
-      const { inquiryId, status, updatedAt } = payload || {};
-      if (!inquiryId || !status) return;
-      
-      // Track newly resolved inquiries for auto-selection
-      if (status === 'RESOLVED') {
-        setLastResolvedInquiryId(inquiryId);
-      }
-      
-      console.log(`Admin: Before moveInquiry - activeTab: ${activeTabRef.current}`);
-      moveInquiry(inquiryId, status, { updatedAt, status });
-      
-      // If we're following this conversation, switch to its new status tab for continuity
-      const current = selectedChatRef.current;
-      if (current && (current.id === inquiryId || current.inquiryId === inquiryId)) {
-        console.log(`Admin: Currently viewing this inquiry, switching from ${activeTabRef.current} to ${status}`);
-        if (activeTabRef.current !== status) {
-          console.log(`Admin: Setting activeTab to ${status}`);
-          setActiveTab(status);
-        }
-        // also update selectedChat status immediately
-        setSelectedChat(prev => prev ? { ...prev, status, updatedAt } : prev);
-      }
-    });
-
-    // Message preview update
-    socket.on('admin_inquiry:message_update', (payload) => {
-      const { inquiryId, lastMessage, timestamp } = payload || {};
-      if (!inquiryId) return;
-      // Only update existing items in-place to avoid moving items back to wrong tabs
-      setPending(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage, lastMessageTime: timestamp, updatedAt: timestamp } : c));
-      setInProgress(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage, lastMessageTime: timestamp, updatedAt: timestamp } : c));
-      setResolved(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage, lastMessageTime: timestamp, updatedAt: timestamp } : c));
-      setSelectedChat(prev => (prev && (prev.id === inquiryId || prev.inquiryId === inquiryId) ? { ...prev, lastMessage, lastMessageTime: timestamp } : prev));
-    });
-
-    // Attachment uploaded by user
-    socket.on('admin_inquiry:attachment', (payload) => {
-      const { inquiryId, filename, filepath, streamUrl, filesize, mimetype } = payload || {};
-      if (!inquiryId) return;
-      const ts = new Date().toISOString();
-      const preview = `📎 ${filename}`;
-      setPending(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage: preview, lastMessageTime: ts, updatedAt: ts } : c));
-      setInProgress(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage: preview, lastMessageTime: ts, updatedAt: ts } : c));
-      setResolved(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage: preview, lastMessageTime: ts, updatedAt: ts } : c));
-
-      // If the chat is open, add attachment both to attachments array and replies for real-time display
-      setSelectedChat(prev => {
-        if (!prev) return prev;
-        const matches = prev.id === inquiryId || prev.inquiryId === inquiryId;
-        if (!matches) return prev;
-        
-        const att = {
-          id: `temp-${Date.now()}`,
-          filename,
-          mimetype,
-          streamUrl: streamUrl || filepath,
-          filesize,
-          uploadedById: prev.userId,
-          createdAt: ts,
-        };
-        
-        // Check if attachment already exists
-        const prevAtts = Array.isArray(prev.attachments) ? prev.attachments : [];
-        const exists = prevAtts.some(a => (a.streamUrl || a.filepath) === att.streamUrl && (a.filename || '') === (filename || ''));
-        
-        if (exists) return prev; // Don't add duplicates
-        
-        // Add attachment message to replies array for immediate display like admin attachments
-        const attachmentReply = {
-          id: `user-att-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          message: streamUrl || filepath,
-          mime: mimetype,
-          filename: filename,
-          createdAt: ts,
-          senderType: 'USER'
-        };
-        
-        return { 
-          ...prev, 
-          attachments: [...prevAtts, att],
-          replies: [...(prev.replies || []), attachmentReply],
-          lastMessage: preview, 
-          lastMessageTime: ts, 
-          updatedAt: ts 
-        };
-      });
-    });
-
-    // User requested to resolve
-    socket.on('admin_inquiry:resolve_request', (payload) => {
-      const { inquiryId, userName } = payload || {};
-      if (!inquiryId) return;
-      const chat = [
-        ...pending,
-        ...inProgress,
-        ...resolved
-      ].find(c => c.id === inquiryId || c.inquiryId === inquiryId);
-      const label = chat ? (chat.subject || 'Inquiry') : `Inquiry ${inquiryId}`;
-      setToast({
-        type: 'info',
-        title: 'User marked conversation as resolved',
-        message: `${userName || 'User'} wants to resolve: ${label}`,
-      });
-    });
-
-    // Listen for user connection status
-    socket.on('user_connected', (data) => {
-      console.log('User connected:', data);
-      setPending(prev => prev.map(chat => chat.userId === data.userId ? { ...chat, isOnline: true } : chat));
-      setInProgress(prev => prev.map(chat => chat.userId === data.userId ? { ...chat, isOnline: true } : chat));
-    });
-
-    socket.on('user_disconnected', (data) => {
-      console.log('User disconnected:', data);
-      setPending(prev => prev.map(chat => chat.userId === data.userId ? { ...chat, isOnline: false } : chat));
-      setInProgress(prev => prev.map(chat => chat.userId === data.userId ? { ...chat, isOnline: false } : chat));
-    });
-
-    return () => {
-      socket.off('chat_message_received');
-      socket.off('admin_support_requested');
-      socket.off('admin_inquiry:status_update');
-      socket.off('admin_inquiry:message_update');
-  socket.off('admin_inquiry:attachment');
-  socket.off('admin_inquiry:resolve_request');
-      socket.off('user_connected');
-      socket.off('user_disconnected');
-    };
-  }, [socket]);
-
-  // Auto-scroll messages container to bottom when a new conversation is selected
-  useEffect(() => {
-    if (selectedChat && messagesContainerRef.current) {
-      // Small delay to ensure messages are rendered first
-      setTimeout(() => {
-        if (messagesContainerRef.current) {
-          messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-        }
-      }, 100);
-    }
-  }, [selectedChat?.id, selectedChat?.inquiryId]);
-
-  // Auto-scroll to bottom when replies change (new messages)
-  useEffect(() => {
-    if (selectedChat?.replies && messagesContainerRef.current) {
-      // Use setTimeout to ensure DOM updates first
-      setTimeout(() => {
-        if (messagesContainerRef.current) {
-          messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-        }
-      }, 50);
-    }
-  }, [selectedChat?.replies?.length]);
-
-  // Sync selectedChat with any list to prevent state inconsistencies
-  useEffect(() => {
-    if (!selectedChat) return;
-    const lists = [...pending, ...inProgress, ...resolved];
-    const match = lists.find(chat => chat.id === selectedChat.id || (chat.inquiryId && selectedChat.inquiryId && chat.inquiryId === selectedChat.inquiryId));
-    if (match) {
-      setSelectedChat(prev => {
-        if (!prev) return match;
-        // Prefer list with more replies
-        const prevRepliesLen = Array.isArray(prev.replies) ? prev.replies.length : 0;
-        const matchRepliesLen = Array.isArray(match.replies) ? match.replies.length : 0;
-        const replies = matchRepliesLen >= prevRepliesLen ? (match.replies || prev.replies) : prev.replies;
-        return {
-          ...prev,
-          ...match,
-          replies,
-          message: prev.message || match.message,
-          createdAt: prev.createdAt || match.createdAt,
-        };
-      });
-    }
-  }, [pending, inProgress, resolved]);
-
-  // Handle sending message
-  const handleSendMessage = (messageText) => {
-    if (!messageText.trim() || !selectedChat) return;
-
-    // Emit to server
-    socket.emit('admin_reply', {
-      userId: selectedChat.userId,
-      inquiryId: selectedChat.inquiryId,
-      message: messageText,
-      timestamp: new Date()
-    });
-
-    // Optimistic preview + move to IN_PROGRESS and append replies locally
-    const id = selectedChat.id || selectedChat.inquiryId;
-    const nowIso = new Date().toISOString();
-    const reply = {
-      id: `admin-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      message: messageText,
-      createdAt: nowIso,
-      senderType: 'ADMIN'
-    };
-
-    setSelectedChat(prev => ({
-      ...prev,
-      replies: [...(prev?.replies || []), reply],
-      lastMessage: messageText,
-      lastMessageTime: nowIso,
-      status: 'IN_PROGRESS'
-    }));
-
-    moveInquiry(id, 'IN_PROGRESS', { lastMessage: messageText, lastMessageTime: nowIso, updatedAt: nowIso });
-
-    // Follow the conversation into In Progress
-    if (activeTabRef.current !== 'IN_PROGRESS') setActiveTab('IN_PROGRESS');
-  };
-
-  // Handle sending attachments - sequential upload like client-side
-  const handleSendAttachment = async (attachmentFiles) => {
-    if (!attachmentFiles || attachmentFiles.length === 0 || !selectedChat) return;
-
-    // Get the inquiry ID - could be either id or inquiryId depending on data structure
-    const inquiryId = selectedChat.inquiryId || selectedChat.id;
-    const id = selectedChat.id || selectedChat.inquiryId;
+    // Pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10);
     
-    if (!inquiryId) {
-      console.error('No inquiry ID found in selectedChat:', selectedChat);
-      setToast({
-        type: 'error',
-        title: 'Upload Failed',
-        message: 'Cannot upload attachment: No inquiry ID found.'
-      });
-      return;
-    }
+    // Refs
+    const messagesEndRef = useRef(null);
+    const messagesContainerRef = useRef(null);
 
-    let successCount = 0;
-
-    // Upload files sequentially like client-side
-    for (let i = 0; i < attachmentFiles.length; i++) {
-      const file = attachmentFiles[i];
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        // Upload to server using the resolved inquiryId
-        const response = await fetch(`/api/inquiries/${inquiryId}/attachments`, {
-          method: 'POST',
-          body: formData,
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(errorText || 'Upload failed');
+    // HTTP Polling Hooks
+    const { inquiries: allInquiries, isLoading, refetch: refetchInquiries } = useAdminInquiries(activeTab);
+    
+    // Get ALL inquiries for tab counts (without status filter)
+    const { inquiries: allInquiriesForCounts = [] } = useAdminInquiries(null);
+    
+    const {
+        messages: polledMessages,
+        sendMessage: sendInquiryMessage,
+        isSending
+    } = useInquiryMessages(selectedChat?.id, {
+        // Show messages for all inquiries, but only poll for active ones
+        enabled: !!selectedChat?.id,
+        pollInterval: ['PENDING', 'IN_PROGRESS'].includes(selectedChat?.status) ? 3000 : false,
+        onNewMessage: (msg) => {
+            // Refresh inquiry list when new message arrives
+            refetchInquiries();
         }
+    });
 
-        const { data } = await response.json();
-        const streamUrl = data.streamUrl || data.filepath;
-        const nowIso = new Date().toISOString();
-        const attachmentPreview = `📎 ${data.filename}`;
-        
-        // Add attachment message to replies array like client-side
-        const attachmentReply = {
-          id: `admin-att-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          message: streamUrl,
-          mime: data.mimetype,
-          filename: data.filename,
-          createdAt: nowIso,
-          senderType: 'ADMIN'
-        };
+    // Auto-hide toast
+    useEffect(() => {
+        if (toast) {
+            const timer = setTimeout(() => setToast(null), 4000);
+            return () => clearTimeout(timer);
+        }
+    }, [toast]);
 
-        setSelectedChat(prev => ({
-          ...prev,
-          lastMessage: attachmentPreview,
-          lastMessageTime: nowIso,
-          status: 'IN_PROGRESS',
-          replies: [...(prev.replies || []), attachmentReply],
-          attachments: [
-            ...(prev.attachments || []),
-            {
-              id: data.id || `temp-${Date.now()}`,
-              filename: data.filename,
-              mimetype: data.mimetype,
-              streamUrl: streamUrl,
-              filesize: data.filesize,
-              uploadedById: 'admin', // Mark as admin upload
-              createdAt: nowIso,
-            }
-          ]
+    // Sync polled messages with selected chat
+    useEffect(() => {
+        if (!selectedChat || !polledMessages || polledMessages.length === 0) return;
+
+        const formattedReplies = polledMessages.map(msg => ({
+            id: msg.id,
+            message: msg.message,
+            createdAt: msg.createdAt,
+            senderType: msg.senderType,
+            senderId: msg.senderId,
+            senderName: msg.senderName,
+            attachments: msg.attachments || [] // Include attachments
         }));
 
-        // Update the inquiry status and move to IN_PROGRESS if needed
-        moveInquiry(id, 'IN_PROGRESS', { lastMessage: attachmentPreview, lastMessageTime: nowIso, updatedAt: nowIso });
+        // Merge with existing replies - append new ones
+        setSelectedChat(prev => {
+            if (!prev) return prev;
+            
+            const existingIds = new Set((prev.replies || []).map(r => r.id));
+            const newReplies = formattedReplies.filter(msg => !existingIds.has(msg.id));
+            
+            if (newReplies.length > 0) {
+                return {
+                    ...prev,
+                    replies: [...(prev.replies || []), ...newReplies]
+                };
+            }
+            
+            return prev;
+        });
+    }, [polledMessages, selectedChat?.id]);
 
-        // Emit socket event to notify user of admin attachment
-        if (socket && isConnected) {
-          socket.emit('admin_attachment_uploaded', {
-            userId: selectedChat.userId,
-            inquiryId: inquiryId,
-            filename: data.filename,
-            streamUrl: streamUrl,
-            filesize: data.filesize,
-            mimetype: data.mimetype,
-            timestamp: nowIso
-          });
+    // Auto-scroll to bottom
+    useEffect(() => {
+        if (selectedChat && messagesContainerRef.current) {
+            setTimeout(() => {
+                if (messagesContainerRef.current) {
+                    messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+                }
+            }, 100);
+        }
+    }, [selectedChat?.id, selectedChat?.replies?.length]);
+
+    // Reset page when tab changes
+    useEffect(() => {
+        setCurrentPage(1);
+        setSelectedChat(null);
+    }, [activeTab]);
+
+    // Handle sending message
+    const handleSendMessage = async () => {
+        if ((!messageText.trim() && attachments.length === 0) || !selectedChat) return;
+
+        const text = messageText.trim() || '(Attachment)';
+        const filesToSend = [...attachments];
+        setMessageText('');
+        setAttachments([]);
+
+        try {
+            await sendInquiryMessage(text, filesToSend);
+            refetchInquiries(); // Update inquiry list
+        } catch (error) {
+            console.error('Error sending message:', error);
+            showToast('error', 'Error', 'Failed to send message. Please try again.');
+            // Restore attachments on error
+            setAttachments(filesToSend);
+        }
+    };
+
+    const handleSelectInquiry = (inquiry) => {
+        setSelectedChat(inquiry);
+    };
+
+    const showToast = (type, title, message) => {
+        setToast({ type, title, message });
+    };
+    
+    const isImageFile = (mimetype, filename) => {
+        if (mimetype) {
+            return mimetype.startsWith('image/');
+        }
+        const ext = filename?.split('.').pop()?.toLowerCase();
+        return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'].includes(ext);
+    };
+    
+    const loadSurveys = async () => {
+        setLoadingSurveys(true);
+        try {
+            const result = await surveyFormsAPI.getAll({ status: 'ACTIVE', limit: 100 });
+            setSurveys(result.data || []);
+        } catch (error) {
+            console.error('Error loading surveys:', error);
+            showToast('error', 'Error', 'Failed to load survey forms');
+        } finally {
+            setLoadingSurveys(false);
+        }
+    };
+    
+    const handleSendSurvey = async (survey) => {
+        if (!selectedChat) return;
+        
+        // Send special formatted message that will render as button on client side
+        const message = `__FC_FORM__${JSON.stringify({ id: survey.id, title: survey.title })}`;
+        
+        try {
+            await sendInquiryMessage(message, []);
+            setShowSurveyPicker(false);
+            showToast('info', 'Survey Sent', `Survey "${survey.title}" has been sent to the user`);
+            refetchInquiries();
+        } catch (error) {
+            console.error('Error sending survey:', error);
+            showToast('error', 'Error', 'Failed to send survey');
+        }
+    };
+
+    // Filter and paginate inquiries
+    const filteredInquiries = allInquiries.filter(inq => {
+        const userName = inq.user ? `${inq.user.firstName} ${inq.user.surname}` : `User #${inq.userId}`;
+        return inq.subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            inq.message?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            userName.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+
+    const totalPages = Math.ceil(filteredInquiries.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedInquiries = filteredInquiries.slice(startIndex, startIndex + itemsPerPage);
+
+    // Stats for dashboard - use allInquiriesForCounts to get accurate counts
+    const pendingCount = allInquiriesForCounts.filter(i => i.status === 'PENDING').length;
+    const inProgressCount = allInquiriesForCounts.filter(i => i.status === 'IN_PROGRESS').length;
+    const resolvedCount = allInquiriesForCounts.filter(i => i.status === 'RESOLVED').length;
+
+    // Render functions
+    const renderInquiryList = () => (
+        <div className="flex flex-col h-full">
+            {/* Search */}
+            <div className="p-4 border-b border-gray-200">
+                <input
+                    type="text"
+                    placeholder="Search inquiries..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                />
+            </div>
+
+            {/* Inquiry List */}
+            <div className="flex-1 overflow-y-auto">
+                {isLoading ? (
+                    <div className="p-8 text-center text-gray-500">Loading...</div>
+                ) : paginatedInquiries.length === 0 ? (
+                    <div className="p-8 text-center text-gray-500">No inquiries found</div>
+                ) : (
+                    <div className="space-y-2 p-4">
+                        {paginatedInquiries.map(inquiry => {
+                            const userName = inquiry.user ? `${inquiry.user.firstName} ${inquiry.user.surname}` : `User #${inquiry.userId}`;
+                            const hasUnread = inquiry.unreadCount > 0;
+                            
+                            return (
+                                <div
+                                    key={inquiry.id}
+                                    onClick={() => handleSelectInquiry(inquiry)}
+                                    className={`p-4 rounded-lg border cursor-pointer transition-colors relative ${
+                                        selectedChat?.id === inquiry.id
+                                            ? 'bg-green-50 border-green-500 shadow-sm'
+                                            : 'border-gray-200 hover:bg-gray-50 hover:shadow-sm'
+                                    }`}
+                                >
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2">
+                                                <p className={`font-semibold text-sm text-gray-900 ${
+                                                    hasUnread ? 'font-bold' : ''
+                                                }`}>
+                                                    {userName}
+                                                </p>
+                                                {hasUnread && (
+                                                    <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                                                )}
+                                            </div>
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                {new Date(inquiry.createdAt).toLocaleDateString()} • #{inquiry.id}
+                                            </p>
+                                            {inquiry.lastMessage && (
+                                                <p className={`text-xs mt-1 line-clamp-1 ${
+                                                    hasUnread ? 'text-gray-900 font-medium' : 'text-gray-600'
+                                                }`}>
+                                                    {inquiry.lastMessage.startsWith('__FC_FORM__') 
+                                                        ? (() => {
+                                                            try {
+                                                                const data = JSON.parse(inquiry.lastMessage.replace('__FC_FORM__', ''));
+                                                                return `📋 Survey: ${data.title}`;
+                                                            } catch {
+                                                                return '📋 Survey Form';
+                                                            }
+                                                        })()
+                                                        : inquiry.lastMessage
+                                                    }
+                                                </p>
+                                            )}
+                                        </div>
+                                        {hasUnread && (
+                                            <span className="ml-2 px-2 py-1 bg-red-600 text-white text-xs rounded-full font-semibold shadow-sm">
+                                                {inquiry.unreadCount}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+                <div className="p-4 border-t border-gray-200 flex items-center justify-between bg-white">
+                    <button
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                        className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed text-gray-900 font-medium"
+                    >
+                        Previous
+                    </button>
+                    <span className="text-sm text-gray-600 font-medium">
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                        className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed text-gray-900 font-medium"
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+
+    const renderChatWindow = () => {
+        if (!selectedChat) {
+            return (
+                <div className="flex items-center justify-center h-full text-gray-500">
+                    <div className="text-center">
+                        <svg className="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                        <p>Select an inquiry to start chatting</p>
+                    </div>
+                </div>
+            );
         }
 
-        successCount++;
-      } catch (error) {
-        console.error(`Failed to upload ${file.name}:`, error);
-        setToast({
-          type: 'error',
-          title: 'Upload failed',
-          message: `${file.name}: ${error.message || 'Attachment upload failed'}`
-        });
-        // Continue with next file like client-side
-      }
-    }
+        const replies = selectedChat.replies || polledMessages || [];
 
-    // Follow the conversation into In Progress if any files succeeded
-    if (successCount > 0 && activeTabRef.current !== 'IN_PROGRESS') {
-      setActiveTab('IN_PROGRESS');
-    }
-
-    // Show success toast for successful uploads
-    if (successCount > 0) {
-      setToast({
-        type: 'success',
-        title: 'Files Sent',
-        message: `${successCount} file(s) uploaded successfully.`
-      });
-    }
-  };
-
-  // Helper function to get user name from chat data
-  const getUserName = (chat) => {
-    return chat.user ? `${chat.user.firstName} ${chat.user.surname}` : (chat.guestName || 'Unknown User');
-  };
-
-  // Helper function to get last message from chat data
-  const getLastMessage = (chat) => {
-    if (chat && Array.isArray(chat.replies) && chat.replies.length > 0) {
-      return chat.replies[chat.replies.length - 1].message || '';
-    }
-    return chat.lastMessage || chat.message || '';
-  };
-
-  // Derived lists
-  const currentList = activeTab === 'PENDING' ? pending : activeTab === 'IN_PROGRESS' ? inProgress : resolved;
-  const filteredChats = currentList.filter(chat => {
-    const userName = getUserName(chat);
-    const lastMessage = getLastMessage(chat);
-    const subject = (chat.subject || '').toLowerCase();
-    const term = searchTerm.toLowerCase();
-    return userName.toLowerCase().includes(term) || lastMessage.toLowerCase().includes(term) || subject.includes(term);
-  });
-  // Pagination logic
-  const currentPage = activeTab === 'PENDING' ? pendingPage : activeTab === 'IN_PROGRESS' ? inProgressPage : resolvedPage;
-  const setCurrentPage = activeTab === 'PENDING' ? setPendingPage : activeTab === 'IN_PROGRESS' ? setInProgressPage : setResolvedPage;
-  const totalPages = Math.max(1, Math.ceil(filteredChats.length / itemsPerPage));
-  const paginatedChats = filteredChats.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-  return (
-    <div className={`min-h-screen py-4 sm:mt-12 px-2 md:px-6 ${
-      isDark ? 'bg-gray-900' : 'bg-white'
-    }`}>
-      {toast && (
-        <div className={`fixed top-4 right-4 z-[100000] px-4 py-3 rounded-xl shadow-xl border ${
-          toast.type === 'info'
-            ? isDark
-              ? 'bg-green-900 border-green-700 text-green-100'
-              : 'bg-green-50 border-green-200 text-green-900'
-            : isDark
-            ? 'bg-gray-800 border-gray-700 text-gray-100'
-            : 'bg-white border-gray-200 text-gray-800'
-        }`}>
-          <div className="flex items-start gap-3">
-            <div className="mt-0.5">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>
-            </div>
-            <div>
-              <div className="font-semibold text-sm">{toast.title}</div>
-              {toast.message && <div className="text-xs mt-0.5 opacity-90 max-w-xs">{toast.message}</div>}
-            </div>
-            <button className="ml-2 text-xs opacity-70 hover:opacity-100 transition-opacity" onClick={() => setToast(null)}>Dismiss</button>
-          </div>
-        </div>
-      )}
-      <div className="max-w-7xl mx-auto">
-
-        {/* Unified container for stats and chat list */}
-        <div className="w-full flex flex-col items-center">
-          {/* Dashboard Stats aligned with chat list */}
-          <div className="w-full max-w-5xl mb-4">
-            <DashboardStats activeChats={[...pending, ...inProgress]} />
-          </div>
-          {/* Main Chat Interface - Slightly less wide Chat List */}
-          <div className="w-full max-w-5xl">
-            <div className={`rounded-xl sm:rounded-2xl shadow-lg border flex flex-col w-full ${
-              isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-            }`}>
-              {/* Status Filter Dropdown */}
-              <div className={`px-3 sm:px-4 md:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4 border-b flex-shrink-0 ${
-                isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'
-              }`}>
-                <div className="flex flex-col gap-3 w-full">
-                  {/* Search Bar - Full width on mobile */}
-                  <div className="w-full">
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-                        <svg className={`w-4 h-4 sm:w-5 sm:h-5 ${
-                          isDark ? 'text-gray-400' : 'text-gray-500'
-                        }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </div>
-                      <input
-                        type="text"
-                        placeholder="Search conversations..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className={`w-full pl-9 sm:pl-10 pr-3 py-2 border-2 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 font-medium text-sm ${
-                          isDark
-                            ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400 focus:bg-gray-700'
-                            : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-500 focus:bg-white'
-                        }`}
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Filters Row - Stack on mobile, inline on tablet+ */}
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <div className="flex items-center gap-2 flex-1">
-                      <label htmlFor="statusFilter" className={`text-xs sm:text-sm font-medium whitespace-nowrap ${
-                        isDark ? 'text-gray-300' : 'text-gray-700'
-                      }`}>Status:</label>
-                      <select
-                        id="statusFilter"
-                        value={activeTab}
-                        onChange={e => setActiveTab(e.target.value)}
-                        className={`flex-1 sm:flex-none border rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                          isDark
-                            ? 'bg-gray-700 border-gray-600 text-gray-100'
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                      >
-                        <option value="PENDING">Pending ({pending.length})</option>
-                        <option value="IN_PROGRESS">In Progress ({inProgress.length})</option>
-                        <option value="RESOLVED">Resolved ({resolved.length})</option>
-                      </select>
+        return (
+            <div className="flex flex-col h-full">
+                {/* Chat Header */}
+                <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-white">
+                    <div>
+                        <h3 className="font-semibold text-gray-900">
+                            {selectedChat.user ? `${selectedChat.user.firstName} ${selectedChat.user.surname}` : `User #${selectedChat.userId}`}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                            Inquiry #{selectedChat.id} • {new Date(selectedChat.createdAt).toLocaleDateString()}
+                        </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <label htmlFor="itemsPerPage" className={`text-xs sm:text-sm font-medium whitespace-nowrap ${
-                        isDark ? 'text-gray-300' : 'text-gray-700'
-                      }`}>Rows:</label>
-                      <select
-                        id="itemsPerPage"
-                        value={itemsPerPage}
-                        onChange={e => {
-                          setItemsPerPage(Number(e.target.value));
-                          setPendingPage(1);
-                          setInProgressPage(1);
-                          setResolvedPage(1);
-                        }}
-                        className={`border rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                          isDark
-                            ? 'bg-gray-700 border-gray-600 text-gray-100'
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                        aria-label="Rows per page"
-                      >
-                        {[5, 8, 10, 20, 50].map(n => (
-                          <option key={n} value={n}>{n}</option>
-                        ))}
-                      </select>
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            selectedChat.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                            selectedChat.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-800' :
+                            'bg-green-100 text-green-800'
+                        }`}>
+                            {selectedChat.status}
+                        </span>
                     </div>
-                  </div>
                 </div>
-              </div>
 
-              {/* Search Bar moved above, removed here */}
-
-              {/* Active Chats */}
-              <div className={`flex-1 overflow-y-auto ${
-                isDark ? 'bg-gray-800' : 'bg-white'
-              }`}>
-                {/* Items per page selector moved and redesigned above */}
-                {loading ? (
-                  <div className="p-8 sm:p-12 text-center">
-                    <div className={`w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-full flex items-center justify-center shadow-sm ${
-                      isDark ? 'bg-green-900' : 'bg-green-100'
-                    }`}>
-                      <div className={`w-8 h-8 sm:w-10 sm:h-10 border-4 rounded-full animate-spin ${
-                        isDark ? 'border-green-700 border-t-green-400' : 'border-green-200 border-t-green-600'
-                      }`}></div>
+                {/* Messages */}
+                <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
+                    {/* Initial Inquiry Message */}
+                    <div className="flex justify-start">
+                        <div className="max-w-[70%]">
+                            <div className="px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 shadow-sm">
+                                {selectedChat.message}
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">
+                                {selectedChat.user ? `${selectedChat.user.firstName} ${selectedChat.user.surname}` : 'User'} • {new Date(selectedChat.createdAt).toLocaleString()}
+                            </p>
+                        </div>
                     </div>
-                    <p className={`text-lg sm:text-xl font-semibold mb-2 ${
-                      isDark ? 'text-gray-100' : 'text-gray-800'
-                    }`}>Loading inquiries...</p>
-                    <p className={`text-xs sm:text-sm ${
-                      isDark ? 'text-gray-400' : 'text-gray-500'
-                    }`}>Please wait while we fetch your chat history</p>
-                  </div>
+
+                    {/* Reply Messages */}
+                    {replies.map((reply, idx) => {
+                        const isAdmin = reply.senderType === 'ADMIN';
+                        // Check if this is a survey form message
+                        const isSurveyForm = typeof reply.message === 'string' && reply.message.startsWith('__FC_FORM__');
+                        let surveyData = null;
+                        if (isSurveyForm) {
+                            try {
+                                surveyData = JSON.parse(reply.message.replace('__FC_FORM__', ''));
+                            } catch (e) {
+                                console.error('Failed to parse survey data:', e);
+                            }
+                        }
+                        
+                        return (
+                            <div key={reply.id || idx} className={`flex ${isAdmin ? 'justify-end' : 'justify-start'}`}>
+                                <div className="max-w-[70%]">
+                                    <div className={`px-4 py-2 rounded-lg shadow-sm ${
+                                        isAdmin 
+                                            ? 'bg-green-600 text-white' 
+                                            : 'bg-white border border-gray-200 text-gray-900'
+                                    }`}>
+                                        {/* Survey Form Button */}
+                                        {isSurveyForm && surveyData ? (
+                                            <button
+                                                onClick={() => setSurveyModal({ open: true, surveyId: surveyData.id, title: surveyData.title })}
+                                                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold border-2 border-green-600 text-green-800 bg-green-50 hover:bg-green-100 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                                </svg>
+                                                {surveyData.title || 'Open Survey Form'}
+                                            </button>
+                                        ) : (
+                                            reply.message
+                                        )}
+                                        
+                                        {/* Display attachments */}
+                                        {reply.attachments && reply.attachments.length > 0 && (
+                                            <div className="mt-2 space-y-1">
+                                                {reply.attachments.map((att, attIdx) => {
+                                                    const isImage = isImageFile(att.mimetype, att.filename);
+                                                    return isImage ? (
+                                                        <button
+                                                            key={attIdx}
+                                                            onClick={() => setImagePreview({ open: true, src: att.streamUrl, filename: att.filename })}
+                                                            className={`flex items-center gap-2 px-3 py-1 rounded text-xs cursor-pointer ${
+                                                                isAdmin 
+                                                                    ? 'bg-green-700 hover:bg-green-800' 
+                                                                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                                                            }`}
+                                                        >
+                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                                                                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                            </svg>
+                                                            <span>{att.filename}</span>
+                                                            {att.filesize && (
+                                                                <span className="opacity-70">({(att.filesize / 1024).toFixed(1)} KB)</span>
+                                                            )}
+                                                        </button>
+                                                    ) : (
+                                                        <a
+                                                            key={attIdx}
+                                                            href={att.streamUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            download={att.filename}
+                                                            className={`flex items-center gap-2 px-3 py-1 rounded text-xs ${
+                                                                isAdmin 
+                                                                    ? 'bg-green-700 hover:bg-green-800' 
+                                                                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                                                            }`}
+                                                        >
+                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                                                                      d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                                            </svg>
+                                                            <span>{att.filename}</span>
+                                                            {att.filesize && (
+                                                                <span className="opacity-70">({(att.filesize / 1024).toFixed(1)} KB)</span>
+                                                            )}
+                                                        </a>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        {reply.senderName || (isAdmin ? 'Admin' : (selectedChat.user ? `${selectedChat.user.firstName} ${selectedChat.user.surname}` : 'User'))} • {new Date(reply.createdAt).toLocaleString()}
+                                    </p>
+                                </div>
+                            </div>
+                        );
+                    })}
+                    <div ref={messagesEndRef} />
+                </div>
+
+                {/* Input Area */}
+                {selectedChat.status === 'RESOLVED' ? (
+                    <div className="p-4 border-t border-gray-200 text-center text-gray-500 bg-gray-50">
+                        This inquiry has been resolved. No further replies allowed.
+                    </div>
                 ) : (
-                  filteredChats.length === 0 ? (
-                    <div className="p-8 sm:p-12 text-center">
-                      <div className={`w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-full flex items-center justify-center shadow-sm ${
-                        isDark ? 'bg-gray-700' : 'bg-gray-100'
-                      }`}>
-                        <svg className={`w-8 h-8 sm:w-10 sm:h-10 ${
-                          isDark ? 'text-gray-400' : 'text-gray-400'
-                        }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </div>
-                      <p className={`text-lg sm:text-xl font-semibold mb-2 ${
-                        isDark ? 'text-gray-100' : 'text-gray-800'
-                      }`}>No active chats</p>
-                      <p className={`text-xs sm:text-sm ${
-                        isDark ? 'text-gray-400' : 'text-gray-500'
-                      }`}>Waiting for customer messages...</p>
+                    <div className="p-3 sm:p-4 border-t border-gray-200 bg-white">
+                        {/* Attachments Preview */}
+                        {attachments.length > 0 && (
+                            <div className="mb-3 flex flex-wrap gap-2">
+                                {attachments.map((file, idx) => (
+                                    <div key={idx} className="flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-lg text-xs sm:text-sm">
+                                        <span className="text-gray-700 truncate max-w-[150px]">{file.name}</span>
+                                        <button
+                                            onClick={() => setAttachments(prev => prev.filter((_, i) => i !== idx))}
+                                            className="text-red-600 hover:text-red-800 flex-shrink-0"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        
+                        <div className="flex flex-col sm:flex-row gap-2">
+                            <input
+                                type="file"
+                                id="admin-attachment"
+                                multiple
+                                onChange={(e) => setAttachments(prev => [...prev, ...Array.from(e.target.files)])}
+                                className="hidden"
+                            />
+                            <div className="flex gap-2">
+                                <label
+                                    htmlFor="admin-attachment"
+                                    className="px-3 sm:px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer flex items-center gap-2 text-gray-700 font-medium text-sm sm:text-base flex-shrink-0"
+                                >
+                                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                    </svg>
+                                    <span className="hidden sm:inline">Attach</span>
+                                </label>
+                                <button
+                                    onClick={() => {
+                                        setShowSurveyPicker(!showSurveyPicker);
+                                        if (!showSurveyPicker && surveys.length === 0) {
+                                            loadSurveys();
+                                        }
+                                    }}
+                                    className="px-3 sm:px-4 py-2 bg-blue-200 hover:bg-blue-300 rounded-lg cursor-pointer flex items-center gap-2 text-blue-700 font-medium text-sm sm:text-base flex-shrink-0"
+                                    title="Send Survey Form"
+                                >
+                                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                    </svg>
+                                    <span className="hidden sm:inline">Survey</span>
+                                </button>
+                            </div>
+                            <input
+                                type="text"
+                                value={messageText}
+                                onChange={(e) => setMessageText(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                                placeholder="Type your reply..."
+                                className="flex-1 px-3 sm:px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm sm:text-base"
+                            />
+                            <button
+                                onClick={handleSendMessage}
+                                disabled={isSending || (!messageText.trim() && attachments.length === 0)}
+                                className="px-4 sm:px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm sm:text-base flex-shrink-0"
+                            >
+                                {isSending ? 'Sending...' : 'Send'}
+                            </button>
+                        </div>
                     </div>
-                  ) : (
-                    <>
-                      {paginatedChats.map((chat) => (
-                        <InquiryListItem
-                          key={chat.id}
-                          chat={chat}
-                          isSelected={selectedChat?.id === chat.id}
-                          onClick={() => setSelectedChat(chat)}
-                          getUserName={getUserName}
-                          getLastMessage={getLastMessage}
-                        />
-                      ))}
-                      {/* Pagination Controls */}
-                      <div className="flex justify-center items-center gap-2 py-4">
-                        <button
-                          className={`px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition-colors ${
-                            currentPage === 1
-                              ? isDark
-                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                              : 'bg-green-600 text-white hover:bg-green-700'
-                          }`}
-                          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                          disabled={currentPage === 1}
-                        >Previous</button>
-                        <span className={`px-2 font-semibold text-xs sm:text-sm ${
-                          isDark ? 'text-gray-200' : 'text-gray-700'
-                        }`}>Page {currentPage} of {totalPages}</span>
-                        <button
-                          className={`px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition-colors ${
-                            currentPage === totalPages
-                              ? isDark
-                                ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                              : 'bg-green-600 text-white hover:bg-green-700'
-                          }`}
-                          onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                          disabled={currentPage === totalPages}
-                        >Next</button>
-                      </div>
-                    </>
-                  )
                 )}
-              </div>
             </div>
-          </div>
+        );
+    };
 
-          {/* Conversation Modal */}
-          <ConversationModal
-            open={!!selectedChat}
-            onClose={() => setSelectedChat(null)}
-            selectedChat={selectedChat}
-            getUserName={getUserName}
-            messagesEndRef={messagesEndRef}
-            messagesContainerRef={messagesContainerRef}
-            onSendMessage={handleSendMessage}
-            onSendAttachment={handleSendAttachment}
-            onError={setToast}
-          />
+    return (
+        <div className="h-screen bg-gray-50 mt-15 overflow-hidden">
+            <div className="container mx-auto p-4 sm:p-6 h-full flex flex-col">
+
+                {/* Main Chat Area */}
+                <div className="flex-1 bg-white rounded-lg shadow-lg overflow-hidden flex flex-col min-h-0">
+                    {/* Tabs with Counts */}
+                    <div className="border-b border-gray-200 flex bg-white overflow-x-auto">
+                        {['PENDING', 'IN_PROGRESS', 'RESOLVED'].map(tab => {
+                            const count = tab === 'PENDING' ? pendingCount : tab === 'IN_PROGRESS' ? inProgressCount : resolvedCount;
+                            return (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveTab(tab)}
+                                className={`flex-1 min-w-[120px] px-4 sm:px-6 py-3 font-semibold transition-colors flex items-center justify-center gap-2 text-sm sm:text-base ${
+                                    activeTab === tab
+                                        ? 'text-green-600 border-b-2 border-green-600 bg-green-50'
+                                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                                }`}
+                            >
+                                <span className="truncate">{tab.replace('_', ' ')}</span>
+                                <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+                                    activeTab === tab 
+                                        ? 'bg-green-600 text-white' 
+                                        : 'bg-gray-200 text-gray-700'
+                                }`}>
+                                    {count}
+                                </span>
+                            </button>
+                        );})}
+                    </div>
+
+                    {/* Content Area */}
+                    <div className="flex-1 flex overflow-hidden flex-col sm:flex-row min-h-0">
+                        {/* Left: Inquiry List */}
+                        <div className="w-full sm:w-96 border-b sm:border-b-0 sm:border-r border-gray-200 bg-white flex-shrink-0 overflow-hidden">
+                            {renderInquiryList()}
+                        </div>
+
+                        {/* Right: Chat Window */}
+                        <div className="flex-1 min-h-0 overflow-hidden">
+                            {renderChatWindow()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Toast */}
+            {toast && (
+                <div className={`fixed bottom-6 right-6 z-50 p-4 rounded-lg shadow-lg ${
+                    toast.type === 'error' ? 'bg-red-600' : 'bg-blue-600'
+                } text-white max-w-sm`}>
+                    <p className="font-semibold">{toast.title}</p>
+                    <p className="text-sm">{toast.message}</p>
+                </div>
+            )}
+            
+            {/* Image Preview */}
+            {imagePreview.open && (
+                <ImagePreview
+                    src={imagePreview.src}
+                    filename={imagePreview.filename}
+                    onClose={() => setImagePreview({ open: false, src: '', filename: '' })}
+                />
+            )}
+            
+            {/* Survey Picker Modal */}
+            {showSurveyPicker && (
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30"
+                    style={{ backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+                    onClick={() => setShowSurveyPicker(false)}
+                >
+                    <div 
+                        className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="p-6 border-b border-gray-200">
+                            <h2 className="text-2xl font-bold text-gray-900">Send Survey Form</h2>
+                            <p className="text-gray-600 mt-1">Select a survey to send to the user</p>
+                        </div>
+                        
+                        <div className="p-6 overflow-y-auto max-h-[60vh]">
+                            {loadingSurveys ? (
+                                <div className="text-center py-8">
+                                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                                    <p className="mt-2 text-gray-600">Loading surveys...</p>
+                                </div>
+                            ) : surveys.length === 0 ? (
+                                <div className="text-center py-8 text-gray-500">
+                                    <svg className="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                    </svg>
+                                    <p className="mt-4">No active surveys available</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {surveys.map(survey => (
+                                        <button
+                                            key={survey.id}
+                                            onClick={() => handleSendSurvey(survey)}
+                                            className="w-full p-4 text-left border border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors"
+                                        >
+                                            <h3 className="font-semibold text-gray-900">{survey.title}</h3>
+                                            {survey.description && (
+                                                <p className="text-sm text-gray-600 mt-1">{survey.description}</p>
+                                            )}
+                                            <div className="flex gap-4 mt-2 text-xs text-gray-500">
+                                                <span>📋 {survey.fields?.length || 0} questions</span>
+                                                {survey.category && <span>🏷️ {survey.category}</span>}
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                        
+                        <div className="p-6 border-t border-gray-200 flex justify-end">
+                            <button
+                                onClick={() => setShowSurveyPicker(false)}
+                                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
+            {/* Survey Form Modal */}
+            {surveyModal.open && (
+                <FillSurveyModal
+                    isOpen={surveyModal.open}
+                    onClose={() => setSurveyModal({ open: false, surveyId: null, title: '' })}
+                    surveyId={surveyModal.surveyId}
+                    title={surveyModal.title}
+                />
+            )}
         </div>
-      </div>
-    </div>
-  );
+    );
 }
-
-export default Chat_Module;

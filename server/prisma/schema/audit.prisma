@@ -13,6 +13,11 @@ model AuditLog {
   admin      Account      @relation("AdminAuditLogs", fields: [adminId], references: [id])
 
   @@index([adminId], map: "audit_logs_adminId_fkey")
+  @@index([createdAt(sort: Desc)])
+  @@index([action])
+  @@index([targetType])
+  @@index([adminId, createdAt(sort: Desc)])
+  @@index([action, createdAt(sort: Desc)])
   @@map("audit_logs")
 }
 

@@ -26,19 +26,26 @@ export async function getFileUrlCached(path, ttl = DEFAULT_TTL) {
   const entry = cache.get(path);
   const now = Date.now();
   
-  // Return cached URL if still valid
+  // Return cached result if still valid (including null for failed lookups)
   if (entry && entry.expiresAt > now) {
-    return entry.url;
+    return entry.url; // Can be null if file doesn't exist
   }
 
-  // Fetch fresh URL and cache it
+  // Fetch fresh URL and cache it (including failures)
   try {
     const url = await getFileUrl(path);
-    if (url) {
-      cache.set(path, { url, expiresAt: now + ttl });
-    }
+    // Cache both successful and failed lookups
+    cache.set(path, { 
+      url, // Will be null if file doesn't exist
+      expiresAt: now + (url ? ttl : ttl / 6) // Cache failures for 10 minutes
+    });
     return url;
   } catch (error) {
+    // Cache the failure to prevent repeated Firebase calls
+    cache.set(path, { 
+      url: null, 
+      expiresAt: now + (ttl / 6) // Cache failures for 10 minutes
+    });
     console.error(`Failed to get cached URL for ${path}:`, error);
     return null;
   }
