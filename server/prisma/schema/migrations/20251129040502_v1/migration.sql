@@ -36,6 +36,11 @@ CREATE TABLE `audit_logs` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     INDEX `audit_logs_adminId_fkey`(`adminId`),
+    INDEX `audit_logs_createdAt_idx`(`createdAt` DESC),
+    INDEX `audit_logs_action_idx`(`action`),
+    INDEX `audit_logs_targetType_idx`(`targetType`),
+    INDEX `audit_logs_adminId_createdAt_idx`(`adminId`, `createdAt` DESC),
+    INDEX `audit_logs_action_createdAt_idx`(`action`, `createdAt` DESC),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -142,6 +147,8 @@ CREATE TABLE `inquiries` (
     INDEX `inquiries_userId_idx`(`userId`),
     INDEX `inquiries_assignedToId_idx`(`assignedToId`),
     INDEX `inquiries_createdAt_idx`(`createdAt`),
+    INDEX `inquiries_updatedAt_idx`(`updatedAt`),
+    INDEX `inquiries_status_updatedAt_idx`(`status`, `updatedAt`),
     INDEX `inquiries_resolvedById_fkey`(`resolvedById`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -165,6 +172,8 @@ CREATE TABLE `inquiry_replies` (
     INDEX `inquiry_replies_senderId_idx`(`senderId`),
     INDEX `inquiry_replies_createdAt_idx`(`createdAt`),
     INDEX `inquiry_replies_senderType_idx`(`senderType`),
+    INDEX `inquiry_replies_readByAdmin_senderType_idx`(`readByAdmin`, `senderType`),
+    INDEX `inquiry_replies_readByUser_senderType_idx`(`readByUser`, `senderType`),
     INDEX `inquiry_replies_parentReplyId_fkey`(`parentReplyId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -300,6 +309,10 @@ CREATE TABLE `planting_reports` (
     INDEX `planting_reports_varietyId_idx`(`varietyId`),
     INDEX `planting_reports_typeOfCrop_idx`(`typeOfCrop`),
     INDEX `planting_reports_dateOfPlanting_idx`(`dateOfPlanting`),
+    INDEX `planting_reports_isArchived_idx`(`isArchived`),
+    INDEX `planting_reports_rsbsaNumber_idx`(`rsbsaNumber`),
+    INDEX `planting_reports_typeOfCrop_croppingSeasonId_idx`(`typeOfCrop`, `croppingSeasonId`),
+    INDEX `planting_reports_dateOfPlanting_isArchived_idx`(`dateOfPlanting`, `isArchived`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -399,6 +412,10 @@ CREATE TABLE `survey_forms` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
+    INDEX `survey_forms_status_idx`(`status`),
+    INDEX `survey_forms_category_idx`(`category`),
+    INDEX `survey_forms_createdAt_idx`(`createdAt`),
+    INDEX `survey_forms_status_category_idx`(`status`, `category`),
     INDEX `survey_forms_createdById_fkey`(`createdById`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -428,6 +445,8 @@ CREATE TABLE `survey_responses` (
     `submittedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `metadata` LONGTEXT NULL,
 
+    INDEX `survey_responses_surveyFormId_idx`(`surveyFormId`),
+    INDEX `survey_responses_submittedAt_idx`(`submittedAt`),
     INDEX `survey_responses_surveyFormId_fkey`(`surveyFormId`),
     INDEX `survey_responses_userId_fkey`(`userId`),
     PRIMARY KEY (`id`)

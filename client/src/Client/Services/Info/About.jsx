@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useTheme } from '../../../contexts/ThemeContext.jsx'
 import Navbar from '../../Components/Navbar'
 import farm from './Assets/farm.webp'
+import orgChart from '../Landing/Assets/org.webp'
 
 export default function About() {
 const { theme } = useTheme();
@@ -101,161 +102,35 @@ return (
                         </ul>
                     </div>
                 </div>
-                {/* More Details Section */}
-                <div className="mt-10">
-                    <h2 className={`text-2xl font-semibold mb-3 ${
-                        theme === 'dark' ? 'text-green-400' : 'text-green-600'
-                    }`}>What We Offer</h2>
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <div className={`rounded-xl p-6 shadow flex flex-col gap-2 border ${
-                            theme === 'dark' 
-                                ? 'bg-gray-700 border-gray-600' 
-                                : 'bg-gray-50 border-gray-200'
-                        }`}>
-                            <h3 className={`text-lg font-bold ${
-                                theme === 'dark' ? 'text-green-400' : 'text-green-600'
-                            }`}>Smart Farm Management</h3>
-                            <p className={`text-sm ${
-                                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                            }`}>
-                                Our platform provides real-time analytics, crop monitoring, and resource management tools to help farmers maximize yield and minimize waste.
-                            </p>
-                        </div>
-                        <div className={`rounded-xl p-6 shadow flex flex-col gap-2 border ${
-                            theme === 'dark' 
-                                ? 'bg-gray-700 border-gray-600' 
-                                : 'bg-gray-50 border-gray-200'
-                        }`}>
-                            <h3 className={`text-lg font-bold ${
-                                theme === 'dark' ? 'text-green-400' : 'text-green-600'
-                            }`}>Marketplace Integration</h3>
-                            <p className={`text-sm ${
-                                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                            }`}>
-                                We connect farmers directly with buyers and suppliers, ensuring fair prices and transparent transactions for all parties.
-                            </p>
-                        </div>
-                        <div className={`rounded-xl p-6 shadow flex flex-col gap-2 border ${
-                            theme === 'dark' 
-                                ? 'bg-gray-700 border-gray-600' 
-                                : 'bg-gray-50 border-gray-200'
-                        }`}>
-                            <h3 className={`text-lg font-bold ${
-                                theme === 'dark' ? 'text-green-400' : 'text-green-600'
-                            }`}>Educational Resources</h3>
-                            <p className={`text-sm ${
-                                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                            }`}>
-                                Access a library of guides, tutorials, and expert advice to stay updated with the latest agricultural trends and best practices.
-                            </p>
-                        </div>
-                        <div className={`rounded-xl p-6 shadow flex flex-col gap-2 border ${
-                            theme === 'dark' 
-                                ? 'bg-gray-700 border-gray-600' 
-                                : 'bg-gray-50 border-gray-200'
-                        }`}>
-                            <h3 className={`text-lg font-bold ${
-                                theme === 'dark' ? 'text-green-400' : 'text-green-600'
-                            }`}>Community Support</h3>
-                            <p className={`text-sm ${
-                                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                            }`}>
-                                Join a vibrant community of farmers, experts, and enthusiasts ready to share knowledge, answer questions, and collaborate on projects.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                {/* End More Details Section */}
+
             </div>
         </section>
         
         <section className={`py-16 ${
             theme === 'dark' ? 'bg-gray-800' : 'bg-green-100'
         }`}>
-            <div className="max-w-5xl mx-auto px-6">
+            <div className="max-w-6xl mx-auto px-6">
                 <h2 className={`text-3xl font-bold mb-8 text-center ${
                     theme === 'dark' ? 'text-white' : 'text-gray-900'
-                }`}>Meet Our Team</h2>
-                <div className="grid md:grid-cols-3 gap-10">
-                    <div className={`flex flex-col items-center rounded-xl p-6 shadow border ${
-                        theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600' 
-                            : 'bg-white border-green-200'
-                    }`}>
-                        <div className={`w-24 h-24 rounded-full mb-4 border-2 flex items-center justify-center ${
-                            theme === 'dark' 
-                                ? 'border-green-400 bg-gray-600' 
-                                : 'border-green-400 bg-green-50'
-                        }`}>
-                            <svg className={`w-12 h-12 ${
-                                theme === 'dark' ? 'text-green-400' : 'text-green-300'
-                            }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                            </svg>
-                        </div>
-                        <h3 className={`text-xl font-semibold ${
-                            theme === 'dark' ? 'text-green-400' : 'text-green-600'
-                        }`}>Rhenzy Cruzat</h3>
-                        <p className={`mb-2 ${
-                            theme === 'dark' ? 'text-green-300' : 'text-green-700'
-                        }`}>Front End Developer</p>
-                        <p className={`text-center text-sm ${
-                            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                        }`}>Rhenzy crafts intuitive and modern user interfaces, ensuring a seamless experience for all platform users.</p>
-                    </div>
-                    <div className={`flex flex-col items-center rounded-xl p-6 shadow border ${
-                        theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600' 
-                            : 'bg-white border-green-200'
-                    }`}>
-                        <div className={`w-24 h-24 rounded-full mb-4 border-2 flex items-center justify-center ${
-                            theme === 'dark' 
-                                ? 'border-green-400 bg-gray-600' 
-                                : 'border-green-400 bg-green-50'
-                        }`}>
-                            <svg className={`w-12 h-12 ${
-                                theme === 'dark' ? 'text-green-400' : 'text-green-300'
-                            }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                            </svg>
-                        </div>
-                        <h3 className={`text-xl font-semibold ${
-                            theme === 'dark' ? 'text-green-400' : 'text-green-600'
-                        }`}>Kc Sean Brix</h3>
-                        <p className={`mb-2 ${
-                            theme === 'dark' ? 'text-green-300' : 'text-green-700'
-                        }`}>Back End Developer</p>
-                        <p className="text-gray-300 text-center text-sm">KC Sean builds and maintains the robust backend systems that power our platform’s features and security.</p>
-                    </div>
-                    <div className={`flex flex-col items-center rounded-xl p-6 shadow border ${
-                        theme === 'dark' 
-                            ? 'bg-gray-700 border-gray-600' 
-                            : 'bg-white border-green-200'
-                    }`}>
-                        <div className={`w-24 h-24 rounded-full mb-4 border-2 flex items-center justify-center ${
-                            theme === 'dark' 
-                                ? 'border-green-400 bg-gray-600' 
-                                : 'border-green-400 bg-green-50'
-                        }`}>
-                            <svg className={`w-12 h-12 ${
-                                theme === 'dark' ? 'text-green-400' : 'text-green-300'
-                            }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                            </svg>
-                        </div>
-                        <h3 className={`text-xl font-semibold ${
-                            theme === 'dark' ? 'text-green-400' : 'text-green-600'
-                        }`}>Maphil Grace Alquizola</h3>
-                        <p className={`mb-2 ${
-                            theme === 'dark' ? 'text-green-300' : 'text-green-700'
-                        }`}>Documentation & Papers</p>
-                        <p className={`text-center text-sm ${
-                            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                        }`}>Maphil Grace manages all documentation and paperwork, ensuring our processes are organized and compliant.</p>
-                    </div>
+                }`}>Organizational Structure</h2>
+                <div className={`rounded-xl p-6 shadow-2xl border ${
+                    theme === 'dark' 
+                        ? 'bg-gray-700 border-gray-600' 
+                        : 'bg-white border-green-200'
+                }`}>
+                    <img
+                        src={orgChart}
+                        alt="FITS-Tanza Organizational Chart"
+                        className="w-full h-auto rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => window.open(orgChart, '_blank')}
+                    />
+                    <p className={`text-center mt-4 text-sm ${
+                        theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                    }`}>Click image to view full size</p>
                 </div>
             </div>
         </section>
+
         <section className={`py-16 ${
             theme === 'dark' ? 'bg-gray-900' : 'bg-white'
         }`}>
@@ -296,7 +171,7 @@ return (
                 </div>
             </div>
         </section>
-        {/* Even More Detail Section */}
+
         <section className={`py-16 ${
             theme === 'dark' ? 'bg-gray-800' : 'bg-green-100'
         }`}>

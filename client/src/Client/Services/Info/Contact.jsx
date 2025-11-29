@@ -1,18 +1,15 @@
 import React from 'react'
 import { useTheme } from '../../../contexts/ThemeContext.jsx'
+import { useNavigate } from 'react-router-dom'
 import Navbar from '../../Components/Navbar'
 
 export default function contact() {
   const { theme } = useTheme();
+  const navigate = useNavigate();
   
   return (
     <>
       <Navbar />
-      {/* Material Icons CDN for icons */}
-      <link
-        href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        rel="stylesheet"
-      />
       <div className={`contact-page px-4 mt-10 sm:mt-25 md:mt-25 sm:px-6 py-8 sm:py-12 max-w-4xl mx-auto pt-24 sm:pt-20 md:pt-16 min-h-screen ${
         theme === 'dark' ? 'bg-gray-900' : 'bg-white'
       }`}>
@@ -26,7 +23,7 @@ export default function contact() {
         }`}>
           We value your feedback and inquiries. Connect with us for support, partnership, or general questions. Our team is ready to assist you!
         </p>
-        <div className="mb-10 sm:mb-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+        <div className="mb-10 sm:mb-12 flex flex-col gap-8">
           {/* Contact Info */}
           <div className="flex flex-col gap-6">
             <div className={`p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col gap-5 border ${
@@ -37,37 +34,49 @@ export default function contact() {
               <h2 className={`text-2xl font-bold mb-2 flex items-center gap-2 ${
                 theme === 'dark' ? 'text-gray-100' : 'text-gray-900'
               }`}>
-                <span className={`material-icons ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>contact_phone</span>
+                <svg className={`w-6 h-6 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
                 Contact Details
               </h2>
               <div className="flex items-center gap-3 flex-wrap">
-                <span className={`material-icons ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>email</span>
+                <svg className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
                 <span className={`font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>General:</span>
                 <a href="mailto:agriculture.tanza@yahoo.com" className={`hover:underline break-all ${
                   theme === 'dark' ? 'text-green-400' : 'text-green-600'
                 }`}>agriculture.tanza@yahoo.com</a>
               </div>
               <div className="flex items-center gap-3 flex-wrap">
-                <span className={`material-icons ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>support_agent</span>
+                <svg className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
                 <span className={`font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>Support:</span>
                 <a href="mailto:support@fits-tanza.com" className={`hover:underline break-all ${
                   theme === 'dark' ? 'text-green-400' : 'text-green-600'
                 }`}>support@fits-tanza.com</a>
               </div>
               <div className="flex items-center gap-3 flex-wrap">
-                <span className={`material-icons ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>phone</span>
+                <svg className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
                 <span className={`font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>Phone:</span>
                 <a href="tel:+15551234567" className={`hover:underline ${
                   theme === 'dark' ? 'text-green-400' : 'text-green-600'
                 }`}>+46 23 076 80</a>
               </div>
               <div className="flex items-center gap-3">
-                <span className={`material-icons ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>schedule</span>
+                <svg className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 <span className={`font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>Hours:</span>
                 <span className={`${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>Mon-Fri, 9am - 6pm</span>
               </div>
               <div className="flex items-center gap-3 flex-wrap">
-                <span className={`material-icons ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>public</span>
+                <svg className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
                 <span className={`font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>Website:</span>
                 <a href="https://fits-tanza.com" className={`hover:underline break-all ${
                   theme === 'dark' ? 'text-green-400' : 'text-green-600'
@@ -76,16 +85,21 @@ export default function contact() {
                 </a>
               </div>
               <div className="flex items-center gap-3">
-                <span className={`material-icons ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>verified_user</span>
+                <svg className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
                 <span className={`font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>VAT:</span>
                 <span className={`${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>VAT123456789</span>
               </div>
               <div className="flex items-center gap-3">
-                <span className={`material-icons ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>business</span>
+                <svg className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
                 <span className={`font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>Company Reg:</span>
                 <span className={`${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>REG-987654321</span>
               </div>
             </div>
+
             {/* Socials Modern Card */}
             <div className={`p-6 sm:p-8 rounded-3xl shadow-xl border flex flex-col gap-4 ${
               theme === 'dark' 
@@ -95,7 +109,9 @@ export default function contact() {
               <h3 className={`font-semibold mb-2 flex items-center gap-2 ${
                 theme === 'dark' ? 'text-gray-100' : 'text-gray-900'
               }`}>
-                <span className={`material-icons ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>share</span>
+                <svg className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                </svg>
                 Socials
               </h3>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-2">
@@ -133,63 +149,8 @@ export default function contact() {
                 </a>
               </div>
             </div>
-          </div>
-          {/* Team Card */}
-          <div className={`p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col gap-6 border ${
-            theme === 'dark' 
-              ? 'bg-gray-800 border-gray-700' 
-              : 'bg-gray-50 border-gray-200'
-          }`}>
-            <h2 className={`text-2xl font-bold mb-2 flex items-center gap-2 ${
-              theme === 'dark' ? 'text-gray-100' : 'text-gray-900'
-            }`}>
-              <span className={`material-icons ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>groups</span>
-              Our Team
-            </h2>
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-4">
-                <img src="https://ui-avatars.com/api/?name=Rhenzy+Cruzat&background=3b82f6&color=fff" alt="Rhenzy Cruzat" className="w-12 h-12 rounded-full shadow" />
-                <div>
-                  <span className={`font-semibold text-lg ${theme === 'dark' ? 'text-gray-100' : 'text-gray-900'}`}>Rhenzy Cruzat</span>
-                  <div className={`text-sm font-medium ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>Front End Developer</div>
-                  <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{'rhenzy.cruzat@FITS-Tanza.com'}</div>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <img src="https://ui-avatars.com/api/?name=KC+Sean+Brix&background=2563eb&color=fff" alt="KC Sean Brix" className="w-12 h-12 rounded-full shadow" />
-                <div>
-                  <span className={`font-semibold text-lg ${theme === 'dark' ? 'text-gray-100' : 'text-gray-900'}`}>KC Sean Brix</span>
-                  <div className={`text-sm font-medium ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>Back End Developer</div>
-                  <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{'kc.seanbrix@FITS-Tanza.com'}</div>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <img src="https://ui-avatars.com/api/?name=Maphil+Grace+Alquizola&background=1d4ed8&color=fff" alt="Maphil Grace Alquizola" className="w-12 h-12 rounded-full shadow" />
-                <div>
-                  <span className={`font-semibold text-lg ${
-                    theme === 'dark' ? 'text-white' : 'text-gray-900'
-                  }`}>Maphil Grace Alquizola</span>
-                  <div className="text-green-600 text-sm font-medium">Documentation & Papers</div>
-                  <div className={`text-xs ${
-                    theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                  }`}>{'maphil.alquizola@FITS-Tanza.com'}</div>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-4 mt-2">
-                <span className={`material-icons ${
-                  theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-                }`}>support_agent</span>
-                <div>
-                  <span className={`font-semibold text-base ${
-                    theme === 'dark' ? 'text-white' : 'text-gray-900'
-                  }`}>Support Hotline</span>
-                  <div className={`text-xs sm:text-sm ${
-                    theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                  }`}>+1 (555) 987-6543</div>
-                </div>
-              </div>
-            </div>
+
+     
           </div>
         </div>
        

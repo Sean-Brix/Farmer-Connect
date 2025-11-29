@@ -272,7 +272,7 @@ export default function Navbar({refresh}) {
     
 
     // Helper: is any of the Info links active?
-    const infoActive = ['/about', '/contact', '/citizens-charter'].some((path) => location.pathname.startsWith(path));
+    const infoActive = ['/about', '/contact', '/citizens-charter', '/faq'].some((path) => location.pathname.startsWith(path));
     // Helper: is any of the Services links active?
     const servicesActive = ['/seminar', '/eic', '/distribution', '/chat-support', '/report'].some((path) => location.pathname.startsWith(path));
 
@@ -662,6 +662,32 @@ export default function Navbar({refresh}) {
                                                 />
                                             </svg>
                                             Citizen's Charter
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink
+                                            to="/faq"
+                                            className={({ isActive }) =>
+                                                `flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-200 font-medium mx-2 ${isActive ? 
+                                                    (theme === 'dark' ? 'bg-green-900/50 text-green-300' : 'bg-green-100 text-green-900') : 
+                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-green-400' : 'text-slate-700 hover:bg-green-50 hover:text-green-800')
+                                                }`
+                                            }
+                                        >
+                                            <svg
+                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                            {t('navigation.faq')}
                                         </NavLink>
                                     </li>
                                 </ul>
@@ -1322,6 +1348,36 @@ export default function Navbar({refresh}) {
                                                         />
                                                     </svg>
                                                     <span>Citizen's Charter</span>
+                                                </NavLink>
+                                                <NavLink 
+                                                    to="/faq"
+                                                    className={({ isActive }) => 
+                                                        `flex items-center space-x-3 py-3 px-4 rounded-lg transition-all duration-200 font-medium ${
+                                                            isActive 
+                                                                ? (isDark 
+                                                                    ? 'bg-emerald-800 text-emerald-100 border-l-3 border-emerald-400 shadow-sm' 
+                                                                    : 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm') 
+                                                                : (isDark 
+                                                                    ? 'text-gray-300 hover:bg-emerald-800 hover:text-emerald-100 hover:translate-x-1' 
+                                                                    : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1')
+                                                        }`
+                                                    }
+                                                    onClick={() => setOpen(false)}
+                                                >
+                                                    <svg
+                                                        className="w-5 h-5 text-emerald-500"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                    </svg>
+                                                    <span>{t('navigation.faq')}</span>
                                                 </NavLink>
                                             </div>
                                         </details>

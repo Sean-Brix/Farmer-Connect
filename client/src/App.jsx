@@ -22,6 +22,7 @@ import User from './Client/Services/Profile/User_Profile.jsx';
 import Seminar from './Client/Services/Enrollment/Seminar.jsx';
 import Contact from './Client/Services/Info/contact.jsx';
 import About from './Client/Services/Info/About.jsx';
+import FAQ from './Client/Services/Info/FAQ.jsx';
 import CitizensCharter from './Client/Components/CitizensCharter.jsx';
 import Distribution from './Client/Services/Distributions/Distribution.jsx';
 import Survey from './Components/Survey/Survey.jsx';
@@ -54,6 +55,7 @@ function App() {
                     <Route path="/settings" element={<Settings />} />
                      
                     <Route path="/about" element={<About />} />
+                    <Route path="/faq" element={<FAQ />} />
                     <Route path="/citizens-charter" element={<CitizensCharter />} />
                     <Route path="/distribution" element={<Distribution />} />
                     <Route path="/survey" element={<Survey />} />

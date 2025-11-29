@@ -16,7 +16,7 @@ import img2 from './Assets/2.webp'
 import img3 from './Assets/3.webp'
 import img4 from './Assets/4.webp'
 import img5 from './Assets/rabies.webp'
-import logo from './Assets/Logo.svg'
+import logo from '../../Assets/logo.png'
 import i1 from './Assets/i1.webp'
 import i2 from './Assets/i2.webp'
 import i3 from './Assets/i3.webp'
@@ -1142,8 +1142,8 @@ export default function Landing() {
                             <div className="space-y-3">
                                 <div className="flex items-start gap-3 group">
                                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${theme === 'dark' ? 'bg-gray-600' : 'bg-white'}`}>
-                                        <svg className={`w-4 h-4 ${theme === 'dark' ? 'text-gray-200' : 'text-green-700'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 12.414a2 2 0 10-2.828 2.828l4.243 4.243a8 8 0 111.414-1.414z" />
+                                        <svg className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-200' : 'text-green-700'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                         </svg>
                                     </div>
                                     <div>
@@ -1154,8 +1154,8 @@ export default function Landing() {
                                 
                                 <div className="flex items-start gap-3 group">
                                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${theme === 'dark' ? 'bg-gray-600' : 'bg-white'}`}>
-                                        <svg className={`w-4 h-4 ${theme === 'dark' ? 'text-gray-200' : 'text-green-700'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        <svg className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-200' : 'text-green-700'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
                                     </div>
                                     <div>
@@ -1168,8 +1168,8 @@ export default function Landing() {
                                 
                                 <div className="flex items-start gap-3 group">
                                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${theme === 'dark' ? 'bg-gray-600' : 'bg-white'}`}>
-                                        <svg className={`w-4 h-4 ${theme === 'dark' ? 'text-gray-200' : 'text-green-700'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3l2 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
+                                        <svg className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-200' : 'text-green-700'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                         </svg>
                                     </div>
                                     <div>
