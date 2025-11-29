@@ -230,7 +230,18 @@ export default function EIC() {
         currentStock
     ) => {
         try {
-            // Show custom confirmation dialog
+            // Validate required parameters
+            if (!itemName || !requestorName) {
+                console.error(' Error updating request status: Missing required data', {
+                    itemName,
+                    requestorName,
+                    requestId,
+                });
+                showAlert('Cannot update request: Missing item or requestor information', 'error');
+                return;
+            }
+
+            // Create custom alert with item details
             const alertDiv = document.createElement('div');
             alertDiv.innerHTML = `
                 <div id="custom-admin-confirm-alert" style="
@@ -1033,9 +1044,11 @@ function RequestsTable({
     const filteredRequests = requests
         .filter((request) => {
             const searchLower = search.toLowerCase();
+            const itemName = request.itemName || request.item?.name || '';
+            const requestorName = request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || '';
             const matchesSearch =
-                request.itemName?.toLowerCase().includes(searchLower) ||
-                request.requestorName?.toLowerCase().includes(searchLower) ||
+                itemName.toLowerCase().includes(searchLower) ||
+                requestorName.toLowerCase().includes(searchLower) ||
                 request.requestNote?.toLowerCase().includes(searchLower) ||
                 request.requestorEmail?.toLowerCase().includes(searchLower);
 
@@ -1056,10 +1069,14 @@ function RequestsTable({
                     return new Date(b.createdAt) - new Date(a.createdAt);
 
                 case 'item':
-                    return a.itemName?.localeCompare(b.itemName) || 0;
+                    const itemA = a.itemName || a.item?.name || '';
+                    const itemB = b.itemName || b.item?.name || '';
+                    return itemA.localeCompare(itemB);
 
                 case 'client':
-                    return a.requestorName?.localeCompare(b.requestorName) || 0;
+                    const requestorA = a.requestorName || `${a.user?.firstName || ''} ${a.user?.surname || ''}`.trim() || '';
+                    const requestorB = b.requestorName || `${b.user?.firstName || ''} ${b.user?.surname || ''}`.trim() || '';
+                    return requestorA.localeCompare(requestorB);
 
                 default:
                     return new Date(b.createdAt) - new Date(a.createdAt);
@@ -1253,12 +1270,12 @@ function RequestsTable({
                                     <h4 className={`font-semibold text-sm ${
                                         isDark ? 'text-white' : 'text-gray-900'
                                     }`}>
-                                        {request.itemName}
+                                        {request.itemName || request.item?.name || 'Unknown Item'}
                                     </h4>
                                     <p className={`text-xs mt-1 ${
                                         isDark ? 'text-gray-400' : 'text-gray-600'
                                     }`}>
-                                        {request.itemCategory}
+                                        {request.itemCategory || request.item?.category || 'N/A'}
                                     </p>
                                 </div>
                                 {getStatusBadge(request.status)}
@@ -1272,7 +1289,7 @@ function RequestsTable({
                                     }`}>Requestor:</span>
                                     <p className={`${
                                         isDark ? 'text-gray-300' : 'text-gray-600'
-                                    }`}>{request.requestorName}</p>
+                                    }`}>{request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || 'Unknown User'}</p>
                                 </div>
                                 <div>
                                     <span className={`font-medium ${
@@ -1280,7 +1297,7 @@ function RequestsTable({
                                     }`}>Quantity:</span>
                                     <p className={`${
                                         isDark ? 'text-gray-300' : 'text-gray-600'
-                                    }`}>{request.requestQuantity}</p>
+                                    }`}>{request.requestQuantity || request.quantity || 0}</p>
                                 </div>
                                 <div>
                                     <span className={`font-medium ${
@@ -1298,7 +1315,7 @@ function RequestsTable({
                                     }`}>Stock:</span>
                                     <p className={`${
                                         isDark ? 'text-gray-300' : 'text-gray-600'
-                                    }`}>{request.currentStock || 'N/A'}</p>
+                                    }`}>{request.currentStock || request.stack?.quantity || 'N/A'}</p>
                                 </div>
                             </div>
                             
@@ -1319,10 +1336,10 @@ function RequestsTable({
                                                 onStatusChange(
                                                     request.id,
                                                     e.target.value,
-                                                    request.itemName,
-                                                    request.requestorName,
-                                                    request.requestQuantity,
-                                                    request.currentStock
+                                                    request.itemName || request.item?.name || 'Unknown Item',
+                                                    request.requestorName || request.user?.firstName + ' ' + request.user?.surname || 'Unknown User',
+                                                    request.requestQuantity || request.quantity || 0,
+                                                    request.currentStock || request.stack?.quantity || 0
                                                 );
                                                 e.target.value = '';
                                             }
@@ -1392,7 +1409,7 @@ function RequestsTable({
                                         <div className={`font-medium text-sm ${
                                             isDark ? 'text-white' : 'text-gray-900'
                                         }`}>
-                                            {request.itemName}
+                                            {request.itemName || request.item?.name || 'Unknown Item'}
                                         </div>
                                         <div className={`text-xs flex items-center ${
                                             isDark ? 'text-gray-400' : 'text-gray-600'
@@ -1400,7 +1417,7 @@ function RequestsTable({
                                             <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                                             </svg>
-                                            {request.itemCategory}
+                                            {request.itemCategory || request.item?.category || 'N/A'}
                                         </div>
                                         {renderNote(request)}
                                     </div>
@@ -1410,17 +1427,17 @@ function RequestsTable({
                                         <div className={`font-medium text-sm ${
                                             isDark ? 'text-white' : 'text-gray-900'
                                         }`}>
-                                            {request.requestorName}
+                                            {request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || 'Unknown User'}
                                         </div>
                                         <div className={`text-xs ${
                                             isDark ? 'text-gray-300' : 'text-gray-600'
                                         }`}>
-                                            {request.requestorEmail}
+                                            {request.requestorEmail || request.user?.email || 'N/A'}
                                         </div>
                                         <div className={`text-xs ${
                                             isDark ? 'text-gray-400' : 'text-gray-500'
                                         }`}>
-                                            @{request.requestorUsername}
+                                            @{request.requestorUsername || request.user?.username || 'unknown'}
                                         </div>
                                     </div>
                                 </td>
@@ -1428,14 +1445,14 @@ function RequestsTable({
                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                                         isDark ? 'bg-green-800 text-green-200' : 'bg-green-100 text-green-800'
                                     }`}>
-                                        {request.requestQuantity}
+                                        {request.requestQuantity || request.quantity || 0}
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-center">
                                     <span className={`text-sm ${
                                         isDark ? 'text-white' : 'text-gray-900'
                                     }`}>
-                                        {request.currentStock || 'N/A'}
+                                        {request.currentStock || request.stack?.quantity || 'N/A'}
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
@@ -1475,10 +1492,10 @@ function RequestsTable({
                                                     onStatusChange(
                                                         request.id,
                                                         e.target.value,
-                                                        request.itemName,
-                                                        request.requestorName,
-                                                        request.requestQuantity,
-                                                        request.currentStock
+                                                        request.itemName || request.item?.name || 'Unknown Item',
+                                                        request.requestorName || request.user?.firstName + ' ' + request.user?.surname || 'Unknown User',
+                                                        request.requestQuantity || request.quantity || 0,
+                                                        request.currentStock || request.stack?.quantity || 0
                                                     );
                                                     e.target.value = '';
                                                 }

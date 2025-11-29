@@ -1,11 +1,13 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Plus, Search, FileText, Calendar, TrendingUp, Users, Filter, Archive, Eye, Settings, Loader } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { useTheme } from '../../../contexts/ThemeContext';
 import ReportModal from './ReportModal';
 import ManageReferences from './ManageReferences';
 import { usePlantingReport } from '../../../contexts/PlantingReportContext';
 
 const PlantingReports = () => {
+    const { theme } = useTheme();
     const {
         fetchReports,
         createReport,
@@ -209,18 +211,18 @@ const PlantingReports = () => {
             <div className="mb-6">
                 <div className="flex justify-between items-center mb-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-800">Planting Reports</h1>
-                        <p className="text-gray-600 mt-1">Track and manage farmer planting and harvest data</p>
+                        <h1 className={`text-3xl font-bold ${theme === 'dark' ? 'text-gray-100' : 'text-gray-800'}`}>Planting Reports</h1>
+                        <p className={theme === 'dark' ? 'text-gray-400 mt-1' : 'text-gray-600 mt-1'}>Track and manage farmer planting and harvest data</p>
                     </div>
                     <div className="flex items-center space-x-3">
                         {/* View Mode Tabs */}
-                        <div className="flex bg-white rounded-lg shadow-sm border border-gray-200">
+                        <div className={`flex rounded-lg shadow-sm border ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                             <button
                                 onClick={() => setViewMode('active')}
                                 className={`px-4 py-2 rounded-l-lg transition-colors ${
                                     viewMode === 'active'
                                         ? 'bg-green-600 text-white'
-                                        : 'text-gray-600 hover:bg-gray-50'
+                                        : theme === 'dark' ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-50'
                                 }`}
                             >
                                 Active ({activeReports.length})
@@ -230,7 +232,7 @@ const PlantingReports = () => {
                                 className={`px-4 py-2 rounded-r-lg transition-colors flex items-center space-x-1 ${
                                     viewMode === 'archived'
                                         ? 'bg-gray-600 text-white'
-                                        : 'text-gray-600 hover:bg-gray-50'
+                                        : theme === 'dark' ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-50'
                                 }`}
                             >
                                 <Archive size={16} />
@@ -257,38 +259,38 @@ const PlantingReports = () => {
 
                 {/* Statistics Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <div className="bg-white p-4 rounded-lg shadow">
+                    <div className={`p-4 rounded-lg shadow ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-gray-600">Total Reports</p>
-                                <p className="text-2xl font-bold text-gray-800">{stats.totalReports}</p>
+                                <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Total Reports</p>
+                                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-gray-100' : 'text-gray-800'}`}>{stats.totalReports}</p>
                             </div>
                             <FileText className="text-blue-500" size={32} />
                         </div>
                     </div>
-                    <div className="bg-white p-4 rounded-lg shadow">
+                    <div className={`p-4 rounded-lg shadow ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-gray-600">Total Area Planted</p>
-                                <p className="text-2xl font-bold text-gray-800">{stats.totalAreaPlanted} ha</p>
+                                <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Total Area Planted</p>
+                                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-gray-100' : 'text-gray-800'}`}>{stats.totalAreaPlanted} ha</p>
                             </div>
                             <Calendar className="text-green-500" size={32} />
                         </div>
                     </div>
-                    <div className="bg-white p-4 rounded-lg shadow">
+                    <div className={`p-4 rounded-lg shadow ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-gray-600">Harvested</p>
-                                <p className="text-2xl font-bold text-gray-800">{stats.harvestedReports}</p>
+                                <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Harvested</p>
+                                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-gray-100' : 'text-gray-800'}`}>{stats.harvestedReports}</p>
                             </div>
                             <Users className="text-orange-500" size={32} />
                         </div>
                     </div>
-                    <div className="bg-white p-4 rounded-lg shadow">
+                    <div className={`p-4 rounded-lg shadow ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-gray-600">Average Yield</p>
-                                <p className="text-2xl font-bold text-gray-800">{stats.averageYield} mt/ha</p>
+                                <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Average Yield</p>
+                                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-gray-100' : 'text-gray-800'}`}>{stats.averageYield} mt/ha</p>
                             </div>
                             <TrendingUp className="text-purple-500" size={32} />
                         </div>
@@ -296,7 +298,7 @@ const PlantingReports = () => {
                 </div>
 
                 {/* Search and Filters */}
-                <div className="bg-white p-4 rounded-lg shadow">
+                <div className={`p-4 rounded-lg shadow ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -341,10 +343,10 @@ const PlantingReports = () => {
             </div>
 
             {/* Reports Table */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className={`rounded-lg shadow overflow-hidden ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                        <thead className={theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}>
                             <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Farmer
@@ -372,7 +374,7 @@ const PlantingReports = () => {
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className={`divide-y ${theme === 'dark' ? 'bg-gray-800 divide-gray-700' : 'bg-white divide-gray-200'}`}>
                             {filteredReports.length === 0 ? (
                                 <tr>
                                     <td colSpan="9" className="px-6 py-8 text-center text-gray-500">

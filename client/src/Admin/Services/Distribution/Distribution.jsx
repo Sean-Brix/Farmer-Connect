@@ -271,6 +271,17 @@ export default function Distribution() {
         currentStock
     ) => {
         try {
+            // Validate required parameters
+            if (!itemName || !requestorName) {
+                console.error(' Error updating request status: Missing required data', {
+                    itemName,
+                    requestorName,
+                    requestId,
+                });
+                showAlert('Cannot update request: Missing item or requestor information', 'error');
+                return;
+            }
+
             // Create custom alert with item details
             const alertDiv = document.createElement('div');
             alertDiv.style.cssText = `
@@ -337,7 +348,7 @@ export default function Distribution() {
                                 font-weight: 700;
                                 font-size: 1.125rem;
                                 flex-shrink: 0;
-                            ">${itemName.charAt(0).toUpperCase()}</div>
+                            ">${(itemName || 'U').charAt(0).toUpperCase()}</div>
                             <div style="flex: 1;">
                                 <div style="
                                     font-weight: 600;
@@ -1425,10 +1436,10 @@ function InternalRequestsTable({
                                                     onStatusChange(
                                                         request.id,
                                                         status,
-                                                        request.itemName,
-                                                        request.requestorName,
-                                                        request.quantity,
-                                                        request.currentStock
+                                                        request.itemName || request.item?.name || 'Unknown Item',
+                                                        request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || 'Unknown User',
+                                                        request.quantity || request.requestQuantity || 0,
+                                                        request.currentStock || request.stack?.quantity || 0
                                                     )
                                                 }
                                                 className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
@@ -1562,10 +1573,10 @@ function InternalRequestsTable({
                                                     onStatusChange(
                                                         request.id,
                                                         status,
-                                                        request.itemName,
-                                                        request.requestorName,
-                                                        request.quantity,
-                                                        request.currentStock
+                                                        request.itemName || request.item?.name || 'Unknown Item',
+                                                        request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || 'Unknown User',
+                                                        request.quantity || request.requestQuantity || 0,
+                                                        request.currentStock || request.stack?.quantity || 0
                                                     )
                                                 }
                                                 className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${

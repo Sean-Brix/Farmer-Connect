@@ -14,13 +14,14 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
+import { useTheme } from '../../../contexts/ThemeContext';
 import { useAdminInquiries, useInquiryMessages } from '../../../hooks/useInquiryPolling.js';
 import ImagePreview from '../../../Components/Chats/ImagePreview.jsx';
 import FillSurveyModal from '../../../Components/Survey/FillSurveyModal.jsx';
 import { surveyFormsAPI } from '../Survey/surveyFormsAPI.js';
 
 export default function Chat_Module() {
-    // Admin is always in light mode - no theme needed
+    const { theme } = useTheme();
     
     // State
     const [activeTab, setActiveTab] = useState('PENDING');
@@ -213,7 +214,9 @@ export default function Chat_Module() {
                     placeholder="Search inquiries..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                        theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'
+                    }`}
                 />
             </div>
 
@@ -287,7 +290,9 @@ export default function Chat_Module() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-                <div className="p-4 border-t border-gray-200 flex items-center justify-between bg-white">
+                <div className={`p-4 border-t flex items-center justify-between ${
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                }`}>
                     <button
                         onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                         disabled={currentPage === 1}
@@ -329,7 +334,9 @@ export default function Chat_Module() {
         return (
             <div className="flex flex-col h-full">
                 {/* Chat Header */}
-                <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-white">
+                <div className={`p-4 border-b flex items-center justify-between ${
+                    theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                }`}>
                     <div>
                         <h3 className="font-semibold text-gray-900">
                             {selectedChat.user ? `${selectedChat.user.firstName} ${selectedChat.user.surname}` : `User #${selectedChat.userId}`}
@@ -354,7 +361,9 @@ export default function Chat_Module() {
                     {/* Initial Inquiry Message */}
                     <div className="flex justify-start">
                         <div className="max-w-[70%]">
-                            <div className="px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 shadow-sm">
+                            <div className={`px-4 py-2 rounded-lg border shadow-sm ${
+                                theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-200 text-gray-900'
+                            }`}>
                                 {selectedChat.message}
                             </div>
                             <p className="text-xs text-gray-500 mt-1">
@@ -383,7 +392,7 @@ export default function Chat_Module() {
                                     <div className={`px-4 py-2 rounded-lg shadow-sm ${
                                         isAdmin 
                                             ? 'bg-green-600 text-white' 
-                                            : 'bg-white border border-gray-200 text-gray-900'
+                                            : theme === 'dark' ? 'bg-gray-700 border border-gray-600 text-gray-100' : 'bg-white border border-gray-200 text-gray-900'
                                     }`}>
                                         {/* Survey Form Button */}
                                         {isSurveyForm && surveyData ? (
@@ -467,7 +476,9 @@ export default function Chat_Module() {
                         This inquiry has been resolved. No further replies allowed.
                     </div>
                 ) : (
-                    <div className="p-3 sm:p-4 border-t border-gray-200 bg-white">
+                    <div className={`p-3 sm:p-4 border-t ${
+                        theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                    }`}>
                         {/* Attachments Preview */}
                         {attachments.length > 0 && (
                             <div className="mb-3 flex flex-wrap gap-2">
@@ -525,7 +536,9 @@ export default function Chat_Module() {
                                 onChange={(e) => setMessageText(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                                 placeholder="Type your reply..."
-                                className="flex-1 px-3 sm:px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm sm:text-base"
+                                className={`flex-1 px-3 sm:px-4 py-2 rounded-lg border focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm sm:text-base ${
+                                    theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'
+                                }`}
                             />
                             <button
                                 onClick={handleSendMessage}
@@ -546,9 +559,13 @@ export default function Chat_Module() {
             <div className="container mx-auto p-4 sm:p-6 h-full flex flex-col">
 
                 {/* Main Chat Area */}
-                <div className="flex-1 bg-white rounded-lg shadow-lg overflow-hidden flex flex-col min-h-0">
+                <div className={`flex-1 rounded-lg shadow-lg overflow-hidden flex flex-col min-h-0 ${
+                    theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+                }`}>
                     {/* Tabs with Counts */}
-                    <div className="border-b border-gray-200 flex bg-white overflow-x-auto">
+                    <div className={`border-b flex overflow-x-auto ${
+                        theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                    }`}>
                         {['PENDING', 'IN_PROGRESS', 'RESOLVED'].map(tab => {
                             const count = tab === 'PENDING' ? pendingCount : tab === 'IN_PROGRESS' ? inProgressCount : resolvedCount;
                             return (
@@ -576,7 +593,9 @@ export default function Chat_Module() {
                     {/* Content Area */}
                     <div className="flex-1 flex overflow-hidden flex-col sm:flex-row min-h-0">
                         {/* Left: Inquiry List */}
-                        <div className="w-full sm:w-96 border-b sm:border-b-0 sm:border-r border-gray-200 bg-white flex-shrink-0 overflow-hidden">
+                        <div className={`w-full sm:w-96 border-b sm:border-b-0 sm:border-r flex-shrink-0 overflow-hidden ${
+                            theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                        }`}>
                             {renderInquiryList()}
                         </div>
 
@@ -615,7 +634,9 @@ export default function Chat_Module() {
                     onClick={() => setShowSurveyPicker(false)}
                 >
                     <div 
-                        className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
+                        className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden ${
+                            theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+                        }`}
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="p-6 border-b border-gray-200">

@@ -24,9 +24,11 @@ export default function RequestsTable({
     const filteredRequests = requests
         .filter((request) => {
             const searchLower = search.toLowerCase();
+            const itemName = request.itemName || request.item?.name || '';
+            const requestorName = request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || '';
             const matchesSearch =
-                request.itemName?.toLowerCase().includes(searchLower) ||
-                request.requestorName?.toLowerCase().includes(searchLower) ||
+                itemName.toLowerCase().includes(searchLower) ||
+                requestorName.toLowerCase().includes(searchLower) ||
                 request.requestNote?.toLowerCase().includes(searchLower) ||
                 request.requestorEmail?.toLowerCase().includes(searchLower);
 
@@ -47,10 +49,14 @@ export default function RequestsTable({
                     return new Date(b.createdAt) - new Date(a.createdAt);
 
                 case 'item':
-                    return a.itemName?.localeCompare(b.itemName) || 0;
+                    const itemA = a.itemName || a.item?.name || '';
+                    const itemB = b.itemName || b.item?.name || '';
+                    return itemA.localeCompare(itemB);
 
                 case 'client':
-                    return a.requestorName?.localeCompare(b.requestorName) || 0;
+                    const requestorA = a.requestorName || `${a.user?.firstName || ''} ${a.user?.surname || ''}`.trim() || '';
+                    const requestorB = b.requestorName || `${b.user?.firstName || ''} ${b.user?.surname || ''}`.trim() || '';
+                    return requestorA.localeCompare(requestorB);
 
                 default:
                     return new Date(b.createdAt) - new Date(a.createdAt);
@@ -339,12 +345,12 @@ export default function RequestsTable({
                                         <div className={`font-medium ${
                                             isDark ? 'text-white' : 'text-gray-900'
                                         }`}>
-                                            {request.itemName}
+                                            {request.itemName || request.item?.name || 'Unknown Item'}
                                         </div>
                                         <div className={`text-xs ${
                                             isDark ? 'text-gray-400' : 'text-gray-500'
                                         }`}>
-                                            Quantity: {request.requestQuantity}
+                                            Quantity: {request.requestQuantity || request.quantity || 0}
                                         </div>
                                         <div className={`text-xs ${
                                             isDark ? 'text-gray-400' : 'text-gray-500'
@@ -369,12 +375,12 @@ export default function RequestsTable({
                                         <div className={`font-medium ${
                                             isDark ? 'text-white' : 'text-gray-900'
                                         }`}>
-                                            {request.requestorName}
+                                            {request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || 'Unknown User'}
                                         </div>
                                         <div className={`text-xs ${
                                             isDark ? 'text-gray-400' : 'text-gray-500'
                                         }`}>
-                                            {request.requestorEmail}
+                                            {request.requestorEmail || request.user?.email || 'N/A'}
                                         </div>
                                     </div>
                                 </td>
@@ -393,7 +399,14 @@ export default function RequestsTable({
                                                 defaultValue=""
                                                 onChange={e => {
                                                     if (e.target.value) {
-                                                        onStatusChange(request.id, e.target.value);
+                                                        onStatusChange(
+                                                            request.id,
+                                                            e.target.value,
+                                                            request.itemName || request.item?.name || 'Unknown Item',
+                                                            request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || 'Unknown User',
+                                                            request.requestQuantity || request.quantity || 0,
+                                                            request.currentStock || request.stack?.quantity || 0
+                                                        );
                                                     }
                                                 }}
                                             >
