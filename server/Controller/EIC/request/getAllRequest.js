@@ -3,22 +3,37 @@ import prisma from '../../../config/database.js';
 async function getAllRequest(req, res) {
     try {
         // Get all item transactions with related data - ONLY for EIC stacks
+        // Optimized query: select only necessary fields to reduce payload size
         const requests = await prisma.itemTransaction.findMany({
             where: {
                 itemStack: {
                     status: 'EIC', // Only get transactions for EIC (Equipment in Circulation) stacks
                 },
             },
-            include: {
+            select: {
+                id: true,
+                itemStackId: true,
+                accountId: true,
+                adminId: true,
+                quantity: true,
+                status: true,
+                pickupDate: true,
+                returnDate: true,
+                requestNote: true,
+                statusChangeReason: true,
+                statusChangedAt: true,
+                createdAt: true,
+                updatedAt: true,
                 itemStack: {
-                    include: {
+                    select: {
+                        quantity: true,
+                        date_limit: true,
                         item: {
                             select: {
                                 id: true,
                                 name: true,
                                 description: true,
                                 category: true,
-                                picture: true,
                             },
                         },
                     },
@@ -30,9 +45,6 @@ async function getAllRequest(req, res) {
                         surname: true,
                         email: true,
                         username: true,
-                        contactNumber: true,
-                        access: true,
-                        client_profile: true,
                     },
                 },
                 admin: {
@@ -40,7 +52,6 @@ async function getAllRequest(req, res) {
                         id: true,
                         firstName: true,
                         surname: true,
-                        email: true,
                     },
                 },
             },
@@ -58,71 +69,43 @@ async function getAllRequest(req, res) {
         const transformedRequests = requests.map((request) => ({
             id: request.id,
             itemStackId: request.itemStackId,
-            accountId: request.accountId,
-            adminId: request.adminId,
             quantity: request.quantity,
             requestQuantity: request.quantity, // Frontend expects requestQuantity
             status: request.status,
             pickupDate: request.pickupDate,
             returnDate: request.returnDate,
             requestNote: request.requestNote,
+            statusChangeReason: request.statusChangeReason,
+            statusChangedAt: request.statusChangedAt,
             createdAt: request.createdAt,
             updatedAt: request.updatedAt,
             // Item information
             itemName: request.itemStack.item.name,
-            itemDescription: request.itemStack.item.description,
             itemCategory: request.itemStack.item.category,
-            itemPicture: request.itemStack.item.picture,
-            itemDateLimit: request.itemStack.date_limit,
             // Stack inventory information
             currentStock: request.itemStack.quantity,
             // User information
             requestorName: `${request.account.firstName} ${request.account.surname}`,
             requestorEmail: request.account.email,
             requestorUsername: request.account.username,
-            requestorPhone: request.account.contactNumber,
-            requestorAccess: request.account.access,
-            requestorProfile: request.account.client_profile,
             // Admin information (if any)
             adminName: request.admin
                 ? `${request.admin.firstName} ${request.admin.surname}`
                 : null,
-            adminEmail: request.admin ? request.admin.email : null,
         }));
 
         console.log('🔍 [EIC Requests] Total requests:', transformedRequests.length);
-        if (transformedRequests.length > 0) {
-            console.log('🔍 [EIC Requests] First request sample:', {
-                id: transformedRequests[0].id,
-                itemName: transformedRequests[0].itemName,
-                quantity: transformedRequests[0].quantity,
-                quantityType: typeof transformedRequests[0].quantity,
-                requestQuantity: transformedRequests[0].requestQuantity,
-                status: transformedRequests[0].status,
-                requestorName: transformedRequests[0].requestorName,
-            });
-        }
 
         return res.status(200).json({
             success: true,
-            message: 'Requests retrieved successfully',
-            count: transformedRequests.length,
             requests: transformedRequests,
         });
     } catch (error) {
-        console.error('Error fetching all requests:', error);
-
-        // Handle specific Prisma errors
-        if (error.code === 'P2002') {
-            return res.status(409).json({
-                error: 'Conflict',
-                message: 'A conflict occurred while fetching requests',
-            });
-        }
+        console.error('❌ [EIC Requests] Error:', error);
 
         return res.status(500).json({
-            error: 'Internal server error',
-            message: 'Failed to fetch requests. Please try again later.',
+            success: false,
+            message: 'Failed to fetch requests',
         });
     }
 }

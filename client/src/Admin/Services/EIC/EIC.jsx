@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../../contexts/ThemeContext';
 import default_image from '../../../Assets/eic_default.png';
 import AddEICItemModal from './addEICItem.jsx';
+import AutoStatusSettings from './components/AutoStatusSettings.jsx';
+import RequestCalendar from '../../../Components/Calendar/RequestCalendar.jsx';
+import RequestSection from './components/RequestSection.jsx';
+import ConfirmationModal from '../../../Components/Modal/ConfirmationModal.jsx';
+import { TableRowSkeleton } from './components/SkeletonLoaders.jsx';
 import {
     useEICStacks,
     useEICRequests,
@@ -13,7 +18,12 @@ import {
 
 export default function EIC() {
     const { isDark } = useTheme();
-    const [activeSection, setActiveSection] = useState('items');
+    // Initialize activeSection from localStorage, default to 'items'
+    const [activeSection, setActiveSection] = useState(() => {
+        const saved = localStorage.getItem('eic_active_section');
+        return saved || 'items';
+    });
+    const [previousSection, setPreviousSection] = useState('items');
     const [search, setSearch] = useState('');
     const [sortBy, setSortBy] = useState('quantity');
     const [searchFilter, setSearchFilter] = useState('name');
@@ -40,6 +50,15 @@ export default function EIC() {
         show: false,
         message: '',
         type: '',
+    });
+
+    // Confirmation Modal state
+    const [confirmModal, setConfirmModal] = useState({
+        isOpen: false,
+        action: 'approve',
+        request: null,
+        requireReason: false,
+        onConfirm: null,
     });
 
     // TanStack Query hooks
@@ -139,6 +158,11 @@ export default function EIC() {
         setItemsCurrentPage(1);
     }, [search, sortBy, searchFilter]);
 
+    // Persist activeSection to localStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem('eic_active_section', activeSection);
+    }, [activeSection]);
+
     const handleAddEICItem = async (formData) => {
         try {
             await addEICItemMutation.mutateAsync(formData);
@@ -220,345 +244,124 @@ export default function EIC() {
         setActiveSection('requests');
     };
 
-    // Handle request status change
+    // Navigate to settings/schedule and save current section for back navigation
+    const handleNavigateToSection = (newSection) => {
+        setPreviousSection(activeSection);
+        setActiveSection(newSection);
+    };
+
+    // Handle back navigation - return to previous section
+    const handleBackNavigation = () => {
+        setActiveSection(previousSection);
+    };
+
+    // Handle request status change with ConfirmationModal
     const handleStatusChange = async (
         requestId,
         newStatus,
         itemName,
         requestorName,
         requestQuantity,
-        currentStock
+        currentStock,
+        requestNote = null
     ) => {
-        try {
-            // Validate required parameters
-            if (!itemName || !requestorName) {
-                console.error(' Error updating request status: Missing required data', {
-                    itemName,
-                    requestorName,
-                    requestId,
-                });
-                showAlert('Cannot update request: Missing item or requestor information', 'error');
-                return;
-            }
-
-            // Create custom alert with item details
-            const alertDiv = document.createElement('div');
-            alertDiv.innerHTML = `
-                <div id="custom-admin-confirm-alert" style="
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100vw;
-                    height: 100vh;
-                    background: rgba(0, 0, 0, 0.75);
-                    backdrop-filter: blur(8px);
-                    z-index: 9999;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    animation: fadeIn 0.3s ease-out;
-                ">
-                    <div style="
-                        background: white;
-                        border-radius: 1.5rem;
-                        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-                        padding: 0;
-                        max-width: 480px;
-                        width: 90vw;
-                        overflow: hidden;
-                        animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-                    ">
-                        <!-- Header -->
-                        <div style="
-                            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-                            padding: 2rem 2.5rem 1.5rem 2.5rem;
-                            text-align: center;
-                        ">
-                            <div style="
-                                background: rgba(255, 255, 255, 0.2);
-                                border-radius: 50%;
-                                width: 4rem;
-                                height: 4rem;
-                                margin: 0 auto 1rem auto;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                            ">
-                                <i class="fas fa-clipboard-check" style="
-                                    font-size: 2rem;
-                                    color: white;
-                                    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
-                                "></i>
-                            </div>
-                            <h3 style="
-                                margin: 0;
-                                color: white;
-                                font-size: 1.5rem;
-                                font-weight: 700;
-                                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                            ">Admin Response Required</h3>
-                        </div>
-                        
-                        <!-- Content -->
-                        <div style="padding: 2rem 2.5rem;">
-                            <div style="
-                                background: #f8fafc;
-                                border: 1px solid #e2e8f0;
-                                border-radius: 0.75rem;
-                                padding: 1.5rem;
-                                margin-bottom: 1.5rem;
-                            ">
-                                <div style="margin-bottom: 1rem;">
-                                    <div style="
-                                        font-size: 0.875rem;
-                                        color: #64748b;
-                                        font-weight: 500;
-                                        margin-bottom: 0.25rem;
-                                    ">EQUIPMENT REQUEST</div>
-                                    <div style="
-                                        font-size: 1.125rem;
-                                        color: #1e293b;
-                                        font-weight: 600;
-                                        margin-bottom: 0.5rem;
-                                    ">"${itemName}"</div>
-                                    <div style="
-                                        font-size: 0.875rem;
-                                        color: #64748b;
-                                        margin-bottom: 0.5rem;
-                                    ">Requested by: <strong style="color: #1e293b;">${requestorName}</strong></div>
-                                    
-                                    <!-- Request and Stock Information -->
-                                    <div style="
-                                        display: flex;
-                                        gap: 1rem;
-                                        margin-top: 1rem;
-                                        padding: 0.75rem;
-                                        background: #f1f5f9;
-                                        border-radius: 0.5rem;
-                                        font-size: 0.875rem;
-                                    ">
-                                        <div style="
-                                            flex: 1;
-                                            text-align: center;
-                                        ">
-                                            <div style="color: #64748b; font-weight: 500;">Requested</div>
-                                            <div style="color: #1e293b; font-weight: 700; font-size: 1.25rem;">${requestQuantity}</div>
-                                        </div>
-                                        <div style="
-                                            width: 1px;
-                                            background: #cbd5e1;
-                                        "></div>
-                                        <div style="
-                                            flex: 1;
-                                            text-align: center;
-                                        ">
-                                            <div style="color: #64748b; font-weight: 500;">Available</div>
-                                            <div style="
-                                                color: ${
-                                                    currentStock === 0
-                                                        ? '#dc2626'
-                                                        : currentStock < 5
-                                                        ? '#d97706'
-                                                        : '#16a34a'
-                                                };
-                                                font-weight: 700;
-                                                font-size: 1.25rem;
-                                            ">${currentStock}</div>
-                                        </div>
-                                    </div>
-                                    
-                                    ${
-                                        requestQuantity > currentStock
-                                            ? `
-                                    <div style="
-                                        margin-top: 0.75rem;
-                                        padding: 0.75rem;
-                                        background: #fef2f2;
-                                        border: 1px solid #fecaca;
-                                        border-radius: 0.5rem;
-                                        color: #dc2626;
-                                        font-size: 0.875rem;
-                                        font-weight: 500;
-                                        text-align: center;
-                                    ">
-                                        ⚠️ Warning: Insufficient stock for this request
-                                    </div>
-                                    `
-                                            : ''
-                                    }
-                                </div>
-                                
-                                <div style="
-                                    border-top: 1px solid #e2e8f0;
-                                    padding-top: 1rem;
-                                    text-align: center;
-                                ">
-                                    <div style="
-                                        font-size: 1rem;
-                                        color: #374151;
-                                        line-height: 1.5;
-                                    ">
-                                        You are about to change the request status to:
-                                        <br>
-                                        <span style="
-                                            display: inline-block;
-                                            margin-top: 0.5rem;
-                                            padding: 0.5rem 1rem;
-                                            background: ${
-                                                newStatus === 'Approved'
-                                                    ? '#dcfce7'
-                                                    : newStatus === 'Rejected'
-                                                    ? '#fee2e2'
-                                                    : newStatus === 'Returned'
-                                                    ? '#f3f4f6'
-                                                    : '#fef3c7'
-                                            };
-                                            color: ${
-                                                newStatus === 'Approved'
-                                                    ? '#166534'
-                                                    : newStatus === 'Rejected'
-                                                    ? '#dc2626'
-                                                    : newStatus === 'Returned'
-                                                    ? '#374151'
-                                                    : '#92400e'
-                                            };
-                                            border-radius: 0.5rem;
-                                            font-weight: 600;
-                                            font-size: 1.125rem;
-                                        ">${newStatus.replace('_', ' ')}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div style="
-                                display: flex;
-                                gap: 0.75rem;
-                                justify-content: center;
-                            ">
-                                <button id="admin-cancel-btn" style="
-                                    flex: 1;
-                                    background: #f1f5f9;
-                                    border: 2px solid #e2e8f0;
-                                    color: #64748b;
-                                    padding: 0.875rem 1.5rem;
-                                    border-radius: 0.75rem;
-                                    font-weight: 600;
-                                    font-size: 1rem;
-                                    cursor: pointer;
-                                    transition: all 0.2s;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    gap: 0.5rem;
-                                ">
-                                    <i class="fas fa-times"></i>
-                                    Cancel
-                                </button>
-                                <button id="admin-confirm-btn" style="
-                                    flex: 1;
-                                    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-                                    border: none;
-                                    color: white;
-                                    padding: 0.875rem 1.5rem;
-                                    border-radius: 0.75rem;
-                                    font-weight: 600;
-                                    font-size: 1rem;
-                                    cursor: pointer;
-                                    transition: all 0.2s;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    gap: 0.5rem;
-                                    box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.3);
-                                ">
-                                    <i class="fas fa-check"></i>
-                                    Confirm Response
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <style>
-                    @keyframes fadeIn {
-                        from { opacity: 0; }
-                        to { opacity: 1; }
-                    }
-                    @keyframes slideUp {
-                        from { 
-                            opacity: 0; 
-                            transform: translateY(40px) scale(0.95); 
-                        }
-                        to { 
-                            opacity: 1; 
-                            transform: translateY(0) scale(1); 
-                        }
-                    }
-                    #admin-cancel-btn:hover {
-                        background: #e2e8f0;
-                        border-color: #cbd5e1;
-                        color: #475569;
-                        transform: translateY(-1px);
-                    }
-                    #admin-confirm-btn:hover {
-                        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-                        transform: translateY(-1px);
-                        box-shadow: 0 8px 25px 0 rgba(59, 130, 246, 0.4);
-                    }
-                </style>
-            `;
-            document.body.appendChild(alertDiv);
-
-            // Create a promise to handle the user's choice
-            const userChoice = await new Promise((resolve) => {
-                document.getElementById('admin-confirm-btn').onclick = () => {
-                    document.body.removeChild(alertDiv);
-                    resolve(true);
-                };
-
-                document.getElementById('admin-cancel-btn').onclick = () => {
-                    document.body.removeChild(alertDiv);
-                    resolve(false);
-                };
-
-                // Close on backdrop click
-                alertDiv.onclick = (e) => {
-                    if (e.target === alertDiv) {
-                        document.body.removeChild(alertDiv);
-                        resolve(false);
-                    }
-                };
-            });
-
-            if (!userChoice) {
-                return; // User cancelled
-            }
-
-            await updateRequestStatusMutation.mutateAsync({
-                requestId,
-                status: newStatus,
+        // Validate required parameters
+        if (!itemName || !requestorName) {
+            console.error('Error updating request status: Missing required data', {
                 itemName,
                 requestorName,
-                requestQuantity,
-                currentStock,
+                requestId,
             });
-
-            showAlert(
-                `Request status successfully changed to ${newStatus}`,
-                'success'
-            );
-        } catch (error) {
-            console.error('Error updating request status:', error);
-            showAlert(
-                error.message || 'Failed to update request status',
-                'error'
-            );
+            showAlert('Cannot update request: Missing item or requestor information', 'error');
+            return false;
         }
+
+        // Map statuses to action types
+        const statusActionMap = {
+            'Approved': 'approve',
+            'Rejected': 'reject',
+            'Cancelled': 'cancel',
+            'Returned': 'return',
+            'No_Return': 'no_return',
+            'No_Pickup': 'no_pickup',
+            'late_return': 'pickup',
+        };
+
+        const action = statusActionMap[newStatus] || 'approve';
+        const requireReason = ['Rejected', 'No_Return', 'No_Pickup', 'Cancelled'].includes(newStatus);
+
+        // Return a promise that will be resolved when modal closes
+        return new Promise((resolve) => {
+            setConfirmModal({
+                isOpen: true,
+                action: action,
+                request: {
+                    id: requestId,
+                    itemName,
+                    requestorName,
+                    quantity: requestQuantity,
+                    currentStock,
+                    requestNote,
+                },
+                requireReason,
+                onConfirm: async (reason) => {
+                    try {
+                        await updateRequestStatusMutation.mutateAsync({
+                            requestId,
+                            status: newStatus,
+                            reason: reason || undefined,
+                        });
+
+                        showAlert(
+                            `Request status successfully changed to ${newStatus}`,
+                            'success'
+                        );
+
+                        // Close modal
+                        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+                        resolve(true);
+                    } catch (error) {
+                        console.error('Error updating request status:', error);
+                        showAlert(
+                            error.message || 'Failed to update request status',
+                            'error'
+                        );
+                        
+                        // Close modal
+                        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+                        resolve(false);
+                    }
+                },
+            });
+        });
     };
 
-    if (isLoading)
+    // Handle modal close
+    const handleModalClose = () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+    };
+
+    if (isLoading && activeSection === 'items')
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <div className={`text-lg ${isDark ? 'text-white' : 'text-gray-900'}`}>Loading...</div>
+            <div className={`min-h-screen py-8 sm:mt-20 px-2 md:px-6 pt-4 sm:pt-6 ${
+                isDark 
+                    ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                    : 'bg-gradient-to-br from-white via-gray-50 to-gray-100'
+            }`}>
+                <div className="w-full max-w-7xl mx-auto px-2 md:px-8">
+                    <div className={`rounded-xl shadow-lg border overflow-hidden ${
+                        isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                    }`}>
+                        <div className={`px-6 py-4 border-b ${
+                            isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-200 border-gray-300'
+                        }`}>
+                            <div className={`h-4 w-48 rounded ${isDark ? 'bg-gray-600' : 'bg-gray-300'} animate-pulse`}></div>
+                        </div>
+                        {[...Array(5)].map((_, index) => (
+                            <TableRowSkeleton key={index} />
+                        ))}
+                    </div>
+                </div>
             </div>
         );
     if (error)
@@ -588,131 +391,58 @@ export default function EIC() {
                 </div>
             )}
 
-            {activeSection === 'requests' ? (
-
-                <div className="max-w-5xl mx-auto">
-                    {/* Distribution-style Search/Filters/Buttons Layout for Requests */}
-                        <div className="flex flex-col sm:flex-row items-stretch w-full gap-2 sm:gap-4 mb-4">
-                            <div className="relative w-full sm:w-1/2">
-                                <input
-                                    type="search"
-                                    placeholder="Search by item name, requestor, or note..."
-                                    className={`block w-full pl-10 pr-3 py-2 text-base border rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all ${
-                                        isDark 
-                                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                                            : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
-                                    }`}
-                                    value={requestSearch}
-                                    onChange={(e) => setRequestSearch(e.target.value)}
-                                    aria-label="Search requests"
-                                />
-                                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg
-                                        className="w-5 h-5 text-green-400"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div className="flex-shrink-0 flex justify-end items-center w-full sm:w-auto">
-                                <button
-                                    onClick={refetchRequests}
-                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-600 hover:bg-green-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-green-300 shadow-sm"
-                                    style={{ minWidth: '120px' }}
-                                >
-                                    <svg
-                                        className="w-4 h-4 mr-2"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                    Refresh
-                                </button>
-                                <span className="hidden sm:inline-block w-2"></span>
-                                <button
-                                    onClick={() => setActiveSection('items')}
-                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-gray-500 hover:bg-gray-600 text-white transition-all focus:outline-none focus:ring-2 focus:ring-gray-400 shadow-sm"
-                                >
-                                    <svg
-                                        className="w-4 h-4 mr-2"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                    Back to Items
-                                </button>
-                            </div>
-                        </div>
-
-                    <div className="flex flex-row gap-2 flex-1 mb-8">
-                            <select
-                                className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
-                                    isDark 
-                                        ? 'bg-gray-700 border-gray-600 text-gray-200' 
-                                        : 'bg-gray-50 border-gray-200 text-gray-700'
-                                }`}
-                                value={requestStatusFilter}
-                                onChange={(e) => setRequestStatusFilter(e.target.value)}
-                                aria-label="Filter by status"
-                            >
-                                <option value="all">All Statuses</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Approved">Approved</option>
-                                <option value="Rejected">Rejected</option>
-                                <option value="Returned">Returned</option>
-                                <option value="No_Return">No Return</option>
-                                <option value="late_return">Late Return</option>
-                                <option value="No_Pickup">No Pickup</option>
-                                <option value="Cancelled">Cancelled</option>
-                            </select>
-                            <select
-                                className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
-                                    isDark 
-                                        ? 'bg-gray-700 border-gray-600 text-gray-200' 
-                                        : 'bg-gray-50 border-gray-200 text-gray-700'
-                                }`}
-                                value={requestSortBy}
-                                onChange={(e) => setRequestSortBy(e.target.value)}
-                                aria-label="Sort by"
-                            >
-                                <option value="status">Sort by Status</option>
-                                <option value="date">Sort by Date</option>
-                                <option value="item">Sort by Item</option>
-                                <option value="client">Sort by Client</option>
-                            </select>
-                        </div>
-
-                    {/* Requests Table */}
-                    <RequestsTable
-                        requests={requests}
-                        search={requestSearch}
-                        statusFilter={requestStatusFilter}
-                        sortBy={requestSortBy}
-                        onStatusChange={handleStatusChange}
-                    />
+            {/* Page Title */}
+            {(activeSection === 'dueTracking' || activeSection === 'settings' || activeSection === 'schedule') && (
+                <div className="max-w-7xl mx-auto mb-6 px-2 md:px-8">
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={handleBackNavigation}
+                            className={`px-4 py-2 rounded-lg transition-colors ${
+                                isDark 
+                                    ? 'bg-gray-800 hover:bg-gray-700 text-white' 
+                                    : 'bg-gray-200 hover:bg-gray-300 text-gray-900'
+                            }`}
+                        >
+                            <i className="fa-solid fa-arrow-left mr-2"></i>
+                            Back
+                        </button>
+                        <h1 className={`text-2xl md:text-3xl font-bold flex items-center gap-3 ${
+                            isDark ? 'text-white' : 'text-gray-900'
+                        }`}>
+                            {activeSection === 'dueTracking' ? (
+                                <>
+                                    <i className="fa-solid fa-calendar-check text-green-600"></i>
+                                    Due Date Tracking
+                                </>
+                            ) : activeSection === 'schedule' ? (
+                                <>
+                                    <i className="fa-solid fa-calendar text-indigo-600"></i>
+                                    Pickup Schedule
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fa-solid fa-gear text-purple-600"></i>
+                                    Auto Status Settings
+                                </>
+                            )}
+                        </h1>
+                    </div>
                 </div>
+            )}
+
+            {activeSection === 'settings' ? (
+                <AutoStatusSettings />
+            ) : activeSection === 'schedule' ? (
+                <RequestCalendar source="eic" />
+            ) : activeSection === 'requests' ? (
+                <RequestSection 
+                    requests={requests}
+                    isLoading={requestsLoading}
+                    onStatusChange={handleStatusChange}
+                    onRefresh={refetchRequests}
+                    onBack={handleBackNavigation}
+                    onOpenSettings={() => handleNavigateToSection('settings')}
+                />
             ) : (
                 <>
                     {/* Distribution-style Search/Filters/Buttons Layout */}
@@ -806,6 +536,26 @@ export default function EIC() {
                                 </select>
                             </div>
                             <div className="flex flex-col sm:flex-row flex-wrap gap-2 justify-end flex-shrink-0 w-full sm:w-auto">
+                                
+                                <button
+                                    onClick={() => handleNavigateToSection('schedule')}
+                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-sm"
+                                >
+                                    <svg
+                                        className="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                    Schedule
+                                </button>
                                 <button
                                     onClick={handleRequestsButtonClick}
                                     className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"
@@ -1009,6 +759,19 @@ export default function EIC() {
                     imageUpdateTimestamp={imageUpdateTimestamp}
                 />
             )}
+
+            {/* Confirmation Modal */}
+            <ConfirmationModal
+                isOpen={confirmModal.isOpen}
+                onClose={handleModalClose}
+                onConfirm={confirmModal.onConfirm}
+                title="Confirm Action"
+                action={confirmModal.action}
+                request={confirmModal.request}
+                requireReason={confirmModal.requireReason}
+                isDark={isDark}
+                isLoading={updateRequestStatusMutation.isPending}
+            />
         </div>
     );
 }
@@ -2051,6 +1814,31 @@ function EICDetailModal({
                             {stack.quantity} Available
                         </span>
 
+                        {/* DATE LIMIT - Maximum Borrowing Period */}
+                        {stack.item?.date_limit && (
+                            <span
+                                className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default ${
+                                    isDark ? 'bg-blue-800 text-blue-200' : 'bg-blue-100 text-blue-800'
+                                }`}
+                                title="Maximum Borrowing Period"
+                            >
+                                <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                                Max {stack.item.date_limit} {stack.item.date_limit === 1 ? 'day' : 'days'}
+                            </span>
+                        )}
+
                         {/* STATUS */}
                         <span
                             className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default ${
@@ -2150,6 +1938,8 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
         description: stack.item?.description || '',
         category: stack.item?.category || 'Other',
         quantity: stack.quantity || 1,
+        date_limit: stack.date_limit || '',
+        max_quantity_per_request: stack.max_quantity_per_request || '',
     });
 
     const [originalData] = useState({
@@ -2157,6 +1947,8 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
         description: stack.item?.description || '',
         category: stack.item?.category || 'Other',
         quantity: stack.quantity || 1,
+        date_limit: stack.date_limit || '',
+        max_quantity_per_request: stack.max_quantity_per_request || '',
     });
 
     const [selectedImage, setSelectedImage] = useState(null);
@@ -2251,6 +2043,16 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
         submitData.append('description', formData.description);
         submitData.append('category', formData.category);
         submitData.append('quantity', formData.quantity);
+        
+        // Only send date_limit if it has a value
+        if (formData.date_limit && formData.date_limit !== '') {
+            submitData.append('date_limit', parseInt(formData.date_limit));
+        }
+        
+        // Only send max_quantity_per_request if it has a value
+        if (formData.max_quantity_per_request && formData.max_quantity_per_request !== '') {
+            submitData.append('max_quantity_per_request', parseInt(formData.max_quantity_per_request));
+        }
 
         // Add image if selected
         if (selectedImage) {
@@ -2428,6 +2230,77 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                                     : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
                             }`}
                             required
+                        />
+                    </div>
+
+                    {/* Maximum Borrowing Period (date_limit) */}
+                    <div>
+                        <label
+                            htmlFor="date_limit"
+                            className={`block text-sm font-medium mb-2 ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}
+                        >
+                            Maximum Borrowing Period (Days)
+                            <span className={`text-xs font-normal ml-2 ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`}>(Optional)</span>
+                        </label>
+                        <p className={`text-xs mb-2 ${
+                            isDark ? 'text-gray-400' : 'text-gray-600'
+                        }`}>
+                            <i className="fa-solid fa-info-circle mr-1 text-blue-500"></i>
+                            Leave empty for no limit. Users cannot borrow this item for longer than specified days.
+                        </p>
+                        <input
+                            type="number"
+                            id="date_limit"
+                            name="date_limit"
+                            value={formData.date_limit}
+                            onChange={handleChange}
+                            placeholder="e.g., 30"
+                            min="1"
+                            max="365"
+                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                isDark 
+                                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                            }`}
+                        />
+                    </div>
+
+                    {/* Maximum Quantity Per Request */}
+                    <div>
+                        <label
+                            htmlFor="max_quantity_per_request"
+                            className={`block text-sm font-medium mb-2 ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}
+                        >
+                            Maximum Quantity Per Request
+                            <span className={`text-xs font-normal ml-2 ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`}>(Optional)</span>
+                        </label>
+                        <p className={`text-xs mb-2 ${
+                            isDark ? 'text-gray-400' : 'text-gray-600'
+                        }`}>
+                            <i className="fa-solid fa-info-circle mr-1 text-blue-500"></i>
+                            Leave empty for no limit. Users cannot request more than this amount in a single transaction.
+                        </p>
+                        <input
+                            type="number"
+                            id="max_quantity_per_request"
+                            name="max_quantity_per_request"
+                            value={formData.max_quantity_per_request}
+                            onChange={handleChange}
+                            placeholder="e.g., 10"
+                            min="1"
+                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                isDark 
+                                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                            }`}
                         />
                     </div>
 

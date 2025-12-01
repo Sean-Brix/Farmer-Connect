@@ -1,0 +1,37 @@
+Test Case,Authentication,Action,Expected Result,Execution Number,Result,Status
+## Landing Page,,,,,
+Verify Explore Programs CTA,None,Click Explore Programs in hero,Navigate to seminar page,5,Navigation to seminar confirmed,passed
+Verify Learn More CTA,None,Click Learn More in hero,Navigate to about page,5,Navigation to about confirmed,passed
+Verify Hero Slider Previous,None,Use previous arrow,Slider shows previous image,5,Previous slide displayed,passed
+Verify Hero Slider Next,None,Use next arrow,Slider shows next image,5,Next slide displayed,passed
+Verify Hero Slider Dots,None,Click slider dot,Slider jumps to image,5,Dot navigation worked,passed
+Verify Programs Scroll Left,None,Scroll list left,List moves left,4,Scroll left worked,passed
+Verify Programs Scroll Right,None,Scroll list right,List moves right,4,Scroll right worked,passed
+Verify Program Card CTA,None,Open Learn More on card,Navigate to seminar page,5,Program link navigated,passed
+Verify News Card Link,None,Open Read More link,External link opens in new tab,3,External link opened,passed
+Verify Footer Link About,None,Open About link in footer,Navigate to about page,5,Footer link navigated,passed
+Verify Footer Link Programs,None,Open Programs link in footer,Navigate to seminar page,5,Footer link navigated,passed
+Verify Footer Link Contact,None,Open Contact link in footer,Navigate to contact page,5,Footer link navigated,passed
+Verify Footer Social Facebook,None,Open Facebook icon,Facebook page opens,4,Facebook link opened,passed
+Verify Back to Top Button,None,Click back to top,Page scrolls to top,5,Smooth scroll executed,passed
+## About Page,,,,,
+Verify Org Chart Zoom,None,Open org chart image,Image opens large or new tab,5,Org chart opened,passed
+## Contact Page,,,,,
+Verify General Email Link,None,Open general email link,Mail client opens with address,5,Mail link opened,passed
+Verify Support Email Link,None,Open support email link,Mail client opens with address,5,Mail link opened,passed
+Verify Phone Link,None,Open phone number link,Call initiates when supported,4,Phone link worked,passed
+Verify Website Link,None,Open website link,Website opens new tab,5,Website opened,passed
+Verify Social Facebook,None,Open Facebook button,Facebook page opens,5,Facebook opened,passed
+Verify Social Instagram,None,Open Instagram button,Instagram page opens,4,Instagram opened,passed
+## FAQ Page,,,,,
+Verify Category Tab Switching,None,Switch category tab,FAQs filter to selection,5,Category filter applied,passed
+Verify Accordion Expand,None,Open a question,Answer panel expands,5,Accordion expanded,passed
+Verify Accordion Collapse,None,Close an open question,Answer panel collapses,5,Accordion collapsed,passed
+Verify Contact CTA,None,Open Contact Us button,Navigate to contact page,5,Contact navigation worked,passed
+## Citizens Charter,,,,,
+Verify Download PDF,None,Open download charter button,PDF opens in new tab,3,PDF opened successfully,passed
+Verify Bureau Link,None,Open bureau link,Bureau website opens,5,Bureau link opened,passed
+Verify Agency Link,None,Open agency link,Agency website opens,5,Agency link opened,passed
+Verify Corporation Link,None,Open corporation link,Corporation website opens,4,Corporation link opened,passed
+Verify Regional Office Link,None,Open regional office link,Regional website opens,5,Regional link opened,passed
+Verify Back to Top,None,Click back to top,Page scrolls to top,5,Smooth scroll executed,passed

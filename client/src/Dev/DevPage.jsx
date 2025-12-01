@@ -2,17 +2,19 @@ import { useState } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import FirebaseImageTest from './Testing/FirebaseImageTest';
 import CachedProfilesViewer from './Caching/CachedProfilesViewer';
+import PhaseTests from './Testing/PhaseTests';
 
 const DevPage = () => {
     const { theme } = useTheme();
     const [activeTab, setActiveTab] = useState('testing');
-    const [activeScript, setActiveScript] = useState('firebase-image');
+    const [activeScript, setActiveScript] = useState('phase-tests');
 
     const tabs = {
         testing: {
             label: 'Testing',
             icon: '🧪',
             scripts: [
+                { id: 'phase-tests', label: 'Phase Testing Suite', component: PhaseTests },
                 { id: 'firebase-image', label: 'Firebase Image Upload/Delete', component: FirebaseImageTest },
                 { id: 'api-endpoints', label: 'API Endpoints Test', component: null },
                 { id: 'socket-connection', label: 'Socket Connection Test', component: null },

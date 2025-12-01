@@ -28,20 +28,6 @@ const eicAPI = {
             throw new Error('Failed to fetch EIC requests');
         }
         const data = await response.json();
-        
-        console.log('📥 [EIC Requests] Received from API:', {
-            total: data.requests?.length || 0,
-            firstRequest: data.requests?.[0] ? {
-                id: data.requests[0].id,
-                itemName: data.requests[0].itemName,
-                quantity: data.requests[0].quantity,
-                requestQuantity: data.requests[0].requestQuantity,
-                quantityType: typeof data.requests[0].quantity,
-                requestQuantityType: typeof data.requests[0].requestQuantity,
-                status: data.requests[0].status,
-            } : null
-        });
-        
         return data.requests || [];
     },
 
@@ -93,6 +79,7 @@ const eicAPI = {
         requestorName,
         requestQuantity,
         currentStock,
+        reason,
     }) => {
         const response = await fetch('/api/eic/request/respond', {
             method: 'POST',
@@ -102,6 +89,7 @@ const eicAPI = {
             body: JSON.stringify({
                 transactionId: requestId,
                 status: status,
+                reason: reason,
             }),
         });
         if (!response.ok) {
@@ -121,6 +109,8 @@ export const useEICStacks = () => {
         queryFn: eicAPI.fetchStacks,
         staleTime: 5 * 60 * 1000, // 5 minutes
         gcTime: 10 * 60 * 1000, // 10 minutes
+        refetchOnWindowFocus: false, // Don't refetch on window focus for better performance
+        refetchOnReconnect: true, // Refetch when internet reconnects
     });
 };
 
@@ -128,8 +118,10 @@ export const useEICRequests = () => {
     return useQuery({
         queryKey: EIC_QUERY_KEYS.requests(),
         queryFn: eicAPI.fetchRequests,
-        staleTime: 2 * 60 * 1000, // 2 minutes
+        staleTime: 1 * 60 * 1000, // 1 minute - requests change more frequently
         gcTime: 5 * 60 * 1000, // 5 minutes
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: true,
     });
 };
 

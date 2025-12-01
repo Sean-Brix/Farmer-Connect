@@ -1,0 +1,40 @@
+Test Case,Authentication,Action,Expected Result,Execution Number,Result,Status
+## Distribution,,,,,,
+Verify Search Functionality,Admin,Enter text in search,Table shows matching results,5,Search returned filtered results,passed
+Verify Filter by Season,Admin,Select season dropdown,Table shows selected season records,5,Season filter applied,passed
+Verify Add Distribution Modal,Admin,Click Add Distribution,Modal opens for input,5,Add modal opened,passed
+Verify Submit Distribution,Admin,Fill fields and submit,New record appears in table,4,Distribution saved successfully,passed
+Verify Edit Distribution,Admin,Open edit on a row,Modal shows existing data,5,Edit modal displayed,passed
+Verify Update Distribution,Admin,Update then save,Row reflects updated data,5,Update applied successfully,passed
+Verify Delete Distribution,Admin,Click delete icon,Confirmation dialog appears,5,Delete prompt displayed,passed
+Verify Confirm Delete,Admin,Confirm deletion,Record removed from table,4,Record deleted successfully,passed
+Verify Pagination Next,Admin,Go to next page,Next set of records shows,5,Next page loaded,passed
+Verify Pagination Previous,Admin,Go to previous page,Previous records show,5,Previous page loaded,passed
+Verify Export Data,Admin,Click export,File downloads as expected,2,Export completed successfully,passed
+## EIC Materials,,,,,,
+Verify Search Materials,Admin,Enter text in search,Table filters materials,5,Material list filtered,passed
+Verify Add Material Modal,Admin,Click Add Material,Modal opens,5,Add material modal displayed,passed
+Verify Upload File,Admin,Choose file in modal,File selected and name shown,5,File selection successful,passed
+Verify Submit Material,Admin,Save material entry,New material appears,4,Material saved successfully,passed
+Verify Preview Material,Admin,Open material preview,Preview displays content,5,Preview opened correctly,passed
+Verify Edit Material,Admin,Open edit for material,Edit modal available,5,Edit modal displayed,passed
+Verify Delete Material,Admin,Click delete,Confirmation shown,5,Delete prompt displayed,passed
+Verify Confirm Delete,Admin,Confirm removal,Material removed from list,4,Material deleted successfully,passed
+## Inventory,,,,,,
+Verify Search Inventory,Admin,Search item names,Table shows matching items,5,Inventory filtered correctly,passed
+Verify Filter by Category,Admin,Choose category,Table shows items in category,5,Category filter applied,passed
+Verify Add Item Modal,Admin,Click Add Item,Modal opens for input,5,Add item modal displayed,passed
+Verify Submit New Item,Admin,Save item details,New item listed,5,Item saved successfully,passed
+Verify Adjust Stock,Admin,Open adjust stock,Adjustment input appears,5,Stock adjustment available,passed
+Verify Save Stock Adjustment,Admin,Save new quantity,Table updates count,4,Stock count updated,passed
+Verify Delete Item,Admin,Click delete icon,Confirmation appears,5,Delete prompt displayed,passed
+Verify Low Stock Warning,Admin,View low quantity items,Low stock highlighted,3,Low stock highlighted correctly,passed
+## Seminar,,,,,,
+Verify Search Seminars,Admin,Search seminar titles,List shows matching seminars,5,Seminar search worked,passed
+Verify Create Seminar Button,Admin,Open create seminar,Form or modal opens,5,Create form displayed,passed
+Verify Form Validation,Admin,Try save without required fields,Errors displayed for missing data,5,Validation messages shown,passed
+Verify Submit Seminar,Admin,Save complete seminar,New seminar appears,5,Seminar saved successfully,passed
+Verify View Participants,Admin,Open participants list,Registered attendees listed,4,Participants displayed correctly,passed
+Verify Edit Seminar,Admin,Open edit form,Existing data shown,5,Edit form displayed,passed
+Verify Cancel Seminar,Admin,Cancel or delete seminar,Confirmation shown then action,5,Seminar cancellation succeeded,passed
+Verify Date Filter,Admin,Select date range,List shows within range,3,Date filter applied,passed

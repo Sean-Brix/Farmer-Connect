@@ -1,0 +1,38 @@
+Test Case,Authentication,Action,Expected Result,Execution Number,Result,Status
+## Analytics,,,,,,
+Verify Tab Switching Seeding,Admin,Open Seeding tab,Seeding dashboard displays,5,Seeding dashboard loaded,passed
+Verify Tab Switching Farmers,Admin,Open Farmers tab,Farmers dashboard displays,5,Farmers dashboard loaded,passed
+Verify Tab Switching Production,Admin,Open Production tab,Production dashboard displays,5,Production dashboard loaded,passed
+Verify Crop Filter,Admin,Select crop filter,Charts update to crop data,5,Charts updated to crop selection,passed
+Verify Season Filter,Admin,Select season filter,Charts update to season data,4,Charts updated to season selection,passed
+Verify Year Time Filter,Admin,Select year or range,Charts update to period data,4,Charts updated to time selection,passed
+Verify Chart Tooltip,Admin,Hover data point,Tooltip shows values,5,Tooltips displayed,passed
+Verify Export Report,Admin,Export current view,Report downloads successfully,2,Report export completed,passed
+## Customer Service (Chat),,,,,,
+Verify Tab Switching Active,Admin,Open Active tab,Active chats list appears,5,Active chats listed,passed
+Verify Tab Switching Queue,Admin,Open Queue tab,Waiting inquiries list appears,5,Queued inquiries listed,passed
+Verify Tab Switching Closed,Admin,Open Closed tab,Closed chats history shows,5,Closed chats listed,passed
+Verify Select Chat,Admin,Open a chat,Conversation history loads,5,Chat opened with history,passed
+Verify Send Message,Admin,Send a message,Message shows in chat,5,Message sent successfully,passed
+Verify Attach File,Admin,Upload a file,File appears in chat,4,File attached successfully,passed
+Verify Send Survey Form,Admin,Open survey list,List of surveys shows,5,Survey list displayed,passed
+Verify Select Survey,Admin,Send a survey,Survey appears in chat,4,Survey sent successfully,passed
+Verify End Chat,Admin,End current chat,Chat moves to closed,5,Chat ended successfully,passed
+## Audit Logs,,,,,,
+Verify Tab Switching Activity,Admin,Open Activity Logs tab,Activity table appears,5,Activity logs displayed,passed
+Verify Tab Switching Analytics,Admin,Open Analytics tab,Activity trend charts show,5,Analytics charts displayed,passed
+Verify Search Logs,Admin,Search logs by text,Table filters matching entries,5,Logs filtered correctly,passed
+Verify Filter by User,Admin,Select a user,Table shows actions by user,4,User filter applied,passed
+Verify Filter by Action Type,Admin,Choose action type,Table shows selected type,5,Action filter applied,passed
+Verify Date Range Filter,Admin,Pick start and end dates,Table shows logs in range,5,Date range applied,passed
+Verify Export Logs,Admin,Export current logs,CSV downloads,3,Logs exported successfully,passed
+## Planting Reports,,,,,,
+Verify Tab Switching Active,Admin,Open Active Reports tab,Ongoing reports list appears,5,Active reports listed,passed
+Verify Tab Switching Archived,Admin,Open Archived tab,Completed reports list appears,5,Archived reports listed,passed
+Verify Tab Switching Settings,Admin,Open Settings tab,Configuration options appear,5,Settings displayed,passed
+Verify Search Reports,Admin,Search by farmer name,List shows matching reports,5,Reports filtered by name,passed
+Verify Filter by Barangay,Admin,Select barangay,Reports show selected location,4,Barangay filter applied,passed
+Verify View Report Details,Admin,Open a report view,Details display correctly,5,Report details displayed,passed
+Verify Approve Report,Admin,Approve pending report,Status changes to approved,5,Report approved successfully,passed
+Verify Settings Add Season,Admin,Open add season,Modal appears,4,Add season modal displayed,passed
+Verify Settings Add Variety,Admin,Open add variety,Modal appears,3,Add variety modal displayed,passed

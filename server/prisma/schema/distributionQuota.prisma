@@ -1,0 +1,57 @@
+// Distribution quota and eligibility management
+// Used for controlling access to distribution items based on rules
+
+model DistributionQuota {
+  id                  String    @id @default(cuid())
+  itemStackId         String    @unique
+  maxPerUser          Int       @default(1) // Maximum quantity per user (lifetime)
+  maxRequestsPerMonth Int       @default(1) // Maximum requests per month
+  cooldownDays        Int       @default(30) // Days to wait between requests
+  eligibilityCriteria Json?     // { "livelihood": ["Farming", "Livestock"], "barangay": ["Brgy A"] }
+  active              Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  
+  itemStack           ItemStack @relation(fields: [itemStackId], references: [id], onDelete: Cascade)
+  
+  @@index([itemStackId])
+  @@index([active])
+  @@map("distribution_quotas")
+}
+
+model DistributionHistory {
+  id          String    @id @default(cuid())
+  accountId   String
+  itemStackId String
+  quantity    Int
+  receivedAt  DateTime  @default(now())
+  transactionId String? // Link to ItemTransaction if applicable
+  
+  account     Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  itemStack   ItemStack @relation(fields: [itemStackId], references: [id], onDelete: Cascade)
+  
+  @@index([accountId, itemStackId])
+  @@index([accountId, receivedAt]) // For monthly counting
+  @@index([itemStackId])
+  @@map("distribution_history")
+}
+
+model DistributionWaitlist {
+  id          String    @id @default(cuid())
+  accountId   String
+  itemStackId String
+  quantity    Int       @default(1)
+  position    Int       // Queue position
+  notified    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime  // Auto-remove if not claimed
+  
+  account     Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  itemStack   ItemStack @relation(fields: [itemStackId], references: [id], onDelete: Cascade)
+  
+  @@unique([accountId, itemStackId]) // One waitlist entry per user per item
+  @@index([itemStackId, position]) // For queue ordering
+  @@index([expiresAt])
+  @@index([notified])
+  @@map("distribution_waitlist")
+}

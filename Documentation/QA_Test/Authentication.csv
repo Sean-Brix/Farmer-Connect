@@ -1,0 +1,19 @@
+Test Case,Authentication,Action,Expected Result,Execution Number,Result,Status
+## Login Page,,,,,,
+Verify Username Input,None,Type in username field,Text appears in field,5,Username input accepted,passed
+Verify Password Input,None,Type in password field,Text appears masked,5,Password masked correctly,passed
+Verify Show Hide Password,None,Toggle eye icon,Password visibility toggles,5,Password toggle worked,passed
+Verify Remember Me,None,Enable remember option,Checkbox shows selected,5,Remember option set,passed
+Verify Forgot Password Link,None,Open forgot password,Page navigates to reset flow,5,Forgot password link navigated,passed
+Verify Sign In Success,None,Login with valid credentials,Dashboard appears,5,Login succeeded,passed
+Verify Sign In Invalid,None,Login with invalid credentials,Error alert shows,5,Invalid login handled,passed
+Verify Terms Link,None,Open terms link,Page navigates to terms,4,Terms page opened,passed
+## Register Page,,,,,,
+Verify Step 1 Validation,None,Attempt continue without required fields,Validation error appears,5,Validation messages shown,passed
+Verify Step 1 Continue,None,Complete step one then continue,Step two appears,5,Step navigation worked,passed
+Verify Client Profile Select,None,Choose client profile option,Option reflects selection,5,Profile option selected,passed
+Verify Email Validation,None,Enter valid email,Availability message shows,5,Email validation shown,passed
+Verify Step 2 Continue,None,Complete step two then continue,Step three appears,5,Step navigation worked,passed
+Verify Password Match,None,Enter mismatching passwords,Error on submit,5,Mismatch handled correctly,passed
+Verify Create Account,None,Submit complete registration,Success and navigate to login,4,Account created successfully,passed
+Verify Sign In Link,None,Use sign in link,Navigates to login page,5,Sign in link navigated,passed

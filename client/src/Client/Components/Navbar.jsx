@@ -7,6 +7,7 @@ import defaultAvatar from '../../Assets/default_picture.png';
 import Chat from '../../Components/Chats/Chat.jsx';
 import { useCustomTranslation } from '../../hooks/useCustomTranslation.js';
 import { useTheme } from '../../contexts/ThemeContext.jsx';
+import NotificationBell from '../../Components/NotificationBell.jsx';
 
 export default function Navbar({refresh}) {
     const location = useLocation();
@@ -863,7 +864,7 @@ export default function Navbar({refresh}) {
                         </ul>
                     </div>
                     <div className="flex items-center gap-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-     
+                        {loggedIn && <NotificationBell />}
                         {loggedIn ? (
                             <div
                                 className="relative hidden md:block p-3 -m-3"

@@ -1,0 +1,241 @@
+import { test, expect } from '@playwright/test';
+
+/**
+ * TEMPLATE TEST FILE
+ * 
+ * Copy this file and rename it for your specific test suite
+ * Examples: auth.spec.js, eic.spec.js, distribution.spec.js, admin.spec.js
+ */
+
+// Configuration for all tests in this file
+test.use({
+    // Uncomment to slow down tests for debugging
+    // slowMo: 500,
+    
+    // Uncomment to set viewport size
+    // viewport: { width: 1280, height: 720 },
+    
+    // Uncomment to always record video
+    // video: 'on',
+    
+    // Uncomment to always take screenshots
+    // screenshot: 'on',
+});
+
+// Test suite (group of related tests)
+test.describe('Feature Name', () => {
+    
+    // Runs once before all tests in this describe block
+    test.beforeAll(async () => {
+        // Setup that runs once (database seeding, etc.)
+    });
+
+    // Runs before each test
+    test.beforeEach(async ({ page }) => {
+        // Navigate to starting page
+        await page.goto('http://localhost:3000');
+        
+        // Or login if needed
+        // await page.goto('http://localhost:3000/login');
+        // await page.fill('input[name="email"]', 'test@example.com');
+        // await page.fill('input[name="password"]', 'password123');
+        // await page.click('button[type="submit"]');
+        // await page.waitForURL('**/dashboard');
+    });
+
+    // Runs after each test
+    test.afterEach(async ({ page }, testInfo) => {
+        // Take screenshot on failure
+        if (testInfo.status !== testInfo.expectedStatus) {
+            await page.screenshot({ 
+                path: `screenshots/failure-${testInfo.title}.png`,
+                fullPage: true 
+            });
+        }
+    });
+
+    // Basic test example
+    test('should do something', async ({ page }) => {
+        // Arrange - Set up test data
+        const testData = 'Test Value';
+
+        // Act - Perform actions
+        await page.fill('input#my-input', testData);
+        await page.click('button#submit');
+
+        // Assert - Verify results
+        await expect(page.locator('.success-message')).toBeVisible();
+        await expect(page.locator('.result')).toHaveText(testData);
+    });
+
+    // Form submission test
+    test('should submit form successfully', async ({ page }) => {
+        await page.click('button:has-text("Add New")');
+        
+        await page.fill('input[name="name"]', 'Test Item');
+        await page.fill('input[name="quantity"]', '10');
+        await page.selectOption('select[name="category"]', 'Farming Equipment');
+        
+        await page.click('button[type="submit"]');
+        
+        await expect(page.locator('.alert-success')).toBeVisible();
+    });
+
+    // Validation test
+    test('should show validation errors', async ({ page }) => {
+        await page.click('button:has-text("Add New")');
+        
+        // Submit empty form
+        await page.click('button[type="submit"]');
+        
+        // Check for validation messages
+        await expect(page.locator('.error-message')).toContainText('required');
+    });
+
+    // Navigation test
+    test('should navigate between pages', async ({ page }) => {
+        await page.click('a:has-text("Dashboard")');
+        await expect(page).toHaveURL(/.*dashboard/);
+        
+        await page.click('a:has-text("Inventory")');
+        await expect(page).toHaveURL(/.*inventory/);
+    });
+
+    // Modal/Dialog test
+    test('should open and close modal', async ({ page }) => {
+        await page.click('button:has-text("Open Modal")');
+        
+        // Wait for modal to appear
+        await expect(page.locator('.modal')).toBeVisible();
+        
+        // Close modal
+        await page.click('button.close-modal');
+        
+        // Verify modal is closed
+        await expect(page.locator('.modal')).toBeHidden();
+    });
+
+    // API mocking test
+    test('should handle API response', async ({ page }) => {
+        // Mock API response
+        await page.route('**/api/items', async route => {
+            await route.fulfill({
+                status: 200,
+                contentType: 'application/json',
+                body: JSON.stringify({
+                    success: true,
+                    data: [{ id: 1, name: 'Test Item' }]
+                })
+            });
+        });
+
+        await page.goto('http://localhost:3000/items');
+        
+        // Verify mocked data is displayed
+        await expect(page.locator('.item-name')).toHaveText('Test Item');
+    });
+
+    // File upload test
+    test('should upload file', async ({ page }) => {
+        await page.click('button:has-text("Upload")');
+        
+        const fileInput = page.locator('input[type="file"]');
+        await fileInput.setInputFiles('path/to/test-image.jpg');
+        
+        await page.click('button:has-text("Submit")');
+        
+        await expect(page.locator('.upload-success')).toBeVisible();
+    });
+
+    // Table interaction test
+    test('should interact with table', async ({ page }) => {
+        await page.goto('http://localhost:3000/items');
+        
+        // Get first row
+        const firstRow = page.locator('table tbody tr').first();
+        
+        // Click edit button in first row
+        await firstRow.locator('button:has-text("Edit")').click();
+        
+        await expect(page.locator('.edit-modal')).toBeVisible();
+    });
+
+    // Conditional test (only run if condition is met)
+    test.skip('should do something specific', async ({ page }) => {
+        // This test will be skipped
+        // Remove .skip to enable
+    });
+
+    // Test with custom timeout
+    test('long running operation', async ({ page }) => {
+        test.setTimeout(60000); // 60 second timeout
+        
+        await page.click('button:has-text("Process")');
+        await page.waitForSelector('.processing-complete', { timeout: 50000 });
+    });
+});
+
+// Another test suite
+test.describe('Another Feature', () => {
+    test('should work independently', async ({ page }) => {
+        await page.goto('http://localhost:3000');
+        // Your test code here
+    });
+});
+
+/**
+ * COMMON SELECTORS REFERENCE:
+ * 
+ * By text:           'button:has-text("Submit")'
+ * By ID:             'button#submit'
+ * By class:          '.submit-button'
+ * By name:           'input[name="email"]'
+ * By type:           'input[type="password"]'
+ * By data-testid:    '[data-testid="submit-btn"]'  (RECOMMENDED)
+ * By placeholder:    'input[placeholder="Enter email"]'
+ * Nth element:       '.item-card >> nth=0'
+ * Contains text:     ':has-text("partial match")'
+ * 
+ * 
+ * COMMON ASSERTIONS:
+ * 
+ * await expect(locator).toBeVisible()
+ * await expect(locator).toBeHidden()
+ * await expect(locator).toHaveText('exact text')
+ * await expect(locator).toContainText('partial')
+ * await expect(locator).toHaveValue('input value')
+ * await expect(locator).toBeEnabled()
+ * await expect(locator).toBeDisabled()
+ * await expect(locator).toBeChecked()
+ * await expect(page).toHaveURL('http://localhost:3000/dashboard')
+ * await expect(page).toHaveTitle('Page Title')
+ * 
+ * 
+ * COMMON ACTIONS:
+ * 
+ * await page.goto('url')
+ * await page.click('selector')
+ * await page.fill('input', 'value')
+ * await page.selectOption('select', 'option')
+ * await page.check('checkbox')
+ * await page.uncheck('checkbox')
+ * await page.type('input', 'text', { delay: 100 })
+ * await page.press('input', 'Enter')
+ * await page.hover('element')
+ * await page.screenshot({ path: 'screenshot.png' })
+ * await page.waitForSelector('selector')
+ * await page.waitForTimeout(1000)
+ * await page.waitForURL('**/dashboard')
+ * await page.reload()
+ * await page.goBack()
+ * 
+ * 
+ * DEBUGGING TIPS:
+ * 
+ * 1. Add await page.pause() to stop test
+ * 2. Run with --headed to see browser
+ * 3. Run with --debug for step-by-step
+ * 4. Use console.log() for debugging
+ * 5. Take screenshots: await page.screenshot()
+ * 6. Use slowMo in test.use() config
+ */

@@ -1,0 +1,32 @@
+Test Case,Authentication,Action,Expected Result,Execution Number,Result,Status
+## Distribution Service,,,,,,
+Verify Distribution Search,User,Enter text in search bar eg Seeds,List filters show only matching items,5,Expected behavior observed,passed
+Verify Distribution Filter,User,Click Filter and select a category,List shows items in selected category,5,Expected behavior observed,passed
+Verify Distribution Pagination,User,Scroll to bottom and use pagination,List updates to next set of items,4,Pagination worked as expected,passed
+Verify My Requests Logged Out,None,Click My Requests button,Login prompt appears with action button,5,Login prompt displayed correctly,passed
+Verify My Requests Logged In,User,Click My Requests button,Requests modal opens with history,3,Requests modal displayed correctly,passed
+Verify Request Item Logged In,User,Click Request Item on any card,Request modal opens with details,5,Request modal opened with correct details,passed
+Verify Submit Request Validation,User,Leave Pickup Date empty then submit,Validation prevents submission,4,Validation prevented submission,passed
+Verify Submit Request Success,User,Enter valid details then submit,Success alert and modal closes,5,Request submitted successfully,passed
+Verify Cancel Request,User,Cancel a pending request in history,Request removed or status updated,3,Request cancellation applied,passed
+## EIC Service,,,,,,
+Verify EIC Search,User,Enter text in search,List shows only matching items,5,Expected behavior observed,passed
+Verify EIC Filter,User,Apply category filter,List shows items in chosen category,4,Filter applied correctly,passed
+Verify EIC Request Logged In,User,Request equipment item,Request modal shows date fields,5,Request modal displayed correctly,passed
+Verify EIC Date Validation,User,Set return before pickup then submit,Error indicates invalid date order,5,Validation message shown,passed
+Verify EIC Submit Success,User,Enter valid dates and quantity then submit,Success confirmation appears,4,Request submitted successfully,passed
+## Seminar Service,,,,,,
+Verify Seminar Search,User,Search seminar titles or speakers,List shows matching seminars,5,Search returned correct results,passed
+Verify Seminar Filter,User,Change filter type,List and logic update accordingly,4,Filter behavior correct,passed
+Verify View Seminar Details,User,Open details from card,Details modal shows full info,5,Details displayed correctly,passed
+Verify Apply Seminar Logged Out,None,Click Apply Now,Login first alert or redirect,5,Login required enforced,passed
+Verify Apply Seminar Logged In,User,Click Apply Now,Button switches to cancel with success,5,Application registered successfully,passed
+Verify Cancel Seminar Application,User,Click Cancel Application,Button reverts and success message,4,Application cancellation succeeded,passed
+Verify My Registered Seminars,User,Open My Registered Seminars,Modal lists enrolled seminars,3,Registered seminars listed,passed
+## User Profile,,,,,,
+Verify Edit Profile Mode,User,Click Edit Profile,Form becomes editable with actions,5,Edit mode enabled correctly,passed
+Verify Profile Tab Navigation,User,Switch between profile tabs,Section updates to chosen tab,5,Tab navigation worked,passed
+Verify Profile Picture Upload,User,Upload new profile image,Preview updates after selection,4,Image preview updated,passed
+Verify Save Profile Validation,User,Save with missing required field,Error indicates missing input,5,Validation message shown,passed
+Verify Save Profile Success,User,Save valid profile changes,Success shown and view updated,5,Profile saved successfully,passed
+Verify Cancel Edit,User,Cancel after making changes,Edits discarded and view restored,3,Changes discarded successfully,passed

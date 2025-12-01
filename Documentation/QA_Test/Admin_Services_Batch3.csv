@@ -1,0 +1,36 @@
+Test Case,Authentication,Action,Expected Result,Execution Number,Result,Status
+## Profiles (User Management),,,,,,
+Verify Search Profiles,Admin,Search profiles input,List filters by term,5,Profiles filtered correctly,passed
+Verify Filter by Role,Admin,Select role filter,List shows role matches,5,Role filter applied,passed
+Verify Sort Profiles,Admin,Choose sort option,List reorders accordingly,5,Sorting applied,passed
+Verify Open Register Modal,Admin,Click Register New User,Register modal opens,5,Register modal displayed,passed
+Verify Register Validation,Admin,Try submit empty fields,Errors appear for required fields,5,Validation messages shown,passed
+Verify Register Submit,Admin,Submit complete form,Success message shows,4,Registration saved successfully,passed
+Verify Register Cancel,Admin,Close during input,Cancel confirmation shows,5,Cancel action confirmed,passed
+Verify Edit User,Admin,Open edit on user,Edit modal shows details,5,User edit modal displayed,passed
+Verify Deactivate User,Admin,Deactivate or delete,Confirmation dialog appears,4,Deactivate confirmation shown,passed
+## Settings,,,,,,
+Verify Tab Navigation,Admin,Switch between settings tabs,Active tab content updates,5,Tab navigation worked,passed
+Verify Preferences Theme,Admin,Toggle theme switch,Theme changes in app,5,Theme toggled successfully,passed
+Verify Preferences Language,Admin,Select Tagalog language,Language updates,3,Language updated successfully,passed
+Verify Profile Edit Mode,Admin,Enter edit profile mode,Fields become editable,5,Edit mode enabled correctly,passed
+Verify Profile Upload Photo,Admin,Upload new profile photo,Image updates after selection,4,Photo upload updated preview,passed
+Verify Profile Save Changes,Admin,Save profile changes,View shows updated data,5,Profile saved successfully,passed
+Verify Account Change Password,Admin,Update password,Password update processed,5,Password change completed,passed
+## Survey Management,,,,,,
+Verify Tab Switching,Admin,Open Create or FAQ tabs,View switches accordingly,5,Tab switch worked,passed
+Verify List Search,Admin,Search surveys by text,List filters by title or description,5,Surveys filtered correctly,passed
+Verify List Filter Status,Admin,Select a status,List shows selected status,5,Status filter applied,passed
+Verify Action Preview,Admin,Open Preview Form,Form preview appears,5,Preview displayed correctly,passed
+Verify Action View Stats,Admin,Open View Statistics,Statistics modal appears,4,Statistics displayed correctly,passed
+Verify Action Download,Admin,Download JSON,File downloads successfully,5,JSON downloaded successfully,passed
+Verify Create Add Field,Admin,Add a field,New field appears in builder,5,Field added to form,passed
+Verify Create Edit Field,Admin,Edit field properties,Preview updates immediately,5,Field edit reflected,passed
+Verify Create Save,Admin,Create survey,Survey saved and redirected,4,Survey created successfully,passed
+## FAQ Management,,,,,,
+Verify Add Category,Admin,Open Add Category,Modal opens for input,5,Add category modal displayed,passed
+Verify Save Category,Admin,Save category,New category listed,5,Category saved successfully,passed
+Verify Add FAQ,Admin,Open Add FAQ,Modal opens for input,5,Add FAQ modal displayed,passed
+Verify Save FAQ,Admin,Save FAQ entry,FAQ appears in list,5,FAQ saved successfully,passed
+Verify Filter FAQs,Admin,Filter by search or category,List updates to criteria,4,FAQ list filtered,passed
+Verify Delete FAQ,Admin,Delete an FAQ,Confirmation appears then removal,5,FAQ deleted successfully,passed

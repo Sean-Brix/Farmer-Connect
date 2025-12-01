@@ -40,6 +40,18 @@ router.use('/survey-forms', surveyForms);
 import plantingReport from './PlantingReport/index.js';
 router.use('/planting-reports', plantingReport);
 
+import cron from './cron.js';
+router.use('/cron', cron);
+
+import notification from './notification.js';
+router.use('/notifications', notification);
+
+import systemSettings from './systemSettings.js';
+router.use('/system-settings', systemSettings);
+
+import schedule from './schedule.js';
+router.use('/schedule', schedule);
+
 // Simple preferences endpoints (temporary)
 router.get('/preferences/language', (req, res) => {
     res.json({

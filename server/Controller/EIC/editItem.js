@@ -6,7 +6,7 @@ import auditLogger from '../../Services/auditLogger.js';
 async function editItem(req, res) {
     try {
         const stackId = req.params.id;
-        const { name, description, category, quantity, date_limit } = req.body;
+        const { name, description, category, quantity, date_limit, max_quantity_per_request } = req.body;
         const file = req.file; // Get uploaded image file
 
         // Validate required fields
@@ -40,6 +40,18 @@ async function editItem(req, res) {
             return res.status(400).json({
                 success: false,
                 error: 'Date limit must be between 1 and 365 days, or null for no limit',
+            });
+        }
+
+        // Validate max_quantity_per_request if provided
+        if (
+            max_quantity_per_request !== undefined &&
+            max_quantity_per_request !== null &&
+            max_quantity_per_request < 1
+        ) {
+            return res.status(400).json({
+                success: false,
+                error: 'Maximum quantity per request must be at least 1, or null for no limit',
             });
         }
 
@@ -150,11 +162,13 @@ async function editItem(req, res) {
                 data: {
                     quantity: parseInt(quantity),
                     date_limit:
-                        date_limit !== undefined
-                            ? date_limit === null
-                                ? null
-                                : parseInt(date_limit)
-                            : undefined,
+                        date_limit !== undefined && date_limit !== null && date_limit !== ''
+                            ? parseInt(date_limit)
+                            : null,
+                    max_quantity_per_request:
+                        max_quantity_per_request !== undefined && max_quantity_per_request !== null && max_quantity_per_request !== ''
+                            ? parseInt(max_quantity_per_request)
+                            : null,
                     updatedAt: new Date(),
                 },
                 include: {

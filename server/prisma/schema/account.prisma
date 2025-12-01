@@ -37,6 +37,11 @@ model Account {
   surveyResponses         SurveyResponse[]     @relation("SurveyResponses")
   surveyStatisticsCreated SurveyStatistic[]    @relation("SurveyStatisticsCreated")
   preferences             UserPreference[]
+  notifications           Notification[]
+  notificationSettings    NotificationSettings?
+  systemSettingsUpdated   SystemSettings[]     @relation("SystemSettingsUpdater")
+  distributionHistory     DistributionHistory[]
+  distributionWaitlist    DistributionWaitlist[]
 
   @@map("accounts")
 }

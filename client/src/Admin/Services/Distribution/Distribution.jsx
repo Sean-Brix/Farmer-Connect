@@ -9,6 +9,7 @@ import DistributionLoadingState from './components/DistributionLoadingState';
 import DistributionErrorState from './components/DistributionErrorState';
 import RequestsTable from './components/RequestsTable';
 import DistributionItemCard from './components/DistributionItemCard';
+import RequestCalendar from '../../../Components/Calendar/RequestCalendar.jsx';
 
 // TANSTACK QUERY HOOKS
 import {
@@ -614,10 +615,34 @@ export default function Distribution() {
                 </div>
             )}
 
-                        {/* Title section removed for minimal UI */}
-           
+            {/* Schedule Section Back Button */}
+            {activeSection === 'schedule' && (
+                <div className="max-w-7xl mx-auto mb-6 px-2 md:px-8">
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => setActiveSection('items')}
+                            className={`px-4 py-2 rounded-lg transition-colors ${
+                                isDark 
+                                    ? 'bg-gray-800 hover:bg-gray-700 text-white' 
+                                    : 'bg-gray-200 hover:bg-gray-300 text-gray-900'
+                            }`}
+                        >
+                            <i className="fa-solid fa-arrow-left mr-2"></i>
+                            Back to Items
+                        </button>
+                        <h1 className={`text-2xl md:text-3xl font-bold flex items-center gap-3 ${
+                            isDark ? 'text-white' : 'text-gray-900'
+                        }`}>
+                            <i className="fa-solid fa-calendar text-indigo-600"></i>
+                            Pickup Schedule
+                        </h1>
+                    </div>
+                </div>
+            )}
 
-            {activeSection === 'requests' ? (
+            {activeSection === 'schedule' ? (
+                <RequestCalendar source="distribution" />
+            ) : activeSection === 'requests' ? (
                 <div className="max-w-7xl mx-auto">
                     {/* Request Search and Filters */}
                     <div className="w-full mb-6 space-y-3">
@@ -748,8 +773,27 @@ export default function Distribution() {
                     {/* Divider line removed for minimal UI */}
                     {/* Search Bar and Refresh Button - Same Row */}
                                         <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8 mb-6 space-y-3">
-                                            {/* Mobile: Requests button on top */}
-                                            <div className="flex md:hidden justify-end">
+                                            {/* Mobile: Schedule and Requests buttons on top */}
+                                            <div className="flex md:hidden justify-end gap-2">
+                                                <button
+                                                    onClick={() => setActiveSection('schedule')}
+                                                    className="flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-sm"
+                                                >
+                                                    <svg
+                                                        className="w-4 h-4 mr-2"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                    </svg>
+                                                    Schedule
+                                                </button>
                                                 <button
                                                     onClick={handleRequestsButtonClick}
                                                     className="flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"
@@ -834,7 +878,26 @@ export default function Distribution() {
                                                     <option value="quantity">Sort by Quantity</option>
                                                     <option value="date">Sort by Date</option>
                                                 </select>
-                                                {/* Desktop: Requests button inline */}
+                                                {/* Desktop: Schedule and Requests buttons inline */}
+                                                <button
+                                                    onClick={() => setActiveSection('schedule')}
+                                                    className="hidden md:flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-sm"
+                                                >
+                                                    <svg
+                                                        className="w-4 h-4 mr-2"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                    </svg>
+                                                    Schedule
+                                                </button>
                                                 <button
                                                     onClick={handleRequestsButtonClick}
                                                     className="hidden md:flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"
@@ -1436,10 +1499,10 @@ function InternalRequestsTable({
                                                     onStatusChange(
                                                         request.id,
                                                         status,
-                                                        request.itemName || request.item?.name || 'Unknown Item',
-                                                        request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || 'Unknown User',
-                                                        request.quantity || request.requestQuantity || 0,
-                                                        request.currentStock || request.stack?.quantity || 0
+                                                        request.itemName || 'Unknown Item',
+                                                        request.requestorName || 'Unknown User',
+                                                        request.requestQuantity || request.quantity || 0,
+                                                        request.currentStock || 0
                                                     )
                                                 }
                                                 className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
@@ -1573,10 +1636,10 @@ function InternalRequestsTable({
                                                     onStatusChange(
                                                         request.id,
                                                         status,
-                                                        request.itemName || request.item?.name || 'Unknown Item',
-                                                        request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || 'Unknown User',
-                                                        request.quantity || request.requestQuantity || 0,
-                                                        request.currentStock || request.stack?.quantity || 0
+                                                        request.itemName || 'Unknown Item',
+                                                        request.requestorName || 'Unknown User',
+                                                        request.requestQuantity || request.quantity || 0,
+                                                        request.currentStock || 0
                                                     )
                                                 }
                                                 className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
@@ -2045,6 +2108,7 @@ function DistributionEditModal({
         description: stack.item?.description || '',
         category: stack.item?.category || 'Other',
         quantity: stack.quantity || 1,
+        max_quantity_per_request: stack.max_quantity_per_request || '',
     });
 
     const [originalData] = useState({
@@ -2052,6 +2116,7 @@ function DistributionEditModal({
         description: stack.item?.description || '',
         category: stack.item?.category || 'Other',
         quantity: stack.quantity || 1,
+        max_quantity_per_request: stack.max_quantity_per_request || '',
     });
 
     const [selectedImage, setSelectedImage] = useState(null);
@@ -2144,6 +2209,13 @@ function DistributionEditModal({
         submitData.append('description', formData.description);
         submitData.append('category', formData.category);
         submitData.append('quantity', formData.quantity);
+        
+        // Send max_quantity_per_request as null if empty, otherwise as integer
+        if (formData.max_quantity_per_request && formData.max_quantity_per_request !== '') {
+            submitData.append('max_quantity_per_request', parseInt(formData.max_quantity_per_request));
+        } else {
+            submitData.append('max_quantity_per_request', '');
+        }
 
         // Add image if selected
         if (selectedImage) {
@@ -2293,6 +2365,31 @@ function DistributionEditModal({
                                 min="0"
                                 className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                                 required
+                            />
+                        </div>
+
+                        {/* Maximum Quantity Per Request */}
+                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                            <label
+                                htmlFor="max_quantity_per_request"
+                                className={`block text-sm font-semibold mb-1 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}
+                            >
+                                Maximum Quantity Per Request
+                                <span className={`text-xs font-normal ml-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>(Optional)</span>
+                            </label>
+                            <p className={`text-xs mb-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                <i className="fa-solid fa-info-circle mr-1 text-blue-500"></i>
+                                Leave empty for no limit. Users cannot request more than this amount in a single transaction.
+                            </p>
+                            <input
+                                type="number"
+                                id="max_quantity_per_request"
+                                name="max_quantity_per_request"
+                                value={formData.max_quantity_per_request}
+                                onChange={handleChange}
+                                placeholder="e.g., 10"
+                                min="1"
+                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                             />
                         </div>
 
@@ -2498,6 +2595,7 @@ function AddDistributionItemModal({
     const [form, setForm] = useState({
         name: '',
         quantity: '1',
+        max_quantity_per_request: '',
         description: '',
         category: 'Other',
         status: 'Available', // For distribution items
@@ -2645,6 +2743,9 @@ function AddDistributionItemModal({
         const formData = new FormData();
         formData.append('name', form.name);
         formData.append('quantity', parseInt(form.quantity));
+        if (form.max_quantity_per_request) {
+            formData.append('max_quantity_per_request', parseInt(form.max_quantity_per_request));
+        }
         formData.append('description', form.description);
         formData.append('category', convertToSnakeCase(form.category));
         formData.append('status', 'Distributed');
@@ -2660,6 +2761,7 @@ function AddDistributionItemModal({
         setForm({
             name: '',
             quantity: '1',
+            max_quantity_per_request: '',
             description: '',
             category: 'Other',
             status: 'Distributed',
@@ -2675,6 +2777,7 @@ function AddDistributionItemModal({
         setForm({
             name: '',
             quantity: '1',
+            max_quantity_per_request: '',
             description: '',
             category: 'Other',
             status: 'Distributed',
@@ -2777,6 +2880,27 @@ function AddDistributionItemModal({
                                 required
                             />
                             <div style={{paddingBottom: '0.75rem'}}></div>
+                        </div>
+
+                        {/* Maximum Quantity Per Request */}
+                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                            <label className={`block text-sm font-semibold mb-1 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                Maximum Quantity Per Request
+                                <span className={`text-xs font-normal ml-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>(Optional)</span>
+                            </label>
+                            <p className={`text-xs mb-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                <i className="fa-solid fa-info-circle mr-1 text-blue-500"></i>
+                                Leave empty for no limit. Users cannot request more than this amount in a single transaction.
+                            </p>
+                            <input
+                                type="number"
+                                name="max_quantity_per_request"
+                                value={form.max_quantity_per_request}
+                                onChange={handleChange}
+                                placeholder="e.g., 10"
+                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                min="1"
+                            />
                         </div>
 
                         {/* Conditional Fields - Only show if it's a new item */}

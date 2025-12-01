@@ -106,7 +106,24 @@ export const useSubmitRequest = () => {
                 if (response.status === 403) {
                     throw new Error('ADMIN_CANNOT_BORROW');
                 }
-                throw new Error(`Failed to submit request: ${response.status}`);
+                
+                // Try to get error details from response
+                try {
+                    const errorData = await response.json();
+                    console.error('❌ [EIC Request Error]:', errorData);
+                    
+                    // Throw the backend error message for user-friendly display
+                    if (errorData.message) {
+                        throw new Error(errorData.message);
+                    }
+                    throw new Error(`Failed to submit request: ${response.status}`);
+                } catch (parseError) {
+                    // If JSON parsing fails, throw generic error
+                    if (parseError.message && !parseError.message.includes('JSON')) {
+                        throw parseError;
+                    }
+                    throw new Error(`Failed to submit request: ${response.status}`);
+                }
             }
 
             return await response.json();

@@ -1,0 +1,26 @@
+{
+  "name": "farmer-connect",
+  "version": "1.0.0",
+  "description": "Farmer-Connect Inventory Management System",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test --config=Testing/config/playwright.config.js",
+    "test:ui": "playwright test --config=Testing/config/playwright.config.js --ui",
+    "test:headed": "playwright test --config=Testing/config/playwright.config.js --headed",
+    "test:debug": "playwright test --config=Testing/config/playwright.config.js --debug",
+    "test:report": "playwright show-report",
+    "test:codegen": "playwright codegen",
+    "test:manager": "node Testing/test-manager.js"
+  },
+  "keywords": [
+    "inventory",
+    "farmer",
+    "management"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.2"
+  }
+}

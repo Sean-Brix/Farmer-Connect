@@ -1,6 +1,7 @@
 // PrismaClient import removed - using centralized db
 import prisma from '../../../config/database.js';
 import auditLogger from '../../../Services/auditLogger.js';
+import { recordDistribution, removeFromWaitlist } from '../../../Services/distributionQuotaService.js';
 // Using centralized prisma instance
 
 async function setStatus(req, res) {
@@ -242,6 +243,27 @@ async function setStatus(req, res) {
                     },
                     req: req,
                 });
+            }
+
+            // Record distribution history when approved
+            if (status === 'Approved') {
+                await recordDistribution(
+                    updatedTransaction.accountId,
+                    updatedTransaction.itemStackId,
+                    updatedTransaction.quantity,
+                    updatedTransaction.id
+                );
+
+                // Remove from waitlist if user was on it
+                try {
+                    await removeFromWaitlist(
+                        updatedTransaction.accountId,
+                        updatedTransaction.itemStackId
+                    );
+                } catch (error) {
+                    // Ignore if user wasn't on waitlist
+                    console.error('Note: User was not on waitlist:', error.message);
+                }
             }
 
             // Update stack quantity if there's a change

@@ -12,39 +12,52 @@ model InventoryItem {
 }
 
 model ItemStack {
-  id               String            @id @default(cuid())
-  itemId           String
-  quantity         Int               @default(1)
-  status           item_status       @default(Available)
-  date_limit       Int?
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-  item             InventoryItem     @relation(fields: [itemId], references: [id])
-  itemTransactions ItemTransaction[]
+  id                      String            @id @default(cuid())
+  itemId                  String
+  quantity                Int               @default(1)
+  status                  item_status       @default(Available)
+  date_limit              Int?
+  max_quantity_per_request Int?
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+  item                    InventoryItem     @relation(fields: [itemId], references: [id])
+  itemTransactions        ItemTransaction[]
+  distributionQuota       DistributionQuota?
+  distributionHistory     DistributionHistory[]
+  distributionWaitlist    DistributionWaitlist[]
 
   @@index([itemId], map: "item_stacks_itemId_fkey")
   @@map("item_stacks")
 }
 
 model ItemTransaction {
-  id          String             @id @default(cuid())
-  itemStackId String
-  accountId   String
-  adminId     String?
-  quantity    Int                @default(1)
-  status      transaction_status @default(Pending)
-  pickupDate  DateTime
-  returnDate  DateTime?
-  requestNote String?
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
-  account     Account            @relation(fields: [accountId], references: [id])
-  admin       Account?           @relation("AdminTransactions", fields: [adminId], references: [id])
-  itemStack   ItemStack          @relation(fields: [itemStackId], references: [id])
+  id                  String             @id @default(cuid())
+  itemStackId         String
+  accountId           String
+  adminId             String?
+  quantity            Int                @default(1)
+  status              transaction_status @default(Pending)
+  pickupDate          DateTime
+  returnDate          DateTime?
+  requestNote         String?
+  autoStatusChanged   Boolean            @default(false)
+  statusChangedAt     DateTime?
+  statusChangeReason  String?
+  previousStatus      String?
+  actual_pickup       DateTime?
+  actual_return       DateTime?
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  account             Account            @relation(fields: [accountId], references: [id])
+  admin               Account?           @relation("AdminTransactions", fields: [adminId], references: [id])
+  itemStack           ItemStack          @relation(fields: [itemStackId], references: [id])
 
   @@index([accountId], map: "item_transactions_accountId_fkey")
   @@index([adminId], map: "item_transactions_adminId_fkey")
   @@index([itemStackId], map: "item_transactions_itemStackId_fkey")
+  @@index([status, returnDate])
+  @@index([actual_pickup])
+  @@index([actual_return])
   @@map("item_transactions")
 }
 

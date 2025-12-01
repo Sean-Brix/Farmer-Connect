@@ -1,11 +1,12 @@
 // PrismaClient import removed - using centralized db
 import prisma from '../../../config/database.js';
 import auditLogger from '../../../Services/auditLogger.js';
+import { notifyRequestStatus } from '../../../Services/notificationService.js';
 // Using centralized prisma instance
 
 async function setStatus(req, res) {
     try {
-        const { transactionId, status } = req.body;
+        const { transactionId, status, reason } = req.body;
         const userId = req.user.id; // From JWT token
 
         // Validate required fields
@@ -112,11 +113,11 @@ async function setStatus(req, res) {
             // Admins can set any status, but let's add some business logic validation
 
             // Prevent changing already completed transactions
+            // Note: late_return is intentionally NOT in this list - it can transition to Returned
             if (
                 [
                     'Returned',
                     'No_Return',
-                    'late_return',
                     'No_Pickup',
                     'Rejected',
                 ].includes(transaction.status)
@@ -124,6 +125,14 @@ async function setStatus(req, res) {
                 return res.status(400).json({
                     error: 'Invalid operation',
                     message: 'Cannot modify completed or rejected transactions',
+                });
+            }
+
+            // Allow late_return to transition to Returned (marking overdue items as returned)
+            if (transaction.status === 'late_return' && status !== 'Returned' && status !== 'No_Return') {
+                return res.status(400).json({
+                    error: 'Invalid operation',
+                    message: 'Late return items can only be marked as Returned or No Return',
                 });
             }
 
@@ -145,7 +154,29 @@ async function setStatus(req, res) {
         const updateData = {
             status: status,
             updatedAt: new Date(),
+            statusChangedAt: new Date(),
+            previousStatus: transaction.status,
         };
+
+        // Add reason if provided
+        if (reason) {
+            updateData.statusChangeReason = reason;
+        }
+
+        // Set adminId for all admin actions
+        if (user.access === 'Admin' || user.access === 'Super_Admin') {
+            updateData.adminId = userId;
+        }
+
+        // Set actual_return timestamp when marking as Returned or No_Return
+        if (status === 'Returned' || status === 'No_Return') {
+            updateData.actual_return = new Date();
+        }
+
+        // Set actual_pickup timestamp when marking as picked up (status changes from Approved)
+        if (transaction.status === 'Approved' && (status === 'late_return' || status === 'Borrowed')) {
+            updateData.actual_pickup = new Date();
+        }
 
         // If admin is updating the status, record who did it
         if (user.access === 'Admin' || user.access === 'Super_Admin') {
@@ -277,6 +308,16 @@ async function setStatus(req, res) {
             },
             req: req,
         });
+
+        // Send notification for approved/rejected status
+        if (status === 'Approved' || status === 'Rejected') {
+            await notifyRequestStatus(
+                result.account.id,
+                status === 'Approved',
+                result.itemStack.item.name,
+                result.id
+            );
+        }
 
         return res.status(200).json({
             success: true,

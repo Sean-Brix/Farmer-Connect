@@ -99,6 +99,14 @@ async function addRequest(req, res) {
             });
         }
 
+        // Check if requested quantity exceeds max quantity per request limit
+        if (itemStack.max_quantity_per_request && quantity > itemStack.max_quantity_per_request) {
+            return res.status(400).json({
+                error: 'Quantity limit exceeded',
+                message: `This item has a maximum request limit of ${itemStack.max_quantity_per_request} units per request. You requested ${quantity} units.`,
+            });
+        }
+
         // Check if user already has a pending request for this item
         const existingRequest = await prisma.itemTransaction.findFirst({
             where: {
@@ -119,8 +127,13 @@ async function addRequest(req, res) {
         if (itemStack.date_limit && returnDate) {
             const pickup = new Date(pickupDate);
             const returnD = new Date(returnDate);
-            const diffTime = Math.abs(returnD - pickup);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            // Calculate difference in days (floor to match frontend behavior)
+            // Reset time to midnight for accurate day calculation
+            pickup.setHours(0, 0, 0, 0);
+            returnD.setHours(0, 0, 0, 0);
+            const diffTime = returnD - pickup;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
             if (diffDays > itemStack.date_limit) {
                 return res.status(400).json({
@@ -171,6 +184,7 @@ async function addRequest(req, res) {
                 status: transaction.status,
                 createdAt: transaction.createdAt,
                 itemDateLimit: transaction.itemStack.date_limit, // Include the stack's date limit for frontend reference
+                itemMaxQuantityPerRequest: transaction.itemStack.max_quantity_per_request, // Include max quantity per request
             },
         });
     } catch (error) {

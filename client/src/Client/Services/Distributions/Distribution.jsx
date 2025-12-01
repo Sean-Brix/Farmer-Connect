@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../../contexts/ThemeContext';
 import Navbar from '../../Components/Navbar';
+import { isBefore, startOfDay, addYears } from 'date-fns';
 
 // ASSETS
 import default_image from './Assets/default_image.webp';
@@ -210,22 +211,72 @@ export default function Distribution() {
         }
     };
 
+    // Enhanced date validation
+    const handleDateInput = (e) => {
+        const { name, value } = e.target;
+        const selectedDate = startOfDay(new Date(value));
+        const today = startOfDay(new Date());
+        const maxDate = startOfDay(addYears(new Date(), 2));
+
+        let errors = { ...formErrors };
+
+        if (isBefore(selectedDate, today)) {
+            errors.pickupDate = 'Pickup date cannot be in the past';
+            setFormErrors(errors);
+            e.target.value = new Date().toISOString().split('T')[0];
+            return;
+        }
+
+        if (selectedDate > maxDate) {
+            errors.pickupDate = 'Date cannot be more than 2 years in the future';
+            setFormErrors(errors);
+            return;
+        }
+
+        handleInputChange(e);
+    };
+
+    // Enhanced quantity validation
+    const handleQuantityChange = (e) => {
+        let value = parseInt(e.target.value);
+        const errors = { ...formErrors };
+
+        if (isNaN(value) || value < 1) {
+            value = 1;
+        }
+
+        if (value > selectedItem?.quantity) {
+            errors.quantity = `Only ${selectedItem?.quantity} units available`;
+            setFormErrors(errors);
+            value = selectedItem?.quantity;
+        } else {
+            delete errors.quantity;
+            setFormErrors(errors);
+        }
+
+        setRequestData((prev) => ({ ...prev, quantity: value }));
+    };
+
     // Form validation function
     const validateForm = () => {
         const errors = {};
+        const today = startOfDay(new Date());
 
         if (!requestData.pickupDate) {
             errors.pickupDate = 'Pickup date is required';
-        } else if (
-            new Date(requestData.pickupDate) < new Date().setHours(0, 0, 0, 0)
-        ) {
-            errors.pickupDate = 'Pickup date cannot be in the past';
+        } else {
+            const pickup = startOfDay(new Date(requestData.pickupDate));
+            if (isBefore(pickup, today)) {
+                errors.pickupDate = 'Pickup date cannot be in the past';
+            }
         }
 
         if (!requestData.quantity || requestData.quantity < 1) {
             errors.quantity = 'Quantity must be at least 1';
         } else if (requestData.quantity > selectedItem?.quantity) {
-            errors.quantity = 'Quantity exceeds available stock';
+            errors.quantity = `Only ${selectedItem?.quantity} units available`;
+        } else if (selectedItem?.max_quantity_per_request && requestData.quantity > selectedItem.max_quantity_per_request) {
+            errors.quantity = `Maximum ${selectedItem.max_quantity_per_request} units per request`;
         }
 
         setFormErrors(errors);
@@ -1524,6 +1575,34 @@ export default function Distribution() {
                                     indicates required fields
                                 </p>
                             </div>
+
+                            {/* Max Quantity Per Request Warning */}
+                            {selectedItem?.max_quantity_per_request && (
+                                <div className={`${isDark ? 'bg-blue-900/30 border-blue-600' : 'bg-blue-50 border-blue-400'} border-l-4 rounded-lg p-4 mb-4`}>
+                                    <div className="flex items-start">
+                                        <i className={`fa-solid fa-box ${isDark ? 'text-blue-400' : 'text-blue-600'} mr-2 mt-0.5`}></i>
+                                        <div className="flex-1">
+                                            <p className={`text-sm font-semibold ${isDark ? 'text-blue-200' : 'text-blue-800'} mb-1`}>
+                                                Quantity Limit Per Request
+                                            </p>
+                                            <p className={`text-sm ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>
+                                                You can request a maximum of{' '}
+                                                <strong>{selectedItem.max_quantity_per_request} units</strong> in a single request.
+                                                {requestData.quantity > 0 && (() => {
+                                                    const isExceeding = requestData.quantity > selectedItem.max_quantity_per_request;
+                                                    return (
+                                                        <span className={isExceeding ? 'text-red-600 font-bold' : 'text-green-600 font-semibold'}>
+                                                            {' '}Your request: <strong>{requestData.quantity} units</strong>
+                                                            {isExceeding && ' (Exceeds limit!)'}
+                                                        </span>
+                                                    );
+                                                })()}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label
@@ -1539,6 +1618,7 @@ export default function Distribution() {
                                         name="pickupDate"
                                         value={requestData.pickupDate}
                                         onChange={handleInputChange}
+                                        onBlur={handleDateInput}
                                         className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition ${
                                             formErrors.pickupDate
                                                 ? 'border-red-300 bg-red-50'
@@ -1547,11 +1627,8 @@ export default function Distribution() {
                                                 : 'border-gray-300 bg-white text-gray-900'
                                         }`}
                                         required
-                                        min={
-                                            new Date()
-                                                .toISOString()
-                                                .split('T')[0]
-                                        }
+                                        min={new Date().toISOString().split('T')[0]}
+                                        max={addYears(new Date(), 2).toISOString().split('T')[0]}
                                     />
                                     {formErrors.pickupDate && (
                                         <p className="text-red-500 text-xs mt-1">
@@ -1572,7 +1649,13 @@ export default function Distribution() {
                                         id="quantity"
                                         name="quantity"
                                         value={requestData.quantity}
-                                        onChange={handleInputChange}
+                                        onChange={handleQuantityChange}
+                                        onKeyDown={(e) => {
+                                            // Prevent typing negative, decimal, or 'e'
+                                            if (e.key === '-' || e.key === '.' || e.key === 'e' || e.key === 'E') {
+                                                e.preventDefault();
+                                            }
+                                        }}
                                         className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition ${
                                             formErrors.quantity
                                                 ? 'border-red-300 bg-red-50'
@@ -1582,22 +1665,17 @@ export default function Distribution() {
                                         }`}
                                         required
                                         min="1"
-                                        max={selectedItem?.quantity}
-                                        title=""
+                                        max={
+                                            selectedItem?.max_quantity_per_request
+                                                ? Math.min(selectedItem.max_quantity_per_request, selectedItem?.quantity)
+                                                : selectedItem?.quantity
+                                        }
                                     />
                                     {formErrors.quantity && (
                                         <p className="text-red-500 text-xs mt-1">
                                             {formErrors.quantity}
                                         </p>
                                     )}
-                                    {!formErrors.quantity &&
-                                        requestData.quantity >
-                                            selectedItem?.quantity && (
-                                            <p className="text-red-500 text-xs mt-1">
-                                                Quantity exceeds available
-                                                stock.
-                                            </p>
-                                        )}
                                 </div>
                             </div>
 
@@ -1669,11 +1747,13 @@ export default function Distribution() {
                                     type="submit"
                                     disabled={
                                         !requestData.pickupDate ||
-                                        !requestData.quantity
+                                        !requestData.quantity ||
+                                        Object.keys(formErrors).length > 0
                                     }
                                     className={`font-semibold px-6 py-2 rounded-xl shadow transition focus:outline-none ${
                                         !requestData.pickupDate ||
-                                        !requestData.quantity
+                                        !requestData.quantity ||
+                                        Object.keys(formErrors).length > 0
                                             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                             : 'bg-green-600 hover:bg-green-700 text-white'
                                     }`}

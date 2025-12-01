@@ -1,0 +1,18 @@
+// System-wide configuration settings
+// Used for: borrowing limits, quotas, cooldowns, feature toggles
+model SystemSettings {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  category    String   @default("general") // 'eic', 'distribution', 'general', 'notification'
+  dataType    String   @default("string")  // 'string', 'number', 'boolean', 'json'
+  updatedBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  updater     Account? @relation(fields: [updatedBy], references: [id], name: "SystemSettingsUpdater")
+  
+  @@index([category])
+  @@map("system_settings")
+}

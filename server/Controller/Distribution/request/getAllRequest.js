@@ -30,7 +30,9 @@ async function getAllRequest(req, res) {
                         surname: true,
                         email: true,
                         username: true,
+                        contactNumber: true,
                         access: true,
+                        client_profile: true,
                     },
                 },
                 admin: {
@@ -59,6 +61,7 @@ async function getAllRequest(req, res) {
             accountId: request.accountId,
             adminId: request.adminId,
             quantity: request.quantity,
+            requestQuantity: request.quantity, // Frontend expects requestQuantity for consistency
             status: request.status,
             pickupDate: request.pickupDate,
             returnDate: null, // Always null for distribution items
@@ -77,7 +80,7 @@ async function getAllRequest(req, res) {
             requestorName: `${request.account.firstName} ${request.account.surname}`,
             requestorEmail: request.account.email,
             requestorUsername: request.account.username,
-            requestorPhone: request.account.cellphone_no,
+            requestorPhone: request.account.contactNumber, // Fixed: was cellphone_no, correct field is contactNumber
             requestorAccess: request.account.access,
             requestorProfile: request.account.client_profile,
             // Admin information (if any)

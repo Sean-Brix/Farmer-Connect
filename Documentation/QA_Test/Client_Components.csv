@@ -1,0 +1,19 @@
+Test Case,Authentication,Action,Expected Result,Execution Number,Result,Status
+## Navbar,,,,,,
+Verify Navigation Links,None,Click Home Info Services,User navigated to respective pages,5,Navigation worked correctly,passed
+Verify Dropdowns Desktop,None,Hover Info and Services menus,Dropdowns appear with sub links,5,Dropdowns displayed correctly,passed
+Verify User Profile Dropdown,User,Hover user avatar,Profile dropdown shows options,5,Profile dropdown appeared,passed
+Verify Logout Flow,User,Click Logout and confirm,User logged out and redirected,5,Logout completed successfully,passed
+Verify Mobile Menu,None,Open hamburger on mobile,Sidebar shows navigation links,4,Mobile menu functioned,passed
+Verify Admin Link Visibility,Admin,Check profile dropdown for admin link,Admin panel link is visible,5,Admin link visible,passed
+## ReportFeedback,,,,,,
+Submit New Comment,User,Post a new comment,Comment appears in list,5,Comment posted successfully,passed
+Reply to Comment,User,Post a reply under a comment,Reply appears nested,4,Reply posted successfully,passed
+Cancel Reply,User,Cancel reply entry,Reply form closes,5,Reply cancelled as expected,passed
+Verify Empty State,None,Open feedback with no entries,No feedback yet message shows,3,Empty state displayed,passed
+## StageProgressionUI,,,,,,
+Verify Stage Loading,User,Open with valid crop id,Stage details display,5,Stage details loaded,passed
+Verify Submit Report Button,User,Check pending or late stage,Submit report button visible,5,Submit button displayed,passed
+Verify Message Admin,User,Click Message Admin,Callback triggers,4,Message action triggered,passed
+Verify Progress Bar,User,Inspect stage progress bar,Bar reflects correct percentage,5,Progress bar accurate,passed
+Verify Completed State,User,When stages completed,Banner shows completion,3,Completion banner displayed,passed

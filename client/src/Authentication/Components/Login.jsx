@@ -276,9 +276,7 @@ export default function Login() {
                             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5 mr-2" />
                             Google
                         </button> */}
-                        <div className="mt-2 text-center text-xs text-gray-400">
-                            <Link to="/terms" className="hover:underline">Terms & Conditions</Link>
-                        </div>
+        
                     </form>
                 </div>
                 {/* Right: Image & Wavy Divider with FITS Tanza branding */}

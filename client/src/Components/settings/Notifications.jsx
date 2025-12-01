@@ -1,152 +1,116 @@
 import React, { useState, useEffect } from 'react';
 import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const Notifications = () => {
   const { t } = useCustomTranslation();
   const { isDark } = useTheme();
+  const queryClient = useQueryClient();
   
-  const [notifications, setNotifications] = useState({
-    email: {
-      seminar_updates: true,
-      distribution_alerts: true,
-      system_notifications: false,
-    },
-    push: {
-      seminar_updates: true,
-      distribution_alerts: true,
-      system_notifications: true,
-    },
-    sms: {
-      seminar_updates: false,
-      distribution_alerts: true,
-      system_notifications: false,
-    },
-  });
-
-  const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Load notification preferences from backend on mount
-  useEffect(() => {
-    const loadNotificationPreferences = async () => {
-      try {
-        const response = await fetch('/api/preferences/notifications', {
-          credentials: 'include',
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success && data.notifications) {
-            setNotifications(data.notifications);
-          }
-        } else {
-          // Load from localStorage as fallback
-          const saved = localStorage.getItem('notificationPreferences');
-          if (saved) {
-            setNotifications(JSON.parse(saved));
-          }
-        }
-      } catch (error) {
-        console.error('Error loading notification preferences:', error);
-        // Load from localStorage as fallback
-        const saved = localStorage.getItem('notificationPreferences');
-        if (saved) {
-          setNotifications(JSON.parse(saved));
-        }
-      }
-    };
-
-    loadNotificationPreferences();
-  }, []);
-
-  const handleToggle = (type, setting) => {
-    setNotifications(prev => ({
-      ...prev,
-      [type]: {
-        ...prev[type],
-        [setting]: !prev[type][setting]
-      }
-    }));
-  };
-
-  const handleSave = async () => {
-    setIsLoading(true);
-    try {
-      // Save to backend
-      const response = await fetch('/api/preferences/notifications', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ notifications }),
+  // Fetch current notification settings
+  const { data: settingsData, isLoading: loadingSettings } = useQuery({
+    queryKey: ['notification-settings'],
+    queryFn: async () => {
+      const response = await fetch('/api/notifications/settings', {
+        credentials: 'include'
       });
-
-      if (response.ok) {
-        setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 3000);
-      } else {
-        console.error('Failed to save notification preferences to backend');
-      }
-      
-      // Save to localStorage as well for offline access
-      localStorage.setItem('notificationPreferences', JSON.stringify(notifications));
-      
-    } catch (error) {
-      console.error('Error saving notification preferences:', error);
-      // Still save locally if backend fails
-      localStorage.setItem('notificationPreferences', JSON.stringify(notifications));
-    } finally {
-      setIsLoading(false);
+      if (!response.ok) throw new Error('Failed to fetch settings');
+      return response.json();
     }
+  });
+
+  // Update notification settings mutation
+  const updateMutation = useMutation({
+    mutationFn: async (newSettings) => {
+      const response = await fetch('/api/notifications/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(newSettings)
+      });
+      if (!response.ok) throw new Error('Failed to update settings');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notification-settings'] });
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    }
+  });
+
+  const settings = settingsData?.settings || {
+    emailEnabled: true,
+    requestApproved: true,
+    requestRejected: true,
+    itemDueSoon: true,
+    itemOverdue: true,
+    seminarReminder: true
   };
 
-  const notificationTypes = [
+  const handleToggle = (key) => {
+    const newSettings = { ...settings, [key]: !settings[key] };
+    updateMutation.mutate(newSettings);
+  };
+
+  const notificationOptions = [
     {
-      key: 'email',
-      title: t('notifications.email_notifications'),
-      description: 'Receive updates via email',
+      key: 'emailEnabled',
+      title: 'Email Notifications',
+      description: 'Receive notifications via email',
       icon: 'fas fa-envelope',
-      color: 'blue',
+      color: 'blue'
     },
     {
-      key: 'push',
-      title: t('notifications.push_notifications'),
-      description: 'Receive browser push notifications',
-      icon: 'fas fa-bell',
-      color: 'emerald',
+      key: 'requestApproved',
+      title: 'Request Approved',
+      description: 'Notify when your request is approved',
+      icon: 'fas fa-check-circle',
+      color: 'green'
     },
     {
-      key: 'sms',
-      title: t('notifications.sms_notifications'),
-      description: 'Receive updates via SMS',
-      icon: 'fas fa-sms',
-      color: 'purple',
+      key: 'requestRejected',
+      title: 'Request Rejected',
+      description: 'Notify when your request is rejected',
+      icon: 'fas fa-times-circle',
+      color: 'red'
     },
+    {
+      key: 'itemDueSoon',
+      title: 'Item Due Soon',
+      description: 'Remind you when borrowed items are due soon',
+      icon: 'fas fa-clock',
+      color: 'yellow'
+    },
+    {
+      key: 'itemOverdue',
+      title: 'Item Overdue',
+      description: 'Alert you when borrowed items are overdue',
+      icon: 'fas fa-exclamation-triangle',
+      color: 'orange'
+    },
+    {
+      key: 'seminarReminder',
+      title: 'Seminar Reminders',
+      description: 'Remind you about upcoming seminars',
+      icon: 'fas fa-graduation-cap',
+      color: 'purple'
+    }
   ];
 
-  const notificationSettings = [
-    {
-      key: 'seminar_updates',
-      title: t('notifications.seminar_updates'),
-      description: 'Get notified about new seminars and enrollment deadlines',
-    },
-    {
-      key: 'distribution_alerts',
-      title: t('notifications.distribution_alerts'),
-      description: 'Receive alerts about distribution schedules and availability',
-    },
-    {
-      key: 'system_notifications',
-      title: t('notifications.system_notifications'),
-      description: 'System updates, maintenance, and security notifications',
-    },
-  ];
+  if (loadingSettings) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 pb-8">
-      {/* Success Message - Centered Popup */}
+      {/* Success Message */}
       {showSuccess && (
         <div className="fixed inset-0 h-full z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div 
@@ -167,7 +131,7 @@ const Notifications = () => {
                 className="font-medium text-lg block"
                 style={{ color: isDark ? '#a7f3d0' : '#047857' }}
               >
-                {t('settings.settings_saved')}
+                Settings Saved
               </span>
               <p 
                 className="text-sm mt-1 opacity-80"
@@ -186,98 +150,75 @@ const Notifications = () => {
           className="text-2xl font-bold mb-2"
           style={{ color: isDark ? '#ffffff' : '#111827' }}
         >
-          {t('settings.notifications')}
+          Notification Preferences
         </h2>
         <p 
           style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
         >
-          Manage how you receive notifications and updates
+          Choose what notifications you want to receive
         </p>
       </div>
 
-      {/* Notification Type Cards */}
-      {notificationTypes.map((type) => (
-        <div 
-          key={type.key} 
-          className="border border-gray-200 dark:border-gray-600 rounded-xl p-6"
-          style={{ backgroundColor: isDark ? '#1f2937' : '#ffffff' }}
-        >
-          <div className="flex items-center space-x-3 mb-6">
-            <div className={`w-10 h-10 bg-${type.color}-100 rounded-lg flex items-center justify-center`}>
-              <i className={`${type.icon} text-${type.color}-600 text-lg`}></i>
-            </div>
-            <div>
-              <h3 
-                className="text-xl font-semibold"
-                style={{ color: isDark ? '#ffffff' : '#111827' }}
-              >
-                {type.title}
-              </h3>
-              <p 
-                className="text-sm"
-                style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
-              >
-                {type.description}
-              </p>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {notificationSettings.map((setting) => (
-              <div 
-                key={setting.key} 
-                className="flex items-start justify-between p-4 rounded-lg"
-                style={{ backgroundColor: isDark ? '#374151' : '#f9fafb' }}
-              >
-                <div className="flex-1">
-                  <h4 
-                    className="font-medium"
-                    style={{ color: isDark ? '#ffffff' : '#111827' }}
-                  >
-                    {setting.title}
-                  </h4>
-                  <p 
-                    className="text-sm mt-1"
-                    style={{ color: isDark ? '#d1d5db' : '#6b7280' }}
-                  >
-                    {setting.description}
-                  </p>
-                </div>
-                <div className="ml-4">
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      checked={notifications[type.key][setting.key]}
-                      onChange={() => handleToggle(type.key, setting.key)}
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
-                  </label>
-                </div>
+      {/* Notification Options */}
+      <div className="grid gap-4">
+        {notificationOptions.map((option) => (
+          <div 
+            key={option.key}
+            className="border border-gray-200 dark:border-gray-600 rounded-xl p-4 flex items-start justify-between"
+            style={{ backgroundColor: isDark ? '#1f2937' : '#ffffff' }}
+          >
+            <div className="flex items-start space-x-4">
+              <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 bg-${option.color}-100`}>
+                <i className={`${option.icon} text-${option.color}-600 text-lg`}></i>
               </div>
-            ))}
+              <div>
+                <h4 
+                  className="font-semibold text-lg"
+                  style={{ color: isDark ? '#ffffff' : '#111827' }}
+                >
+                  {option.title}
+                </h4>
+                <p 
+                  className="text-sm mt-1"
+                  style={{ color: isDark ? '#d1d5db' : '#6b7280' }}
+                >
+                  {option.description}
+                </p>
+              </div>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={settings[option.key]}
+                onChange={() => handleToggle(option.key)}
+                disabled={updateMutation.isPending}
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+            </label>
+          </div>
+        ))}
+      </div>
+
+      {/* Info Note */}
+      <div 
+        className="border border-blue-200 dark:border-blue-800 rounded-xl p-4"
+        style={{ backgroundColor: isDark ? '#1e3a8a' : '#eff6ff' }}
+      >
+        <div className="flex items-start space-x-3">
+          <i 
+            className="fas fa-info-circle text-lg mt-0.5"
+            style={{ color: isDark ? '#93c5fd' : '#3b82f6' }}
+          ></i>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: isDark ? '#dbeafe' : '#1e40af' }}
+            >
+              You will always receive in-app notifications. Email notifications are sent only if enabled and according to your preferences above.
+            </p>
           </div>
         </div>
-      ))}
-
-      {/* Save Button */}
-      <div className="flex justify-end space-x-4">
-        <button
-          onClick={handleSave}
-          disabled={isLoading}
-          className={`px-6 py-3 bg-emerald-600 text-white rounded-xl font-medium transition-all duration-200 ${
-            isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-emerald-700 hover:shadow-lg'
-          }`}
-        >
-          {isLoading ? (
-            <div className="flex items-center space-x-2">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-              <span>{t('common.loading')}</span>
-            </div>
-          ) : (
-            t('settings.save_changes')
-          )}
-        </button>
       </div>
     </div>
   );

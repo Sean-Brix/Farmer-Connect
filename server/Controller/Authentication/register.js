@@ -3,6 +3,7 @@ import prisma from '../../config/database.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { initializeNotificationSettings } from '../../Services/notificationService.js';
 
 dotenv.config();
 // Using centralized prisma instance
@@ -72,6 +73,9 @@ async function register(req, res) {
                 client_profile: req.body.clientProfile || 'Other',
             },
         });
+
+        // Initialize notification settings for new user
+        await initializeNotificationSettings(newUser.id);
 
         // Generate JWT token
         const token = jwt.sign(

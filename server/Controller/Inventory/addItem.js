@@ -5,7 +5,7 @@ import auditLogger from '../../Services/auditLogger.js';
 
 async function addItem(req, res) {
     try {
-        const { name, description, category, quantity, status } = req.body;
+        const { name, description, category, quantity, status, date_limit, max_quantity_per_request } = req.body;
         const file = req.file; // Get uploaded image file
 
         // Validate required fields
@@ -20,6 +20,30 @@ async function addItem(req, res) {
         if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
             return res.status(400).json({
                 error: 'Quantity must be a positive number',
+            });
+        }
+
+        // Validate date_limit if provided
+        if (
+            date_limit !== undefined &&
+            date_limit !== null &&
+            date_limit !== '' &&
+            (parseInt(date_limit) < 1 || parseInt(date_limit) > 365)
+        ) {
+            return res.status(400).json({
+                error: 'Date limit must be between 1 and 365 days, or empty for no limit',
+            });
+        }
+
+        // Validate max_quantity_per_request if provided
+        if (
+            max_quantity_per_request !== undefined &&
+            max_quantity_per_request !== null &&
+            max_quantity_per_request !== '' &&
+            parseInt(max_quantity_per_request) < 1
+        ) {
+            return res.status(400).json({
+                error: 'Maximum quantity per request must be at least 1, or empty for no limit',
             });
         }
 
@@ -65,20 +89,44 @@ async function addItem(req, res) {
 
             if (existingStack) {
                 // Update the existing stack by adding the quantity
+                const updateData = {
+                    quantity: existingStack.quantity + parsedQuantity,
+                };
+                
+                // Update date_limit if provided
+                if (date_limit !== undefined && date_limit !== null && date_limit !== '') {
+                    updateData.date_limit = parseInt(date_limit);
+                }
+                
+                // Update max_quantity_per_request if provided
+                if (max_quantity_per_request !== undefined && max_quantity_per_request !== null && max_quantity_per_request !== '') {
+                    updateData.max_quantity_per_request = parseInt(max_quantity_per_request);
+                }
+                
                 await prisma.itemStack.update({
                     where: { id: existingStack.id },
-                    data: {
-                        quantity: existingStack.quantity + parsedQuantity,
-                    },
+                    data: updateData,
                 });
             } else {
                 // If stack with this status doesn't exist, create it
+                const newStackData = {
+                    itemId: existingItem.id,
+                    quantity: parsedQuantity,
+                    status: targetStatus,
+                };
+                
+                // Add date_limit if provided
+                if (date_limit !== undefined && date_limit !== null && date_limit !== '') {
+                    newStackData.date_limit = parseInt(date_limit);
+                }
+                
+                // Add max_quantity_per_request if provided
+                if (max_quantity_per_request !== undefined && max_quantity_per_request !== null && max_quantity_per_request !== '') {
+                    newStackData.max_quantity_per_request = parseInt(max_quantity_per_request);
+                }
+                
                 await prisma.itemStack.create({
-                    data: {
-                        itemId: existingItem.id,
-                        quantity: parsedQuantity,
-                        status: targetStatus,
-                    },
+                    data: newStackData,
                 });
             }
 
@@ -143,10 +191,24 @@ async function addItem(req, res) {
             ];
             const targetStatus = status || 'Available';
 
-            const stacksToCreate = allStatuses.map((stackStatus) => ({
-                quantity: stackStatus === targetStatus ? parsedQuantity : 0,
-                status: stackStatus,
-            }));
+            const stacksToCreate = allStatuses.map((stackStatus) => {
+                const stackData = {
+                    quantity: stackStatus === targetStatus ? parsedQuantity : 0,
+                    status: stackStatus,
+                };
+                
+                // Only apply date_limit and max_quantity_per_request to the target status stack
+                if (stackStatus === targetStatus) {
+                    if (date_limit !== undefined && date_limit !== null && date_limit !== '') {
+                        stackData.date_limit = parseInt(date_limit);
+                    }
+                    if (max_quantity_per_request !== undefined && max_quantity_per_request !== null && max_quantity_per_request !== '') {
+                        stackData.max_quantity_per_request = parseInt(max_quantity_per_request);
+                    }
+                }
+                
+                return stackData;
+            });
 
             const newItem = await prisma.inventoryItem.create({
                 data: {

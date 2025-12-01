@@ -2,6 +2,7 @@
 import prisma from '../../config/database.js';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
+import { initializeNotificationSettings } from '../../Services/notificationService.js';
 
 dotenv.config();
 // Using centralized prisma instance
@@ -72,6 +73,9 @@ async function adminRegister(req, res) {
                 client_profile: req.body.clientProfile || 'Other',
             },
         });
+
+        // Initialize notification settings for new user
+        await initializeNotificationSettings(newUser.id);
 
         // Remove password from user object before sending response
         newUser.password = undefined;

@@ -28,6 +28,7 @@ import Distribution from './Client/Services/Distributions/Distribution.jsx';
 import Survey from './Components/Survey/Survey.jsx';
 import Settings from './Components/settings/Settings.jsx';
 import My_Profile from './Admin/Components/Profile/My_Profile.jsx';
+import SystemSettings from './Admin/Services/Settings/SystemSettings.jsx';
 import ForgotPassword from './Authentication/Components/ForgotPassword';
 import ResetPassword from './Authentication/Components/ResetPassword.jsx';
 import FillSurvey from './Components/Survey/FillSurvey.jsx';
@@ -66,6 +67,7 @@ function App() {
                     {/* ADMIN ROUTES */}
                     <Route path="/admin" element={<Dashboard />} />
                     <Route path="/admin/profile" element={<My_Profile />} />
+                    <Route path="/admin/settings/system" element={<SystemSettings />} />
 
                     {/* DEVELOPER TOOLS */}
                     <Route path="/dev" element={<DevPage />} />

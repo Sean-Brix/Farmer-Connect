@@ -14,6 +14,8 @@ const AddEICItemModal = ({
     const [form, setForm] = useState({
         name: '',
         quantity: '1',
+        date_limit: '',
+        max_quantity_per_request: '',
         description: '',
         category: 'Other',
         status: 'EIC', // Fixed to EIC only
@@ -163,6 +165,12 @@ const AddEICItemModal = ({
         const formData = new FormData();
         formData.append('name', form.name);
         formData.append('quantity', parseInt(form.quantity));
+        if (form.date_limit) {
+            formData.append('date_limit', parseInt(form.date_limit));
+        }
+        if (form.max_quantity_per_request) {
+            formData.append('max_quantity_per_request', parseInt(form.max_quantity_per_request));
+        }
         formData.append('description', form.description);
         formData.append('category', convertToSnakeCase(form.category));
         formData.append('status', 'EIC');
@@ -178,6 +186,8 @@ const AddEICItemModal = ({
         setForm({
             name: '',
             quantity: '1',
+            date_limit: '',
+            max_quantity_per_request: '',
             description: '',
             category: 'Other',
             status: 'EIC',
@@ -193,6 +203,8 @@ const AddEICItemModal = ({
         setForm({
             name: '',
             quantity: '1',
+            date_limit: '',
+            max_quantity_per_request: '',
             description: '',
             category: 'Other',
             status: 'EIC',
@@ -341,6 +353,77 @@ const AddEICItemModal = ({
                                 }`}
                                 min="1"
                                 required
+                            />
+                        </div>
+
+                        {/* Maximum Borrowing Period (date_limit) */}
+                        <div className={`border rounded-lg p-4 ${
+                            isDark 
+                                ? 'bg-gray-700 border-gray-600' 
+                                : 'bg-gray-50 border-gray-200'
+                        }`}>
+                            <label className={`block text-sm font-semibold mb-1 ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
+                                Maximum Borrowing Period (Days)
+                                <span className={`text-xs font-normal ml-2 ${
+                                    isDark ? 'text-gray-400' : 'text-gray-500'
+                                }`}>(Optional)</span>
+                            </label>
+                            <p className={`text-xs mb-3 ${
+                                isDark ? 'text-gray-400' : 'text-gray-600'
+                            }`}>
+                                <i className="fa-solid fa-info-circle mr-1 text-blue-500"></i>
+                                Leave empty for no limit. Users cannot borrow this item for longer than specified days.
+                            </p>
+                            <input
+                                type="number"
+                                name="date_limit"
+                                value={form.date_limit}
+                                onChange={handleChange}
+                                placeholder="e.g., 30"
+                                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${
+                                    isDark 
+                                        ? 'bg-gray-600 border-gray-500 text-white placeholder-gray-300' 
+                                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                                }`}
+                                min="1"
+                                max="365"
+                            />
+                        </div>
+
+                        {/* Maximum Quantity Per Request */}
+                        <div className={`border rounded-lg p-4 ${
+                            isDark 
+                                ? 'bg-gray-700 border-gray-600' 
+                                : 'bg-gray-50 border-gray-200'
+                        }`}>
+                            <label className={`block text-sm font-semibold mb-1 ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
+                                Maximum Quantity Per Request
+                                <span className={`text-xs font-normal ml-2 ${
+                                    isDark ? 'text-gray-400' : 'text-gray-500'
+                                }`}>(Optional)</span>
+                            </label>
+                            <p className={`text-xs mb-3 ${
+                                isDark ? 'text-gray-400' : 'text-gray-600'
+                            }`}>
+                                <i className="fa-solid fa-info-circle mr-1 text-blue-500"></i>
+                                Leave empty for no limit. Users cannot request more than this amount in a single transaction.
+                            </p>
+                            <input
+                                type="number"
+                                name="max_quantity_per_request"
+                                value={form.max_quantity_per_request}
+                                onChange={handleChange}
+                                placeholder="e.g., 10"
+                                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${
+                                    isDark 
+                                        ? 'bg-gray-600 border-gray-500 text-white placeholder-gray-300' 
+                                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                                }`}
+                                min="1"
                             />
                         </div>
 

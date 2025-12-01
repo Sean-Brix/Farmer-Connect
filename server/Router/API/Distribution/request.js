@@ -10,8 +10,11 @@ const router = express.Router();
 import parseToken from '../../../Middlewares/JWT/parseToken.js';
 router.use(parseToken);
 
+import { checkDistributionLimit } from '../../../Middlewares/Restrictions/checkBorrowLimit.js';
+import checkDailyPickupLimit from '../../../Middlewares/Restrictions/checkDailyPickupLimit.js';
+
 import addRequest from '../../../Controller/Distribution/request/addRequest.js';
-router.post('/', addRequest);
+router.post('/', checkDistributionLimit, checkDailyPickupLimit, addRequest);
 
 import getMyRequest from '../../../Controller/Distribution/request/getMyRequest.js';
 router.get('/me', getMyRequest);
