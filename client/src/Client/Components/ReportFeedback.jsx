@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 
 /**
  * ReportFeedback Component
@@ -13,6 +14,7 @@ export default function ReportFeedback({
   onSubmitFeedback,
   theme = 'light'
 }) {
+  const { t } = useCustomTranslation();
   const [replyingTo, setReplyingTo] = useState(null);
   const [newMessage, setNewMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,7 +34,7 @@ export default function ReportFeedback({
       setReplyingTo(null);
     } catch (error) {
       console.error('Failed to submit feedback:', error);
-      alert('Failed to submit feedback. Please try again.');
+      alert(t('chat.failed_to_send'));
     } finally {
       setIsSubmitting(false);
     }
@@ -88,7 +90,7 @@ export default function ReportFeedback({
               theme === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'
             }`}
           >
-            Reply
+            {t('chat.send').replace('Send', 'Reply')}
           </button>
         )}
 
@@ -98,7 +100,7 @@ export default function ReportFeedback({
             <textarea
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Write your reply..."
+              placeholder={t('chat.type_a_message')}
               rows="2"
               className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none ${
                 theme === 'dark' 
@@ -112,7 +114,7 @@ export default function ReportFeedback({
                 disabled={isSubmitting || !newMessage.trim()}
                 className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? 'Sending...' : 'Reply'}
+                {isSubmitting ? t('common.processing') : t('chat.send').replace('Send', 'Reply')}
               </button>
               <button
                 onClick={() => {
@@ -123,7 +125,7 @@ export default function ReportFeedback({
                   theme === 'dark' ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
-                Cancel
+                {t('common.cancel')}
               </button>
             </div>
           </div>
@@ -150,10 +152,10 @@ export default function ReportFeedback({
         </div>
         <div>
           <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-            Feedback & Discussion
+            {t('feedback.title')}
           </h3>
           <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-            {feedback.length} {feedback.length === 1 ? 'comment' : 'comments'}
+            {feedback.length} {feedback.length === 1 ? t('feedback.comments').slice(0, -1) : t('feedback.comments')}
           </p>
         </div>
       </div>
@@ -165,8 +167,8 @@ export default function ReportFeedback({
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder={currentUserAccess === 'Admin' || currentUserAccess === 'Super_Admin' 
-              ? "Add feedback for the farmer..." 
-              : "Ask a question or add a note..."}
+              ? t('feedback.comments') 
+              : t('chat.type_a_message')}
             rows="3"
             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none ${
               theme === 'dark' 
@@ -180,7 +182,7 @@ export default function ReportFeedback({
               disabled={isSubmitting || !newMessage.trim()}
               className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Posting...' : 'Post Comment'}
+              {isSubmitting ? t('common.processing') : t('feedback.submit_feedback')}
             </button>
           </div>
         </div>
@@ -190,7 +192,7 @@ export default function ReportFeedback({
       {feedback.length === 0 ? (
         <div className={`text-center py-8 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
           <div className="text-4xl mb-2">💭</div>
-          <p className="text-sm">No feedback yet. Be the first to comment!</p>
+          <p className="text-sm">{t('chat.no_messages')}</p>
         </div>
       ) : (
         <div>

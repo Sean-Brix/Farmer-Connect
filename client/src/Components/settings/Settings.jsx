@@ -30,7 +30,7 @@ const Settings = () => {
     },
     { 
       id: 'profile', 
-      label: 'Profile Settings', 
+      label: t('settings.profile_settings'), 
       icon: 'fas fa-user',
       component: ProfileSettings 
     },
@@ -42,7 +42,7 @@ const Settings = () => {
     },
     { 
       id: 'account', 
-      label: 'Account Settings', 
+      label: t('settings.account_settings'), 
       icon: 'fas fa-user-cog',
       component: AccountSettings 
     }
@@ -90,7 +90,7 @@ const Settings = () => {
                       color: isDark ? '#9ca3af' : '#6b7280' 
                     }}
                   >
-                    Manage your preferences and account settings
+                    {t('settings.manage_preferences')}
                   </p>
                 </div>
               </div>

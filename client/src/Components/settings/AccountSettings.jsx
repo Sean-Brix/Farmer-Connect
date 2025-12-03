@@ -66,7 +66,7 @@ const AccountSettings = () => {
     e.preventDefault();
     
     if (passwords.new !== passwords.confirm) {
-      alert('New passwords do not match');
+      alert(t('errors.passwords_no_match'));
       return;
     }
     
@@ -80,13 +80,13 @@ const AccountSettings = () => {
         body: JSON.stringify({ currentPassword: passwords.current, newPassword: passwords.new }),
       });
       const data = await resp.json();
-      if (!resp.ok) throw new Error(data.message || 'Failed to change password');
+      if (!resp.ok) throw new Error(data.message || t('errors.password_change_failed'));
       setPasswords({ current: '', new: '', confirm: '' });
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
       console.error('Error changing password:', error);
-      alert(error.message || 'Error changing password');
+      alert(error.message || t('errors.password_change_error'));
     } finally {
       setIsLoading(false);
     }
@@ -157,7 +157,7 @@ const AccountSettings = () => {
         <p 
           style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
         >
-          Manage your account information and security settings
+          {t('account.manage_security')}
         </p>
       </div>
 
@@ -203,14 +203,14 @@ const AccountSettings = () => {
                   className="block text-sm font-medium mb-2"
                   style={{ color: isDark ? '#d1d5db' : '#374151' }}
                 >
-                  Username
+                  {t('account.username')}
                 </label>
                 <input
                   type="text"
                   value={userInfo.username}
                   onChange={(e) => setUserInfo(prev => ({ ...prev, username: e.target.value }))}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Enter your username"
+                  placeholder={t('account.enter_username')}
                   style={{ backgroundColor: isDark ? undefined : '#fff', color: isDark ? undefined : '#111827' }}
                 />
               </div>
@@ -219,40 +219,40 @@ const AccountSettings = () => {
                   className="block text-sm font-medium mb-2"
                   style={{ color: isDark ? '#d1d5db' : '#374151' }}
                 >
-                  Email
+                  {t('account.email')}
                 </label>
                 <input
                   type="email"
                   value={userInfo.email}
                   onChange={(e) => setUserInfo(prev => ({ ...prev, email: e.target.value }))}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Enter your email"
+                  placeholder={t('account.enter_email')}
                   style={{ backgroundColor: isDark ? undefined : '#fff', color: isDark ? undefined : '#111827' }}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2" style={{ color: isDark ? '#d1d5db' : '#374151' }}>
-                  Position
+                  {t('profile.position')}
                 </label>
                 <input
                   type="text"
                   value={userInfo.position}
                   onChange={(e) => setUserInfo(prev => ({ ...prev, position: e.target.value }))}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Enter your position"
+                  placeholder={t('profile.enter_position')}
                   style={{ backgroundColor: isDark ? undefined : '#fff', color: isDark ? undefined : '#111827' }}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2" style={{ color: isDark ? '#d1d5db' : '#374151' }}>
-                  Phone
+                  {t('account.phone')}
                 </label>
                 <input
                   type="tel"
                   value={userInfo.phone}
                   onChange={(e) => setUserInfo(prev => ({ ...prev, phone: e.target.value }))}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Enter your phone number"
+                  placeholder={t('account.enter_phone')}
                   style={{ backgroundColor: isDark ? undefined : '#fff', color: isDark ? undefined : '#111827' }}
                 />
               </div>
@@ -279,42 +279,42 @@ const AccountSettings = () => {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2" style={{ color: isDark ? '#d1d5db' : '#374151' }}>
-                  Current Password
+                  {t('account.current_password')}
                 </label>
                 <input
                   type="password"
                   value={passwords.current}
                   onChange={(e) => setPasswords(prev => ({ ...prev, current: e.target.value }))}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Enter current password"
+                  placeholder={t('account.enter_current_password')}
                   required
                   style={{ backgroundColor: isDark ? undefined : '#fff', color: isDark ? undefined : '#111827' }}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2" style={{ color: isDark ? '#d1d5db' : '#374151' }}>
-                  New Password
+                  {t('account.new_password')}
                 </label>
                 <input
                   type="password"
                   value={passwords.new}
                   onChange={(e) => setPasswords(prev => ({ ...prev, new: e.target.value }))}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Enter new password"
+                  placeholder={t('account.enter_new_password')}
                   required
                   style={{ backgroundColor: isDark ? undefined : '#fff', color: isDark ? undefined : '#111827' }}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2" style={{ color: isDark ? '#d1d5db' : '#374151' }}>
-                  Confirm New Password
+                  {t('account.confirm_password')}
                 </label>
                 <input
                   type="password"
                   value={passwords.confirm}
                   onChange={(e) => setPasswords(prev => ({ ...prev, confirm: e.target.value }))}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Confirm new password"
+                  placeholder={t('account.confirm_new_password')}
                   required
                   style={{ backgroundColor: isDark ? undefined : '#fff', color: isDark ? undefined : '#111827' }}
                 />
@@ -341,19 +341,19 @@ const AccountSettings = () => {
           <div className="space-y-6">
             <div className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: isDark ? '#374151' : '#f3f4f6' }}>
               <div>
-                <h4 className="font-medium" style={{ color: isDark ? '#fff' : '#111827' }}>Profile Visibility</h4>
-                <p className="text-sm" style={{ color: isDark ? '#d1d5db' : '#6b7280' }}>Control who can see your profile information</p>
+                <h4 className="font-medium" style={{ color: isDark ? '#fff' : '#111827' }}>{t('account.profile_visibility')}</h4>
+                <p className="text-sm" style={{ color: isDark ? '#d1d5db' : '#6b7280' }}>{t('account.visibility_description')}</p>
               </div>
               <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500" style={{ backgroundColor: isDark ? '#374151' : '#fff', color: isDark ? '#fff' : '#111827' }}>
-                <option>Public</option>
-                <option>Private</option>
-                <option>Friends Only</option>
+                <option>{t('account.public')}</option>
+                <option>{t('account.private')}</option>
+                <option>{t('account.friends_only')}</option>
               </select>
             </div>
             <div className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: isDark ? '#374151' : '#f3f4f6' }}>
               <div>
-                <h4 className="font-medium" style={{ color: isDark ? '#fff' : '#111827' }}>Data Collection</h4>
-                <p className="text-sm" style={{ color: isDark ? '#d1d5db' : '#6b7280' }}>Allow collection of usage data for improvement</p>
+                <h4 className="font-medium" style={{ color: isDark ? '#fff' : '#111827' }}>{t('account.data_collection')}</h4>
+                <p className="text-sm" style={{ color: isDark ? '#d1d5db' : '#6b7280' }}>{t('account.data_collection_description')}</p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" className="sr-only peer" defaultChecked />
@@ -365,7 +365,7 @@ const AccountSettings = () => {
                 {t('account.delete_account')}
               </button>
               <p className="text-sm mt-2" style={{ color: isDark ? '#d1d5db' : '#6b7280' }}>
-                This action cannot be undone. All your data will be permanently deleted.
+                {t('account.delete_warning')}
               </p>
             </div>
           </div>

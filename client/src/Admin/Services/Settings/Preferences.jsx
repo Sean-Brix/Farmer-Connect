@@ -6,36 +6,31 @@ import ThemeSwitch from '../../../Components/settings/ThemeSwitch';
 const Preferences = () => {
   const { t, i18n } = useCustomTranslation();
   const { theme, changeTheme, isDark } = useTheme();
-  const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
+  // Initialize from localStorage to avoid flash of wrong language
+  const [selectedLanguage, setSelectedLanguage] = useState(() => {
+    return localStorage.getItem('i18nextLng') || i18n.language || 'en';
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Load language preference from backend on mount
+  // Sync selectedLanguage with i18n.language changes
   useEffect(() => {
-    const loadLanguagePreference = async () => {
-      try {
-        const response = await fetch('/api/preferences/language', {
-          credentials: 'include',
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success && data.language) {
-            setSelectedLanguage(data.language);
-            if (data.language !== i18n.language) {
-              await i18n.changeLanguage(data.language);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error loading language preference:', error);
-      }
+    const handleLanguageChanged = (lng) => {
+      console.log('🔄 [Admin Preferences] Language changed event:', lng);
+      setSelectedLanguage(lng);
     };
 
-    loadLanguagePreference();
-  }, [i18n]);
+    i18n.on('languageChanged', handleLanguageChanged);
+    
+    // Set initial language from i18n
+    if (i18n.language) {
+      setSelectedLanguage(i18n.language);
+    }
 
-  const languages = [
+    return () => {
+      i18n.off('languageChanged', handleLanguageChanged);
+    };
+  }, [i18n]);  const languages = [
     { code: 'en', name: t('settings.english'), flag: '🇺🇸' },
     { code: 'tl', name: t('settings.tagalog'), flag: '🇵🇭' },
   ];

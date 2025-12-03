@@ -1,10 +1,4 @@
 {
-  "navigation": {
-    "home": "Home",
-    "about": "About Us",
-    "contact": "Get in Touch"
-  },
-  "settings": {
-    "title": "App Settings"
-  }
+  "navigation": {},
+  "settings": {}
 }

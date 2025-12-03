@@ -2,6 +2,7 @@
  * InquirySidebar - History of past inquiries
  */
 import React from 'react';
+import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 
 export default function InquirySidebar({ 
     theme,
@@ -11,6 +12,8 @@ export default function InquirySidebar({
     onSearchChange,
     onSelectInquiry
 }) {
+    const { t } = useCustomTranslation();
+    
     if (!isOpen) return null;
 
     return (
@@ -19,11 +22,11 @@ export default function InquirySidebar({
         } overflow-y-auto`}>
             <div className="p-4">
                 <h3 className={`font-semibold mb-3 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                    Past Inquiries
+                    {t('chat.past_inquiries')}
                 </h3>
                 <input
                     type="text"
-                    placeholder="Search..."
+                    placeholder={t('common.search')}
                     value={searchQuery}
                     onChange={(e) => onSearchChange(e.target.value)}
                     className={`w-full px-3 py-2 rounded-lg border mb-3 focus:outline-none focus:ring-2 focus:ring-green-500 ${
@@ -37,7 +40,7 @@ export default function InquirySidebar({
                         <p className={`text-sm text-center py-4 ${
                             theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
                         }`}>
-                            No past inquiries found
+                            {t('chat.no_inquiries')}
                         </p>
                     ) : (
                         inquiries.map(inq => (
@@ -53,7 +56,7 @@ export default function InquirySidebar({
                                 <p className={`font-medium text-sm ${
                                     theme === 'dark' ? 'text-white' : 'text-gray-900'
                                 }`}>
-                                    {inq.subject || 'No Subject'}
+                                    {inq.subject || t('chat.no_subject')}
                                 </p>
                                 <p className={`text-xs mt-1 ${
                                     theme === 'dark' ? 'text-gray-400' : 'text-gray-500'

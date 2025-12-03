@@ -443,8 +443,8 @@ export default function Navbar({refresh}) {
                                 strokeLinejoin="round"
                             />
                         </svg>
-                        <span className="text-base font-semibold text-green-700 text-center">Logout?</span>
-                        <span className="block text-gray-500 text-sm text-center">You will need to login again.</span>
+                        <span className="text-base font-semibold text-green-700 text-center">{t('navigation.logout')}?</span>
+                        <span className="block text-gray-500 text-sm text-center">{t('navigation.logout_confirm')}</span>
                         <div className="flex gap-2 mt-1">
                         <button
                             disabled={isLoggingOut}
@@ -461,13 +461,13 @@ export default function Navbar({refresh}) {
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
                                 )}
-                                <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
+                                <span>{isLoggingOut ? t('navigation.logging_out') : t('navigation.logout')}</span>
                             </button>
                             <button
                                 className="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 focus:outline-none"
                                 onClick={() => setShowAlert(false)}
                             >
-                                Cancel
+                                {t('common.cancel')}
                             </button>
                         </div>
                     </div>
@@ -550,7 +550,7 @@ export default function Navbar({refresh}) {
                                             strokeLinejoin="round"
                                         />
                                     </svg>
-                                    {!isMidScreen && <span className="nav-text-underline">Information</span>}
+                                    {!isMidScreen && <span className="nav-text-underline">{t('navigation.information')}</span>}
                                     <svg
                                         className={`w-4 h-4 ml-1 transition-transform duration-300 ${
                                             infoOpen ? 'rotate-180' : ''
@@ -662,7 +662,7 @@ export default function Navbar({refresh}) {
                                                     strokeLinejoin="round"
                                                 />
                                             </svg>
-                                            Citizen's Charter
+                                            {t('navigation.citizens_charter')}
                                         </NavLink>
                                     </li>
                                     <li>
@@ -723,7 +723,7 @@ export default function Navbar({refresh}) {
                                             strokeLinejoin="round"
                                         />
                                     </svg>
-                                    {!isMidScreen && <span className="nav-text-underline">Services</span>}
+                                    {!isMidScreen && <span className="nav-text-underline">{t('navigation.services')}</span>}
                                     <svg
                                         className={`w-4 h-4 ml-1 transition-transform duration-300 ${
                                             servicesOpen ? 'rotate-180' : ''
@@ -801,7 +801,7 @@ export default function Navbar({refresh}) {
                                                     strokeLinejoin="round"
                                                 />
                                             </svg>
-                                            EIC
+                                            {t('navigation.eic')}
                                         </NavLink>
                                     </li>
                                     <li>
@@ -827,7 +827,7 @@ export default function Navbar({refresh}) {
                                                     strokeLinejoin="round"
                                                 />
                                             </svg>
-                                            Distribution
+                                            {t('navigation.distribution')}
                                         </NavLink>
                                     </li>
 
@@ -968,7 +968,7 @@ export default function Navbar({refresh}) {
                                                         strokeLinejoin="round"
                                                     />
                                                 </svg>
-                                                Profile
+                                                {t('navigation.profile')}
                                             </Link>
                                         </li>
                                         {/* Only show Admin Panel to admin/superadmin users */}
@@ -1005,7 +1005,7 @@ export default function Navbar({refresh}) {
                                                             strokeLinejoin="round"
                                                         />
                                                     </svg>
-                                                    Admin Panel
+                                                    {t('navigation.admin_panel')}
                                                 </Link>
                                             </li>
                                         )}
@@ -1060,7 +1060,7 @@ export default function Navbar({refresh}) {
                                                         />
                                                     </svg>
                                                 )}
-                                                <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
+                                                <span>{isLoggingOut ? t('navigation.logging_out') : t('navigation.logout')}</span>
                                             </button>
                                         </li>
                                     </ul>
@@ -1084,7 +1084,7 @@ export default function Navbar({refresh}) {
                                         strokeLinejoin="round"
                                     />
                                 </svg>
-                                <span>Login</span>
+                                <span>{t('navigation.login')}</span>
                             </Link>
                         )}
                         <button
@@ -1241,7 +1241,7 @@ export default function Navbar({refresh}) {
                                                             strokeLinejoin="round"
                                                         />
                                                     </svg>
-                                                    <span>Info</span>
+                                                    <span>{t('navigation.information')}</span>
                                                 </div>
                                                 <svg className={`w-5 h-5 transition-transform duration-300 group-open:rotate-180 ${infoActive ? 'text-emerald-700' : 'text-emerald-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -1348,7 +1348,7 @@ export default function Navbar({refresh}) {
                                                             strokeLinejoin="round"
                                                         />
                                                     </svg>
-                                                    <span>Citizen's Charter</span>
+                                                    <span>{t('navigation.citizens_charter')}</span>
                                                 </NavLink>
                                                 <NavLink 
                                                     to="/faq"
@@ -1408,7 +1408,7 @@ export default function Navbar({refresh}) {
                                                             strokeLinejoin="round"
                                                         />
                                                     </svg>
-                                                    <span>Services</span>
+                                                    <span>{t('navigation.services')}</span>
                                                 </div>
                                                 <svg className={`w-5 h-5 transition-transform duration-300 group-open:rotate-180 ${servicesActive ? 'text-emerald-700' : 'text-emerald-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -1487,7 +1487,7 @@ export default function Navbar({refresh}) {
                                                             strokeLinejoin="round"
                                                         />
                                                     </svg>
-                                                    <span>EIC</span>
+                                                    <span>{t('navigation.eic')}</span>
                                                 </NavLink>
                                                 <NavLink 
                                                     to="/distribution"
@@ -1522,7 +1522,7 @@ export default function Navbar({refresh}) {
                                                             strokeLinejoin="round"
                                                         />
                                                     </svg>
-                                                    <span>Distribution</span>
+                                                    <span>{t('navigation.distribution')}</span>
                                                 </NavLink>
                                                 <NavLink 
                                                     to="/chat-support"
@@ -1552,7 +1552,7 @@ export default function Navbar({refresh}) {
                                                             strokeLinejoin="round"
                                                         />
                                                     </svg>
-                                                    <span>Chat Support</span>
+                                                    <span>{t('navigation.chat_support')}</span>
                                                 </NavLink>
                                             </div>
                                         </details>
@@ -1587,7 +1587,7 @@ export default function Navbar({refresh}) {
                                                         strokeLinejoin="round"
                                                     />
                                                 </svg>
-                                                <span>Farmer Reports</span>
+                                                <span>{t('navigation.farmer_reports')}</span>
                                             </NavLink>
                                         )}
                                         
@@ -1628,7 +1628,7 @@ export default function Navbar({refresh}) {
                                                                 style={{
                                                                     color: isDark ? '#a7f3d0' : '#065f46'
                                                                 }}
-                                                            >Active Member</p>
+                                                            >{t('navigation.active_member')}</p>
                                                         </div>
                                                     </div>
                                                     
@@ -1696,7 +1696,7 @@ export default function Navbar({refresh}) {
                                                                     strokeLinejoin="round"
                                                                 />
                                                             </svg>
-                                                            <span>Admin Panel</span>
+                                                            <span>{t('navigation.admin_panel')}</span>
                                                         </NavLink>
                                                     )}
                                                     
@@ -1740,7 +1740,7 @@ export default function Navbar({refresh}) {
                                                                 />
                                                             </svg>
                                                         )}
-                                                        <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
+                                                        <span>{isLoggingOut ? t('navigation.logging_out') : t('navigation.logout')}</span>
                                                     </button>
                                                 </>
                                             ) : (
@@ -1777,13 +1777,13 @@ export default function Navbar({refresh}) {
                                                                 style={{
                                                                     color: isDark ? '#d1d5db' : '#374151'
                                                                 }}
-                                                            >Guest User</p>
+                                                            >{t('navigation.guest_user')}</p>
                                                             <p 
                                                                 className="text-sm"
                                                                 style={{
                                                                     color: isDark ? '#9ca3af' : '#6b7280'
                                                                 }}
-                                                            >Please login to access all features</p>
+                                                            >{t('navigation.login_prompt')}</p>
                                                         </div>
                                                     </div>
                                                     
@@ -1806,7 +1806,7 @@ export default function Navbar({refresh}) {
                                                                 strokeLinejoin="round"
                                                             />
                                                         </svg>
-                                                        <span>Login to Get Started</span>
+                                                        <span>{t('navigation.login')}</span>
                                                     </NavLink>
                                                     
                                                     {/* Sign Up Option */}
@@ -1836,7 +1836,7 @@ export default function Navbar({refresh}) {
                                                                 strokeLinejoin="round"
                                                             />
                                                         </svg>
-                                                        <span>Create Account</span>
+                                                        <span>{t('navigation.create_account')}</span>
                                                     </NavLink>
                                                 </>
                                             )}

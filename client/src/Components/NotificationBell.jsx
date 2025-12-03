@@ -3,8 +3,10 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Bell } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext.jsx';
 import { useNavigate } from 'react-router-dom';
+import { useCustomTranslation } from '../hooks/useCustomTranslation';
 
 export default function NotificationBell() {
+  const { t } = useCustomTranslation();
   const { isDark } = useTheme();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -186,14 +188,14 @@ export default function NotificationBell() {
               : 'bg-white border-gray-200'
           }`}>
             <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              Notifications
+              {t('notifications.title')}
             </h3>
             {notifications.some(n => !n.read) && (
               <button
                 onClick={handleMarkAllAsRead}
                 className="text-xs text-blue-600 hover:text-blue-700 font-medium"
               >
-                Mark all as read
+                {t('notifications.mark_all_read')}
               </button>
             )}
           </div>
@@ -202,7 +204,7 @@ export default function NotificationBell() {
           <div className="divide-y divide-gray-200 dark:divide-gray-700">
             {notifications.length === 0 ? (
               <div className={`p-6 text-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                No notifications
+                {t('notifications.no_new_notifications')}
               </div>
             ) : (
               notifications.map((notification) => (
@@ -263,7 +265,7 @@ export default function NotificationBell() {
                 }}
                 className="text-xs text-blue-600 hover:text-blue-700 font-medium"
               >
-                View all notifications
+                {t('notifications.title')}
               </button>
             </div>
           )}

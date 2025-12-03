@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 
 /**
  * Stage Progression UI Component - NEW VERSION
@@ -11,6 +12,7 @@ export default function StageProgressionUI({
   onSubmitReport,
   onMessageAdmin
 }) {
+  const { t } = useCustomTranslation();
   const [stageInfo, setStageInfo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -49,7 +51,7 @@ export default function StageProgressionUI({
     return (
       <div className={`p-6 rounded-lg ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-50'}`}>
         <p className={`text-center ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-          Loading stage information...
+          {t('common.loading')}
         </p>
       </div>
     );
@@ -59,7 +61,7 @@ export default function StageProgressionUI({
     return (
       <div className={`p-6 rounded-lg ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-50'}`}>
         <p className={`text-center ${theme === 'dark' ? 'text-red-400' : 'text-red-600'}`}>
-          {error || 'No stage information available for this crop'}
+          {error || t('messages.no_data')}
         </p>
       </div>
     );
@@ -118,10 +120,10 @@ export default function StageProgressionUI({
         }`}>
           <div className="text-6xl mb-4">🎉</div>
           <h3 className={`text-2xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-            All Stages Completed!
+            {t('stage_progression.completed')}
           </h3>
           <p className={`text-sm ${theme === 'dark' ? 'text-green-200' : 'text-green-800'}`}>
-            Your crop has successfully completed all growth stages. Time to harvest!
+            {t('survey.all_surveys_completed')}
           </p>
         </div>
       )}
@@ -137,10 +139,10 @@ export default function StageProgressionUI({
             <div className="text-3xl">📋</div>
             <div>
               <h3 className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                {pendingReports.length} Pending Report{pendingReports.length !== 1 ? 's' : ''}
+                {pendingReports.length} {t('status.pending')} {t('navigation.farmer_reports')}
               </h3>
               <p className={`text-sm ${theme === 'dark' ? 'text-yellow-200' : 'text-yellow-800'}`}>
-                Scroll down to submit reports for each stage
+                {t('survey.answer_all_questions')}
               </p>
             </div>
           </div>
@@ -164,9 +166,9 @@ export default function StageProgressionUI({
             <div className="flex items-start gap-4">
               <div className="text-4xl">📊</div>
               <div className="flex-1">
-                <h3 className={`text-xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                  Previous Reports ({submittedReports.length})
-                </h3>
+              <h3 className={`text-xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                {t('navigation.farmer_reports')} ({submittedReports.length})
+              </h3>
                 <div className="space-y-2">
                   {submittedReports.map((stage) => {
                     const isLate = stage.reportStatus === 'Late';
@@ -228,12 +230,12 @@ export default function StageProgressionUI({
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2 flex-wrap">
                 <h3 className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                  Current Stage: {currentStageName}
+                  {t('stage_progression.current_stage')}: {currentStageName}
                 </h3>
                 <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                   theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'
                 }`}>
-                  Stage {currentStageIndex + 1} of {totalStages}
+                  {t('stage_progression.stage')} {currentStageIndex + 1} {t('pagination.of')} {totalStages}
                 </span>
               </div>
               {currentStageDetails.description && (
@@ -257,7 +259,7 @@ export default function StageProgressionUI({
               {/* Progress Bar */}
               <div className="mb-4">
                 <div className="flex justify-between text-xs mb-1">
-                  <span className={theme === 'dark' ? 'text-blue-200' : 'text-blue-700'}>Stage Progress</span>
+                  <span className={theme === 'dark' ? 'text-blue-200' : 'text-blue-700'}>{t('stage_progression.progress')}</span>
                   <span className={theme === 'dark' ? 'text-blue-200' : 'text-blue-700'}>{Math.round(currentStageProgress)}%</span>
                 </div>
                 <div className={`h-3 rounded-full overflow-hidden ${theme === 'dark' ? 'bg-blue-950' : 'bg-blue-200'}`}>
@@ -295,8 +297,8 @@ export default function StageProgressionUI({
                   <div className="flex items-center gap-2">
                     <span className="text-xl">⏳</span>
                     <div className="text-sm">
-                      <div className="font-semibold">Stage in progress - {daysRemaining} day{daysRemaining !== 1 ? 's' : ''} remaining</div>
-                      <div className="text-xs opacity-80">Report submission opens when stage duration completes</div>
+                      <div className="font-semibold">{t('status.in_progress')} - {daysRemaining} {t('stage_progression.days_remaining')}</div>
+                      <div className="text-xs opacity-80">{t('survey.answer_all_questions')}</div>
                     </div>
                   </div>
                 </div>
@@ -311,8 +313,8 @@ export default function StageProgressionUI({
                   <div className="flex items-center gap-2">
                     <span className="text-xl">✨</span>
                     <div className="text-sm">
-                      <div className="font-semibold">Stage duration complete!</div>
-                      <div className="text-xs opacity-80">Report will open when advancing to next stage</div>
+                      <div className="font-semibold">{t('stage_progression.completed')}</div>
+                      <div className="text-xs opacity-80">{t('survey.complete_required_fields')}</div>
                     </div>
                   </div>
                 </div>
@@ -328,7 +330,7 @@ export default function StageProgressionUI({
                       : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
                   }`}
                 >
-                  💬 Message Admin
+                  💬 {t('chat.title')}
                 </button>
               )}
             </div>
@@ -496,33 +498,33 @@ export default function StageProgressionUI({
         theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
         }`}>
         <h3 className={`text-lg font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-          📈 Overall Progress
+          📈 {t('stage_progression.progress')}
         </h3>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-green-900' : 'bg-green-50'}`}>
             <div className="text-2xl font-bold text-green-600">
               {allStages.filter(s => s.reportStatus === 'Submitted').length}
             </div>
-            <div className={`text-xs ${theme === 'dark' ? 'text-green-200' : 'text-green-700'}`}>Submitted</div>
+            <div className={`text-xs ${theme === 'dark' ? 'text-green-200' : 'text-green-700'}`}>{t('status.completed')}</div>
           </div>
           <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-yellow-900' : 'bg-yellow-50'}`}>
             <div className="text-2xl font-bold text-yellow-600">
               {allStages.filter(s => s.reportStatus === 'Pending' || s.reportStatus === 'Late').length}
             </div>
-            <div className={`text-xs ${theme === 'dark' ? 'text-yellow-200' : 'text-yellow-700'}`}>Pending</div>
+            <div className={`text-xs ${theme === 'dark' ? 'text-yellow-200' : 'text-yellow-700'}`}>{t('status.pending')}</div>
           </div>
           <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}`}>
             <div className={`text-2xl font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
               {allStages.filter(s => !s.hasReport).length}
             </div>
-            <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Upcoming</div>
+            <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{t('seminar.upcoming')}</div>
           </div>
         </div>
 
         {/* Overall completion percentage */}
         <div className="mt-4">
           <div className="flex justify-between text-sm mb-1">
-            <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>Overall Progress</span>
+            <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>{t('stage_progression.progress')}</span>
             <span className={`font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>
               {Math.round((allStages.filter(s => s.reportStatus === 'Submitted').length / totalStages) * 100)}%
             </span>

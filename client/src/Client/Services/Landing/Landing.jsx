@@ -5,6 +5,7 @@
 // eslint-disable-next-line
 import React, { useEffect, useState, useRef } from 'react'
 import { useTheme } from '../../../contexts/ThemeContext'
+import { useCustomTranslation } from '../../../hooks/useCustomTranslation'
 
 // NAVBAR
 import Navbar from '../../Components/Navbar'
@@ -23,7 +24,8 @@ import i3 from './Assets/i3.webp'
 import i4 from './Assets/i4.webp'
 
 export default function Landing() {
-    const { theme } = useTheme()
+    const { t } = useCustomTranslation();
+    const { theme } = useTheme();
     
     // Preload only first hero image immediately, lazy load others
     useEffect(() => {
@@ -1147,7 +1149,7 @@ export default function Landing() {
                                         </svg>
                                     </div>
                                     <div>
-                                        <p className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>Address</p>
+                                        <p className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>{t('footer.address')}</p>
                                         <p className={`text-sm ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>Municipal Cmpd., Municipality of Tanza, A. Soriano Hi-way, Daang Amaya I, Tanza, Philippines</p>
                                     </div>
                                 </div>
@@ -1159,7 +1161,7 @@ export default function Landing() {
                                         </svg>
                                     </div>
                                     <div>
-                                        <p className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>Email</p>
+                                        <p className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>{t('footer.email')}</p>
                                         <a href="mailto:fitstanza@gmail.com" className={`text-sm font-bold transition-colors duration-300 ${theme === 'dark' ? 'text-gray-200 hover:text-gray-100' : 'text-white hover:text-gray-200'}`}>
                                             fitstanza@gmail.com
                                         </a>
@@ -1173,7 +1175,7 @@ export default function Landing() {
                                         </svg>
                                     </div>
                                     <div>
-                                        <p className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>Phone</p>
+                                        <p className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>{t('footer.phone')}</p>
                                         <a href="tel:+63464123456" className={`text-sm transition-colors duration-300 ${theme === 'dark' ? 'text-gray-200 hover:underline' : 'text-white hover:underline'}`}>
                                             (+63) 46 412 3456
                                         </a>
@@ -1187,19 +1189,19 @@ export default function Landing() {
                             <div className="mb-6">
                                 <h4 className={`text-xl font-bold mb-4 flex items-center gap-2 ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>
                                     <div className={`w-1 h-6 rounded-full ${theme === 'dark' ? 'bg-gray-400' : 'bg-white'}`}></div>
-                                    Quick Links
+                                    {t('footer.quick_links')}
                                 </h4>
                                 <div className={`w-12 h-0.5 rounded-full ${theme === 'dark' ? 'bg-gray-400' : 'bg-white'}`}></div>
                             </div>
                             
                             <nav className="space-y-3">
                                 {[
-                                    { href: '/about', label: 'About Us' },
-                                    { href: '/seminar', label: 'Programs' },
-                                    { href: '/contact', label: 'Contact' },
-                                    { href: '/citizens-charter', label: 'Citizen\'s Charter' },
-                                    { href: '/faq', label: 'FAQ' },
-                                    { href: '/resources', label: 'Resources' }
+                                    { href: '/about', label: t('footer.about_us') },
+                                    { href: '/seminar', label: t('footer.programs') },
+                                    { href: '/contact', label: t('footer.contact') },
+                                    { href: '/citizens-charter', label: t('footer.citizens_charter') },
+                                    { href: '/faq', label: t('footer.faq') },
+                                    { href: '/resources', label: t('footer.resources') }
                                 ].map((link, index) => (
                                     <a
                                         key={index}
@@ -1219,7 +1221,7 @@ export default function Landing() {
                             <div className="mb-4">
                                 <h4 className={`text-lg font-bold mb-3 flex items-center gap-2 ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>
                                     <div className={`w-1 h-5 rounded-full ${theme === 'dark' ? 'bg-gray-400' : 'bg-white'}`}></div>
-                                    Office Hours
+                                    {t('footer.office_hours')}
                                 </h4>
                                 <div className={`w-10 h-0.5 rounded-full ${theme === 'dark' ? 'bg-gray-400' : 'bg-white'}`}></div>
                             </div>
@@ -1231,9 +1233,9 @@ export default function Landing() {
                                             <circle cx="12" cy="12" r="10"/>
                                             <polyline points="12,6 12,12 16,14"/>
                                         </svg>
-                                        <span className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>Working Days</span>
+                                        <span className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>{t('footer.working_days')}</span>
                                     </div>
-                                    <p className={`text-sm ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>Monday - Friday</p>
+                                    <p className={`text-sm ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>{t('footer.monday_friday')}</p>
                                     <p className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>8:00 AM - 5:00 PM</p>
                                 </div>
                                 

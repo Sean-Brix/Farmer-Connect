@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+import { useCustomTranslation } from '../../hooks/useCustomTranslation'
 import { useTheme } from '../../contexts/ThemeContext'
 import { Link } from 'react-router-dom'
 
 export default function Settings() {
+    const { t } = useCustomTranslation();
     const { theme, isDark, toggleTheme } = useTheme();
     const [activeTab, setActiveTab] = useState('general');
     const [profileImage, setProfileImage] = useState("https://ui-avatars.com/api/?name=User&background=6366f1&color=fff&rounded=true");
@@ -32,7 +34,7 @@ export default function Settings() {
                     <h2 className={`font-extrabold text-3xl m-0 tracking-tight text-center ${
                         isDark ? 'text-indigo-300' : 'text-indigo-900'
                     }`}>
-                        Settings
+                        {t('settings.title')}
                     </h2>
 
                     {/* Tab Navigation */}
@@ -49,7 +51,7 @@ export default function Settings() {
                                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300')
                             }`}
                         >
-                            General Settings
+                            {t('settings.general_settings')}
                         </button>
                         <button
                             onClick={() => setActiveTab('profile')}
@@ -63,7 +65,7 @@ export default function Settings() {
                                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300')
                             }`}
                         >
-                            Profile Settings
+                            {t('settings.profile_settings')}
                         </button>
                     </div>
                 </div>
@@ -85,7 +87,7 @@ export default function Settings() {
                             <label htmlFor="language-select" className={`text-base font-semibold ${
                                 isDark ? 'text-gray-200' : 'text-gray-700'
                             }`}>
-                                Language
+                                {t('settings.language')}
                             </label>
                             <select
                                 id="language-select"
@@ -96,11 +98,11 @@ export default function Settings() {
                                         : 'border-indigo-200 bg-indigo-50 text-indigo-900 focus:border-indigo-400'
                                 }`}
                             >
-                                <option value="en">English</option>
+                                <option value="en">{t('preferences.english')}</option>
                                 <option value="es">Spanish</option>
                                 <option value="fr">French</option>
                                 <option value="de">German</option>
-                                <option value="tl">Tagalog</option>
+                                <option value="tl">{t('preferences.tagalog')}</option>
                             </select>
                         </div>
 
@@ -109,7 +111,7 @@ export default function Settings() {
                             <label htmlFor="theme-select" className={`text-base font-semibold ${
                                 isDark ? 'text-gray-200' : 'text-gray-700'
                             }`}>
-                                Theme
+                                {t('settings.theme')}
                             </label>
                             <select
                                 id="theme-select"
@@ -121,9 +123,9 @@ export default function Settings() {
                                         : 'border-indigo-200 bg-indigo-50 text-indigo-900 focus:border-indigo-400'
                                 }`}
                             >
-                                <option value="light">Light</option>
-                                <option value="dark">Dark</option>
-                                <option value="system">System Default</option>
+                                <option value="light">{t('preferences.light')}</option>
+                                <option value="dark">{t('preferences.dark')}</option>
+                                <option value="system">{t('preferences.system_default')}</option>
                             </select>
                         </div>
 
@@ -139,7 +141,7 @@ export default function Settings() {
                                 <span className={`text-base font-semibold ${
                                     isDark ? 'text-gray-200' : 'text-gray-700'
                                 }`}>
-                                    Enable Notifications
+                                    {t('settings.enable_notifications')}
                                 </span>
                             </label>
                         </div>
@@ -149,7 +151,7 @@ export default function Settings() {
                             <label htmlFor="privacy-toggle" className={`text-base font-semibold ${
                                 isDark ? 'text-gray-200' : 'text-gray-700'
                             }`}>
-                                Profile Privacy
+                                {t('account.profile_privacy')}
                             </label>
                             <select
                                 id="privacy-toggle"
@@ -160,9 +162,9 @@ export default function Settings() {
                                         : 'border-indigo-200 bg-indigo-50 text-indigo-900 focus:border-indigo-400'
                                 }`}
                             >
-                                <option value="public">Public</option>
-                                <option value="private">Private</option>
-                                <option value="friends">Friends Only</option>
+                                <option value="public">{t('account.public')}</option>
+                                <option value="private">{t('account.private')}</option>
+                                <option value="friends">{t('account.friends_only')}</option>
                             </select>
                         </div>
 
@@ -171,7 +173,7 @@ export default function Settings() {
                             <label htmlFor="2fa-toggle" className={`text-base font-semibold ${
                                 isDark ? 'text-gray-200' : 'text-gray-700'
                             }`}>
-                                Two-Factor Authentication
+                                {t('account.two_factor')}
                             </label>
                             <label className="flex items-center gap-2 cursor-pointer">
                                 <input
@@ -182,7 +184,7 @@ export default function Settings() {
                                 <span className={`text-base font-medium ${
                                     isDark ? 'text-gray-200' : 'text-gray-700'
                                 }`}>
-                                    Enable 2FA for extra security
+                                    {t('account.enable_2fa')}
                                 </span>
                             </label>
                         </div>
@@ -191,7 +193,7 @@ export default function Settings() {
                         <div className="flex flex-col gap-2">
                             <label className={`text-base font-semibold ${
                                 isDark ? 'text-gray-200' : 'text-gray-700'
-                            }`}>Support</label>
+                            }`}>{t('settings.support')}</label>
                             <button
                                 className={`p-2.5 rounded-xl border font-bold text-base cursor-pointer transition-colors ${
                                     isDark 
@@ -199,7 +201,7 @@ export default function Settings() {
                                         : 'border-indigo-500 bg-white text-indigo-500 hover:bg-indigo-50 hover:text-indigo-700'
                                 }`}
                             >
-                                Contact Support
+                                {t('settings.contact_support')}
                             </button>
                         </div>
 
@@ -211,7 +213,7 @@ export default function Settings() {
                                     : 'bg-red-500 text-white hover:bg-red-600'
                             }`}
                         >
-                            Log Out
+                            {t('navigation.logout')}
                         </button>
                     </>
                 )}
@@ -272,7 +274,7 @@ export default function Settings() {
                         <div className="flex flex-col gap-4">
                             <h3 className={`text-xl font-semibold ${
                                 isDark ? 'text-gray-200' : 'text-gray-700'
-                            }`}>Personal Information</h3>
+                            }`}>{t('profile.personal_information')}</h3>
                             
                             <div className="grid gap-4 md:grid-cols-2">
                                 {/* First Name */}
@@ -280,7 +282,7 @@ export default function Settings() {
                                     <label htmlFor="first-name" className={`text-base font-semibold ${
                                         isDark ? 'text-gray-200' : 'text-gray-700'
                                     }`}>
-                                        First Name
+                                        {t('profile.first_name')}
                                     </label>
                                     <input
                                         type="text"
@@ -299,7 +301,7 @@ export default function Settings() {
                                     <label htmlFor="last-name" className={`text-base font-semibold ${
                                         isDark ? 'text-gray-200' : 'text-gray-700'
                                     }`}>
-                                        Last Name
+                                        {t('profile.last_name')}
                                     </label>
                                     <input
                                         type="text"
@@ -319,7 +321,7 @@ export default function Settings() {
                                 <label htmlFor="username" className={`text-base font-semibold ${
                                     isDark ? 'text-gray-200' : 'text-gray-700'
                                 }`}>
-                                    Username
+                                    {t('account.username')}
                                 </label>
                                 <input
                                     type="text"
@@ -338,7 +340,7 @@ export default function Settings() {
                                 <label htmlFor="profile-email" className={`text-base font-semibold ${
                                     isDark ? 'text-gray-200' : 'text-gray-700'
                                 }`}>
-                                    Email Address
+                                    {t('account.email')}
                                 </label>
                                 <input
                                     type="email"
@@ -357,7 +359,7 @@ export default function Settings() {
                                 <label htmlFor="phone" className={`text-base font-semibold ${
                                     isDark ? 'text-gray-200' : 'text-gray-700'
                                 }`}>
-                                    Phone Number
+                                    {t('account.phone')}
                                 </label>
                                 <input
                                     type="tel"
@@ -376,7 +378,7 @@ export default function Settings() {
                                 <label htmlFor="bio" className={`text-base font-semibold ${
                                     isDark ? 'text-gray-200' : 'text-gray-700'
                                 }`}>
-                                    Bio
+                                    {t('profile.bio')}
                                 </label>
                                 <textarea
                                     id="bio"
@@ -395,7 +397,7 @@ export default function Settings() {
                         <div className="flex flex-col gap-4">
                             <h3 className={`text-xl font-semibold ${
                                 isDark ? 'text-gray-200' : 'text-gray-700'
-                            }`}>Security</h3>
+                            }`}>{t('account.security')}</h3>
                             
                             <div className="flex flex-col gap-2">
                                 <label htmlFor="current-password" className={`text-base font-semibold ${
@@ -420,12 +422,12 @@ export default function Settings() {
                                     <label htmlFor="new-password" className={`text-base font-semibold ${
                                         isDark ? 'text-gray-200' : 'text-gray-700'
                                     }`}>
-                                        New Password
+                                        {t('account.new_password')}
                                     </label>
                                     <input
                                         type="password"
                                         id="new-password"
-                                        placeholder="Enter new password"
+                                        placeholder={t('account.enter_new_password')}rrent_password')}
                                         className={`p-3 rounded-xl border text-base font-medium outline-none transition-colors ${
                                             isDark 
                                                 ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-400 focus:border-indigo-400' 
@@ -438,12 +440,12 @@ export default function Settings() {
                                     <label htmlFor="confirm-password" className={`text-base font-semibold ${
                                         isDark ? 'text-gray-200' : 'text-gray-700'
                                     }`}>
-                                        Confirm Password
+                                        {t('account.confirm_password')}
                                     </label>
                                     <input
                                         type="password"
                                         id="confirm-password"
-                                        placeholder="Confirm new password"
+                                        placeholder={t('account.confirm_new_password')}
                                         className={`p-3 rounded-xl border text-base font-medium outline-none transition-colors ${
                                             isDark 
                                                 ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-400 focus:border-indigo-400' 
@@ -462,7 +464,7 @@ export default function Settings() {
                                     : 'bg-indigo-500 text-white hover:bg-indigo-600'
                             }`}
                         >
-                            Save Profile Changes
+                            {t('profile.save_profile_changes')}
                         </button>
 
                         {/* View Full Profile Link */}
@@ -474,7 +476,7 @@ export default function Settings() {
                                     : 'border-indigo-500 bg-white text-indigo-500 hover:bg-indigo-50 hover:text-indigo-700'
                             }`}
                         >
-                            View Full Profile & History
+                            {t('profile.view_full_profile')}
                         </Link>
                     </>
                 )}

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 import { useTheme } from '../../contexts/ThemeContext';
 import axios from 'axios';
 import useImageCache, { clearImageCache } from '../../hooks/useImageCache';
 
 const ProfileSettings = () => {
+  const { t } = useCustomTranslation();
   const { isDark } = useTheme();
   const [userId, setUserId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -93,7 +95,7 @@ const ProfileSettings = () => {
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
-      const error = 'Invalid file type. Only JPEG, PNG, and WebP are allowed.';
+      const error = t('errors.invalid_file_type');
       console.error('🖼️ [ProfileSettings] ✗', error);
       setUploadError(error);
       return;
@@ -101,7 +103,7 @@ const ProfileSettings = () => {
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      const error = 'File too large. Maximum size is 5MB.';
+      const error = t('errors.file_too_large');
       console.error('🖼️ [ProfileSettings] ✗', error);
       setUploadError(error);
       return;
@@ -165,12 +167,12 @@ const ProfileSettings = () => {
       setSelectedFile(null);
       setPreviewUrl(null);
       
-      alert('Profile picture updated successfully!');
+      alert(t('profile.picture_updated'));
     } catch (error) {
       const errorMsg = error.response?.data?.error || error.message;
       console.error('🖼️ [ProfileSettings] ✗ Upload failed:', errorMsg);
       setUploadError(errorMsg);
-      alert('Failed to upload picture: ' + errorMsg);
+      alert(t('errors.upload_failed') + ': ' + errorMsg);
     } finally {
       setIsUploading(false);
     }
@@ -261,11 +263,11 @@ const ProfileSettings = () => {
         console.log('💾 [ProfileSettings] ✓ Profile saved successfully:', result);
         setUserInfo({ ...tempUserInfo });
         setIsEditing(false);
-        alert('Profile updated successfully!');
+        alert(t('profile.updated_successfully'));
       } else {
         const errorData = await response.json();
         console.error('💾 [ProfileSettings] ✗ Failed to save profile:', errorData);
-        alert(`Failed to save: ${errorData.message || 'Unknown error'}`);
+        alert(`${t('errors.save_failed')}: ${errorData.message || t('errors.unknown')}`);
       }
     } catch (error) {
       console.error('💾 [ProfileSettings] ==================== ERROR ====================');
@@ -276,10 +278,11 @@ const ProfileSettings = () => {
       
       if (error.response?.data?.error) {
         setUploadError(error.response.data.error);
-        alert('Error: ' + error.response.data.error);
+        alert(`${t('errors.error')}: ${error.response.data.error}`);
+
       } else {
         setUploadError(error.message);
-        alert('Error saving profile. Please try again.');
+        alert(t('errors.save_profile_failed'));
       }
     } finally {
       setIsSaving(false);
@@ -292,7 +295,7 @@ const ProfileSettings = () => {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500 mx-auto"></div>
-          <p className="mt-4 text-gray-500">Loading profile...</p>
+          <p className="mt-4 text-gray-500">{t('common.loading_profile')}</p>
         </div>
       </div>
     );
@@ -307,13 +310,13 @@ const ProfileSettings = () => {
             className="text-2xl font-bold mb-2"
             style={{ color: isDark ? '#ffffff' : '#111827' }}
           >
-            Profile Information
+            {t('profile.profile_information')}
           </h2>
           <p 
             className="text-sm"
             style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
           >
-            {isEditing ? 'Update your profile information' : 'View and manage your profile details'}
+            {isEditing ? t('profile.update_information') : t('profile.view_details')}
           </p>
         </div>
         
@@ -323,7 +326,7 @@ const ProfileSettings = () => {
             className="flex items-center space-x-2 px-4 py-2 bg-emerald-500 text-white rounded-xl font-medium hover:bg-emerald-600 transition-colors"
           >
             <i className="fas fa-edit"></i>
-            <span>Edit Profile</span>
+            <span>{t('common.edit_profile')}</span>
           </button>
         ) : (
           <div className="flex space-x-2">
@@ -336,7 +339,7 @@ const ProfileSettings = () => {
                 backgroundColor: 'transparent'
               }}
             >
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               onClick={handleSave}
@@ -346,12 +349,12 @@ const ProfileSettings = () => {
               {isSaving ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span>Saving...</span>
+                  <span>{t('common.saving')}</span>
                 </>
               ) : (
                 <>
                   <i className="fas fa-save"></i>
-                  <span>Save Changes</span>
+                  <span>{t('common.save_changes')}</span>
                 </>
               )}
             </button>
@@ -371,7 +374,7 @@ const ProfileSettings = () => {
           className="text-lg font-semibold mb-4"
           style={{ color: isDark ? '#ffffff' : '#111827' }}
         >
-          Profile Picture
+          {t('profile.profile_picture')}
         </h3>
         <div className="space-y-4">
           <div className="flex items-center space-x-6">
@@ -422,7 +425,7 @@ const ProfileSettings = () => {
             <div className="flex items-center space-x-3">
               <div className="text-sm" style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>
                 <i className="fas fa-info-circle mr-1"></i>
-                Selected: {selectedFile.name} - Click "Save Changes" to upload
+                {t('profile.selected_file')}: {selectedFile.name} - {t('profile.click_save_upload')}
               </div>
               <button
                 onClick={() => {
@@ -438,7 +441,7 @@ const ProfileSettings = () => {
                 }}
               >
                 <i className="fas fa-times mr-1"></i>
-                Clear
+                {t('common.clear')}
               </button>
             </div>
           )}
@@ -464,7 +467,7 @@ const ProfileSettings = () => {
           className="text-lg font-semibold mb-6"
           style={{ color: isDark ? '#ffffff' : '#111827' }}
         >
-          Personal Information
+          {t('profile.personal_information')}
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -474,7 +477,7 @@ const ProfileSettings = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: isDark ? '#d1d5db' : '#374151' }}
             >
-              First Name
+              {t('profile.first_name')}
             </label>
             {isEditing ? (
               <input
@@ -497,7 +500,7 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                {userInfo.firstName || 'Not specified'}
+                {userInfo.firstName || t('common.not_specified')}
               </div>
             )}
           </div>
@@ -508,7 +511,7 @@ const ProfileSettings = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: isDark ? '#d1d5db' : '#374151' }}
             >
-              Last Name
+              {t('profile.last_name')}
             </label>
             {isEditing ? (
               <input
@@ -531,7 +534,7 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                {userInfo.lastName || 'Not specified'}
+                {userInfo.lastName || t('common.not_specified')}
               </div>
             )}
           </div>
@@ -542,7 +545,7 @@ const ProfileSettings = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: isDark ? '#d1d5db' : '#374151' }}
             >
-              Middle Name
+              {t('profile.middle_name')}
             </label>
             {isEditing ? (
               <input
@@ -565,7 +568,7 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                {userInfo.middleName || 'Not specified'}
+                {userInfo.middleName || t('common.not_specified')}
               </div>
             )}
           </div>
@@ -576,7 +579,7 @@ const ProfileSettings = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: isDark ? '#d1d5db' : '#374151' }}
             >
-              Username
+              {t('account.username')}
             </label>
             {isEditing ? (
               <input
@@ -599,7 +602,7 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                {userInfo.username || 'Not specified'}
+                {userInfo.username || t('common.not_specified')}
               </div>
             )}
           </div>
@@ -610,7 +613,7 @@ const ProfileSettings = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: isDark ? '#d1d5db' : '#374151' }}
             >
-              Email Address
+              {t('account.email')}
             </label>
             {isEditing ? (
               <input
@@ -633,7 +636,7 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                {userInfo.email || 'Not specified'}
+                {userInfo.email || t('common.not_specified')}
               </div>
             )}
           </div>
@@ -644,7 +647,7 @@ const ProfileSettings = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: isDark ? '#d1d5db' : '#374151' }}
             >
-              Phone Number
+              {t('account.phone')}
             </label>
             {isEditing ? (
               <input
@@ -667,7 +670,7 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                {userInfo.phone || 'Not specified'}
+                {userInfo.phone || t('common.not_specified')}
               </div>
             )}
           </div>
@@ -678,7 +681,7 @@ const ProfileSettings = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: isDark ? '#d1d5db' : '#374151' }}
             >
-              Gender
+              {t('profile.gender')}
             </label>
             {isEditing ? (
               <select
@@ -691,11 +694,11 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-                <option value="Prefer not to say">Prefer not to say</option>
+                <option value="">{t('profile.select_gender')}</option>
+                <option value="Male">{t('profile.male')}</option>
+                <option value="Female">{t('profile.female')}</option>
+                <option value="Other">{t('common.other')}</option>
+                <option value="Prefer not to say">{t('profile.prefer_not_say')}</option>
               </select>
             ) : (
               <div 
@@ -706,7 +709,7 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                {userInfo.gender || 'Not specified'}
+                {userInfo.gender || t('common.not_specified')}
               </div>
             )}
           </div>
@@ -717,7 +720,7 @@ const ProfileSettings = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: isDark ? '#d1d5db' : '#374151' }}
             >
-              Date of Birth
+              {t('profile.date_of_birth')}
             </label>
             {isEditing ? (
               <input
@@ -740,7 +743,7 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                {userInfo.dateOfBirth ? new Date(userInfo.dateOfBirth).toLocaleDateString() : 'Not specified'}
+                {userInfo.dateOfBirth ? new Date(userInfo.dateOfBirth).toLocaleDateString() : t('common.not_specified')}
               </div>
             )}
           </div>
@@ -751,7 +754,7 @@ const ProfileSettings = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: isDark ? '#d1d5db' : '#374151' }}
             >
-              Address
+              {t('profile.address')}
             </label>
             {isEditing ? (
               <input
@@ -764,7 +767,7 @@ const ProfileSettings = () => {
                   borderColor: isDark ? '#4b5563' : '#d1d5db',
                   color: isDark ? '#ffffff' : '#111827'
                 }}
-                placeholder="Enter your full address"
+                placeholder={t('profile.enter_address')}
               />
             ) : (
               <div 
@@ -775,7 +778,7 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                {userInfo.address || 'Not specified'}
+                {userInfo.address || t('common.not_specified')}
               </div>
             )}
           </div>
@@ -786,7 +789,7 @@ const ProfileSettings = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: isDark ? '#d1d5db' : '#374151' }}
             >
-              Bio
+              {t('profile.bio')}
             </label>
             {isEditing ? (
               <textarea
@@ -799,7 +802,7 @@ const ProfileSettings = () => {
                   borderColor: isDark ? '#4b5563' : '#d1d5db',
                   color: isDark ? '#ffffff' : '#111827'
                 }}
-                placeholder="Tell us about yourself..."
+                placeholder={t('profile.bio_placeholder')}
               />
             ) : (
               <div 
@@ -810,7 +813,7 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                {userInfo.bio || 'No bio available'}
+                {userInfo.bio || t('profile.no_bio')}
               </div>
             )}
           </div>
@@ -829,7 +832,7 @@ const ProfileSettings = () => {
           className="text-lg font-semibold mb-6"
           style={{ color: isDark ? '#ffffff' : '#111827' }}
         >
-          Professional Information
+          {t('profile.professional_information')}
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -839,7 +842,7 @@ const ProfileSettings = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: isDark ? '#d1d5db' : '#374151' }}
             >
-              Position/Title
+              {t('profile.position')}
             </label>
             {isEditing ? (
               <input
@@ -852,7 +855,7 @@ const ProfileSettings = () => {
                   borderColor: isDark ? '#4b5563' : '#d1d5db',
                   color: isDark ? '#ffffff' : '#111827'
                 }}
-                placeholder="e.g., Farmer, Agricultural Officer"
+                placeholder={t('profile.position_placeholder')}
               />
             ) : (
               <div 
@@ -863,7 +866,7 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                {userInfo.position || 'Not specified'}
+                {userInfo.position || t('common.not_specified')}
               </div>
             )}
           </div>
@@ -874,7 +877,7 @@ const ProfileSettings = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: isDark ? '#d1d5db' : '#374151' }}
             >
-              Occupation
+              {t('profile.occupation')}
             </label>
             {isEditing ? (
               <input
@@ -887,7 +890,7 @@ const ProfileSettings = () => {
                   borderColor: isDark ? '#4b5563' : '#d1d5db',
                   color: isDark ? '#ffffff' : '#111827'
                 }}
-                placeholder="e.g., Rice Farmer, Vegetable Grower"
+                placeholder={t('profile.occupation_placeholder')}
               />
             ) : (
               <div 
@@ -898,7 +901,7 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                {userInfo.occupation || 'Not specified'}
+                {userInfo.occupation || t('common.not_specified')}
               </div>
             )}
           </div>
@@ -909,7 +912,7 @@ const ProfileSettings = () => {
               className="block text-sm font-medium mb-2"
               style={{ color: isDark ? '#d1d5db' : '#374151' }}
             >
-              Civil Status
+              {t('profile.civil_status')}
             </label>
             {isEditing ? (
               <select
@@ -922,12 +925,12 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                <option value="">Select Status</option>
-                <option value="Single">Single</option>
-                <option value="Married">Married</option>
-                <option value="Widowed">Widowed</option>
-                <option value="Divorced">Divorced</option>
-                <option value="Separated">Separated</option>
+                <option value="">{t('profile.select_status')}</option>
+                <option value="Single">{t('profile.single')}</option>
+                <option value="Married">{t('profile.married')}</option>
+                <option value="Widowed">{t('profile.widowed')}</option>
+                <option value="Divorced">{t('profile.divorced')}</option>
+                <option value="Separated">{t('profile.separated')}</option>
               </select>
             ) : (
               <div 
@@ -938,7 +941,7 @@ const ProfileSettings = () => {
                   color: isDark ? '#ffffff' : '#111827'
                 }}
               >
-                {userInfo.civilStatus || 'Not specified'}
+                {userInfo.civilStatus || t('common.not_specified')}
               </div>
             )}
           </div>

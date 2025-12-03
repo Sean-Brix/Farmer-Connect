@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 
 /**
  * ConfirmationModal Component
@@ -21,17 +22,21 @@ const ConfirmationModal = ({
     isOpen,
     onClose,
     onConfirm,
-    title = 'Confirm Action',
+    title,
     action = 'approve',
     request,
     requireReason = false,
     isDark = false,
     isLoading = false,
 }) => {
+    const { t } = useCustomTranslation();
     const [reason, setReason] = useState('');
     const [localLoading, setLocalLoading] = useState(false);
     const modalRef = useRef(null);
     const reasonInputRef = useRef(null);
+
+    // Default title if not provided
+    const modalTitle = title || t('modal.confirm_action');
 
     // Action configuration
     const actionConfig = {
@@ -40,24 +45,24 @@ const ConfirmationModal = ({
             color: '#16a34a',
             bgColor: '#dcfce7',
             gradient: 'linear-gradient(135deg, #16a34a 0%, #15803d 100%)',
-            label: 'Approve',
-            statusLabel: 'Approved',
+            label: t('common.approve'),
+            statusLabel: t('status.approved'),
         },
         reject: {
             icon: 'fa-times-circle',
             color: '#dc2626',
             bgColor: '#fee2e2',
             gradient: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
-            label: 'Reject',
-            statusLabel: 'Rejected',
+            label: t('common.reject'),
+            statusLabel: t('status.rejected'),
         },
         cancel: {
             icon: 'fa-ban',
             color: '#d97706',
             bgColor: '#fef3c7',
             gradient: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
-            label: 'Cancel',
-            statusLabel: 'Cancelled',
+            label: t('common.cancel'),
+            statusLabel: t('status.cancelled'),
         },
         pickup: {
             icon: 'fa-hand-holding',
@@ -448,14 +453,14 @@ const ConfirmationModal = ({
                                     marginBottom: '0.5rem',
                                 }}
                             >
-                                Reason {requireReason && <span style={{ color: '#dc2626' }}>*</span>}
+                                {t('distribution.notes')} {requireReason && <span style={{ color: '#dc2626' }}>*</span>}
                             </label>
                             <textarea
                                 ref={reasonInputRef}
                                 value={reason}
                                 onChange={(e) => setReason(e.target.value)}
                                 onKeyDown={handleReasonKeyDown}
-                                placeholder="Please provide a reason for this action..."
+                                placeholder={t('distribution.describe_purpose')}
                                 disabled={loading}
                                 rows={3}
                                 style={{
@@ -549,7 +554,7 @@ const ConfirmationModal = ({
                             {loading ? (
                                 <>
                                     <i className="fas fa-spinner fa-spin" />
-                                    Processing...
+                                    {t('common.processing')}
                                 </>
                             ) : (
                                 <>

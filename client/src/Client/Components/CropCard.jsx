@@ -1,10 +1,12 @@
 import React from 'react';
+import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 
 /**
  * Crop Card Component for Active and Archived Crops
  * Displays crop information in a card format
  */
 export default function CropCard({ crop, theme, onViewDetails, weatherData, isArchived = false }) {
+  const { t } = useCustomTranslation();
   const calculateProgress = () => {
     if (!crop.plantingDate || !crop.expectedHarvest) return 0;
     const planted = new Date(crop.plantingDate);
@@ -68,7 +70,7 @@ export default function CropCard({ crop, theme, onViewDetails, weatherData, isAr
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
             <p className={`text-xs font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-              Planting Date
+              {t('crop_card.planting_date')}
             </p>
             <p className={`text-sm font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
               {new Date(crop.plantingDate).toLocaleDateString()}
@@ -76,7 +78,7 @@ export default function CropCard({ crop, theme, onViewDetails, weatherData, isAr
           </div>
           <div>
             <p className={`text-xs font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-              Expected Harvest
+              {t('crop_card.planting_date').replace('Planting', 'Expected Harvest')}
             </p>
             <p className={`text-sm font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
               {new Date(crop.expectedHarvest).toLocaleDateString()}
@@ -84,7 +86,7 @@ export default function CropCard({ crop, theme, onViewDetails, weatherData, isAr
           </div>
           <div>
             <p className={`text-xs font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-              Area Planted
+              {t('form.address').replace('Address', 'Area Planted')}
             </p>
             <p className={`text-sm font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
               {crop.area} hectares
@@ -92,7 +94,7 @@ export default function CropCard({ crop, theme, onViewDetails, weatherData, isAr
           </div>
           <div>
             <p className={`text-xs font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-              Expected Yield
+              {t('form.address').replace('Address', 'Expected Yield')}
             </p>
             <p className={`text-sm font-bold text-green-600`}>
               {crop.expectedYield} kg
@@ -105,7 +107,7 @@ export default function CropCard({ crop, theme, onViewDetails, weatherData, isAr
           <div className="mb-4">
             <div className="flex justify-between items-center mb-2">
               <span className={`text-xs font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                Growth Progress
+                {t('stage_progression.progress')}
               </span>
               <span className={`text-xs font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                 {Math.round(progress)}%
@@ -123,7 +125,7 @@ export default function CropCard({ crop, theme, onViewDetails, weatherData, isAr
         {/* Current Stage */}
         <div className="mb-4">
           <p className={`text-xs font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} mb-1`}>
-            Current Stage
+            {t('stage_progression.current_stage')}
           </p>
           <div className="flex items-center gap-2">
             <span className={`px-3 py-1 rounded-lg text-sm font-semibold ${
@@ -143,7 +145,7 @@ export default function CropCard({ crop, theme, onViewDetails, weatherData, isAr
         {!isArchived && weatherData?.current && (
           <div className={`p-3 rounded-lg mb-4 ${theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-50'}`}>
             <p className={`text-xs font-semibold ${theme === 'dark' ? 'text-blue-300' : 'text-blue-700'} mb-2`}>
-              🌤️ Current Weather
+              🌤️ {t('common.info').replace('Information', 'Current Weather')}
             </p>
             <div className="flex items-center justify-between text-sm">
               <span className={theme === 'dark' ? 'text-blue-200' : 'text-blue-900'}>
@@ -187,7 +189,7 @@ export default function CropCard({ crop, theme, onViewDetails, weatherData, isAr
               : 'bg-green-600 text-white hover:bg-green-700 shadow-lg hover:shadow-xl'
           }`}
         >
-          {isArchived ? '📂 View Archive Details' : '📊 View Details & Reports'}
+          {isArchived ? `📂 ${t('crop_card.view_details')}` : `📊 ${t('crop_card.view_details')}`}
         </button>
       </div>
     </div>

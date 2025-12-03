@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useCustomTranslation } from '../../../hooks/useCustomTranslation';
 import { useTheme } from '../../../contexts/ThemeContext';
 import Info_Block from './Info_Block';
 
 export default function AccountProfile({ admin_navigate }) {
+    const { t } = useCustomTranslation();
     const { theme } = useTheme();
     // Simplified schema - only 13 fields
     const [user, setUser] = useState({
@@ -47,7 +49,7 @@ export default function AccountProfile({ admin_navigate }) {
             <div className="relative mt-20 sm:mt-30  md:mt-30">
                 <hr className="border-gray-300 dark:border-gray-600" />
                 <span className="absolute left-1/8 -translate-x-1/4 -top-5 bg-white dark:bg-gray-800 rounded-lg px-4 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-                    Account Settings
+                    {t('settings.account_settings')}
                 </span>
             </div>
 

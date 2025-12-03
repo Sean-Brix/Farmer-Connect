@@ -1,11 +1,13 @@
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 import i1 from '../Assets/people.webp';
 import ebg from '../Assets/elementbg.webp';
 import logo from '../../Assets/Logo.png';
 
 export default function ForgotPassword() {
+    const { t } = useCustomTranslation();
     const { theme, isDark } = useTheme();
     const navigate = useNavigate();
     const email = useRef(null);
@@ -58,7 +60,7 @@ export default function ForgotPassword() {
                         <img src={logo} alt="FITS Tanza Logo" className="h-12 w-12 rounded-full mb-3 shadow-xl  z-30 relative mt-5" />
                         <h1 className={`font-extrabold text-3xl md:text-4xl tracking-tight mb-1 text-center drop-shadow font-sans uppercase ${isDark ? 'text-green-400' : 'text-green-700'}`} style={{letterSpacing: '0.04em'}}>FITS - Tanza</h1>
                         <span className={`text-sm md:text-sm font-semibold tracking-wide mb-2 text-center ${isDark ? 'text-green-300' : 'text-green-600'}`} style={{textShadow: '0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.07)'}}>Municipal Agriculture Office</span>
-                        <span className={`text-base md:text-lg text-center ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>Enter your registered email address below and we'll send you a link to reset your password.</span>
+                        <span className={`text-base md:text-lg text-center ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>{t('auth.enter_email')}</span>
                     </div>
                     <form
                         className="space-y-6 w-full max-w-md mx-auto"
@@ -84,7 +86,7 @@ export default function ForgotPassword() {
                         }}
                     >
                         <div>
-                            <label htmlFor="email" className={`block text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Email</label>
+                            <label htmlFor="email" className={`block text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>{t('auth.email')}</label>
                             <input
                                 type="email"
                                 id="email"
@@ -100,11 +102,11 @@ export default function ForgotPassword() {
                             disabled={loading}
                             className="w-full py-3 mt-4 mb-6 text-white bg-green-600 rounded-lg font-semibold shadow hover:bg-green-700 transition disabled:opacity-60"
                         >
-                            {loading ? 'Sending...' : 'Send Reset Link'}
+                            {loading ? t('common.processing') : t('auth.send_reset_link')}
                         </button>
                         <p className={`mt-6 text-center text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                            Remembered your password?{' '}
-                            <Link to="/login" className="text-green-600 hover:underline">Sign in</Link>
+                            {t('auth.dont_have_account').replace('Don\'t have an account?', 'Remembered your password?')}{' '}
+                            <Link to="/login" className="text-green-600 hover:underline">{t('auth.sign_in')}</Link>
                         </p>
                     </form>
                 </div>

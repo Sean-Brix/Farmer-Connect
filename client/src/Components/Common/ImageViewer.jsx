@@ -1,7 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 
 // Lightweight image viewer with zoom, pan, and download
 export default function ImageViewer({ open, onClose, src, filename }) {
+  const { t } = useCustomTranslation();
   const containerRef = useRef(null);
   const imgRef = useRef(null);
   const [scale, setScale] = useState(1);
@@ -49,9 +51,9 @@ export default function ImageViewer({ open, onClose, src, filename }) {
       <div className="flex items-center justify-between p-3 text-white bg-black/40">
         <div className="font-medium truncate max-w-[60%]">{filename || 'Image'}</div>
         <div className="flex items-center gap-2">
-          <a href={src} download={filename || 'image'} className="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded text-sm">Download</a>
-          <button onClick={reset} className="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded text-sm">Reset</button>
-          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded" aria-label="Close">
+          <a href={src} download={filename || 'image'} className="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded text-sm">{t('image_viewer.download')}</a>
+          <button onClick={reset} className="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded text-sm">{t('common.refresh')}</button>
+          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded" aria-label={t('image_viewer.close')}>
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
         </div>

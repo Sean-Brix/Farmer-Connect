@@ -1,13 +1,19 @@
 import React from 'react';
 import './HourglassLoader.css';
+import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 
-const HourglassLoader = ({ size = 'medium', text = 'Loading...' }) => {
+const HourglassLoader = ({ size = 'medium', text }) => {
+  const { t } = useCustomTranslation();
+  
   // Size variants
   const sizeClasses = {
     small: 'w-16 h-16',
     medium: 'w-20 h-20', 
     large: 'w-24 h-24'
   };
+
+  // Default text to localized version
+  const displayText = text !== undefined ? text : t('common.loading');
 
   return (
     <div className="flex flex-col items-center space-y-3">
@@ -44,9 +50,9 @@ const HourglassLoader = ({ size = 'medium', text = 'Loading...' }) => {
           </g>
         </svg>
       </div>
-      {text && (
+      {displayText && (
         <span className="text-sm font-medium text-white">
-          {text}
+          {displayText}
         </span>
       )}
     </div>

@@ -2,6 +2,7 @@
  * ChatHeader - Header section of chat modal
  */
 import React from 'react';
+import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 
 export default function ChatHeader({ 
     theme, 
@@ -11,6 +12,8 @@ export default function ChatHeader({
     onToggleSidebar, 
     onClose 
 }) {
+    const { t } = useCustomTranslation();
+    
     return (
         <div className={`flex items-center justify-between px-6 py-4 border-b ${
             theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
@@ -21,11 +24,11 @@ export default function ChatHeader({
                     <h2 className={`text-lg font-semibold ${
                         theme === 'dark' ? 'text-white' : 'text-gray-900'
                     }`}>
-                        {chatMode === 'bot' ? 'FAQ Assistant' : 'Live Support'}
+                        {chatMode === 'bot' ? t('chat.faq_assistant') : t('chat.live_support')}
                     </h2>
                     {chatMode === 'agent' && activeInquiry && (
                         <p className="text-sm text-gray-500">
-                            Inquiry #{activeInquiry.id} • {activeInquiry.status}
+                            {t('chat.inquiry')} #{activeInquiry.id} • {activeInquiry.status}
                         </p>
                     )}
                 </div>
@@ -39,7 +42,7 @@ export default function ChatHeader({
                                 ? 'hover:bg-gray-700 text-gray-300' 
                                 : 'hover:bg-gray-100 text-gray-700'
                         }`}
-                        title="Inquiry History"
+                        title={t('chat.inquiry_history')}
                     >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />

@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext.jsx';
-
+import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 
 // COMPONENTS
 import logo from '../../Assets/Logo.png';
@@ -10,6 +10,7 @@ import pipol from '../Assets/pinoy.webp';
 
 
 export default function Login() {
+    const { t } = useCustomTranslation();
     const { theme } = useTheme();
     const navigate = useNavigate();
     const username = useRef(null);
@@ -113,7 +114,7 @@ export default function Login() {
                         }`} style={{textShadow: '0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.07)'}}>Municipal Agriculture Office</span>
                         <span className={`text-base md:text-lg text-center ${
                             theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
-                        }`}>Sign in to your account</span>
+                        }`}>{t('auth.sign_in')}</span>
                     </div>
                     <form
                         className="space-y-6 w-full max-w-md mx-auto"
@@ -184,7 +185,7 @@ export default function Login() {
                         <div>
                             <label htmlFor="username" className={`block text-sm font-medium ${
                                 theme === 'dark' ? 'text-gray-200' : 'text-gray-700'
-                            }`}>Username</label>
+                            }`}>{t('auth.username')}</label>
                             <input
                                 type="text"
                                 id="username"
@@ -202,7 +203,7 @@ export default function Login() {
                         <div>
                             <label htmlFor="password" className={`block text-sm font-medium ${
                                 theme === 'dark' ? 'text-gray-200' : 'text-gray-700'
-                            }`}>Password</label>
+                            }`}>{t('auth.password')}</label>
                             <div className="relative">
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -246,9 +247,9 @@ export default function Login() {
                                     onChange={(e) => handleRememberMeChange(e.target.checked)}
                                     className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                                 />
-                                <span className="ml-2 text-sm text-gray-600">Remember me</span>
+                                <span className="ml-2 text-sm text-gray-600">{t('auth.remember_me')}</span>
                             </label>
-                            <Link to="/forgot-password" className="text-sm text-green-600 hover:underline">Forgot password?</Link>
+                            <Link to="/forgot-password" className="text-sm text-green-600 hover:underline">{t('auth.forgot_password')}</Link>
                         </div>
                         <button 
                             type="submit" 
@@ -265,7 +266,7 @@ export default function Login() {
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
                             )}
-                            <span>{isLoading ? 'Signing In...' : 'Sign In'}</span>
+                            <span>{isLoading ? t('common.processing') : t('auth.sign_in')}</span>
                         </button>
                         {/* <div className="flex items-center gap-2  w-full">
                             <span className="flex-grow border-t border-gray-300"></span>

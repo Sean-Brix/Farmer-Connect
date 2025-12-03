@@ -2,6 +2,7 @@
  * MessageList - Displays chat messages
  */
 import React, { useState } from 'react';
+import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 import BotCategoryButtons from './BotCategoryButtons.jsx';
 import BotFAQList from './BotFAQList.jsx';
 import ImagePreview from './ImagePreview.jsx';
@@ -22,6 +23,7 @@ export default function MessageList({
     onEscalate,
     messagesEndRef
 }) {
+    const { t } = useCustomTranslation();
     const [imagePreview, setImagePreview] = useState({ open: false, src: '', filename: '' });
     const [surveyModal, setSurveyModal] = useState({ open: false, surveyId: null, title: '' });
     
@@ -74,14 +76,14 @@ export default function MessageList({
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                         </svg>
-                                        {surveyData.title || 'Open Survey Form'}
+                                        {surveyData.title || t('chat.open_survey')}
                                     </button>
                                 ) : (
                                     <>
                                         {msg.text && msg.text.trim() && (
                                             <>
                                                 {msg.text}
-                                                {msg.pending && <span className="ml-2 text-xs opacity-70">Sending...</span>}
+                                                {msg.pending && <span className="ml-2 text-xs opacity-70">{t('chat.sending')}</span>}
                                             </>
                                         )}
                                     </>
