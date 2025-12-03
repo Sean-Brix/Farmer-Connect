@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../../contexts/ThemeContext';
 import AddItemModal from './addItem';
+import { InventoryTableSkeleton, PageHeaderSkeleton, FilterBarSkeleton } from '../../../Components/Skeletons/ServiceSkeletons';
 
 const categories = [
     'Farming Equipment',
@@ -22,6 +23,7 @@ const statuses = ['Available', 'Unavailable', 'Damaged', 'EIC', 'Distributed'];
 function Content() {
     const { isDark } = useTheme();
     const [items, setItems] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [expandedStacks, setExpandedStacks] = useState(new Set());
     const [showModal, setShowModal] = useState(false);
     const [search, setSearch] = useState('');
@@ -86,7 +88,11 @@ function Content() {
     const fetchItems = async () => {
         try {
             console.log('📦 [Inventory] Fetching items from API...');
-            const response = await fetch('/api/inventory/all/items');
+            const response = await fetch('/api/inventory/all/items', {
+                headers: {
+                    'Cache-Control': 'max-age=300' // 5 minutes cache
+                }
+            });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -100,6 +106,8 @@ function Content() {
         } catch (error) {
             console.error('❌ [Inventory] Failed to fetch inventory:', error);
             setItems([]);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -877,6 +885,19 @@ function Content() {
             padding: 'px-6 py-3'
         }
     };
+
+    // Show skeleton loader during initial load
+    if (isLoading) {
+        return (
+            <div className={`min-h-screen ${isDark ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-white'}`}>
+                <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-6 sm:pb-8">
+                    <PageHeaderSkeleton />
+                    <FilterBarSkeleton />
+                    <InventoryTableSkeleton />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={`min-h-screen overflow-x-hidden ${isDark ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-white'}`}>

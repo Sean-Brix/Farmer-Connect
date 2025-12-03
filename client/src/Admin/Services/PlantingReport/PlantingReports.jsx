@@ -245,7 +245,7 @@ const PlantingReports = () => {
                             title="Manage Varieties & Seasons"
                         >
                             <Settings size={20} />
-                            <span>Settings</span>
+                            <span>Configuration</span>
                         </button>
                         <button
                             onClick={handleCreateReport}

@@ -126,19 +126,6 @@ export default function RequestCalendar({ source = 'standalone' }) {
     <div className={`p-6 ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Calendar className="w-7 h-7" />
-            Pickup Schedule Calendar
-          </h1>
-          
-          <button
-            onClick={goToToday}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-          >
-            Today
-          </button>
-        </div>
 
         {/* Filters */}
         <div className="flex flex-wrap gap-3 items-center">

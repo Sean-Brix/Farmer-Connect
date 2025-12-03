@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTheme } from '../../../contexts/ThemeContext';
+import { ProgramListSkeleton, PageHeaderSkeleton, FilterBarSkeleton } from '../../../Components/Skeletons/ServiceSkeletons';
 
 import default_seminar_pic from '../../../Assets/default_seminar_pic.jpg';
 
@@ -446,7 +447,18 @@ export default function Seminar() {
     const totalPages = programList? Math.ceil(programList.length / itemsPerPage): 0;
     const paginatedPrograms = programList? programList.slice((currentPage - 1) * itemsPerPage,currentPage * itemsPerPage): [];
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) {
+        return (
+            <div className={`min-h-screen pt-30 pb-8 px-2 md:px-6 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
+                <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8">
+                    <PageHeaderSkeleton />
+                    <FilterBarSkeleton />
+                    <ProgramListSkeleton count={6} />
+                </div>
+            </div>
+        );
+    }
+    
     if (error) return <div>Error: {error.message}</div>;
 
     return (

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../../contexts/ThemeContext';
 import Navbar from '../../Components/Navbar';
 import { isBefore, startOfDay, addYears } from 'date-fns';
+import { CardGridSkeleton, PageHeaderSkeleton, FilterBarSkeleton } from '../../../Components/Skeletons/ServiceSkeletons';
 
 // ASSETS
 import default_image from './Assets/default_image.webp';
@@ -13,6 +14,7 @@ export default function Distribution() {
     const { theme, isDark } = useTheme();
     const navigate = useNavigate();
     const [distributionItems, setDistributionItems] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [filter, setFilter] = useState('All');
     const [search, setSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -48,7 +50,11 @@ export default function Distribution() {
     useEffect(() => {
         const fetchDistributionItems = async () => {
             try {
-                const response = await fetch('/api/dist/all');
+                const response = await fetch('/api/dist/all', {
+                    headers: {
+                        'Cache-Control': 'max-age=300' // 5 minutes cache
+                    }
+                });
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -85,6 +91,8 @@ export default function Distribution() {
             } catch (error) {
                 console.error('Failed to fetch distribution items:', error);
                 setDistributionItems([]);
+            } finally {
+                setIsLoading(false);
             }
         };
 
@@ -1171,6 +1179,26 @@ export default function Distribution() {
             }, 5000);
         }
     };
+
+    // Show skeleton during loading
+    if (isLoading) {
+        return (
+            <>
+                <Navbar />
+                <div className={`flex min-h-screen relative ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
+                    <main className="flex-1 w-full relative z-10 mt-30">
+                        <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-[8vh]">
+                            <div className="w-full max-w-5xl mx-auto">
+                                <PageHeaderSkeleton />
+                                <FilterBarSkeleton />
+                                <CardGridSkeleton count={8} columns={4} />
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </>
+        );
+    }
 
     return (
         <>

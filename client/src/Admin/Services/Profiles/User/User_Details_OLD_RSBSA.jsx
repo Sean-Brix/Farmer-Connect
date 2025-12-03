@@ -587,7 +587,6 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                     {renderField('Access Level', userDetail?.access, 'access', 'select', [
                                         { value: 'User', label: 'User' },
                                         { value: 'Admin', label: 'Admin' },
-                                        { value: 'Super_Admin', label: 'Super Admin' }
                                     ])}
                                     <div className="space-y-2">
                                         <label className={`block text-xs font-medium ${
@@ -951,7 +950,6 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                         {renderField('Access Level', editedUser?.access, 'access', 'select', [
                                             { value: 'User', label: 'User' },
                                             { value: 'Admin', label: 'Admin' },
-                                            { value: 'Super_Admin', label: 'Super Admin' }
                                         ])}
                                         <div className="space-y-2">
                                             <label className={`block text-sm font-medium ${

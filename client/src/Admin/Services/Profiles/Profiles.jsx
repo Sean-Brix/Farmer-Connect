@@ -63,8 +63,8 @@ export default function Profiles({ details }) {
         setPage(1);
     }, [filter.roles, filter.client_profile, filter.order, debouncedSearch, itemsPerPage]);
 
-    // Extract data
-    const userList = data?.list || [];
+    // Extract data and filter out Super Admin accounts
+    const userList = (data?.list || []).filter(user => user.access !== 'Super Admin');
     const pagination = data?.pagination || { total: 0, totalPages: 0 };
     const totalPages = pagination.totalPages;
 
@@ -114,7 +114,6 @@ export default function Profiles({ details }) {
                                     >
                                         <option value="none">All Roles</option>
                                         <option value="Admin">Admin</option>
-                                        <option value="Super Admin">Super Admin</option>
                                         <option value="User">User</option>
                                     </select>
                                     <span className="pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">
@@ -494,6 +493,7 @@ export default function Profiles({ details }) {
                     setShowRegisterModal(false);
                 }}
                 isDark={isDark}
+                currentUserRole={details?.access}
             />
         </div>
     );

@@ -107,7 +107,39 @@ export default function User_Details({ user, isEdit, refetchRow}) {
         },
     });
 
+    const calculateAge = (dateOfBirth) => {
+        if (!dateOfBirth) return null;
+        const today = new Date();
+        const birthDate = new Date(dateOfBirth);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    };
+
     const handleChange = (key, value) => {
+        // Input filtering for name fields
+        if (['firstName', 'middleName', 'surname', 'extensionName'].includes(key)) {
+            // Only allow letters, spaces, periods, and hyphens
+            if (value && !/^[a-zA-Z\s.-]*$/.test(value)) {
+                return; // Don't update if invalid characters
+            }
+        }
+
+        // Input filtering for contact number
+        if (key === 'contactNumber') {
+            // Only allow digits
+            if (value && !/^\d*$/.test(value)) {
+                return; // Don't update if non-numeric
+            }
+            // Limit to 11 digits
+            if (value && value.length > 11) {
+                return;
+            }
+        }
+
         setEditedUser(prev => ({
             ...prev,
             [key]: value,
@@ -115,6 +147,31 @@ export default function User_Details({ user, isEdit, refetchRow}) {
     };
 
     const handleSave = async () => {
+        // Validate contact number if provided
+        if (editedUser.contactNumber) {
+            if (editedUser.contactNumber.length !== 11) {
+                setErrorModal({ open: true, message: 'Contact number must be exactly 11 digits' });
+                return;
+            }
+            if (!/^\d{11}$/.test(editedUser.contactNumber)) {
+                setErrorModal({ open: true, message: 'Contact number must contain only numbers' });
+                return;
+            }
+            if (!editedUser.contactNumber.startsWith('09')) {
+                setErrorModal({ open: true, message: 'Contact number must start with 09' });
+                return;
+            }
+        }
+
+        // Validate date of birth (must be at least 15 years old)
+        if (editedUser.dateOfBirth) {
+            const age = calculateAge(editedUser.dateOfBirth);
+            if (age !== null && age < 15) {
+                setErrorModal({ open: true, message: 'User must be at least 15 years old' });
+                return;
+            }
+        }
+
         setConfirmModal({
             open: true,
             onConfirm: async () => {
@@ -163,6 +220,27 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                     </div>
                 );
             } else {
+                // Get validation attributes based on field
+                let pattern, title, maxLength, inputMode, max;
+                
+                if (['firstName', 'middleName', 'surname', 'extensionName'].includes(fieldName)) {
+                    pattern = '[a-zA-Z\\s.-]+';
+                    title = `${label} can only contain letters, spaces, periods, and hyphens`;
+                }
+                
+                if (fieldName === 'contactNumber') {
+                    pattern = '09[0-9]{9}';
+                    maxLength = '11';
+                    inputMode = 'numeric';
+                    title = 'Contact number must be exactly 11 digits starting with 09';
+                }
+                
+                if (fieldName === 'dateOfBirth') {
+                    const today = new Date();
+                    const maxDate = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate());
+                    max = maxDate.toISOString().split('T')[0];
+                }
+                
                 return (
                     <div className="space-y-2">
                         <label className={`block text-xs font-medium ${
@@ -172,6 +250,11 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             type={type}
                             value={editValue || ''}
                             onChange={(e) => handleChange(fieldName, e.target.value)}
+                            pattern={pattern}
+                            title={title}
+                            maxLength={maxLength}
+                            inputMode={inputMode}
+                            max={max}
                             className={`w-full border px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition ${
                                 isDark 
                                     ? 'bg-gray-700 border-gray-600 text-white' 
@@ -179,6 +262,13 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             }`}
                             autoComplete="off"
                         />
+                        {fieldName === 'dateOfBirth' && editValue && (
+                            <p className={`text-xs mt-1 ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`}>
+                                Age: {calculateAge(editValue)} years old
+                            </p>
+                        )}
                     </div>
                 );
             }
@@ -500,7 +590,6 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                         {renderField('Access Level', editedUser?.access, 'access', 'select', [
                                             { value: 'User', label: 'User' },
                                             { value: 'Admin', label: 'Admin' },
-                                            { value: 'Super Admin', label: 'Super Admin' }
                                         ])}
                                         <div className="space-y-2">
                                             <label className={`block text-xs font-medium ${

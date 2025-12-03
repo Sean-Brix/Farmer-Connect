@@ -23,6 +23,19 @@ export default function Account() {
 
     const queryClient = useQueryClient();
 
+    // Calculate age from date of birth
+    const calculateAge = (dateOfBirth) => {
+        if (!dateOfBirth) return null;
+        const today = new Date();
+        const birthDate = new Date(dateOfBirth);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    };
+
     const {
         data: profile,
         isLoading,
@@ -82,6 +95,27 @@ export default function Account() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        
+        // Input filtering for name fields
+        if (['firstName', 'middleName', 'surname', 'extensionName'].includes(name)) {
+            // Only allow letters, spaces, periods, and hyphens
+            if (value && !/^[a-zA-Z\s.-]*$/.test(value)) {
+                return; // Don't update if invalid characters
+            }
+        }
+
+        // Input filtering for mobile number
+        if (name === 'mobileNumber') {
+            // Only allow digits
+            if (value && !/^\d*$/.test(value)) {
+                return; // Don't update if non-numeric
+            }
+            // Limit to 11 digits
+            if (value && value.length > 11) {
+                return;
+            }
+        }
+        
         setTempProfile((prev) => ({
             ...prev,
             [name]: value,
@@ -619,6 +653,8 @@ export default function Account() {
                                                 value={tempProfile.firstName || ''}
                                                 onChange={handleChange}
                                                 disabled={!editMode}
+                                                pattern="[a-zA-Z\s.-]+"
+                                                title="First name can only contain letters, spaces, periods, and hyphens"
                                                 className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
                                                     editMode 
                                                         ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
@@ -646,6 +682,8 @@ export default function Account() {
                                                 value={tempProfile.middleName || ''}
                                                 onChange={handleChange}
                                                 disabled={!editMode}
+                                                pattern="[a-zA-Z\s.-]*"
+                                                title="Middle name can only contain letters, spaces, periods, and hyphens"
                                                 className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
                                                     editMode 
                                                         ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
@@ -673,6 +711,8 @@ export default function Account() {
                                                 value={tempProfile.surname || ''}
                                                 onChange={handleChange}
                                                 disabled={!editMode}
+                                                pattern="[a-zA-Z\s.-]+"
+                                                title="Surname can only contain letters, spaces, periods, and hyphens"
                                                 className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
                                                     editMode 
                                                         ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
@@ -750,12 +790,22 @@ export default function Account() {
                                                 value={tempProfile.dateOfBirth || ''}
                                                 onChange={handleChange}
                                                 disabled={!editMode}
+                                                max={(() => {
+                                                    const today = new Date();
+                                                    const maxDate = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate());
+                                                    return maxDate.toISOString().split('T')[0];
+                                                })()}
                                                 className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
                                                     editMode 
                                                         ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
                                                         : 'bg-gray-50 border-gray-200 text-gray-600'
                                                 }`}
                                             />
+                                            {tempProfile.dateOfBirth && (
+                                                <p className="text-sm text-gray-500">
+                                                    Age: {calculateAge(tempProfile.dateOfBirth)} years old
+                                                </p>
+                                            )}
                                         </div>
 
                                         {/* Email */}
@@ -816,6 +866,10 @@ export default function Account() {
                                                         value={tempProfile.mobileNumber || ''}
                                                         onChange={handleChange}
                                                         disabled={!editMode}
+                                                        maxLength="11"
+                                                        inputMode="numeric"
+                                                        pattern="09[0-9]{9}"
+                                                        title="Mobile number must be exactly 11 digits starting with 09"
                                                         className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
                                                             editMode 
                                                                 ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 

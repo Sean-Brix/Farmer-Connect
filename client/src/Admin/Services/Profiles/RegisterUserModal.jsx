@@ -19,16 +19,58 @@ class RegisterUserModal extends Component {
         },
         isLoading: false,
         showConfirmDialog: false,
+        alertMessage: null,
+        alertType: 'error',
     };
 
     onChange_input = (event) => {
         const { name, value } = event.target;
+        
+        // Restrict name fields to letters, spaces, and common name characters only
+        if (['firstName', 'middleName', 'surname', 'extensionName'].includes(name)) {
+            if (value && !/^[a-zA-Z\s.-]*$/.test(value)) {
+                return; // Don't update if invalid characters
+            }
+        }
+        
+        // Restrict contact number to numbers only and max 11 digits
+        if (name === 'contactNumber') {
+            if (value && !/^\d*$/.test(value)) {
+                return; // Don't update if non-numeric
+            }
+            if (value.length > 11) {
+                return; // Don't update if exceeds 11 digits
+            }
+        }
+        
         this.setState({
             inputs: {
                 ...this.state.inputs,
                 [name]: value
             }
         });
+    };
+    
+    calculateAge = (dateOfBirth) => {
+        if (!dateOfBirth) return null;
+        
+        const birthDate = new Date(dateOfBirth);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        
+        return age;
+    };
+
+    showAlert = (message, type = 'error') => {
+        this.setState({ alertMessage: message, alertType: type });
+        setTimeout(() => {
+            this.setState({ alertMessage: null });
+        }, 5000);
     };
 
     validateForm = () => {
@@ -58,39 +100,57 @@ class RegisterUserModal extends Component {
         
         if (emptyFields.length > 0) {
             console.log('Empty fields:', emptyFields);
-            alert(`Please fill in all required fields. Missing: ${emptyFields.join(', ')}`);
+            this.showAlert(`Please fill in all required fields. Missing: ${emptyFields.join(', ')}`);
             return false;
         }
 
-        // Password length validation
-        if (inputs.password.length < 6) {
-            alert('Password must be at least 6 characters long.');
+        // Password validation - must be at least 8 characters with uppercase, lowercase, and number
+        if (inputs.password.length < 8) {
+            this.showAlert('Password must be at least 8 characters long.');
+            return false;
+        }
+        
+        const hasUpperCase = /[A-Z]/.test(inputs.password);
+        const hasLowerCase = /[a-z]/.test(inputs.password);
+        const hasNumber = /[0-9]/.test(inputs.password);
+        
+        if (!hasUpperCase || !hasLowerCase || !hasNumber) {
+            this.showAlert('Password must contain at least one uppercase letter, one lowercase letter, and one number.');
             return false;
         }
 
         // Password match validation
         if (inputs.password !== inputs.confirmPass) {
-            alert('Passwords do not match.');
+            this.showAlert('Passwords do not match.');
             return false;
         }
 
-        // Contact number validation (Philippine format)
-        const contactRegex = /^09\d{9}$/;
-        if (!contactRegex.test(inputs.contactNumber)) {
-            alert('Contact number must be in format: 09XXXXXXXXX');
+        // Contact number validation - exactly 11 digits
+        if (inputs.contactNumber.length !== 11) {
+            this.showAlert('Contact number must be exactly 11 digits.');
+            return false;
+        }
+        
+        if (!/^\d{11}$/.test(inputs.contactNumber)) {
+            this.showAlert('Contact number must contain only numbers.');
+            return false;
+        }
+        
+        if (!inputs.contactNumber.startsWith('09')) {
+            this.showAlert('Contact number must start with 09.');
             return false;
         }
 
         // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(inputs.email)) {
-            alert('Please enter a valid email address.');
+            this.showAlert('Please enter a valid email address.');
             return false;
         }
 
         // Username validation (at least 3 characters)
         if (inputs.username.length < 3) {
-            alert('Username must be at least 3 characters long.');
+            this.showAlert('Username must be at least 3 characters long.');
             return false;
         }
 
@@ -102,7 +162,7 @@ class RegisterUserModal extends Component {
         const actualAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate()) ? age - 1 : age;
         
         if (actualAge < 15) {
-            alert('User must be at least 15 years old to register.');
+            this.showAlert('User must be at least 15 years old to register.');
             return false;
         }
 
@@ -154,28 +214,31 @@ class RegisterUserModal extends Component {
             const data = await response.json();
             console.log('Backend error response:', data);
             if (response.status === 400) {
-                alert(data.message || 'Please check all required fields.');
+                this.showAlert(data.message || 'Please check all required fields.', 'error');
                 return;
             }
             if (response.status === 409) {
-                alert(data.message || 'Username or email already exists.');
+                this.showAlert(data.message || 'Username or email already exists.', 'error');
                 return;
             }
             if (response.status === 401) {
-                alert('Unauthorized. Admin access required.');
+                this.showAlert('Unauthorized. Admin access required.', 'error');
                 return;
             }
             if (response.status === 500) {
-                alert('Something went wrong. Please try again later.');
+                this.showAlert('Something went wrong. Please try again later.', 'error');
                 return;
             }
             return;
         }
         
-        alert('Account registered successfully!');
-        this.resetForm();
-        this.props.onSuccess();
-        this.props.onClose();
+        this.showAlert('Account saved successfully!', 'success');
+        // Wait for alert to be visible, then close modal
+        setTimeout(() => {
+            this.resetForm();
+            this.props.onSuccess();
+            this.props.onClose();
+        }, 2000);
     };
 
     resetForm = () => {
@@ -231,13 +294,42 @@ class RegisterUserModal extends Component {
     };
 
     render() {
-        const { open, isDark } = this.props;
-        const { inputs, isLoading } = this.state;
+        const { open, isDark, currentUserRole } = this.props;
+        const { inputs, isLoading, showConfirmDialog, alertMessage, alertType } = this.state;
+        
+        // Determine available roles based on current user's role
+        // Debug: Log the current user role to verify what's being passed
+        console.log('RegisterUserModal - currentUserRole:', currentUserRole);
+        const isSuperAdmin = currentUserRole === 'Super Admin';
+        const isAdmin = currentUserRole === 'Admin';
+        console.log('RegisterUserModal - isSuperAdmin:', isSuperAdmin, 'isAdmin:', isAdmin);
         
         if (!open) return null;
 
         return (
             <React.Fragment>
+                {/* Custom Alert */}
+                {alertMessage && (
+                    <div className="fixed top-4 right-4 z-[60] transition-all duration-300 ease-in-out">
+                        <div className={`flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl border-l-4 max-w-md animate-pulse-once ${
+                            alertType === 'success'
+                                ? 'bg-green-600 border-green-400 text-white'
+                                : 'bg-red-600 border-red-400 text-white'
+                        }`}>
+                            {alertType === 'success' ? (
+                                <svg className="w-6 h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                            ) : (
+                                <svg className="w-6 h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                </svg>
+                            )}
+                            <span className="font-semibold text-sm">{alertMessage}</span>
+                        </div>
+                    </div>
+                )}
+                
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 transition-opacity p-4">
                     <div className={`backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl max-w-4xl w-full relative max-h-[95vh] flex flex-col border ${
                         isDark 
@@ -327,6 +419,8 @@ class RegisterUserModal extends Component {
                                             value={inputs.firstName}
                                             onChange={this.onChange_input} 
                                             required 
+                                            pattern="[a-zA-Z\s.-]+"
+                                            title="First name can only contain letters, spaces, periods, and hyphens"
                                             className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg font-medium ${
                                                 isDark 
                                                     ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 placeholder-gray-400 text-gray-100' 
@@ -346,7 +440,9 @@ class RegisterUserModal extends Component {
                                             id="middleName" 
                                             name="middleName" 
                                             value={inputs.middleName}
-                                            onChange={this.onChange_input} 
+                                            onChange={this.onChange_input}
+                                            pattern="[a-zA-Z\s.-]*"
+                                            title="Middle name can only contain letters, spaces, periods, and hyphens"
                                             className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg font-medium ${
                                                 isDark 
                                                     ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 placeholder-gray-400 text-gray-100' 
@@ -388,6 +484,8 @@ class RegisterUserModal extends Component {
                                             name="extensionName" 
                                             value={inputs.extensionName}
                                             onChange={this.onChange_input} 
+                                            pattern="[a-zA-Z\s.-]*"
+                                            title="Extension name can only contain letters, spaces, periods, and hyphens"
                                             className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg font-medium ${
                                                 isDark 
                                                     ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 placeholder-gray-400 text-gray-100' 
@@ -449,13 +547,24 @@ class RegisterUserModal extends Component {
                                                 value={inputs.dateOfBirth}
                                                 onChange={this.onChange_input} 
                                                 required 
-                                                max={new Date().toISOString().split('T')[0]}
+                                                max={(() => {
+                                                    const today = new Date();
+                                                    const maxDate = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate());
+                                                    return maxDate.toISOString().split('T')[0];
+                                                })()}
                                                 className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
                                                     isDark 
                                                         ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100' 
                                                         : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700'
                                                 }`}
                                             />
+                                            {inputs.dateOfBirth && (
+                                                <p className={`text-sm mt-1 ${
+                                                    isDark ? 'text-gray-400' : 'text-gray-500'
+                                                }`}>
+                                                    Age: {this.calculateAge(inputs.dateOfBirth)} years old
+                                                </p>
+                                            )}
                                         </div>
                                         <div className="space-y-2">
                                             <label htmlFor="contactNumber" className={`block text-sm font-bold tracking-wide ${
@@ -471,6 +580,9 @@ class RegisterUserModal extends Component {
                                                 onChange={this.onChange_input} 
                                                 required 
                                                 pattern="09[0-9]{9}"
+                                                maxLength="11"
+                                                inputMode="numeric"
+                                                title="Contact number must be exactly 11 digits starting with 09"
                                                 className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg font-medium ${
                                                     isDark 
                                                         ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 placeholder-gray-400 text-gray-100' 
@@ -547,7 +659,6 @@ class RegisterUserModal extends Component {
                                             >
                                                 <option value="User">User</option>
                                                 <option value="Admin">Admin</option>
-                                                <option value="Super Admin">Super Admin</option>
                                             </select>
                                         </div>
                                     </div>
@@ -638,14 +749,19 @@ class RegisterUserModal extends Component {
                                             value={inputs.password}
                                             onChange={this.onChange_input} 
                                             required 
-                                            minLength="6"
+                                            minLength="8"
                                             className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg font-medium ${
                                                 isDark 
                                                     ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 placeholder-gray-400 text-gray-100' 
                                                     : 'bg-white/80 border-gray-200 hover:border-gray-300 placeholder-gray-400 text-gray-700'
                                             }`}
-                                            placeholder="Min 6 characters"
+                                            placeholder="Min 8 characters with uppercase, lowercase, and number"
                                         />
+                                        <p className={`text-xs mt-1 ${
+                                            isDark ? 'text-gray-400' : 'text-gray-500'
+                                        }`}>
+                                            Password must be at least 8 characters with uppercase, lowercase, and a number
+                                        </p>
                                     </div>
                                     <div className="space-y-2">
                                         <label htmlFor="confirmPass" className={`block text-sm font-bold tracking-wide ${

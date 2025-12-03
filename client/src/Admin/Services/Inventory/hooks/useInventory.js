@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 
 export const useInventory = () => {
     const [items, setItems] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const [showStacksModal, setShowStacksModal] = useState(false);
     const [selectedItemStacks, setSelectedItemStacks] = useState(null);
     const [expandedStacks, setExpandedStacks] = useState(new Set());
@@ -52,9 +54,20 @@ export const useInventory = () => {
         );
     };
 
-    const fetchItems = async () => {
+    const fetchItems = async (refresh = false) => {
         try {
-            const response = await fetch('/api/inventory/all/items');
+            // Show loading only on initial load, show refreshing on subsequent fetches
+            if (refresh) {
+                setIsRefreshing(true);
+            } else {
+                setIsLoading(true);
+            }
+            
+            const response = await fetch('/api/inventory/all/items', {
+                headers: {
+                    'Cache-Control': 'max-age=300', // Cache for 5 minutes
+                }
+            });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -63,6 +76,9 @@ export const useInventory = () => {
         } catch (error) {
             console.error('Failed to fetch inventory:', error);
             setItems([]);
+        } finally {
+            setIsLoading(false);
+            setIsRefreshing(false);
         }
     };
 
@@ -88,6 +104,8 @@ export const useInventory = () => {
         // State
         items,
         setItems,
+        isLoading,
+        isRefreshing,
         showStacksModal,
         setShowStacksModal,
         selectedItemStacks,

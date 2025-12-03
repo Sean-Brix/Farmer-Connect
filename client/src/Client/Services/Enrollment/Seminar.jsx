@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTheme } from '../../../contexts/ThemeContext';
+import { ProgramListSkeleton, FilterBarSkeleton } from '../../../Components/Skeletons/ServiceSkeletons';
 
 // SUB COMPONENT
 import Navbar from '../../Components/Navbar';
@@ -414,8 +415,8 @@ export default function Seminar() {
                         {/* Seminar Cards */}
                         <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
                             {isLoading ? (
-                                <div className="col-span-full text-center text-green-300 py-16 text-lg font-semibold tracking-wide">
-                                    Loading...
+                                <div className="col-span-full">
+                                    <ProgramListSkeleton count={6} />
                                 </div>
                             ) : paginatedPrograms.length === 0 ? (
                                 <div className={`col-span-full text-center py-16 text-lg font-semibold tracking-wide ${
