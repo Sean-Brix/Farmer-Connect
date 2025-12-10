@@ -13,15 +13,6 @@ export const getSurveyResponses = async (req, res) => {
         const skip = (parseInt(page) - 1) * parseInt(limit);
         const take = parseInt(limit);
 
-
-
-        if (!surveyForm) {
-            return res.status(404).json({
-                success: false,
-                message: 'Survey form not found'
-            });
-        }
-
         // Order by clause
         const orderBy = {};
         orderBy[sortBy] = sortOrder.toLowerCase();
@@ -76,6 +67,14 @@ export const getSurveyResponses = async (req, res) => {
                 }
             })
         ]);
+
+        // Check if survey form exists
+        if (!surveyForm) {
+            return res.status(404).json({
+                success: false,
+                message: 'Survey form not found'
+            });
+        }
 
         const parseOptions = (opts) => {
             if (opts == null) return null;

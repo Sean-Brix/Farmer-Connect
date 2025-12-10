@@ -6,7 +6,6 @@ import { getSetting } from '../../Services/systemSettingsService.js';
  * Validates:
  * - Max simultaneous active borrows
  * - Max quantity per request
- * - Cooldown period after last return
  */
 async function checkBorrowLimit(req, res, next) {
   try {
@@ -23,7 +22,6 @@ async function checkBorrowLimit(req, res, next) {
     // Get system settings
     const maxSimultaneous = await getSetting('eic_max_simultaneous_borrows', 3);
     const maxQuantity = await getSetting('eic_max_quantity_per_request', 5);
-    const cooldownDays = await getSetting('eic_cooldown_days', 7);
     
     // 1. Check maximum simultaneous active borrows
     const activeBorrows = await prisma.itemTransaction.count({
@@ -58,54 +56,7 @@ async function checkBorrowLimit(req, res, next) {
       });
     }
     
-    // 3. Check cooldown period (if enabled)
-    if (cooldownDays > 0) {
-      const cooldownDate = new Date();
-      cooldownDate.setDate(cooldownDate.getDate() - cooldownDays);
-      
-      // Find most recent returned transaction
-      const recentReturn = await prisma.itemTransaction.findFirst({
-        where: {
-          accountId: userId,
-          status: { in: ['Returned', 'late_return'] },
-          updatedAt: { gte: cooldownDate }
-        },
-        orderBy: {
-          updatedAt: 'desc'
-        },
-        include: {
-          itemStack: {
-            include: {
-              item: {
-                select: {
-                  name: true
-                }
-              }
-            }
-          }
-        }
-      });
-      
-      if (recentReturn) {
-        const daysSinceReturn = Math.floor(
-          (new Date() - new Date(recentReturn.updatedAt)) / (1000 * 60 * 60 * 24)
-        );
-        const daysRemaining = cooldownDays - daysSinceReturn;
-        
-        return res.status(400).json({
-          error: 'Cooldown period active',
-          message: `Please wait ${daysRemaining} more day(s) before making a new request`,
-          details: {
-            itemReturned: recentReturn.itemStack.item.name,
-            returnedAt: recentReturn.updatedAt,
-            daysSinceReturn,
-            cooldownDays,
-            daysRemaining,
-            type: 'cooldown_period'
-          }
-        });
-      }
-    }
+    // Cooldown period check removed - Admin has full control over request approval
     
     // All checks passed
     next();
@@ -148,9 +99,7 @@ async function checkDistributionLimit(req, res, next) {
       where: {
         accountId: userId,
         itemStack: {
-          item: {
-            category: 'Distribution' // Assuming distribution items have this category
-          }
+          status: 'Distributed' // Distribution items have status 'Distributed'
         },
         createdAt: {
           gte: startOfMonth

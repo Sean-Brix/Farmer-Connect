@@ -3,7 +3,6 @@ import { useTheme } from '../../../contexts/ThemeContext';
 import default_image from '../../../Assets/eic_default.png';
 import AddEICItemModal from './addEICItem.jsx';
 import AutoStatusSettings from './components/AutoStatusSettings.jsx';
-import RequestCalendar from '../../../Components/Calendar/RequestCalendar.jsx';
 import RequestSection from './components/RequestSection.jsx';
 import ConfirmationModal from '../../../Components/Modal/ConfirmationModal.jsx';
 import { TableRowSkeleton } from './components/SkeletonLoaders.jsx';
@@ -284,7 +283,9 @@ export default function EIC() {
             'Returned': 'return',
             'No_Return': 'no_return',
             'No_Pickup': 'no_pickup',
-            'late_return': 'pickup',
+            'late_return': 'return',  // Late return is still a return action
+            'late_pickup': 'pickup',  // Late pickup is still a pickup action
+            'Borrowed': 'pickup',     // User picks up the approved item
         };
 
         const action = statusActionMap[newStatus] || 'approve';
@@ -392,7 +393,7 @@ export default function EIC() {
             )}
 
             {/* Page Title */}
-            {(activeSection === 'dueTracking' || activeSection === 'settings' || activeSection === 'schedule') && (
+            {(activeSection === 'dueTracking' || activeSection === 'settings') && (
                 <div className="max-w-7xl mx-auto mb-6 px-2 md:px-8">
                     <div className="flex items-center gap-4">
                         <button
@@ -414,11 +415,6 @@ export default function EIC() {
                                     <i className="fa-solid fa-calendar-check text-green-600"></i>
                                     Due Date Tracking
                                 </>
-                            ) : activeSection === 'schedule' ? (
-                                <>
-                                    <i className="fa-solid fa-calendar text-indigo-600"></i>
-                                    Pickup Schedule
-                                </>
                             ) : (
                                 <>
                                     <i className="fa-solid fa-gear text-purple-600"></i>
@@ -432,8 +428,6 @@ export default function EIC() {
 
             {activeSection === 'settings' ? (
                 <AutoStatusSettings />
-            ) : activeSection === 'schedule' ? (
-                <RequestCalendar source="eic" />
             ) : activeSection === 'requests' ? (
                 <RequestSection 
                     requests={requests}
@@ -445,6 +439,7 @@ export default function EIC() {
                 />
             ) : (
                 <>
+
                     {/* Distribution-style Search/Filters/Buttons Layout */}
                     <div className="relative w-full max-w-7xl mx-auto px-2 md:px-8 mb-4">
                         <div className="flex flex-col sm:flex-row items-stretch w-full gap-2 sm:gap-4">
@@ -536,26 +531,6 @@ export default function EIC() {
                                 </select>
                             </div>
                             <div className="flex flex-col sm:flex-row flex-wrap gap-2 justify-end flex-shrink-0 w-full sm:w-auto">
-                                
-                                <button
-                                    onClick={() => handleNavigateToSection('schedule')}
-                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-sm"
-                                >
-                                    <svg
-                                        className="w-4 h-4 mr-2"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                    Schedule
-                                </button>
                                 <button
                                     onClick={handleRequestsButtonClick}
                                     className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"

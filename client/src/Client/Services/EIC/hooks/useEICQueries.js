@@ -21,21 +21,36 @@ export const useEICEquipment = () => {
                 return [];
             }
             
+            console.log('📦 Raw API Response (first item):', eicItems[0]);
+            
             // Transform the data to match the expected structure
-            const transformedItems = eicItems.map((stack) => ({
-                id: stack.itemId,
-                stackId: stack.id,
-                Name: stack.item.name,
-                category: stack.item.category,
-                description: stack.item.description,
-                quantity: stack.quantity,
-                status: stack.status,
-                img: stack.item.picture || null,
-                // Include all original item properties
-                ...stack.item,
-                // Override with stack-specific data
-                availableQuantity: stack.quantity,
-            }));
+            const transformedItems = eicItems.map((stack) => {
+                const transformed = {
+                    id: stack.itemId,
+                    stackId: stack.id,
+                    Name: stack.item.name,
+                    category: stack.item.category,
+                    description: stack.item.description,
+                    status: stack.status,
+                    img: stack.item.picture || null,
+                    // Include all original item properties
+                    ...stack.item,
+                    // Override with stack-specific data (must be after ...stack.item to override)
+                    quantity: stack.quantity, // Actual available quantity from ItemStack
+                    availableQuantity: stack.quantity,
+                    max_quantity_per_request: stack.max_quantity_per_request, // Restriction from stack
+                    date_limit: stack.date_limit, // Date limit from stack
+                };
+                
+                return transformed;
+            });
+            
+            console.log('🔄 Transformed Items (first item):', transformedItems[0]);
+            console.log('✅ max_quantity_per_request values:', transformedItems.map(item => ({
+                name: item.Name,
+                max_qty: item.max_quantity_per_request,
+                available_qty: item.quantity
+            })));
             
             return transformedItems;
         },
@@ -70,12 +85,14 @@ export const useUserRequests = () => {
         },
         staleTime: 2 * 60 * 1000, // 2 minutes
         cacheTime: 5 * 60 * 1000, // 5 minutes
+        refetchInterval: 30 * 1000, // Refetch every 30 seconds to keep active request badges updated
+        refetchIntervalInBackground: false, // Don't refetch when tab is not active
         retry: (failureCount, error) => {
             // Don't retry on auth errors
             if (error.message === 'UNAUTHORIZED') return false;
             return failureCount < 3;
         },
-        enabled: false, // Only fetch when explicitly called
+        enabled: true, // Fetch automatically to enable active request checking
     });
 };
 

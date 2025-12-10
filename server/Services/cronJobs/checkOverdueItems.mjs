@@ -14,14 +14,23 @@ const checkOverdueItems = cron.schedule('0 1 * * *', async () => {
     const now = new Date();
     now.setHours(0, 0, 0, 0); // Reset to midnight for accurate day comparison
 
-    // ===== PART 1: Mark Approved items as late_return =====
-    // Find all approved transactions with return dates that have passed
+    // ===== PART 1: Mark borrowed items as late_return =====
+    // Find items WITH USERS (Borrowed or late_pickup) that are past return date
     const overdueTransactions = await prisma.itemTransaction.findMany({
       where: {
-        status: 'Approved',
-        AND: [
-          { returnDate: { not: null } },
-          { returnDate: { lt: now } } // Return date is before today
+        status: { in: ['Borrowed', 'late_pickup'] }, // Items currently with users
+        OR: [
+          // Check adjustedReturnDate if it exists (for late pickups)
+          {
+            adjustedReturnDate: { not: null },
+            adjustedReturnDate: { lt: now }
+          },
+          // Otherwise check regular returnDate
+          {
+            adjustedReturnDate: null,
+            returnDate: { not: null },
+            returnDate: { lt: now }
+          }
         ]
       },
       select: {
@@ -48,11 +57,27 @@ const checkOverdueItems = cron.schedule('0 1 * * *', async () => {
     });
 
     if (overdueTransactions.length > 0) {
-      console.error(`[CRON - ${now.toISOString()}] Found ${overdueTransactions.length} overdue transaction(s). Updating status...`);
+      console.error(`[CRON - ${now.toISOString()}] Found ${overdueTransactions.length} overdue borrowed item(s). Updating status...`);
+
+      // TEST 7.1: Cron Job Part 1 (Mark borrowed items as late_return)
+      console.log(`
+${'='.repeat(60)}
+📋 TEST 7.1: CRON JOB - MARK OVERDUE ITEMS
+${'='.repeat(60)}
+Execution time: ${now.toISOString()}
+Found overdue items: ${overdueTransactions.length}
+Items to update:
+${overdueTransactions.map(t => `  - ID: ${t.id}, Item: ${t.itemStack.item.name}, Due: ${(t.adjustedReturnDate || t.returnDate).toLocaleDateString()}`).join('\n')}
+${'='.repeat(60)}
+✅ COPY THIS LOG TO CHECKLIST TEST 7.1
+${'='.repeat(60)}
+`);
 
       // Update all overdue transactions
       const updatePromises = overdueTransactions.map(async (transaction) => {
-        const daysOverdue = Math.floor((now - new Date(transaction.returnDate)) / (1000 * 60 * 60 * 24));
+        // Use adjustedReturnDate if available, otherwise returnDate
+        const dueDate = transaction.adjustedReturnDate || transaction.returnDate;
+        const daysOverdue = Math.floor((now - new Date(dueDate)) / (1000 * 60 * 60 * 24));
         
         await prisma.itemTransaction.update({
           where: { id: transaction.id },
@@ -60,26 +85,40 @@ const checkOverdueItems = cron.schedule('0 1 * * *', async () => {
             status: 'late_return',
             autoStatusChanged: true,
             statusChangedAt: new Date(),
-            statusChangeReason: `Automatically marked as late return. Item was due on ${new Date(transaction.returnDate).toLocaleDateString()} (${daysOverdue} day(s) overdue).`
+            statusChangeReason: `Automatically marked as late return. Item was due on ${new Date(dueDate).toLocaleDateString()} (${daysOverdue} day(s) overdue).`
           }
         });
 
         // Send overdue notification
         await notifyItemOverdue(
           transaction.account.id,
-          transaction.itemStack.item.name,
-          daysOverdue,
-          transaction.id
+          {
+            itemName: transaction.itemStack.item.name,
+            daysOverdue: daysOverdue,
+            transactionId: transaction.id
+          }
         );
 
-        console.error(`[CRON - ${now.toISOString()}] Updated transaction ${transaction.id}: ${transaction.itemStack.item.name} borrowed by ${transaction.account.firstName} ${transaction.account.surname} (${daysOverdue} days overdue)`);
+        console.error(`[CRON - ${now.toISOString()}] Updated transaction ${transaction.id}: ${transaction.itemStack.item.name} borrowed by ${transaction.account.user_fname} ${transaction.account.user_lname} (${daysOverdue} days overdue)`);
       });
 
       await Promise.all(updatePromises);
 
       console.error(`[CRON - ${now.toISOString()}] Successfully updated ${overdueTransactions.length} overdue transaction(s) to 'late_return' status.`);
     } else {
-      console.error(`[CRON - ${now.toISOString()}] No overdue approved items found.`);
+      console.error(`[CRON - ${now.toISOString()}] No overdue borrowed items found.`);
+      // TEST 7.1: Cron Job Part 1 (No overdue items)
+      console.log(`
+${'='.repeat(60)}
+📋 TEST 7.1: CRON JOB - MARK OVERDUE ITEMS
+${'='.repeat(60)}
+Execution time: ${now.toISOString()}
+Result: No overdue borrowed items found
+Statuses checked: Borrowed, late_pickup
+${'='.repeat(60)}
+✅ COPY THIS LOG TO CHECKLIST TEST 7.1
+${'='.repeat(60)}
+`);
     }
 
     // ===== PART 2: Auto-reject expired pending requests =====
@@ -209,28 +248,20 @@ const checkOverdueItems = cron.schedule('0 1 * * *', async () => {
         const noPickupPromises = overdueReservations.map(async (transaction) => {
           const daysOverdue = Math.floor((now - new Date(transaction.pickupDate)) / (1000 * 60 * 60 * 24));
           
-          await prisma.$transaction(async (tx) => {
-            // Update transaction status
-            await tx.itemTransaction.update({
-              where: { id: transaction.id },
-              data: {
-                status: 'No_Pickup',
-                autoStatusChanged: true,
-                statusChangedAt: new Date(),
-                statusChangeReason: `Automatically marked as No Pickup. Item was not picked up by ${new Date(transaction.pickupDate).toLocaleDateString()} (${daysOverdue} day(s) overdue, threshold: ${autoNoPickupDays} days).`
-              }
-            });
-
-            // Restore stock quantity
-            await tx.itemStack.update({
-              where: { id: transaction.itemStack.id },
-              data: {
-                quantity: transaction.itemStack.quantity + transaction.quantity
-              }
-            });
+          // Update transaction status
+          // NOTE: No stock restoration needed - stock is now deducted at pickup (Borrowed/late_pickup)
+          // Since item was never picked up, stock was never deducted
+          await prisma.itemTransaction.update({
+            where: { id: transaction.id },
+            data: {
+              status: 'No_Pickup',
+              autoStatusChanged: true,
+              statusChangedAt: new Date(),
+              statusChangeReason: `Automatically marked as No Pickup. Item was not picked up by ${new Date(transaction.pickupDate).toLocaleDateString()} (${daysOverdue} day(s) overdue, threshold: ${autoNoPickupDays} days).`
+            }
           });
 
-          console.error(`[CRON - ${now.toISOString()}] Auto-no_pickup transaction ${transaction.id}: ${transaction.itemStack.item.name} reserved by ${transaction.account.firstName} ${transaction.account.surname}, stock restored`);
+          console.error(`[CRON - ${now.toISOString()}] Auto-no_pickup transaction ${transaction.id}: ${transaction.itemStack.item.name} reserved by ${transaction.account.firstName} ${transaction.account.surname} (no stock change - never deducted)`);
         });
 
         await Promise.all(noPickupPromises);
@@ -259,18 +290,28 @@ const checkOverdueItems = cron.schedule('0 1 * * *', async () => {
       const cutoffDate = new Date(now);
       cutoffDate.setDate(cutoffDate.getDate() - autoArchiveDays);
 
-      // Find borrowed items (late_return status) where return date is older than cutoff
+      // Find items WITH USERS (Borrowed, late_pickup, or late_return) severely overdue
       const severelyOverdueItems = await prisma.itemTransaction.findMany({
         where: {
-          status: 'late_return',
-          AND: [
-            { returnDate: { not: null } },
-            { returnDate: { lt: cutoffDate } }
+          status: { in: ['Borrowed', 'late_pickup', 'late_return'] }, // All items with users
+          OR: [
+            // Check adjustedReturnDate for late pickups
+            {
+              adjustedReturnDate: { not: null },
+              adjustedReturnDate: { lt: cutoffDate }
+            },
+            // Check regular returnDate
+            {
+              adjustedReturnDate: null,
+              returnDate: { not: null },
+              returnDate: { lt: cutoffDate }
+            }
           ]
         },
         select: {
           id: true,
           returnDate: true,
+          adjustedReturnDate: true,
           account: {
             select: {
               id: true,
@@ -295,7 +336,8 @@ const checkOverdueItems = cron.schedule('0 1 * * *', async () => {
         console.error(`[CRON - ${now.toISOString()}] Found ${severelyOverdueItems.length} severely overdue item(s) to auto-archive.`);
 
         const archivePromises = severelyOverdueItems.map(async (transaction) => {
-          const daysOverdue = Math.floor((now - new Date(transaction.returnDate)) / (1000 * 60 * 60 * 24));
+          const dueDate = transaction.adjustedReturnDate || transaction.returnDate;
+          const daysOverdue = Math.floor((now - new Date(dueDate)) / (1000 * 60 * 60 * 24));
           
           await prisma.itemTransaction.update({
             where: { id: transaction.id },
@@ -392,9 +434,11 @@ const runManualCheck = async () => {
         // Send overdue notification
         await notifyItemOverdue(
           transaction.account.id,
-          transaction.itemStack.item.name,
-          daysOverdue,
-          transaction.id
+          {
+            itemName: transaction.itemStack.item.name,
+            daysOverdue: daysOverdue,
+            transactionId: transaction.id
+          }
         );
       });
 

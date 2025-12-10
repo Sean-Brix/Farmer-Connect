@@ -54,6 +54,9 @@ async function addRequest(req, res) {
             });
         }
 
+        // Log user access for debugging
+        console.log('🔍 [Distribution Request] User access level:', user.access, 'Email:', user.email);
+
         if (user.access === 'Admin' || user.access === 'Super_Admin') {
             return res.status(403).json({
                 error: 'Access denied',

@@ -814,12 +814,11 @@ export default function Distribution() {
                     left: 50%;
                     transform: translate(-50%, -50%) scale(0.95);
                     z-index: 9999;
-                    background: rgba(37,99,235,0.98);
-                    background: linear-gradient(100deg, #2563eb 0%, #3b82f6 100%);
-                    color: #fff;
+                    background: white;
+                    color: #374151;
                     padding: 2rem 3rem;
                     border-radius: 2rem;
-                    box-shadow: 0 12px 40px 0 rgba(59,130,246,0.22);
+                    box-shadow: 0 12px 40px 0 rgba(0,0,0,0.15);
                     font-size: 1.18rem;
                     font-weight: 700;
                     display: flex;
@@ -836,24 +835,25 @@ export default function Distribution() {
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        background: rgba(255,255,255,0.13);
+                        background: #fef3c7;
                         border-radius: 50%;
                         width: 3rem;
                         height: 3rem;
-                        box-shadow: 0 2px 8px 0 rgba(59,130,246,0.10);
+                        box-shadow: 0 2px 8px 0 rgba(251,191,36,0.10);
                     ">
-                        <i class="fa-solid fa-exclamation-triangle" style="font-size:1.5rem; color: #fff; filter: drop-shadow(0 2px 8px #3b82f688);"></i>
+                        <i class="fa-solid fa-exclamation-triangle" style="font-size:1.5rem; color: #d97706; filter: drop-shadow(0 2px 8px #d97706);"></i>
                     </div>
                     <div>
-                        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.4rem;">Cancel Request</h3>
-                        <p style="margin: 0; font-weight: 400; opacity: 0.9; font-size: 1rem;">
-                            Are you sure you want to cancel your request for "<strong>${itemName}</strong>"?
+                        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.4rem; color: #374151;">Cancel Request</h3>
+                        <p style="margin: 0; font-weight: 400; color: #6b7280; font-size: 1rem;">
+                            Are you sure you want to cancel your request for <strong>"${itemName}"</strong>?
                         </p>
                     </div>
-                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                    <div style="display: flex; gap: 1rem; width: 100%;">
                         <button id="confirm-cancel-btn" style="
-                            background: rgba(220,38,38,0.9);
-                            border: 2px solid rgba(220,38,38,0.8);
+                            flex: 1;
+                            background: #dc2626;
+                            border: none;
                             color: #fff;
                             padding: 0.75rem 1.5rem;
                             border-radius: 1rem;
@@ -861,10 +861,11 @@ export default function Distribution() {
                             cursor: pointer;
                             transition: all 0.2s;
                             font-size: 1rem;
-                        ">Yes, Cancel</button>
+                        ">Yes, Cancel Request</button>
                         <button id="keep-request-btn" style="
-                            background: transparent;
-                            border: 2px solid rgba(255,255,255,0.3);
+                            flex: 1;
+                            background: #16a34a;
+                            border: 2px solid #16a34a;
                             color: #fff;
                             padding: 0.75rem 1.5rem;
                             border-radius: 1rem;
@@ -881,8 +882,8 @@ export default function Distribution() {
                         60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
                         100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
                     }
-                    #confirm-cancel-btn:hover { background: rgba(220,38,38,1); transform: translateY(-2px); }
-                    #keep-request-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+                    #confirm-cancel-btn:hover { background: #b91c1c; transform: translateY(-2px); }
+                    #keep-request-btn:hover { background: #15803d; transform: translateY(-2px); }
                 </style>
             `;
             document.body.appendChild(alertDiv);

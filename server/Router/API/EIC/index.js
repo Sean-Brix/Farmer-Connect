@@ -15,4 +15,10 @@ router.use('/item', item);
 import request from './request.js';
 router.use('/request', request);
 
+import settings from './settings.js';
+router.use('/settings', settings);
+
+import pickupSlots from './pickup-slots.js';
+router.use('/pickup-slots', pickupSlots);
+
 export default router;

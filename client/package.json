@@ -12,6 +12,7 @@
     "exp-server": "vite --config vite.config.exp.js"
   },
   "dependencies": {
+    "@material-tailwind/react": "^2.1.10",
     "@tanstack/react-query": "^5.81.5",
     "axios": "^1.13.2",
     "chart.js": "^4.5.0",

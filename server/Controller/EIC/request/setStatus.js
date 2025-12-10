@@ -70,6 +70,8 @@ async function setStatus(req, res) {
         const validStatuses = [
             'Pending',
             'Approved',
+            'Borrowed',
+            'late_pickup',
             'Rejected',
             'Returned',
             'No_Return',
@@ -150,6 +152,30 @@ async function setStatus(req, res) {
             });
         }
 
+        // Validate status transitions
+        const validTransitions = {
+            Pending: ['Approved', 'Rejected', 'Cancelled'],
+            Approved: ['Borrowed', 'late_pickup', 'No_Pickup', 'Cancelled'],
+            Borrowed: ['Returned', 'late_return', 'No_Return', 'Cancelled'],
+            late_pickup: ['Returned', 'late_return', 'No_Return', 'Cancelled'],
+            // Terminal statuses cannot transition
+            Returned: [],
+            late_return: ['Returned', 'No_Return'], // Can correct late returns
+            Rejected: [],
+            No_Return: [],
+            No_Pickup: [],
+            Cancelled: []
+        };
+
+        const allowedTransitions = validTransitions[transaction.status] || [];
+        if (!allowedTransitions.includes(status)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid status transition',
+                message: `Cannot change status from ${transaction.status} to ${status}. Allowed transitions: ${allowedTransitions.join(', ') || 'none'}`,
+            });
+        }
+
         // Prepare update data
         const updateData = {
             status: status,
@@ -168,52 +194,194 @@ async function setStatus(req, res) {
             updateData.adminId = userId;
         }
 
-        // Set actual_return timestamp when marking as Returned or No_Return
-        if (status === 'Returned' || status === 'No_Return') {
+        // SMART PICKUP DETECTION: Determine Borrowed vs late_pickup
+        if (transaction.status === 'Approved' && (status === 'Borrowed' || status === 'late_pickup')) {
+            const now = new Date();
+            const pickupDate = new Date(transaction.pickupDate);
+            const returnDate = transaction.returnDate ? new Date(transaction.returnDate) : null;
+            
+            updateData.actual_pickup = now;
+            
+            // Auto-determine status based on timing
+            if (now > pickupDate) {
+                // Late pickup
+                const daysLate = Math.ceil((now - pickupDate) / (1000 * 60 * 60 * 24));
+                updateData.status = 'late_pickup';
+                
+                // Calculate adjusted return date: give user the full borrowing period
+                if (returnDate) {
+                    const borrowDuration = returnDate - pickupDate; // Original duration in milliseconds
+                    updateData.adjustedReturnDate = new Date(now.getTime() + borrowDuration);
+                    
+                    console.log(`\n${'='.repeat(60)}\n📋 TEST 3.2: LATE PICKUP DETECTION\n${'='.repeat(60)}\nTransaction ID: ${transactionId}\nItem: ${transaction.itemStack.item.name}\nUser: ${transaction.account.firstName} ${transaction.account.surname}\nEmail: ${transaction.account.email || 'N/A'}\nScheduled Pickup: ${pickupDate.toLocaleString()}\nActual Pickup: ${now.toLocaleString()}\nDays Late: ${daysLate}\nStatus: late_pickup\nOriginal Return: ${returnDate.toLocaleString()}\nAdjusted Return: ${updateData.adjustedReturnDate.toLocaleString()}\nBorrow Duration: ${Math.ceil(borrowDuration / (1000 * 60 * 60 * 24))} days\nCurrent Stock: ${transaction.itemStack.quantity}\nQuantity Requested: ${transaction.quantity}\nStock Will Be: ${transaction.itemStack.quantity - transaction.quantity}\n${'='.repeat(60)}\n✅ COPY THIS LOG TO CHECKLIST TEST 3.2\n${'='.repeat(60)}\n`);
+                }
+            } else {
+                // On-time pickup
+                updateData.status = 'Borrowed';
+                console.log(`\n${'='.repeat(60)}\n📋 TEST 3.1: ON-TIME PICKUP DETECTION\n${'='.repeat(60)}\nTransaction ID: ${transactionId}\nItem: ${transaction.itemStack.item.name}\nUser: ${transaction.account.firstName} ${transaction.account.surname}\nEmail: ${transaction.account.email || 'N/A'}\nScheduled Pickup: ${pickupDate.toLocaleString()}\nActual Pickup: ${now.toLocaleString()}\nStatus: Borrowed\nReturn Due: ${returnDate ? returnDate.toLocaleString() : 'N/A'}\nCurrent Stock: ${transaction.itemStack.quantity}\nQuantity Requested: ${transaction.quantity}\nStock Will Be: ${transaction.itemStack.quantity - transaction.quantity}\n${'='.repeat(60)}\n✅ COPY THIS LOG TO CHECKLIST TEST 3.1\n${'='.repeat(60)}\n`);
+            }
+            
+            // ============ TEST 3.2 DEBUG - VERIFY UPDATE DATA ============
+            console.log('[TEST 3.2 DEBUG] updateData object before database:', {
+                transactionId: transactionId,
+                status: updateData.status,
+                adjustedReturnDate: updateData.adjustedReturnDate ? updateData.adjustedReturnDate.toISOString() : null,
+                actual_pickup: updateData.actual_pickup ? updateData.actual_pickup.toISOString() : null,
+                pickupDate: transaction.pickupDate.toISOString(),
+                returnDate: transaction.returnDate ? transaction.returnDate.toISOString() : null,
+                willUpdateDB: true
+            });
+            // ===========================================================
+        }
+
+        // SMART RETURN DETECTION: Determine Returned vs late_return
+        if (['Borrowed', 'late_pickup'].includes(transaction.status) && (status === 'Returned' || status === 'late_return')) {
+            const now = new Date();
+            const dueDate = transaction.adjustedReturnDate 
+                ? new Date(transaction.adjustedReturnDate)
+                : transaction.returnDate 
+                ? new Date(transaction.returnDate)
+                : null;
+            
+            updateData.actual_return = now;
+            
+            // Auto-determine status based on timing
+            if (dueDate && now > dueDate) {
+                // Late return
+                updateData.status = 'late_return';
+                const daysLate = Math.ceil((now - dueDate) / (1000 * 60 * 60 * 24));
+                console.log(`\n${'='.repeat(60)}\n📋 TEST 4.2: LATE RETURN DETECTION\n${'='.repeat(60)}\nTransaction ID: ${transactionId}\nItem: ${transaction.itemStack.item.name}\nUser: ${transaction.account.firstName} ${transaction.account.surname}\nEmail: ${transaction.account.email || 'N/A'}\nPrevious Status: ${transaction.status}\nDue Date: ${dueDate.toLocaleString()}${transaction.adjustedReturnDate ? ' (Adjusted)' : ' (Original)'}\nActual Return: ${now.toLocaleString()}\nDays Overdue: ${daysLate}\nStatus: late_return\nCurrent Stock: ${transaction.itemStack.quantity}\nQuantity Returned: ${transaction.quantity}\nStock Will Be: ${transaction.itemStack.quantity + transaction.quantity}\n${'='.repeat(60)}\n✅ COPY THIS LOG TO CHECKLIST TEST 4.2\n${'='.repeat(60)}\n`);
+            } else {
+                // On-time return
+                updateData.status = 'Returned';
+                console.log(`\n${'='.repeat(60)}\n📋 TEST 4.1: ON-TIME RETURN DETECTION\n${'='.repeat(60)}\nTransaction ID: ${transactionId}\nItem: ${transaction.itemStack.item.name}\nUser: ${transaction.account.firstName} ${transaction.account.surname}\nEmail: ${transaction.account.email || 'N/A'}\nPrevious Status: ${transaction.status}\nDue Date: ${dueDate ? dueDate.toLocaleString() : 'N/A'}${transaction.adjustedReturnDate ? ' (Adjusted)' : ''}\nActual Return: ${now.toLocaleString()}\nStatus: Returned\nCurrent Stock: ${transaction.itemStack.quantity}\nQuantity Returned: ${transaction.quantity}\nStock Will Be: ${transaction.itemStack.quantity + transaction.quantity}\n${'='.repeat(60)}\n✅ COPY THIS LOG TO CHECKLIST TEST 4.1\n${'='.repeat(60)}\n`);
+            }
+            
+            // ============ TEST 4.2 DEBUG - VERIFY DUE DATE LOGIC ============
+            console.log('[TEST 4.2 DEBUG] Return detection analysis:', {
+                transactionId: transactionId,
+                currentTime: now.toISOString(),
+                adjustedReturnDate: transaction.adjustedReturnDate ? new Date(transaction.adjustedReturnDate).toISOString() : null,
+                returnDate: transaction.returnDate ? new Date(transaction.returnDate).toISOString() : null,
+                dueDateUsed: dueDate ? dueDate.toISOString() : null,
+                isLate: dueDate && now > dueDate,
+                statusDecision: updateData.status,
+                previousStatus: transaction.status
+            });
+            // =================================================================
+        }
+
+        // Set actual_return timestamp for No_Return
+        if (status === 'No_Return') {
             updateData.actual_return = new Date();
         }
 
-        // Set actual_pickup timestamp when marking as picked up (status changes from Approved)
-        if (transaction.status === 'Approved' && (status === 'late_return' || status === 'Borrowed')) {
-            updateData.actual_pickup = new Date();
+        // ============ RESERVED STOCK MANAGEMENT ============
+        let reservedQuantityChange = 0;
+        const currentStatus = transaction.status;
+        const newStatus = updateData.status || status; // Use smart-detected status
+
+        // Reserve stock when request is approved
+        if (newStatus === 'Approved' && currentStatus === 'Pending') {
+            reservedQuantityChange = transaction.quantity;
+            console.log(`🔒 Stock reserved: ${transaction.quantity} units of ${transaction.itemStack.item.name}`);
         }
 
-        // If admin is updating the status, record who did it
-        if (user.access === 'Admin' || user.access === 'Super_Admin') {
-            updateData.adminId = userId;
+        // Release reservation when picked up (already deducting from actual quantity)
+        if (['Borrowed', 'late_pickup'].includes(newStatus) && currentStatus === 'Approved') {
+            reservedQuantityChange = -transaction.quantity;
+            console.log(`🔓 Reservation released on pickup: ${transaction.quantity} units`);
         }
+
+        // Release reservation when rejected/cancelled/no-pickup (without affecting actual quantity)
+        if (['Rejected', 'Cancelled', 'No_Pickup'].includes(newStatus) && currentStatus === 'Approved') {
+            reservedQuantityChange = -transaction.quantity;
+            console.log(`🔓 Reservation released (not picked up): ${transaction.quantity} units`);
+        }
+        // ===================================================
 
         // Handle stack quantity adjustments based on status change
         let stackQuantityChange = 0;
-        const currentStatus = transaction.status;
-        const newStatus = status;
+        let stockAction = 'NO CHANGE';
 
-        if (newStatus === 'Approved') {
-            // Subtract quantity when approved (items are taken out of circulation)
+        // DEDUCT STOCK: When item physically LEAVES office (pickup)
+        if (['Borrowed', 'late_pickup'].includes(newStatus) && currentStatus === 'Approved') {
             stackQuantityChange = -transaction.quantity;
-        } else if (newStatus === 'Rejected') {
-            // No change for rejected
-            stackQuantityChange = 0;
-        } else if (
-            ['Returned', 'late_return', 'No_Pickup'].includes(newStatus)
-        ) {
-            // Add quantity back when returned, late return, or no pickup
+            stockAction = `DEDUCT ${transaction.quantity} units`;
+        }
+
+        // RESTORE STOCK: When item RETURNS to office
+        if (['Returned', 'late_return'].includes(newStatus) && ['Borrowed', 'late_pickup'].includes(currentStatus)) {
             stackQuantityChange = transaction.quantity;
-        } else if (newStatus === 'No_Return') {
-            // No change for no return (items are permanently lost)
+            stockAction = `RESTORE ${transaction.quantity} units`;
+        }
+
+        // NO STOCK CHANGE: Never picked up (stock was never deducted)
+        if (newStatus === 'No_Pickup' && currentStatus === 'Approved') {
             stackQuantityChange = 0;
-        } else if (newStatus === 'Cancelled') {
-            // Handle cancellation logic
-            if (currentStatus === 'Approved') {
-                // If cancelling an approved transaction, add quantity back
-                stackQuantityChange = transaction.quantity;
-            } else if (currentStatus === 'Pending') {
-                // If cancelling a pending transaction, no quantity change needed
-                stackQuantityChange = 0;
-            } else {
-                // For other statuses, no change
-                stackQuantityChange = 0;
-            }
+            stockAction = 'NO CHANGE (never picked up)';
+        }
+
+        // TEST 6.1, 6.2, 6.3: Stock Management Logging
+        const testNumber = stockAction.includes('DEDUCT') ? '6.2' : stockAction.includes('RESTORE') ? '6.3' : '6.1';
+        console.log(`
+${'='.repeat(60)}
+📋 TEST ${testNumber}: STOCK MANAGEMENT - ${stockAction}
+${'='.repeat(60)}
+Transaction ID: ${transactionId}
+Item: ${transaction.itemStack.item.name}
+Current Status: ${currentStatus}
+New Status: ${newStatus}
+Current Stock: ${transaction.itemStack.quantity}
+Stock Change: ${stackQuantityChange > 0 ? '+' : ''}${stackQuantityChange}
+New Stock Will Be: ${transaction.itemStack.quantity + stackQuantityChange}
+Action: ${stockAction}
+${'='.repeat(60)}
+✅ COPY THIS LOG TO CHECKLIST TEST ${testNumber}
+${'='.repeat(60)}
+`);
+
+        // ============ TEST 4.2 DEBUG - VERIFY STOCK RESTORATION ============
+        console.log('[TEST 4.2 DEBUG] Stock management calculation:', {
+            transactionId: transactionId,
+            currentStatus: currentStatus,
+            newStatus: newStatus,
+            itemName: transaction.itemStack.item.name,
+            currentStock: transaction.itemStack.quantity,
+            calculatedStockChange: stackQuantityChange,
+            willUpdateStock: stackQuantityChange !== 0,
+            action: stockAction,
+            expectedNewStock: transaction.itemStack.quantity + stackQuantityChange
+        });
+        // ====================================================================
+
+        // NO STOCK CHANGE: Cancelled before pickup
+        if (newStatus === 'Cancelled' && currentStatus === 'Approved') {
+            stackQuantityChange = 0;
+            stockAction = 'NO CHANGE (cancelled before pickup)';
+        }
+
+        // RESTORE STOCK: Cancelled after pickup (user returns item)
+        if (newStatus === 'Cancelled' && ['Borrowed', 'late_pickup'].includes(currentStatus)) {
+            stackQuantityChange = transaction.quantity;
+            stockAction = `RESTORE ${transaction.quantity} units (cancelled after pickup)`;
+        }
+
+        // NO STOCK CHANGE: Pending cancellation
+        if (newStatus === 'Cancelled' && currentStatus === 'Pending') {
+            stackQuantityChange = 0;
+            stockAction = 'NO CHANGE (cancelled from pending)';
+        }
+
+        // NO RESTORATION: Item lost/damaged
+        if (newStatus === 'No_Return') {
+            stackQuantityChange = 0;
+            console.log(`📦 No stock restoration - item marked as not returned`);
+        }
+
+        // NO CHANGE: Rejected requests
+        if (newStatus === 'Rejected') {
+            stackQuantityChange = 0;
         }
 
         // Update the transaction and stack quantity in a transaction
@@ -248,34 +416,67 @@ async function setStatus(req, res) {
                 },
             });
 
-            // Update stack quantity if there's a change
-            if (stackQuantityChange !== 0) {
+            // Update stock and reservations if needed
+            if (stackQuantityChange !== 0 || reservedQuantityChange !== 0) {
                 const currentStackQuantity = transaction.itemStack.quantity;
-                const newStackQuantity =
-                    currentStackQuantity + stackQuantityChange;
-
-                // Ensure quantity doesn't go negative
-                if (newStackQuantity < 0) {
-                    throw new Error(
-                        `Insufficient stock. Current quantity: ${currentStackQuantity}, Requested: ${Math.abs(
-                            stackQuantityChange
-                        )}`
-                    );
+                const currentReservedQuantity = transaction.itemStack.reservedQuantity || 0;
+                
+                const stockUpdateData = {};
+                
+                if (stackQuantityChange !== 0) {
+                    const newStackQuantity = currentStackQuantity + stackQuantityChange;
+                    
+                    // Ensure quantity doesn't go negative
+                    if (newStackQuantity < 0) {
+                        throw new Error(
+                            `Insufficient stock. Current quantity: ${currentStackQuantity}, Requested: ${Math.abs(
+                                stackQuantityChange
+                            )}`
+                        );
+                    }
+                    
+                    stockUpdateData.quantity = newStackQuantity;
                 }
+                
+                if (reservedQuantityChange !== 0) {
+                    const newReservedQuantity = currentReservedQuantity + reservedQuantityChange;
+                    
+                    if (newReservedQuantity < 0) {
+                        console.warn(`⚠️ Warning: Reserved quantity would be negative, setting to 0`);
+                        stockUpdateData.reservedQuantity = 0;
+                    } else {
+                        stockUpdateData.reservedQuantity = newReservedQuantity;
+                    }
+                }
+                
+                stockUpdateData.updatedAt = new Date();
 
                 await prisma.itemStack.update({
-                    where: {
-                        id: transaction.itemStackId,
-                    },
-                    data: {
-                        quantity: newStackQuantity,
-                        updatedAt: new Date(),
-                    },
+                    where: { id: transaction.itemStackId },
+                    data: stockUpdateData,
+                });
+                
+                console.log(`📊 Stock update applied:`, {
+                    itemStackId: transaction.itemStackId,
+                    quantityChange: stackQuantityChange,
+                    reservedChange: reservedQuantityChange
                 });
             }
 
             return updatedTransaction;
         });
+        
+        // ============ TEST 3.2 & 4.2 DEBUG - VERIFY DATABASE UPDATE ============
+        console.log('[DATABASE UPDATE] Transaction updated successfully:', {
+            transactionId: result.id,
+            statusUpdated: result.status,
+            adjustedReturnDateSaved: result.adjustedReturnDate ? result.adjustedReturnDate.toISOString() : null,
+            actual_pickup: result.actual_pickup ? result.actual_pickup.toISOString() : null,
+            actual_return: result.actual_return ? result.actual_return.toISOString() : null,
+            stockChangeApplied: stackQuantityChange,
+            committedToDB: true
+        });
+        // ========================================================================
 
         // Log the EIC request status change
         const auditAction =
@@ -319,6 +520,19 @@ async function setStatus(req, res) {
             );
         }
 
+        // ============ TEST 3.2 & 4.2 DEBUG - VERIFY RESPONSE INCLUDES FIELDS ============
+        console.log('[RESPONSE TO CLIENT] Sending response:', {
+            transactionId: result.id,
+            status: result.status,
+            adjustedReturnDate: result.adjustedReturnDate ? result.adjustedReturnDate.toISOString() : null,
+            returnDate: result.returnDate ? result.returnDate.toISOString() : null,
+            actual_pickup: result.actual_pickup ? result.actual_pickup.toISOString() : null,
+            actual_return: result.actual_return ? result.actual_return.toISOString() : null,
+            includesAdjustedDate: !!result.adjustedReturnDate,
+            responseComplete: true
+        });
+        // =================================================================================
+        
         return res.status(200).json({
             success: true,
             message: 'Transaction status updated successfully',
@@ -330,12 +544,15 @@ async function setStatus(req, res) {
                 status: result.status,
                 pickupDate: result.pickupDate,
                 returnDate: result.returnDate,
+                adjustedReturnDate: result.adjustedReturnDate, // For late pickup adjusted due date
+                actual_pickup: result.actual_pickup, // For actual pickup timestamp
+                actual_return: result.actual_return, // For actual return timestamp
                 requestNote: result.requestNote,
                 updatedBy: result.admin
                     ? `${result.admin.firstName} ${result.admin.surname}`
                     : 'User',
                 updatedAt: result.updatedAt,
-                stackQuantityChange: stackQuantityChange, // Include the quantity change for debugging
+                stackQuantityChange: stackQuantityChange,
             },
         });
     } catch (error) {

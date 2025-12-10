@@ -14,8 +14,8 @@ import prisma from '../../../config/database.js';
 export default async function getStatistics(req, res) {
   try {
     // Get all archived requests (completed states) - ONLY for EIC stacks
-    // Note: late_return is NOT archived - it means overdue but still with user (shown in Borrowed tab)
-    const archivedStatuses = ['Rejected', 'Returned', 'No_Return', 'No_Pickup', 'Cancelled'];
+    // late_return is NOW archived - means item has been returned late
+    const archivedStatuses = ['Rejected', 'Returned', 'late_return', 'No_Return', 'No_Pickup', 'Cancelled'];
     
     const archivedRequests = await prisma.itemTransaction.findMany({
       where: {
@@ -46,15 +46,38 @@ export default async function getStatistics(req, res) {
       return acc;
     }, {});
 
+    // TEST 2.2: Statistics API
+    console.log(`
+${'='.repeat(60)}
+📋 TEST 2.2: STATISTICS API (ARCHIVE DATA)
+${'='.repeat(60)}
+Total archived: ${total}
+Breakdown by status:
+${JSON.stringify(byStatus, null, 2)}
+Archived statuses used: ${archivedStatuses.join(', ')}
+Sample IDs: ${archivedRequests.slice(0, 5).map(r => r.id).join(', ')}
+${'='.repeat(60)}
+✅ COPY THIS LOG TO CHECKLIST TEST 2.2
+${'='.repeat(60)}
+`);
+
     // Calculate late return rate
     const returnedRequests = archivedRequests.filter(req => 
       req.status === 'Returned' || req.status === 'late_return' || req.status === 'No_Return'
     );
     const lateReturns = returnedRequests.filter(req => {
-      if (!req.returnDate) return false;
-      const returnDate = new Date(req.returnDate);
-      const actualReturn = req.actual_return ? new Date(req.actual_return) : new Date(req.statusChangedAt);
-      return actualReturn > returnDate;
+      // Items with status 'late_return' are already counted as late
+      if (req.status === 'late_return') return true;
+      
+      // For 'Returned' status, check if actual_return was after due date
+      if (req.status === 'Returned' && req.actual_return && req.returnDate) {
+        const dueDate = req.adjustedReturnDate || req.returnDate;
+        const actualReturn = new Date(req.actual_return);
+        const returnDeadline = new Date(dueDate);
+        return actualReturn > returnDeadline;
+      }
+      
+      return false;
     });
     const lateReturnRate = returnedRequests.length > 0 
       ? (lateReturns.length / returnedRequests.length) 

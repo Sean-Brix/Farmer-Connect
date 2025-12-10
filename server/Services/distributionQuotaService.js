@@ -114,37 +114,7 @@ export async function checkEligibility(userId, itemStackId) {
       };
     }
 
-    // Check cooldown period
-    if (quota.cooldownDays > 0) {
-      const cooldownDate = new Date();
-      cooldownDate.setDate(cooldownDate.getDate() - quota.cooldownDays);
-
-      const recentRequest = await prisma.distributionHistory.findFirst({
-        where: {
-          accountId: userId,
-          itemStackId,
-          receivedAt: {
-            gte: cooldownDate
-          }
-        },
-        orderBy: {
-          receivedAt: 'desc'
-        }
-      });
-
-      if (recentRequest) {
-        const daysSince = Math.floor(
-          (new Date() - new Date(recentRequest.receivedAt)) / (1000 * 60 * 60 * 24)
-        );
-        const daysRemaining = quota.cooldownDays - daysSince;
-
-        return {
-          eligible: false,
-          reason: `Please wait ${daysRemaining} more day(s) before requesting this item again`,
-          quota
-        };
-      }
-    }
+    // Cooldown period check removed - Admin has full control over request approval
 
     // All checks passed
     return {

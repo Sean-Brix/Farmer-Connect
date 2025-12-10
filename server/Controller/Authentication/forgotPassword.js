@@ -12,7 +12,7 @@ export default async function forgotPassword(req, res) {
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: 'Email is required' });
 
-    const user = await prisma.account.findUnique({ where: { email } });
+    const user = await prisma.account.findFirst({ where: { email } });
     // Always respond OK to prevent email enumeration
     if (!user) return res.status(200).json({ message: 'If that email exists, a reset link has been sent.' });
 

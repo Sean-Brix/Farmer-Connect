@@ -5,6 +5,122 @@ import toast from 'react-hot-toast';
 import default_image from '../../../../Assets/eic_default.png';
 import ArchiveStatistics from './ArchiveStatistics.jsx';
 import { RequestTableSkeleton } from './SkeletonLoaders.jsx';
+import RequestStatusBadge from '../../../../Client/Services/EIC/components/RequestStatusBadge.jsx';
+
+// Helper function to determine smart date labels
+const getDateLabels = (request) => {
+  const pickupAdjusted = request.actual_pickup && 
+    new Date(request.actual_pickup).getTime() !== new Date(request.pickupDate).getTime();
+  const returnAdjusted = request.adjustedReturnDate && 
+    new Date(request.adjustedReturnDate).getTime() !== new Date(request.returnDate).getTime();
+  
+  // If neither adjusted, return null (no labels needed)
+  if (!pickupAdjusted && !returnAdjusted) {
+    return { 
+      pickupLabel: null, 
+      returnLabel: null,
+      pickupAdjusted: false,
+      returnAdjusted: false
+    };
+  }
+  
+  // If one adjusted, show "(adjusted)" on adjusted date, "(on time)" on other for height consistency
+  return {
+    pickupLabel: pickupAdjusted ? '(adjusted)' : (returnAdjusted ? '(on time)' : null),
+    returnLabel: returnAdjusted ? '(adjusted)' : (pickupAdjusted ? '(on time)' : null),
+    pickupAdjusted,
+    returnAdjusted
+  };
+};
+
+// Helper function to generate system status prompts
+const getSystemPrompt = (request) => {
+  const now = new Date();
+  const pickupDate = new Date(request.pickupDate);
+  const returnDate = new Date(request.adjustedReturnDate || request.returnDate);
+  
+  const daysDiff = (date1, date2) => Math.ceil((date1 - date2) / (1000 * 60 * 60 * 24));
+  const hoursDiff = (date1, date2) => Math.ceil((date1 - date2) / (1000 * 60 * 60));
+  
+  switch(request.status) {
+    case 'Pending':
+      const daysWaiting = daysDiff(now, new Date(request.createdAt));
+      const pickupIn = daysDiff(pickupDate, now);
+      if (pickupIn < 0) {
+        return {
+          type: 'warning',
+          icon: 'fa-exclamation-triangle',
+          message: `Request has been pending for ${daysWaiting} day${daysWaiting !== 1 ? 's' : ''}. Pickup date has passed by ${Math.abs(pickupIn)} day${Math.abs(pickupIn) !== 1 ? 's' : ''}. Requires immediate admin action.`
+        };
+      } else if (pickupIn <= 2) {
+        return {
+          type: 'warning',
+          icon: 'fa-clock',
+          message: `Pickup date is in ${pickupIn} day${pickupIn !== 1 ? 's' : ''}. Waiting for admin approval/rejection for ${daysWaiting} day${daysWaiting !== 1 ? 's' : ''}.`
+        };
+      }
+      return {
+        type: 'info',
+        icon: 'fa-hourglass-half',
+        message: `Waiting for admin action for ${daysWaiting} day${daysWaiting !== 1 ? 's' : ''}. Pickup scheduled in ${pickupIn} day${pickupIn !== 1 ? 's' : ''}.`
+      };
+      
+    case 'Approved':
+      const pickupDue = daysDiff(pickupDate, now);
+      if (pickupDue < 0) {
+        return {
+          type: 'error',
+          icon: 'fa-exclamation-circle',
+          message: `Pickup is overdue by ${Math.abs(pickupDue)} day${Math.abs(pickupDue) !== 1 ? 's' : ''}. Will auto-transition to "late_pickup" if not picked up.`
+        };
+      } else if (pickupDue === 0) {
+        const hoursLeft = hoursDiff(pickupDate, now);
+        return {
+          type: 'warning',
+          icon: 'fa-clock',
+          message: `Pickup is TODAY (${hoursLeft} hour${hoursLeft !== 1 ? 's' : ''} remaining). User needs to collect item.`
+        };
+      }
+      return {
+        type: 'success',
+        icon: 'fa-calendar-check',
+        message: `Ready for pickup in ${pickupDue} day${pickupDue !== 1 ? 's' : ''}. User has been notified.`
+      };
+      
+    case 'Borrowed':
+    case 'late_pickup':
+      const returnDue = daysDiff(returnDate, now);
+      if (returnDue < 0) {
+        return {
+          type: 'error',
+          icon: 'fa-exclamation-triangle',
+          message: `Return is overdue by ${Math.abs(returnDue)} day${Math.abs(returnDue) !== 1 ? 's' : ''}. Will auto-transition to "late_return" if not returned soon.`
+        };
+      } else if (returnDue <= 3) {
+        return {
+          type: 'warning',
+          icon: 'fa-bell',
+          message: `Return due in ${returnDue} day${returnDue !== 1 ? 's' : ''}. Consider sending reminder to user.`
+        };
+      }
+      return {
+        type: 'info',
+        icon: 'fa-hand-holding',
+        message: `Item is with user. Return scheduled in ${returnDue} day${returnDue !== 1 ? 's' : ''}.${request.status === 'late_pickup' ? ' (Pickup was late)' : ''}`
+      };
+      
+    case 'late_return':
+      const overdueDays = Math.abs(daysDiff(returnDate, now));
+      return {
+        type: 'error',
+        icon: 'fa-exclamation-circle',
+        message: `Item return is ${overdueDays} day${overdueDays !== 1 ? 's' : ''} overdue. Follow up with user immediately. Stock not restored until returned.`
+      };
+      
+    default:
+      return null;
+  }
+};
 
 export default function RequestSection({ requests = [], onStatusChange, onRefresh, onBack, onOpenSettings, isLoading = false }) {
   const { isDark } = useTheme();
@@ -34,22 +150,57 @@ export default function RequestSection({ requests = [], onStatusChange, onRefres
     const result = {
       request: requests.filter(req => req.status === 'Pending'),
       reserved: requests.filter(req => req.status === 'Approved'),
-      borrowed: requests.filter(req => req.status === 'late_return'), // Items overdue but still with user
+      borrowed: requests.filter(req => 
+        ['Borrowed', 'late_pickup'].includes(req.status) // Items currently with users (exclude late_return - it's archived)
+      ),
       archive: requests.filter(req => 
-        ['Rejected', 'No_Return', 'No_Pickup', 'Cancelled', 'Returned'].includes(req.status)
+        ['Rejected', 'No_Return', 'No_Pickup', 'Cancelled', 'Returned', 'late_return'].includes(req.status)
       )
     };
     
-    // Debug logging for Archive tab
-    console.log('📊 Archive categorization:', {
-      totalRequests: requests.length,
-      archiveCount: result.archive.length,
-      archiveStatuses: result.archive.reduce((acc, req) => {
-        acc[req.status] = (acc[req.status] || 0) + 1;
-        return acc;
-      }, {}),
-      archiveIds: result.archive.map(r => r.id)
-    });
+    // Calculate breakdown for borrowed tab
+    const borrowedBreakdown = result.borrowed.reduce((acc, req) => {
+      acc[req.status] = (acc[req.status] || 0) + 1;
+      return acc;
+    }, {});
+    
+    // TEST 2.1: Borrowed Tab Display
+    console.log(`
+${'='.repeat(60)}
+📋 TEST 2.1: BORROWED TAB DISPLAY
+${'='.repeat(60)}
+Total requests: ${requests.length}
+Borrowed tab count: ${result.borrowed.length}
+Borrowed status breakdown:
+  - Borrowed: ${borrowedBreakdown['Borrowed'] || 0}
+  - late_pickup: ${borrowedBreakdown['late_pickup'] || 0}
+Borrowed IDs: ${result.borrowed.map(r => r.id).join(', ')}
+Request tab count: ${result.request.length}
+Reserved tab count: ${result.reserved.length}
+Archive tab count: ${result.archive.length}
+${'='.repeat(60)}
+✅ COPY THIS LOG TO CHECKLIST TEST 2.1
+${'='.repeat(60)}
+`);
+    
+    // TEST 2.2: Archive Tab Display
+    console.log(`
+${'='.repeat(60)}
+📋 TEST 2.2: ARCHIVE TAB DISPLAY
+${'='.repeat(60)}
+Total requests: ${requests.length}
+Archive tab count: ${result.archive.length}
+Archive status breakdown:
+${JSON.stringify(result.archive.reduce((acc, req) => {
+  acc[req.status] = (acc[req.status] || 0) + 1;
+  return acc;
+}, {}), null, 2)}
+Archive IDs: ${result.archive.map(r => r.id).join(', ')}
+Expected statuses: Rejected, Returned, late_return, No_Return, No_Pickup, Cancelled
+${'='.repeat(60)}
+✅ COPY THIS LOG TO CHECKLIST TEST 2.2
+${'='.repeat(60)}
+`);
     
     return result;
   }, [requests]);
@@ -158,16 +309,38 @@ export default function RequestSection({ requests = [], onStatusChange, onRefres
       overdueFilter, quantityMin, quantityMax, dateRangeStart, dateRangeEnd, overdueDurationFilter, processingAdminFilter]);
 
   // Pagination logic
-  const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredRequests.length / itemsPerPage) || 1;
   const paginatedRequests = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return filteredRequests.slice(startIndex, endIndex);
   }, [filteredRequests, currentPage, itemsPerPage]);
+  
+  // Ensure currentPage doesn't exceed totalPages
+  React.useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   // Reset to page 1 when filters or tab changes
   React.useEffect(() => {
     setCurrentPage(1);
+    // TEST 1.2: Admin Dashboard Data Fetching
+    console.log(`
+${'='.repeat(60)}
+📋 TEST 1.2: ADMIN DASHBOARD DATA FETCHING
+${'='.repeat(60)}
+Active tab: ${activeTab}
+Total requests: ${requests.length}
+Filtered requests: ${filteredRequests.length}
+Current page: ${currentPage}
+Items per page: ${itemsPerPage}
+Filters applied: search=${search}, itemFilter=${itemFilter}, userFilter=${userFilter}
+${'='.repeat(60)}
+✅ COPY THIS LOG TO CHECKLIST TEST 1.2
+${'='.repeat(60)}
+`);
   }, [activeTab, search, itemFilter, userFilter, dateFilter, statusFilter, overdueFilter, quantityMin, quantityMax, dateRangeStart, dateRangeEnd, overdueDurationFilter, processingAdminFilter]);
 
   // Memoized action handlers for better performance
@@ -214,12 +387,26 @@ export default function RequestSection({ requests = [], onStatusChange, onRefres
       const requestQuantity = request.requestQuantity || request.quantity || 0;
       const currentStock = request.currentStock || 0;
       
-      const success = await onStatusChange(request.id, 'late_return', itemName, requestorName, requestQuantity, currentStock);
+      // Smart detection: Check if pickup is late
+      const now = new Date();
+      const pickupDate = new Date(request.pickupDate);
+      const isLate = now > pickupDate;
+      const status = isLate ? 'late_pickup' : 'Borrowed';
+      const returnDate = request.returnDate ? new Date(request.returnDate) : null;
+      
+      const testNum = isLate ? '3.2' : '3.1';
+      console.log(`\n${'='.repeat(60)}\n📋 TEST ${testNum}: ADMIN PICKUP ACTION (${isLate ? 'LATE' : 'ON-TIME'})\n${'='.repeat(60)}\nRequest ID: ${request.id}\nItem: ${itemName}\nUser: ${requestorName}\nScheduled Pickup: ${pickupDate.toLocaleString()}\nCurrent Time: ${now.toLocaleString()}\nIs Late: ${isLate ? 'YES' : 'NO'}\nStatus Will Be: ${status}\nQuantity: ${requestQuantity}\nCurrent Stock: ${currentStock}\nStock After: ${currentStock - requestQuantity}\nReturn Date: ${returnDate ? returnDate.toLocaleString() : 'N/A'}\n${'='.repeat(60)}\n`);
+      
+      const success = await onStatusChange(request.id, status, itemName, requestorName, requestQuantity, currentStock);
       
       if (success) {
+        console.log(`✅ RESULT: Admin Pickup Success - ${status}\n${'='.repeat(60)}\n✅ COPY THIS LOG TO CHECKLIST TEST ${testNum}\n${'='.repeat(60)}\n`);
         onRefresh?.();
+      } else {
+        console.log(`❌ RESULT: Admin Pickup Failed\n${'='.repeat(60)}\n`);
       }
     } catch (error) {
+      console.error('❌ Error in handlePickup:', error);
       toast.error('Failed to mark as picked up');
     }
   }, [onStatusChange, onRefresh]);
@@ -267,12 +454,40 @@ export default function RequestSection({ requests = [], onStatusChange, onRefres
       const currentStock = request.currentStock || 0;
       const requestNote = request.requestNote || null;
       
+      // TEST 4.1/4.2: Smart return detection (logged on server)
+      const now = new Date();
+      const dueDate = request.adjustedReturnDate ? new Date(request.adjustedReturnDate) : (request.returnDate ? new Date(request.returnDate) : null);
+      const isLate = dueDate && now > dueDate;
+      const testNum = isLate ? '4.2' : '4.1';
+      
+      console.log(`
+${'='.repeat(60)}
+📋 TEST ${testNum}: ADMIN RETURN ACTION (${isLate ? 'LATE' : 'ON-TIME'})
+${'='.repeat(60)}
+Request ID: ${request.id}
+Item: ${itemName}
+User: ${requestorName}
+Current Status: ${request.status}
+Due Date: ${dueDate ? dueDate.toLocaleString() : 'N/A'}${request.adjustedReturnDate ? ' (Adjusted)' : ''}
+Current Time: ${now.toLocaleString()}
+Is Late: ${isLate ? 'YES' : 'NO'}
+Expected Status: ${isLate ? 'late_return' : 'Returned'}
+Quantity: ${requestQuantity}
+Current Stock: ${currentStock}
+Stock After: ${currentStock + requestQuantity}
+${'='.repeat(60)}
+`);
+      
       const success = await onStatusChange(request.id, 'Returned', itemName, requestorName, requestQuantity, currentStock, requestNote);
       
       if (success) {
+        console.log(`✅ RESULT: Admin Return Success\n${'='.repeat(60)}\n✅ COPY THIS LOG TO CHECKLIST TEST ${testNum}\n${'='.repeat(60)}\n`);
         onRefresh?.();
+      } else {
+        console.log(`❌ RESULT: Admin Return Failed\n${'='.repeat(60)}\n`);
       }
     } catch (error) {
+      console.error('❌ Error in handleMarkReturned:', error);
       toast.error('Failed to mark as returned');
     }
   }, [onStatusChange, onRefresh]);
@@ -316,10 +531,30 @@ export default function RequestSection({ requests = [], onStatusChange, onRefres
   // Check if item is overdue (past return date and still with user)
   const isOverdue = (request) => {
     if (!request.returnDate) return false;
-    const returnDate = new Date(request.returnDate);
+    const returnDate = new Date(request.adjustedReturnDate || request.returnDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return today > returnDate && (request.status === 'Returned' || request.status === 'late_return');
+    return today > returnDate && request.status === 'Borrowed';
+  };
+
+  // Check if item is overdue for pickup in Reserved tab
+  const isPickupOverdueReserved = (request) => {
+    if (!request.pickupDate) return false;
+    const pickupDate = new Date(request.pickupDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return pickupDate < today && !request.actual_pickup;
+  };
+
+  // Calculate days overdue for pickup in Reserved tab
+  const getDaysOverdueReserved = (request) => {
+    if (!request.pickupDate) return 0;
+    const pickupDate = new Date(request.pickupDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const diffTime = today - pickupDate;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 0;
   };
 
   const tabs = [
@@ -786,29 +1021,109 @@ export default function RequestSection({ requests = [], onStatusChange, onRefres
                     </td>
                     <td className={`px-4 py-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                       <div>
-                        {formatDate(request.pickupDate)}
-                        {(activeTab === 'request' || activeTab === 'reserved') && isPickupOverdue(request) && (
-                          <div className="text-red-600 dark:text-red-400 text-xs font-medium mt-0.5">
-                            Overdue by {getDaysOverdue(request)} day{getDaysOverdue(request) !== 1 ? 's' : ''}
-                          </div>
-                        )}
+                        {/* Display latest pickup date (actual_pickup > pickupDate) */}
+                        {(() => {
+                          const labels = getDateLabels(request);
+                          const displayDate = request.actual_pickup || request.pickupDate;
+                          
+                          return (
+                            <>
+                              {formatDate(displayDate)}
+                              {labels.pickupLabel && (
+                                <div className="text-green-600 dark:text-green-400 text-xs font-medium mt-0.5">
+                                  {labels.pickupLabel}
+                                </div>
+                              )}
+                              {activeTab === 'request' && isPickupOverdue(request) && !request.actual_pickup && (
+                                <div className="text-red-600 dark:text-red-400 text-xs font-medium mt-0.5">
+                                  Approval overdue by {getDaysOverdue(request)} day{getDaysOverdue(request) !== 1 ? 's' : ''}
+                                </div>
+                              )}
+                              {activeTab === 'reserved' && (() => {
+                                if (isPickupOverdueReserved(request)) {
+                                  return (
+                                    <div className="text-red-600 dark:text-red-400 text-xs font-medium mt-0.5">
+                                      Pickup overdue by {getDaysOverdueReserved(request)} day{getDaysOverdueReserved(request) !== 1 ? 's' : ''}
+                                    </div>
+                                  );
+                                }
+                                
+                                // Check if pickup is due today
+                                if (request.pickupDate && !request.actual_pickup) {
+                                  const pickupDate = new Date(request.pickupDate);
+                                  const today = new Date();
+                                  today.setHours(0, 0, 0, 0);
+                                  pickupDate.setHours(0, 0, 0, 0);
+                                  
+                                  if (pickupDate.getTime() === today.getTime()) {
+                                    return (
+                                      <div className="text-yellow-600 dark:text-yellow-400 text-xs font-medium mt-0.5">
+                                        Pickup due today
+                                      </div>
+                                    );
+                                  }
+                                }
+                                
+                                return null;
+                              })()}
+                            </>
+                          );
+                        })()}
                       </div>
                     </td>
                     <td className={`px-4 py-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                      {formatDate(request.returnDate)}
+                      {/* Display latest return date (actual_return > adjustedReturnDate > returnDate) */}
+                      {(() => {
+                        const labels = getDateLabels(request);
+                        const displayDate = request.actual_return || request.adjustedReturnDate || request.returnDate;
+                        
+                        return (
+                          <>
+                            {formatDate(displayDate)}
+                            {labels.returnLabel && (
+                              <div className="text-green-600 dark:text-green-400 text-xs font-medium mt-0.5">
+                                {labels.returnLabel}
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
                     </td>
                     {activeTab === 'borrowed' && (
                       <td className="px-4 py-3">
-                        {isOverdue(request) ? (
-                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
-                            <Clock className="w-3 h-3 mr-1" />
-                            Overdue
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                            With User
-                          </span>
-                        )}
+                        {(() => {
+                          const returnDate = new Date(request.adjustedReturnDate || request.returnDate);
+                          const today = new Date();
+                          today.setHours(0, 0, 0, 0);
+                          returnDate.setHours(0, 0, 0, 0);
+                          
+                          // Check if overdue (return date has passed)
+                          if (today > returnDate) {
+                            return (
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-white text-black border-2 border-red-400">
+                                <Clock className="w-3 h-3 mr-1" />
+                                Overdue
+                              </span>
+                            );
+                          }
+                          
+                          // Check if due today
+                          if (returnDate.getTime() === today.getTime()) {
+                            return (
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-white text-black border-2 border-yellow-400">
+                                <Clock className="w-3 h-3 mr-1" />
+                                Due Today
+                              </span>
+                            );
+                          }
+                          
+                          // Otherwise with user
+                          return (
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-white text-black border-2 border-blue-400">
+                              With User
+                            </span>
+                          );
+                        })()}
                       </td>
                     )}
                     {activeTab === 'archive' && (
@@ -908,113 +1223,229 @@ export default function RequestSection({ requests = [], onStatusChange, onRefres
                   {/* Expanded Details Row */}
                   {expandedRow === request.id && (
                     <tr className={`${isDark ? 'bg-gray-750' : 'bg-gray-50'}`}>
-                      <td colSpan={activeTab === 'archive' ? "6" : "7"} className="px-4 py-4">
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                          <div>
-                            <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                              Request ID:
-                            </span>
-                            <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>
-                              #{request.id}
-                            </p>
-                          </div>
-                          <div>
-                            <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                              Created At:
-                            </span>
-                            <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>
-                              {formatDate(request.createdAt)}
-                            </p>
-                          </div>
-                          <div>
-                            <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                              Available Stock:
-                            </span>
-                            <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>
-                              {request.currentStock || 0}
-                            </p>
-                          </div>
-                          
-                          {/* Archive-specific details */}
-                          {activeTab === 'archive' && (
-                            <>
-                              {request.updatedAt && (
-                                <div>
-                                  <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                    Status Changed:
-                                  </span>
-                                  <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>
-                                    {formatDate(request.updatedAt)}
+                      <td colSpan={activeTab === 'archive' ? "6" : "7"} className="px-6 py-6">
+                        <div className="space-y-6">
+                          {/* REQUEST INFORMATION SECTION */}
+                          <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
+                            <h4 className={`text-sm font-bold mb-3 flex items-center gap-2 ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
+                              <i className="fa-solid fa-file-lines"></i>
+                              REQUEST INFORMATION
+                            </h4>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Request ID:</span>
+                                <p className={`font-mono ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>#{request.id}</p>
+                              </div>
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Requested Quantity:</span>
+                                <p className={`font-bold ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>{request.quantity}</p>
+                              </div>
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Created:</span>
+                                <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>{formatDate(request.createdAt)}</p>
+                              </div>
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Last Updated:</span>
+                                <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>{formatDate(request.updatedAt)}</p>
+                              </div>
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Requested Pickup:</span>
+                                <p className={`${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
+                                  {formatDate(request.pickupDate)}
+                                  <span className="text-xs text-gray-500 ml-1">(Original)</span>
+                                </p>
+                              </div>
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Requested Return:</span>
+                                <p className={`${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
+                                  {formatDate(request.returnDate)}
+                                  <span className="text-xs text-gray-500 ml-1">(Original)</span>
+                                </p>
+                              </div>
+                              {request.requestNote && (
+                                <div className="col-span-2 md:col-span-4">
+                                  <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>User's Note:</span>
+                                  <p className={`mt-1 px-3 py-2 rounded ${isDark ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-900'}`}>
+                                    {request.requestNote}
                                   </p>
                                 </div>
                               )}
-                              {request.adminName && (
+                            </div>
+                          </div>
+
+                          {/* CURRENT STATUS SECTION */}
+                          <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
+                            <h4 className={`text-sm font-bold mb-3 flex items-center gap-2 ${isDark ? 'text-green-400' : 'text-green-600'}`}>
+                              <i className="fa-solid fa-calendar-check"></i>
+                              CURRENT STATUS & DATES
+                            </h4>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Current Status:</span>
+                                <div className="mt-1">
+                                  <RequestStatusBadge status={request.status} size="sm" />
+                                </div>
+                              </div>
+                              {request.actual_pickup && (
                                 <div>
-                                  <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                    Processed By:
-                                  </span>
-                                  <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>
-                                    {request.adminName}
+                                  <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Actual Pickup:</span>
+                                  <p className={`text-green-600 dark:text-green-400 font-semibold`}>
+                                    {formatDate(request.actual_pickup)}
                                   </p>
                                 </div>
                               )}
-                            </>
-                          )}
-                          
-                          {request.actual_pickup && (
-                            <div>
-                              <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                Actual Pickup:
-                              </span>
-                              <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>
-                                {formatDate(request.actual_pickup)}
-                              </p>
+                              {request.adjustedReturnDate && (() => {
+                                const wasAdjusted = new Date(request.adjustedReturnDate).getTime() !== new Date(request.returnDate).getTime();
+                                const wasLate = request.actual_return && new Date(request.actual_return) > new Date(request.returnDate);
+                                const label = wasAdjusted ? 'Adjusted Return:' : (wasLate ? 'Late Return:' : 'Return Date:');
+                                
+                                return (
+                                  <div>
+                                    <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{label}</span>
+                                    <p className={`${wasLate && !wasAdjusted ? 'text-red-600 dark:text-red-400' : 'text-orange-600 dark:text-orange-400'} font-semibold`}>
+                                      {formatDate(request.adjustedReturnDate)}
+                                    </p>
+                                  </div>
+                                );
+                              })()}
+                              {request.actual_return && (
+                                <div>
+                                  <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Actual Return:</span>
+                                  <p className={`text-green-600 dark:text-green-400 font-semibold`}>
+                                    {formatDate(request.actual_return)}
+                                  </p>
+                                </div>
+                              )}
+                              {activeTab === 'archive' && request.adminName && (
+                                <div>
+                                  <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Processed By:</span>
+                                  <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>{request.adminName}</p>
+                                </div>
+                              )}
                             </div>
-                          )}
-                          {request.actual_return && (
-                            <div>
-                              <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                Actual Return:
-                              </span>
-                              <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>
-                                {formatDate(request.actual_return)}
-                              </p>
+                          </div>
+
+                          {/* USER INFORMATION SECTION */}
+                          <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
+                            <h4 className={`text-sm font-bold mb-3 flex items-center gap-2 ${isDark ? 'text-purple-400' : 'text-purple-600'}`}>
+                              <i className="fa-solid fa-user"></i>
+                              USER INFORMATION
+                            </h4>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Name:</span>
+                                <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>{request.userName || 'N/A'}</p>
+                              </div>
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Username:</span>
+                                <p className={`font-mono ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>{request.userUsername || 'N/A'}</p>
+                              </div>
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Email:</span>
+                                <p className={`${isDark ? 'text-gray-200' : 'text-gray-900'}`}>{request.userEmail || 'N/A'}</p>
+                              </div>
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Phone:</span>
+                                <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>{request.userPhone || 'N/A'}</p>
+                              </div>
                             </div>
-                          )}
-                          
-                          {/* User's request note */}
-                          {request.requestNote && (
-                            <div className="col-span-2 md:col-span-3">
-                              <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                Request Note:
-                              </span>
-                              <p className={`mt-1 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
-                                {request.requestNote}
-                              </p>
+                          </div>
+
+                          {/* ITEM INFORMATION SECTION */}
+                          <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
+                            <h4 className={`text-sm font-bold mb-3 flex items-center gap-2 ${isDark ? 'text-orange-400' : 'text-orange-600'}`}>
+                              <i className="fa-solid fa-box"></i>
+                              ITEM INFORMATION
+                            </h4>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Item Name:</span>
+                                <p className={`font-semibold ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>{request.itemName}</p>
+                              </div>
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Category:</span>
+                                <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>{request.itemCategory || 'N/A'}</p>
+                              </div>
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Current Stock:</span>
+                                <p className={`font-bold ${request.currentStock <= 10 ? 'text-red-600' : isDark ? 'text-gray-200' : 'text-gray-900'}`}>
+                                  {request.currentStock || 0}
+                                </p>
+                              </div>
+                              <div>
+                                <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Reserved Stock:</span>
+                                <p className={`font-bold ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
+                                  {request.reservedQuantity || 0}
+                                </p>
+                              </div>
+                              {request.itemDateLimit && (
+                                <div>
+                                  <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Max Borrow Period:</span>
+                                  <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>{request.itemDateLimit} days</p>
+                                </div>
+                              )}
                             </div>
-                          )}
-                          
-                          {/* Admin's status change reason (for archive) */}
-                          {activeTab === 'archive' && request.statusChangeReason && (
-                            <div className="col-span-2 md:col-span-3">
-                              <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                {request.status === 'Rejected' ? 'Rejection Reason:' : 
-                                 request.status === 'No_Return' ? 'No Return Reason:' :
-                                 request.status === 'No_Pickup' ? 'No Pickup Reason:' :
-                                 request.status === 'Cancelled' ? 'Cancellation Reason:' :
-                                 'Status Change Reason:'}
-                              </span>
-                              <p className={`mt-1 px-3 py-2 rounded-lg ${
-                                request.status === 'Rejected' 
-                                  ? 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300'
-                                  : request.status === 'No_Return'
-                                  ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-800 dark:text-orange-300'
-                                  : request.status === 'No_Pickup'
-                                  ? 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300'
-                                  : 'bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
-                              }`}>
-                                {request.statusChangeReason}
-                              </p>
+                          </div>
+
+                          {/* SYSTEM STATUS & PROMPTS SECTION */}
+                          {(() => {
+                            const systemPrompt = getSystemPrompt(request);
+                            if (!systemPrompt) return null;
+                            
+                            const colorClasses = {
+                              success: 'bg-green-50 dark:bg-green-900/50 text-green-900 dark:text-green-100 border-green-200 dark:border-green-700',
+                              info: 'bg-blue-50 dark:bg-blue-900/50 text-blue-900 dark:text-blue-100 border-blue-200 dark:border-blue-700',
+                              warning: 'bg-yellow-50 dark:bg-yellow-900/50 text-yellow-900 dark:text-yellow-100 border-yellow-200 dark:border-yellow-700',
+                              error: 'bg-red-50 dark:bg-red-900/50 text-red-900 dark:text-red-100 border-red-200 dark:border-red-700'
+                            };
+                            
+                            return (
+                              <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
+                                <h4 className={`text-sm font-bold mb-3 flex items-center gap-2 ${isDark ? 'text-cyan-400' : 'text-cyan-600'}`}>
+                                  <i className="fa-solid fa-robot"></i>
+                                  SYSTEM STATUS & ALERTS
+                                </h4>
+                                <div className={`px-4 py-3 rounded-lg border ${colorClasses[systemPrompt.type]}`}>
+                                  <div className="flex items-start gap-3">
+                                    <i className={`fa-solid ${systemPrompt.icon} text-lg mt-0.5`}></i>
+                                    <p className="flex-1 font-medium">
+                                      {systemPrompt.message}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })()}
+
+                          {/* ADMIN NOTES & SYSTEM LOGS SECTION */}
+                          {(activeTab === 'archive' && request.statusChangeReason) && (
+                            <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
+                              <h4 className={`text-sm font-bold mb-3 flex items-center gap-2 ${isDark ? 'text-red-400' : 'text-red-600'}`}>
+                                <i className="fa-solid fa-clipboard-list"></i>
+                                ADMIN NOTES & SYSTEM LOGS
+                              </h4>
+                              <div className="space-y-2">
+                                <div>
+                                  <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                    {request.status === 'Rejected' ? 'Rejection Reason:' : 
+                                     request.status === 'No_Return' ? 'No Return Reason:' :
+                                     request.status === 'No_Pickup' ? 'No Pickup Reason:' :
+                                     request.status === 'Cancelled' ? 'Cancellation Reason:' :
+                                     'Status Change Reason:'}
+                                  </span>
+                                  <p className={`mt-2 px-4 py-3 rounded-lg ${
+                                    request.status === 'Rejected' 
+                                      ? 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-800'
+                                      : request.status === 'No_Return'
+                                      ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-800 dark:text-orange-300 border border-orange-200 dark:border-orange-800'
+                                      : request.status === 'No_Pickup'
+                                      ? 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-800'
+                                      : 'bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-600'
+                                  }`}>
+                                    {request.statusChangeReason}
+                                  </p>
+                                </div>
+                              </div>
                             </div>
                           )}
                         </div>

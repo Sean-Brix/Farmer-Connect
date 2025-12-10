@@ -12,7 +12,7 @@ async function getDueTracking(req, res) {
         today.setHours(0, 0, 0, 0);
         
         let whereClause = {
-            status: 'Approved',
+            status: { in: ['Borrowed', 'late_pickup', 'late_return'] }, // Items currently with users
             returnDate: { not: null }
         };
         
@@ -82,7 +82,8 @@ async function getDueTracking(req, res) {
         
         // Enrich transactions with calculated fields
         const enrichedTransactions = transactions.map(transaction => {
-            const dueDate = new Date(transaction.returnDate);
+            // Use adjustedReturnDate if available (for late pickups), otherwise use returnDate
+            const dueDate = new Date(transaction.adjustedReturnDate || transaction.returnDate);
             dueDate.setHours(0, 0, 0, 0);
             
             const diffTime = dueDate - today;
@@ -144,6 +145,12 @@ async function getDueTracking(req, res) {
             dueNextWeek: grouped.dueNextWeek.length,
             dueLater: grouped.dueLater.length
         };
+        
+        const itemsList = enrichedTransactions.slice(0, 5).map(t => 
+            `  - ${t.itemName} (${t.userName}, Due: ${t.dueDate}, Status: ${t.status})`
+        ).join('\n');
+        
+        console.log(`\n${'='.repeat(60)}\n📋 TEST 1.1: DUE TRACKING DASHBOARD\n${'='.repeat(60)}\nFilter: ${filter}\nSort By: ${sortBy}\nToday: ${today.toLocaleDateString()}\nStatuses Queried: Borrowed, late_pickup, late_return\nTotal Items: ${counts.total}\nOverdue: ${counts.overdue}\nDue Today: ${counts.dueToday}\nDue This Week: ${counts.dueThisWeek}\nDue Next Week: ${counts.dueNextWeek}\nDue Later: ${counts.dueLater}\nSample Items (first 5):\n${itemsList || '  (none)'}\n${'='.repeat(60)}\n✅ COPY THIS LOG TO CHECKLIST TEST 1.1\n${'='.repeat(60)}\n`);
         
         return res.json({
             success: true,

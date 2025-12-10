@@ -13,33 +13,35 @@ model Account {
   access         access         @default(User)
   email          String?
   client_profile client_profile @default(Other)
+  resetTokenHash String?
+  resetTokenExpiry DateTime?
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
-  
+
   // Relations
-  auditLogs               AuditLog[]           @relation("AdminAuditLogs")
+  auditLogs               AuditLog[]             @relation("AdminAuditLogs")
   chatAttachments         ChatAttachment[]
   chatMessages            ChatMessage[]
   chatParticipants        ChatParticipant[]
   chatReadReceipts        ChatReadReceipt[]
   createdFAQCategories    FAQCategory[]
   createdFAQs             FAQ[]
-  assignedInquiries       Inquiry[]            @relation("AssignedInquiries")
-  resolvedInquiries       Inquiry[]            @relation("ResolvedInquiries")
+  assignedInquiries       Inquiry[]              @relation("AssignedInquiries")
+  resolvedInquiries       Inquiry[]              @relation("ResolvedInquiries")
   inquiries               Inquiry[]
   inquiryAttachments      InquiryAttachment[]
   inquiryReplies          InquiryReply[]
   itemTransactions        ItemTransaction[]
-  adminTransactions       ItemTransaction[]    @relation("AdminTransactions")
+  adminTransactions       ItemTransaction[]      @relation("AdminTransactions")
   seminars                SeminarParticipant[]
-  seminarsCreated         Seminar[]            @relation("SeminarsCreated")
-  surveyFormsCreated      SurveyForm[]         @relation("SurveyFormsCreated")
-  surveyResponses         SurveyResponse[]     @relation("SurveyResponses")
-  surveyStatisticsCreated SurveyStatistic[]    @relation("SurveyStatisticsCreated")
+  seminarsCreated         Seminar[]              @relation("SeminarsCreated")
+  surveyFormsCreated      SurveyForm[]           @relation("SurveyFormsCreated")
+  surveyResponses         SurveyResponse[]       @relation("SurveyResponses")
+  surveyStatisticsCreated SurveyStatistic[]      @relation("SurveyStatisticsCreated")
   preferences             UserPreference[]
   notifications           Notification[]
   notificationSettings    NotificationSettings?
-  systemSettingsUpdated   SystemSettings[]     @relation("SystemSettingsUpdater")
+  systemSettingsUpdated   SystemSettings[]       @relation("SystemSettingsUpdater")
   distributionHistory     DistributionHistory[]
   distributionWaitlist    DistributionWaitlist[]
 

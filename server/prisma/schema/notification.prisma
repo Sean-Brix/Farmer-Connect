@@ -1,13 +1,13 @@
 model Notification {
-  id          String            @id @default(cuid())
-  accountId   String
-  type        notification_type
-  title       String
-  message     String            @db.Text
-  relatedId   String?           // Related transaction/item/seminar ID
-  read        Boolean           @default(false)
-  createdAt   DateTime          @default(now())
-  account     Account           @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  id        String            @id @default(cuid())
+  accountId String
+  type      notification_type
+  title     String
+  message   String            @db.Text
+  relatedId String? // Related transaction/item/seminar ID
+  read      Boolean           @default(false)
+  createdAt DateTime          @default(now())
+  account   Account           @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@index([accountId], map: "notifications_accountId_idx")
   @@index([accountId, read], map: "notifications_accountId_read_idx")
@@ -16,15 +16,15 @@ model Notification {
 }
 
 model NotificationSettings {
-  id                    String  @id @default(cuid())
-  accountId             String  @unique
-  emailEnabled          Boolean @default(true)
-  requestApproved       Boolean @default(true)
-  requestRejected       Boolean @default(true)
-  itemDueSoon           Boolean @default(true)
-  itemOverdue           Boolean @default(true)
-  seminarReminder       Boolean @default(true)
-  account               Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  id              String  @id @default(cuid())
+  accountId       String  @unique
+  emailEnabled    Boolean @default(true)
+  requestApproved Boolean @default(true)
+  requestRejected Boolean @default(true)
+  itemDueSoon     Boolean @default(true)
+  itemOverdue     Boolean @default(true)
+  seminarReminder Boolean @default(true)
+  account         Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@map("notification_settings")
 }

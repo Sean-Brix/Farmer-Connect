@@ -10,7 +10,9 @@ export default function EICSearchAndFilters({
     setShowFilter, 
     categories, 
     typeIcon,
-    onMyRequestsClick 
+    onMyRequestsClick,
+    activeRequestsCount,
+    maxActiveRequests
 }) {
     const { isDark } = useTheme();
     // Close filter dropdown when clicking outside
@@ -39,8 +41,36 @@ export default function EICSearchAndFilters({
 
     return (
         <div className="w-full max-w-5xl mb-8 mx-auto">
-            {/* My Requests Button - Top Right on Desktop, Top on Mobile */}
-            <div className="w-full flex justify-end mb-3">
+            {/* My Requests Button & Active Counter - Top Right */}
+            <div className="w-full flex justify-end items-center gap-3 mb-3">
+                {/* Active Request Counter - Only show if maxActiveRequests exists */}
+                {maxActiveRequests && (
+                    <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
+                        activeRequestsCount >= maxActiveRequests 
+                            ? 'bg-red-100 border-2 border-red-400' 
+                            : activeRequestsCount >= maxActiveRequests * 0.7
+                            ? 'bg-yellow-100 border-2 border-yellow-400'
+                            : 'bg-green-100 border-2 border-green-400'
+                    }`}>
+                        <i className={`fa-solid fa-clipboard-list ${
+                            activeRequestsCount >= maxActiveRequests 
+                                ? 'text-red-600' 
+                                : activeRequestsCount >= maxActiveRequests * 0.7
+                                ? 'text-yellow-600'
+                                : 'text-green-600'
+                        }`}></i>
+                        <span className={`text-sm font-semibold ${
+                            activeRequestsCount >= maxActiveRequests 
+                                ? 'text-red-800' 
+                                : activeRequestsCount >= maxActiveRequests * 0.7
+                                ? 'text-yellow-800'
+                                : 'text-green-800'
+                        }`}>
+                            Active: {activeRequestsCount}/{maxActiveRequests}
+                        </span>
+                    </div>
+                )}
+                
                 <button
                     className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold shadow-md hover:shadow-lg transition border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm sm:text-base"
                     onClick={onMyRequestsClick}

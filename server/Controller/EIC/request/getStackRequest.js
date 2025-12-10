@@ -40,7 +40,7 @@ async function getStackRequests(req, res) {
                         surname: true,
                         email: true,
                         username: true,
-                        cellphone_no: true,
+                        contactNumber: true,
                         access: true,
                         client_profile: true,
                     },
@@ -74,6 +74,9 @@ async function getStackRequests(req, res) {
             status: request.status,
             pickupDate: request.pickupDate,
             returnDate: request.returnDate,
+            adjustedReturnDate: request.adjustedReturnDate, // For late pickup adjusted due date
+            actual_pickup: request.actual_pickup, // For actual pickup timestamp
+            actual_return: request.actual_return, // For actual return timestamp
             requestNote: request.requestNote,
             createdAt: request.createdAt,
             updatedAt: request.updatedAt,
@@ -85,11 +88,16 @@ async function getStackRequests(req, res) {
             itemDateLimit: request.itemStack.date_limit,
             // Stack inventory information
             currentStock: request.itemStack.quantity,
-            // User information
+            // User information (matching frontend expectations)
+            userName: `${request.account.firstName} ${request.account.surname}`,
+            userEmail: request.account.email,
+            userUsername: request.account.username,
+            userPhone: request.account.contactNumber,
+            // Legacy fields for backward compatibility
             requestorName: `${request.account.firstName} ${request.account.surname}`,
             requestorEmail: request.account.email,
             requestorUsername: request.account.username,
-            requestorPhone: request.account.cellphone_no,
+            requestorPhone: request.account.contactNumber,
             requestorAccess: request.account.access,
             requestorProfile: request.account.client_profile,
             // Admin information (if any)

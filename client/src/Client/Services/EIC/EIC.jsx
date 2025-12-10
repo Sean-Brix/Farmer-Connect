@@ -1,11 +1,16 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../../contexts/ThemeContext.jsx';
 import Navbar from '../../Components/Navbar';
 import { differenceInDays, isAfter, isBefore, startOfDay, addYears, addDays } from 'date-fns';
+import { ARCHIVED_STATUSES } from '../../../constants/eicStatuses';
 
 // TANSTACK QUERY HOOKS
 import { useEICEquipment, useUserRequests, useSubmitRequest, useCancelRequest } from './hooks/useEICQueries';
+
+// NEW HOOKS
+import useSystemSettings from './hooks/useSystemSettings';
+import useRequestActions from './hooks/useRequestActions';
 
 // COMPONENTS
 import EICLoadingState from './components/EICLoadingState';
@@ -13,11 +18,45 @@ import EICErrorState from './components/EICErrorState';
 import EICSearchAndFilters from './components/EICSearchAndFilters';
 import EICEquipmentCard from './components/EICEquipmentCard';
 import EICPagination from './components/EICPagination';
+import ActiveRequestCounter from './components/ActiveRequestCounter';
+import BorrowPeriodCard from './components/BorrowPeriodCard';
+import RequestStatusBadge from './components/RequestStatusBadge';
+import RequestActionPanel from './components/RequestActionPanel';
+import RequestTimeline from './components/RequestTimeline';
+import RequestDetailModal from './components/RequestDetailModal';
 
 // UTILITIES
 import { showSuccessAlert, showErrorAlert, showLoginPrompt } from './utils/alertUtils';
+import { canRequestItem, getUserFriendlyStatus } from './utils/statusHelpers';
+import { validateRequestForm } from './utils/validationHelpers';
 
 const ITEMS_PER_PAGE = 8;
+
+// Helper function to determine smart date labels for Client view
+const getClientDateLabels = (request) => {
+  const pickupAdjusted = request.actual_pickup && 
+    new Date(request.actual_pickup).getTime() !== new Date(request.pickupDate).getTime();
+  const returnAdjusted = request.adjustedReturnDate && 
+    new Date(request.adjustedReturnDate).getTime() !== new Date(request.returnDate).getTime();
+  
+  // If neither adjusted, return null (no labels needed)
+  if (!pickupAdjusted && !returnAdjusted) {
+    return { 
+      pickupLabel: null, 
+      returnLabel: null,
+      pickupAdjusted: false,
+      returnAdjusted: false
+    };
+  }
+  
+  // If one adjusted, show "(adjusted)" on adjusted date, "(on time)" on other for height consistency
+  return {
+    pickupLabel: pickupAdjusted ? '(adjusted)' : (returnAdjusted ? '(on time)' : null),
+    returnLabel: returnAdjusted ? '(adjusted)' : (pickupAdjusted ? '(on time)' : null),
+    pickupAdjusted,
+    returnAdjusted
+  };
+};
 
 export default function Eic() {
     const { theme, isDark } = useTheme();
@@ -32,11 +71,18 @@ export default function Eic() {
         pickupDate: '',
         returnDate: '',
         request_note: '',
-        quantity: 1,
+        quantity: '',
     });
     const [myRequests, setMyRequests] = useState([]);
     const [showMyRequestsModal, setShowMyRequestsModal] = useState(false);
+    const [requestsTab, setRequestsTab] = useState('active'); // 'active', 'history', 'cancelled'
+    const [selectedRequestDetail, setSelectedRequestDetail] = useState(null);
     const [formErrors, setFormErrors] = useState({});
+    const [expandedRowId, setExpandedRowId] = useState(null); // Track which row is expanded
+    const [highlightedItemId, setHighlightedItemId] = useState(null); // Track which item to highlight
+
+    // NEW HOOKS - System Settings
+    const { settings: systemSettings, loading: settingsLoading } = useSystemSettings();
 
     // TANSTACK QUERY HOOKS
     const { 
@@ -55,6 +101,47 @@ export default function Eic() {
     // MUTATIONS
     const submitRequestMutation = useSubmitRequest();
     const cancelRequestMutation = useCancelRequest();
+
+    // REQUEST ACTIONS HOOK
+    const { 
+        loading: actionsLoading, 
+        error: actionsError,
+        cancelRequest,
+        confirmPickup,
+        confirmReturn,
+        requestExtension
+    } = useRequestActions({
+        onSuccess: (actionType) => {
+            showSuccessAlert(`${actionType} completed successfully!`);
+            refetchRequests();
+        }
+    });
+
+    // Calculate active requests count (exclude archived statuses)
+    const activeRequestsCount = userRequests?.filter(
+        r => !ARCHIVED_STATUSES.includes(r.status)
+    ).length || 0;
+
+    // TEST 5.3: Client Active Requests Filter
+    if (userRequests && userRequests.length > 0) {
+      const breakdown = userRequests.reduce((acc, r) => {
+        acc[r.status] = (acc[r.status] || 0) + 1;
+        return acc;
+      }, {});
+      
+      console.log(`
+${'='.repeat(60)}
+📋 TEST 5.3: CLIENT ACTIVE REQUESTS FILTER
+${'='.repeat(60)}
+Total user requests: ${userRequests.length}
+Active requests count: ${activeRequestsCount}
+Archived statuses used: ${ARCHIVED_STATUSES.join(', ')}
+Request breakdown: ${JSON.stringify(breakdown, null, 2)}
+${'='.repeat(60)}
+✅ COPY THIS LOG TO CHECKLIST TEST 5.3
+${'='.repeat(60)}
+`);
+    }
 
     const categories = [
         'All',
@@ -114,6 +201,34 @@ export default function Eic() {
     // SEND REQUEST
     const handleRequestClick = async (item) => {
         try {
+            // Check if user already has active request for this item (not archived)
+            const hasActiveRequest = userRequests?.some(
+                r => r.itemStackId === item.id && !ARCHIVED_STATUSES.includes(r.status)
+            );
+            
+            if (hasActiveRequest) {
+                showErrorAlert(`You already have an ongoing request for "${item.Name}". Please complete or cancel your current request before making a new one.`);
+                return;
+            }
+            
+            // Check if can request this item (additional validations like max simultaneous borrows)
+            const requestCheck = canRequestItem(userRequests, item.id, systemSettings);
+            if (!requestCheck.can) {
+                showErrorAlert(requestCheck.reason);
+                return;
+            }
+            
+            console.log('🔍 Selected Item Data:', {
+                id: item.id,
+                stackId: item.stackId,
+                name: item.Name || item.name,
+                max_quantity_per_request: item.max_quantity_per_request,
+                quantity: item.quantity,
+                date_limit: item.date_limit,
+                'HAS max_quantity_per_request?': item.max_quantity_per_request !== undefined && item.max_quantity_per_request !== null,
+                fullItem: item
+            });
+            
             setSelectedItem(item);
             setModalOpen(true);
         } catch (e) {
@@ -123,7 +238,53 @@ export default function Eic() {
 
     const handleCloseModal = () => {
         setModalOpen(false);
+        setSelectedItem(null);
+        setRequestData({
+            pickupDate: '',
+            returnDate: '',
+            request_note: '',
+            quantity: '',
+        });
         setFormErrors({});
+    };
+
+    const handleOpenMyRequestsWithHighlight = async (itemId) => {
+        try {
+            // Refetch to get latest data
+            const requestsData = await refetchRequests();
+            
+            if (requestsData.error?.message === 'UNAUTHORIZED') {
+                showLoginPrompt(navigate);
+                return;
+            }
+            
+            // Update myRequests state with latest data
+            setMyRequests(requestsData.data || []);
+            setHighlightedItemId(itemId);
+            setShowMyRequestsModal(true);
+            setRequestsTab('active'); // Always show active tab when opening from card
+            
+            // Clear highlight after 3 seconds
+            setTimeout(() => {
+                setHighlightedItemId(null);
+            }, 3000);
+        } catch (error) {
+            console.error('Error fetching user requests:', error);
+            
+            if (error.message === 'UNAUTHORIZED') {
+                showLoginPrompt(navigate);
+            } else {
+                // Still open the modal with existing data
+                setMyRequests(userRequests || []);
+                setHighlightedItemId(itemId);
+                setShowMyRequestsModal(true);
+                setRequestsTab('active');
+                
+                setTimeout(() => {
+                    setHighlightedItemId(null);
+                }, 3000);
+            }
+        }
     };
 
     const handleInputChange = (e) => {
@@ -134,10 +295,10 @@ export default function Eic() {
         }));
 
         // Clear specific error when user starts typing
-        if (formErrors[name]) {
+        if (formErrors[name] && formErrors[name].length > 0) {
             setFormErrors((prev) => ({
                 ...prev,
-                [name]: '',
+                [name]: [],
             }));
         }
     };
@@ -153,7 +314,7 @@ export default function Eic() {
 
         // Prevent past dates
         if (name === 'pickupDate' && isBefore(selectedDate, today)) {
-            errors.pickupDate = 'Pickup date cannot be in the past';
+            errors.pickupDate = ['Pickup date cannot be in the past'];
             setFormErrors(errors);
             // Reset to today
             e.target.value = new Date().toISOString().split('T')[0];
@@ -162,7 +323,7 @@ export default function Eic() {
 
         // Prevent unrealistic future dates
         if (isAfter(selectedDate, maxDate)) {
-            errors[name] = 'Date cannot be more than 2 years in the future';
+            errors[name] = ['Date cannot be more than 2 years in the future'];
             setFormErrors(errors);
             return;
         }
@@ -171,7 +332,7 @@ export default function Eic() {
         if (name === 'returnDate' && requestData.pickupDate) {
             const pickup = startOfDay(new Date(requestData.pickupDate));
             if (!isAfter(selectedDate, pickup)) {
-                errors.returnDate = 'Return date must be after pickup date';
+                errors.returnDate = ['Return date must be after pickup date'];
                 setFormErrors(errors);
                 return;
             }
@@ -180,7 +341,7 @@ export default function Eic() {
             if (selectedItem?.date_limit) {
                 const borrowDays = differenceInDays(selectedDate, pickup);
                 if (borrowDays > selectedItem.date_limit) {
-                    errors.returnDate = `Borrowing period (${borrowDays} days) exceeds maximum limit of ${selectedItem.date_limit} days`;
+                    errors.returnDate = [`Borrowing period (${borrowDays} days) exceeds maximum limit of ${selectedItem.date_limit} days`];
                     setFormErrors(errors);
                     return;
                 }
@@ -192,23 +353,39 @@ export default function Eic() {
 
     // Enhanced quantity validation
     const handleQuantityChange = (e) => {
-        let value = parseInt(e.target.value);
+        const value = e.target.value;
         const errors = { ...formErrors };
 
-        if (isNaN(value) || value < 1) {
-            value = 1;
-        }
-
-        if (value > selectedItem?.quantity) {
-            errors.quantity = `Only ${selectedItem?.quantity} units available`;
-            setFormErrors(errors);
-            value = selectedItem?.quantity;
-        } else {
+        // Allow empty value or any number input
+        if (value === '' || value === null) {
+            setRequestData((prev) => ({ ...prev, quantity: '' }));
             delete errors.quantity;
             setFormErrors(errors);
+            return;
         }
 
-        setRequestData((prev) => ({ ...prev, quantity: value }));
+        const numValue = parseInt(value);
+        
+        if (isNaN(numValue)) {
+            // Invalid input, keep previous value
+            return;
+        }
+
+        // Check max_quantity_per_request limit first
+        if (selectedItem?.max_quantity_per_request && numValue > selectedItem.max_quantity_per_request) {
+            errors.quantity = [`Maximum ${selectedItem.max_quantity_per_request} units per request allowed`];
+        }
+        // Check available stock
+        else if (numValue > selectedItem?.quantity) {
+            errors.quantity = [`Only ${selectedItem?.quantity} units available`];
+        } 
+        // Clear errors if valid
+        else {
+            delete errors.quantity;
+        }
+
+        setFormErrors(errors);
+        setRequestData((prev) => ({ ...prev, quantity: numValue }));
     };
 
     // Calculate borrowing period in days
@@ -223,45 +400,30 @@ export default function Eic() {
 
     // Form validation function with date_limit check
     const validateForm = () => {
-        const errors = {};
-        const today = startOfDay(new Date());
+        // Use comprehensive validation from validationHelpers
+        const validation = validateRequestForm(
+            {
+                pickupDate: requestData.pickupDate,
+                returnDate: requestData.returnDate,
+                quantity: requestData.quantity,
+                request_note: requestData.request_note
+            },
+            selectedItem,
+            userRequests,
+            systemSettings
+        );
 
-        if (!requestData.pickupDate) {
-            errors.pickupDate = 'Pickup date is required';
-        } else {
-            const pickup = startOfDay(new Date(requestData.pickupDate));
-            if (isBefore(pickup, today)) {
-                errors.pickupDate = 'Pickup date cannot be in the past';
+        setFormErrors(validation.errors);
+        
+        // Show error alert for critical validation failures
+        if (validation.hasErrors) {
+            const firstError = Object.values(validation.errors)[0];
+            if (firstError && (firstError.includes('duplicate') || firstError.includes('maximum') || firstError.includes('cooldown'))) {
+                showErrorAlert(firstError);
             }
         }
-
-        if (requestData.returnDate) {
-            const pickup = startOfDay(new Date(requestData.pickupDate));
-            const returnD = startOfDay(new Date(requestData.returnDate));
-            
-            if (!isAfter(returnD, pickup)) {
-                errors.returnDate = 'Return date must be after pickup date';
-            }
-
-            // Check against item's date_limit if set
-            if (selectedItem?.date_limit) {
-                const borrowDays = differenceInDays(returnD, pickup);
-                if (borrowDays > selectedItem.date_limit) {
-                    errors.returnDate = `Maximum borrowing period is ${selectedItem.date_limit} days. Your requested period is ${borrowDays} days.`;
-                }
-            }
-        }
-
-        if (!requestData.quantity || requestData.quantity < 1) {
-            errors.quantity = 'Quantity must be at least 1';
-        } else if (requestData.quantity > selectedItem?.quantity) {
-            errors.quantity = `Only ${selectedItem?.quantity} units available`;
-        } else if (selectedItem?.max_quantity_per_request && requestData.quantity > selectedItem.max_quantity_per_request) {
-            errors.quantity = `Maximum ${selectedItem.max_quantity_per_request} units per request`;
-        }
-
-        setFormErrors(errors);
-        return Object.keys(errors).length === 0;
+        
+        return !validation.hasErrors;
     };
 
     // SUBMIT REQUEST
@@ -305,7 +467,7 @@ export default function Eic() {
                 pickupDate: '',
                 returnDate: '',
                 request_note: '',
-                quantity: 1,
+                quantity: '',
             });
             setFormErrors({});
         }
@@ -509,22 +671,43 @@ export default function Eic() {
                             categories={categories}
                             typeIcon={typeIcon}
                             onMyRequestsClick={handleMyRequestsClick}
+                            activeRequestsCount={activeRequestsCount}
+                            maxActiveRequests={systemSettings?.eic_max_simultaneous_borrows || 3}
                         />
 
-                        <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
+                        <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-8 lg:grid-cols-3 justify-items-center">
                             {filteredItems.length === 0 ? (
                                 <div className={`col-span-full text-center ${isDark ? 'text-gray-400' : 'text-gray-500'} py-16 text-lg font-semibold tracking-wide`}>
                                     No equipment found.
                                 </div>
                             ) : (
-                                paginatedItems.map((item) => (
-                                    <EICEquipmentCard
-                                        key={item.id}
-                                        item={item}
-                                        onRequestClick={handleRequestClick}
-                                        typeIcon={typeIcon}
-                                    />
-                                ))
+                                paginatedItems.map((item) => {
+                                    // Check if user has active request for this item (not in archives)
+                                    const hasActiveRequest = userRequests?.some(
+                                        r => r.itemStackId === item.id && !ARCHIVED_STATUSES.includes(r.status)
+                                    );
+                                    
+                                    // Check if user can request this item
+                                    const requestCheck = canRequestItem(userRequests, item.id, systemSettings);
+                                    
+                                    // Determine disabled reason
+                                    const disabledReason = hasActiveRequest 
+                                        ? `You already have an active request for this item`
+                                        : requestCheck.reason;
+                                    
+                                    return (
+                                        <EICEquipmentCard
+                                            key={item.id}
+                                            item={item}
+                                            onRequestClick={handleRequestClick}
+                                            typeIcon={typeIcon}
+                                            hasActiveRequest={hasActiveRequest}
+                                            isDisabled={!requestCheck.can}
+                                            disabledReason={disabledReason}
+                                            onOpenMyRequests={handleOpenMyRequestsWithHighlight}
+                                        />
+                                    );
+                                })
                             )}
                         </div>
 
@@ -586,32 +769,51 @@ export default function Eic() {
                                 </p>
                             </div>
 
-                            {/* Max Quantity Per Request Warning */}
-                            {selectedItem?.max_quantity_per_request && (
-                                <div className={`${isDark ? 'bg-blue-900/30 border-blue-600' : 'bg-blue-50 border-blue-400'} border-l-4 rounded-lg p-4 mb-4`}>
-                                    <div className="flex items-start">
-                                        <i className={`fa-solid fa-box ${isDark ? 'text-blue-400' : 'text-blue-600'} mr-2 mt-0.5`}></i>
-                                        <div className="flex-1">
-                                            <p className={`text-sm font-semibold ${isDark ? 'text-blue-200' : 'text-blue-800'} mb-1`}>
-                                                Quantity Limit Per Request
-                                            </p>
-                                            <p className={`text-sm ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>
-                                                You can request a maximum of{' '}
-                                                <strong>{selectedItem.max_quantity_per_request} units</strong> in a single request.
-                                                {requestData.quantity > 0 && (() => {
-                                                    const isExceeding = requestData.quantity > selectedItem.max_quantity_per_request;
-                                                    return (
-                                                        <span className={isExceeding ? 'text-red-600 font-bold' : 'text-green-600 font-semibold'}>
-                                                            {' '}Your request: <strong>{requestData.quantity} units</strong>
-                                                            {isExceeding && ' (Exceeds limit!'}
+                            {/* Max Quantity Per Request Warning - Always Visible */}
+                            {selectedItem?.max_quantity_per_request && (() => {
+                                const isExceeding = requestData.quantity > 0 && requestData.quantity > selectedItem.max_quantity_per_request;
+                                return (
+                                    <div className={`${
+                                        isExceeding
+                                            ? isDark ? 'bg-red-900/30 border-red-600' : 'bg-red-50 border-red-400'
+                                            : isDark ? 'bg-blue-900/30 border-blue-600' : 'bg-blue-50 border-blue-400'
+                                    } border-l-4 rounded-lg p-4 mb-4`}>
+                                        <div className="flex items-start">
+                                            <i className={`fa-solid fa-box ${
+                                                isExceeding
+                                                    ? isDark ? 'text-red-400' : 'text-red-600'
+                                                    : isDark ? 'text-blue-400' : 'text-blue-600'
+                                            } mr-2 mt-0.5`}></i>
+                                            <div className="flex-1">
+                                                <p className={`text-sm font-semibold ${
+                                                    isExceeding
+                                                        ? isDark ? 'text-red-200' : 'text-red-800'
+                                                        : isDark ? 'text-blue-200' : 'text-blue-800'
+                                                } mb-1`}>
+                                                    Quantity Limit Per Request
+                                                </p>
+                                                <p className={`text-sm ${
+                                                    isExceeding
+                                                        ? isDark ? 'text-red-300' : 'text-red-700'
+                                                        : isDark ? 'text-blue-300' : 'text-blue-700'
+                                                }`}>
+                                                    Maximum per request: <strong>{selectedItem.max_quantity_per_request} units</strong>
+                                                    {requestData.quantity !== '' && requestData.quantity !== null && (
+                                                        <span className={
+                                                            isExceeding
+                                                                ? 'text-red-600 dark:text-red-400 font-bold'
+                                                                : 'text-green-600 dark:text-green-400 font-semibold'
+                                                        }>
+                                                            {' '}| Your request: <strong>{requestData.quantity} units</strong>
+                                                            {isExceeding && ' (Exceeds limit!)'}
                                                         </span>
-                                                    );
-                                                })()}
-                                            </p>
+                                                    )}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )}
+                                );
+                            })()}
 
                             {/* Date Limit Warning */}
                             {selectedItem?.date_limit && (
@@ -659,19 +861,19 @@ export default function Eic() {
                                             handleDateInput(e);
                                         }}
                                         className={`w-full rounded-xl border-2 px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-500 focus:outline-none transition ${
-                                            formErrors.pickupDate
+                                            formErrors.pickupDate && formErrors.pickupDate.length > 0
                                                 ? 'border-red-400 bg-red-50'
                                                 : isDark 
                                                 ? 'border-gray-600 bg-gray-700 text-gray-100'
                                                 : 'border-gray-300 bg-white text-gray-900'
                                         }`}
                                         required
-                                        min={new Date().toISOString().split('T')[0]}
+                                        min={new Date(Date.now() + 86400000).toISOString().split('T')[0]}
                                         max={addYears(new Date(), 2).toISOString().split('T')[0]}
                                     />
-                                    {formErrors.pickupDate && (
+                                    {formErrors.pickupDate && formErrors.pickupDate.length > 0 && (
                                         <p className="text-red-500 text-xs mt-1">
-                                            {formErrors.pickupDate}
+                                            {formErrors.pickupDate[0]}
                                         </p>
                                     )}
                                 </div>
@@ -695,7 +897,7 @@ export default function Eic() {
                                             handleDateInput(e);
                                         }}
                                         className={`w-full rounded-xl border-2 px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-500 focus:outline-none transition ${
-                                            formErrors.returnDate
+                                            formErrors.returnDate && formErrors.returnDate.length > 0
                                                 ? 'border-red-400 bg-red-50'
                                                 : isDark 
                                                 ? 'border-gray-600 bg-gray-700 text-gray-100'
@@ -712,13 +914,22 @@ export default function Eic() {
                                                 : addYears(new Date(), 2).toISOString().split('T')[0]
                                         }
                                     />
-                                    {formErrors.returnDate && (
+                                    {formErrors.returnDate && formErrors.returnDate.length > 0 && (
                                         <p className="text-red-500 text-xs mt-1">
-                                            {formErrors.returnDate}
+                                            {formErrors.returnDate[0]}
                                         </p>
                                     )}
                                 </div>
                             </div>
+
+                            {/* Borrow Period Card */}
+                            {requestData.pickupDate && requestData.returnDate && (
+                                <BorrowPeriodCard
+                                    pickupDate={requestData.pickupDate}
+                                    returnDate={requestData.returnDate}
+                                    dateLimit={selectedItem?.date_limit}
+                                />
+                            )}
 
                             <div>
                                 <div>
@@ -735,38 +946,42 @@ export default function Eic() {
                                         name="quantity"
                                         value={requestData.quantity}
                                         onChange={handleQuantityChange}
-                                        onKeyDown={(e) => {
-                                            // Prevent typing negative, decimal, or 'e'
-                                            if (e.key === '-' || e.key === '.' || e.key === 'e' || e.key === 'E') {
-                                                e.preventDefault();
+                                        onInput={(e) => {
+                                            // Enforce max limit strictly
+                                            const maxAllowed = selectedItem?.max_quantity_per_request || selectedItem?.quantity || 999;
+                                            if (parseInt(e.target.value) > maxAllowed) {
+                                                e.target.value = maxAllowed;
+                                                handleQuantityChange(e);
                                             }
                                         }}
+                                        step="1"
+                                        min="1"
+                                        max={selectedItem?.max_quantity_per_request || selectedItem?.quantity || 999}
                                         className={`w-full rounded-xl border-2 px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-500 focus:outline-none transition ${
-                                            formErrors.quantity
+                                            formErrors.quantity && formErrors.quantity.length > 0
                                                 ? 'border-red-400 bg-red-50'
                                                 : isDark 
                                                 ? 'border-gray-600 bg-gray-700 text-gray-100'
                                                 : 'border-gray-300 bg-white text-gray-900'
                                         }`}
                                         required
-                                        min="1"
-                                        max={
-                                            selectedItem?.max_quantity_per_request
-                                                ? Math.min(selectedItem.max_quantity_per_request, selectedItem?.quantity)
-                                                : selectedItem?.quantity
-                                        }
                                     />
-                                    {formErrors.quantity && (
+                                    {formErrors.quantity && formErrors.quantity.length > 0 && (
                                         <p className="text-red-500 text-xs mt-1">
-                                            {formErrors.quantity}
+                                            {formErrors.quantity[0]}
                                         </p>
                                     )}
-                                    {!formErrors.quantity &&
+                                    {(!formErrors.quantity || formErrors.quantity.length === 0) && (requestData.quantity === '' || requestData.quantity < 1) && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            Quantity must be at least 1
+                                        </p>
+                                    )}
+                                    {(!formErrors.quantity || formErrors.quantity.length === 0) &&
+                                        requestData.quantity >= 1 &&
                                         requestData.quantity >
                                             selectedItem?.quantity && (
                                             <p className="text-red-500 text-xs mt-1">
-                                                Quantity exceeds available
-                                                stock.
+                                                Quantity exceeds available stock ({selectedItem?.quantity} available)
                                             </p>
                                         )}
                                 </div>
@@ -788,9 +1003,13 @@ export default function Eic() {
                                     value={requestData.request_note}
                                     onChange={handleInputChange}
                                     rows="3"
+                                    maxLength={500}
                                     className={`w-full rounded-xl border-2 ${isDark ? 'border-gray-600 bg-gray-700 text-gray-100' : 'border-gray-300 bg-white text-gray-900'} px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-500 focus:outline-none transition resize-none`}
                                     placeholder="Describe the purpose of borrowing this equipment and any special requirements..."
                                 ></textarea>
+                                <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'} mt-1 text-right`}>
+                                    {requestData.request_note?.length || 0}/500 characters
+                                </p>
                             </div>
 
                             {/* Request Summary */}
@@ -854,12 +1073,16 @@ export default function Eic() {
                                     disabled={
                                         !requestData.pickupDate ||
                                         !requestData.quantity ||
-                                        Object.keys(formErrors).length > 0
+                                        (selectedItem?.max_quantity_per_request && requestData.quantity > selectedItem.max_quantity_per_request) ||
+                                        (requestData.quantity > selectedItem?.quantity) ||
+                                        Object.values(formErrors).some(err => Array.isArray(err) && err.length > 0)
                                     }
                                     className={`font-semibold px-4 sm:px-6 py-2 rounded-xl shadow-md transition border-2 focus:outline-none order-1 sm:order-2 ${
                                         !requestData.pickupDate ||
                                         !requestData.quantity ||
-                                        Object.keys(formErrors).length > 0
+                                        (selectedItem?.max_quantity_per_request && requestData.quantity > selectedItem.max_quantity_per_request) ||
+                                        (requestData.quantity > selectedItem?.quantity) ||
+                                        Object.values(formErrors).some(err => Array.isArray(err) && err.length > 0)
                                             ? 'bg-gray-300 text-gray-500 cursor-not-allowed border-gray-300'
                                             : 'bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700'
                                     }`}
@@ -889,17 +1112,56 @@ export default function Eic() {
                                 <i className="fa-solid fa-xmark"></i>
                             </button>
                         </div>
+                        {/* Tabs */}
+                        <div className={`flex border-b-2 ${isDark ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-gray-50'} px-4 sm:px-6 md:px-8`}>
+                            {['active', 'history', 'cancelled'].map((tab) => {
+                                const count = myRequests.filter(r => {
+                                    if (tab === 'active') return !ARCHIVED_STATUSES.includes(r.status);
+                                    if (tab === 'cancelled') return r.status === 'Cancelled';
+                                    return ['Returned', 'late_return', 'No_Return', 'No_Pickup', 'Rejected'].includes(r.status);
+                                }).length;
+
+                                return (
+                                    <button
+                                        key={tab}
+                                        onClick={() => setRequestsTab(tab)}
+                                        className={`px-4 py-3 font-semibold text-sm border-b-4 transition-all ${
+                                            requestsTab === tab
+                                                ? 'border-green-500 text-green-600'
+                                                : `border-transparent ${isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-700'}`
+                                        }`}
+                                    >
+                                        {tab.charAt(0).toUpperCase() + tab.slice(1)} 
+                                        <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
+                                            requestsTab === tab
+                                                ? 'bg-green-100 text-green-800'
+                                                : isDark ? 'bg-gray-600 text-gray-300' : 'bg-gray-200 text-gray-600'
+                                        }`}>
+                                            {count}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        
                         {/* Modal Body */}
                         <div className="px-8 py-6 space-y-5 overflow-y-auto flex-1">
-                            {myRequests.length > 0 ? (
+                            {(() => {
+                                const filteredRequests = myRequests.filter(r => {
+                                    if (requestsTab === 'active') return !ARCHIVED_STATUSES.includes(r.status);
+                                    if (requestsTab === 'cancelled') return r.status === 'Cancelled';
+                                    return ['Returned', 'late_return', 'No_Return', 'No_Pickup', 'Rejected'].includes(r.status);
+                                });
+
+                                return filteredRequests.length > 0 ? (
                                 <div>
-                                    <div className="mb-6 text-sm text-gray-600 bg-green-50 p-4 rounded-xl border border-green-100">
+                                    <div className={`mb-6 text-sm ${isDark ? 'text-gray-300 bg-green-900/20 border-green-700' : 'text-gray-600 bg-green-50 border-green-100'} p-4 rounded-xl border`}>
                                         <i className="fa-solid fa-info-circle mr-2 text-green-600"></i>
                                         <span className="font-medium">
-                                            Found {myRequests.length} request
-                                            {myRequests.length !== 1 ? 's' : ''}
+                                            Found {filteredRequests.length} {requestsTab} request
+                                            {filteredRequests.length !== 1 ? 's' : ''}
                                         </span>
-                                        <span className="ml-2 text-gray-500">
+                                        <span className={`ml-2 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
                                             • Sorted by most recent first
                                         </span>
                                     </div>
@@ -931,22 +1193,29 @@ export default function Eic() {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {myRequests.map(
-                                                    (request, index) => (
+                                                {filteredRequests.map(
+                                                    (request, index) => {
+                                                        const isExpanded = expandedRowId === request.id;
+                                                        const isHighlighted = highlightedItemId === request.itemStackId;
+                                                        
+                                                        return (
+                                                        <React.Fragment key={request.id}>
                                                         <tr
-                                                            key={request.id}
-                                                            className={`border-b border-gray-100 hover:bg-gray-50 transition-colors ${
-                                                                index % 2 === 0
+                                                            onClick={() => setExpandedRowId(isExpanded ? null : request.id)}
+                                                            className={`border-b border-gray-100 hover:bg-green-50 transition-all cursor-pointer ${
+                                                                isHighlighted
+                                                                    ? 'bg-yellow-100 animate-pulse'
+                                                                    : index % 2 === 0
                                                                     ? 'bg-white'
                                                                     : 'bg-gray-25'
                                                             }`}
+                                                            title="Click to view details"
                                                         >
                                                             <td className="py-5 px-6">
                                                                 <div className="space-y-2">
-                                                                    <div className="font-semibold text-gray-800 text-base leading-tight">
-                                                                        {
-                                                                            request.itemName
-                                                                        }
+                                                                    <div className="font-semibold text-gray-800 text-base leading-tight flex items-center gap-2">
+                                                                        {request.itemName}
+                                                                        <i className="fa-solid fa-arrow-up-right-from-square text-xs text-gray-400"></i>
                                                                     </div>
                                                                     <div className="text-sm text-gray-500 font-medium">
                                                                         <i className="fa-solid fa-tag mr-1"></i>
@@ -986,35 +1255,57 @@ export default function Eic() {
                                                             </td>
                                                             <td className="py-5 px-4">
                                                                 <div className="text-sm font-medium text-gray-700">
-                                                                    <i className="fa-solid fa-calendar-plus mr-2 text-green-600"></i>
-                                                                    {new Date(
-                                                                        request.pickupDate
-                                                                    ).toLocaleDateString(
-                                                                        'en-US',
-                                                                        {
-                                                                            year: 'numeric',
-                                                                            month: 'short',
-                                                                            day: 'numeric',
-                                                                        }
-                                                                    )}
+                                                                    {(() => {
+                                                                        const labels = getClientDateLabels(request);
+                                                                        const displayDate = request.actual_pickup || request.pickupDate;
+                                                                        
+                                                                        return (
+                                                                            <>
+                                                                                <i className="fa-solid fa-calendar-plus mr-2 text-green-600"></i>
+                                                                                {new Date(displayDate).toLocaleDateString(
+                                                                                    'en-US',
+                                                                                    {
+                                                                                        year: 'numeric',
+                                                                                        month: 'short',
+                                                                                        day: 'numeric',
+                                                                                    }
+                                                                                )}
+                                                                                {labels.pickupLabel && (
+                                                                                    <div className="text-green-600 text-xs font-medium mt-0.5">
+                                                                                        {labels.pickupLabel}
+                                                                                    </div>
+                                                                                )}
+                                                                            </>
+                                                                        );
+                                                                    })()}
                                                                 </div>
                                                             </td>
                                                             <td className="py-5 px-4">
                                                                 <div className="text-sm font-medium text-gray-700">
-                                                                    {request.returnDate ? (
-                                                                        <>
-                                                                            <i className="fa-solid fa-calendar-minus mr-2 text-red-600"></i>
-                                                                            {new Date(
-                                                                                request.returnDate
-                                                                            ).toLocaleDateString(
-                                                                                'en-US',
-                                                                                {
-                                                                                    year: 'numeric',
-                                                                                    month: 'short',
-                                                                                    day: 'numeric',
-                                                                                }
-                                                                            )}
-                                                                        </>
+                                                                    {(request.actual_return || request.adjustedReturnDate || request.returnDate) ? (
+                                                                        (() => {
+                                                                            const labels = getClientDateLabels(request);
+                                                                            const displayDate = request.actual_return || request.adjustedReturnDate || request.returnDate;
+                                                                            
+                                                                            return (
+                                                                                <>
+                                                                                    <i className="fa-solid fa-calendar-minus mr-2 text-red-600"></i>
+                                                                                    {new Date(displayDate).toLocaleDateString(
+                                                                                        'en-US',
+                                                                                        {
+                                                                                            year: 'numeric',
+                                                                                            month: 'short',
+                                                                                            day: 'numeric',
+                                                                                        }
+                                                                                    )}
+                                                                                    {labels.returnLabel && (
+                                                                                        <div className="text-green-600 text-xs font-medium mt-0.5">
+                                                                                            {labels.returnLabel}
+                                                                                        </div>
+                                                                                    )}
+                                                                                </>
+                                                                            );
+                                                                        })()
                                                                     ) : (
                                                                         <span className="text-gray-400 italic">
                                                                             <i className="fa-solid fa-minus mr-2"></i>
@@ -1025,27 +1316,33 @@ export default function Eic() {
                                                                 </div>
                                                             </td>
                                                             <td className="py-5 px-4 text-center">
-                                                                <span
-                                                                    className={`px-3 py-2 rounded-full text-xs font-bold min-w-[80px] inline-block ${
-                                                                        request.status ===
-                                                                        'Pending'
-                                                                            ? 'bg-yellow-100 text-yellow-800 border border-yellow-200'
-                                                                            : request.status ===
-                                                                              'Approved'
-                                                                            ? 'bg-green-100 text-green-800 border border-green-200'
-                                                                            : request.status ===
-                                                                              'Rejected'
-                                                                            ? 'bg-red-100 text-red-800 border border-red-200'
-                                                                            : request.status ===
-                                                                              'Returned'
-                                                                            ? 'bg-gray-100 text-gray-800 border border-gray-200'
-                                                                            : 'bg-green-100 text-green-800 border border-green-200'
-                                                                    }`}
-                                                                >
-                                                                    {
-                                                                        request.status
+                                                                {(() => {
+                                                                    const userFriendly = getUserFriendlyStatus(request.status, request.adjustedReturnDate || request.returnDate);
+                                                                    
+                                                                    if (userFriendly && requestsTab === 'active') {
+                                                                        return (
+                                                                            <div className={`inline-flex flex-col items-center px-3 py-2 rounded-lg border-2 ${userFriendly.bgClass} ${userFriendly.borderClass} ${userFriendly.textClass}`}>
+                                                                                <div className="flex items-center gap-1.5">
+                                                                                    <i className={`fa-solid ${userFriendly.icon} text-xs`}></i>
+                                                                                    <span className="font-bold text-xs">{userFriendly.label}</span>
+                                                                                </div>
+                                                                                {userFriendly.subLabel && (
+                                                                                    <div className="text-xs mt-1 font-medium">
+                                                                                        {userFriendly.subLabel}
+                                                                                    </div>
+                                                                                )}
+                                                                            </div>
+                                                                        );
                                                                     }
-                                                                </span>
+                                                                    
+                                                                    return (
+                                                                        <RequestStatusBadge 
+                                                                            status={request.status} 
+                                                                            size="sm"
+                                                                            pulse={request.status === 'Approved' || request.status === 'late_return'}
+                                                                        />
+                                                                    );
+                                                                })()}
                                                             </td>
                                                             <td className="py-5 px-6 text-center">
                                                                 <div className="text-xs text-gray-500 font-medium">
@@ -1062,37 +1359,78 @@ export default function Eic() {
                                                                     )}
                                                                 </div>
                                                             </td>
-                                                            <td className="py-5 px-4 text-center">
-                                                                {[
-                                                                    'Pending',
-                                                                    'Approved',
-                                                                ].includes(
-                                                                    request.status
-                                                                ) ? (
-                                                                    <button
-                                                                        onClick={() =>
-                                                                            handleCancelRequest(
-                                                                                request.id,
-                                                                                request.itemName
-                                                                            )
-                                                                        }
-                                                                        className="bg-red-100 hover:bg-red-200 text-red-800 hover:text-red-900 px-4 py-2 rounded-lg text-sm font-semibold border border-red-200 hover:border-red-300 transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
-                                                                        title="Cancel this request"
-                                                                    >
-                                                                        <i className="fa-solid fa-times mr-2"></i>
-                                                                        Cancel
-                                                                    </button>
-                                                                ) : (
-                                                                    <span className="text-gray-400 text-sm italic">
-                                                                        No
-                                                                        actions
-                                                                        available
-                                                                    </span>
-                                                                )}
+                                                            <td className="py-5 px-4" onClick={(e) => e.stopPropagation()}>
+                                                                <div className="flex gap-2 justify-center items-center">
+                                                                    {request.status === 'Pending' && (
+                                                                        <button
+                                                                            onClick={() => handleCancelRequest(request.id, request.itemName)}
+                                                                            disabled={actionsLoading}
+                                                                            className="bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1.5 rounded-lg text-xs font-semibold border border-red-200 transition-all disabled:opacity-50"
+                                                                            title="Cancel this request"
+                                                                        >
+                                                                            <i className="fa-solid fa-ban mr-1"></i>
+                                                                            Cancel
+                                                                        </button>
+                                                                    )}
+                                                                    {request.status === 'Approved' && (
+                                                                        <button
+                                                                            onClick={() => handleCancelRequest(request.id, request.itemName)}
+                                                                            disabled={actionsLoading}
+                                                                            className="bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1.5 rounded-lg text-xs font-semibold border border-red-200 transition-all disabled:opacity-50"
+                                                                            title="Cancel this request"
+                                                                        >
+                                                                            <i className="fa-solid fa-ban mr-1"></i>
+                                                                            Cancel
+                                                                        </button>
+                                                                    )}
+                                                                    {!['Pending', 'Approved'].includes(request.status) && (
+                                                                        <span className={`${isDark ? 'text-gray-500' : 'text-gray-400'} text-xs italic`}>
+                                                                            No actions
+                                                                        </span>
+                                                                    )}
+                                                                </div>
                                                             </td>
                                                         </tr>
-                                                    )
-                                                )}
+                                                        
+                                                        {/* Expandable Row Content */}
+                                                        {isExpanded && (
+                                                            <tr className="bg-green-50 border-l-4 border-green-500">
+                                                                <td colSpan="7" className="p-0">
+                                                                    <div className="p-6 space-y-4 animate-slide-down">
+                                                                        <div className="flex items-center justify-between mb-4">
+                                                                            <h4 className="font-bold text-gray-800 text-lg">
+                                                                                <i className="fa-solid fa-info-circle mr-2 text-green-600"></i>
+                                                                                Request Details & Progress
+                                                                            </h4>
+                                                                            <button
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    setExpandedRowId(null);
+                                                                                }}
+                                                                                className="text-gray-500 hover:text-gray-700 text-sm"
+                                                                            >
+                                                                                <i className="fa-solid fa-chevron-up mr-1"></i>
+                                                                                Collapse
+                                                                            </button>
+                                                                        </div>
+                                                                        
+                                                                        {/* Timeline */}
+                                                                        <RequestTimeline request={request} isDark={false} />
+                                                                        
+                                                                        {/* Action Panel - Client can only cancel */}
+                                                                        <RequestActionPanel
+                                                                            request={request}
+                                                                            onCancel={() => handleCancelRequest(request.id, request.itemName)}
+                                                                            isDark={false}
+                                                                        />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        )}
+                                                        </React.Fragment>
+                                                    );
+                                                    })
+                                                }
                                             </tbody>
                                         </table>
                                     </div>
@@ -1100,21 +1438,22 @@ export default function Eic() {
                             ) : (
                                 <div className="text-center py-16">
                                     <div className="mb-4">
-                                        <i className="fa-solid fa-inbox text-6xl text-gray-300"></i>
+                                        <i className={`fa-solid fa-inbox text-6xl ${isDark ? 'text-gray-600' : 'text-gray-300'}`}></i>
                                     </div>
-                                    <h3 className="text-lg font-semibold text-gray-600 mb-2">
-                                        No Requests Found
+                                    <h3 className={`text-lg font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-2`}>
+                                        No {requestsTab.charAt(0).toUpperCase() + requestsTab.slice(1)} Requests
                                     </h3>
-                                    <p className="text-gray-500">
-                                        You haven't made any equipment requests
-                                        yet.
+                                    <p className={isDark ? 'text-gray-500' : 'text-gray-500'}>
+                                        You don't have any {requestsTab} requests at the moment.
                                     </p>
                                 </div>
-                            )}
+                            );
+                            })()}
                         </div>
                     </div>
                 </div>
             )}
+            
             <style>{`
                 .letter-spacing-wide {
                     letter-spacing: 0.15em;
@@ -1160,6 +1499,21 @@ export default function Eic() {
                 @keyframes fadeIn {
                     from { opacity: 0; transform: translateY(10px);}
                     to { opacity: 1; transform: translateY(0);}
+                }
+                .animate-slide-down {
+                    animation: slideDown 0.3s ease-out;
+                }
+                @keyframes slideDown {
+                    from { 
+                        opacity: 0; 
+                        transform: translateY(-10px);
+                        max-height: 0;
+                    }
+                    to { 
+                        opacity: 1; 
+                        transform: translateY(0);
+                        max-height: 1000px;
+                    }
                 }
                 html, body, #root {
                     scrollbar-width: none;

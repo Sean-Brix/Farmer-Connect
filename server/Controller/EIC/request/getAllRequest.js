@@ -19,6 +19,9 @@ async function getAllRequest(req, res) {
                 status: true,
                 pickupDate: true,
                 returnDate: true,
+                adjustedReturnDate: true, // For late pickup adjusted due date
+                actual_pickup: true, // For actual pickup timestamp
+                actual_return: true, // For actual return timestamp
                 requestNote: true,
                 statusChangeReason: true,
                 statusChangedAt: true,
@@ -45,6 +48,7 @@ async function getAllRequest(req, res) {
                         surname: true,
                         email: true,
                         username: true,
+                        contactNumber: true,
                     },
                 },
                 admin: {
@@ -74,6 +78,9 @@ async function getAllRequest(req, res) {
             status: request.status,
             pickupDate: request.pickupDate,
             returnDate: request.returnDate,
+            adjustedReturnDate: request.adjustedReturnDate, // For late pickup adjusted due date
+            actual_pickup: request.actual_pickup, // For actual pickup timestamp
+            actual_return: request.actual_return, // For actual return timestamp
             requestNote: request.requestNote,
             statusChangeReason: request.statusChangeReason,
             statusChangedAt: request.statusChangedAt,
@@ -84,7 +91,13 @@ async function getAllRequest(req, res) {
             itemCategory: request.itemStack.item.category,
             // Stack inventory information
             currentStock: request.itemStack.quantity,
-            // User information
+            itemDateLimit: request.itemStack.date_limit,
+            // User information (matching frontend expectations)
+            userName: `${request.account.firstName} ${request.account.surname}`,
+            userEmail: request.account.email,
+            userUsername: request.account.username,
+            userPhone: request.account.contactNumber,
+            // Legacy fields for backward compatibility
             requestorName: `${request.account.firstName} ${request.account.surname}`,
             requestorEmail: request.account.email,
             requestorUsername: request.account.username,

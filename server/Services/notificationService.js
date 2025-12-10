@@ -92,11 +92,68 @@ export async function notifyRequestStatus(accountId, { itemName, status, transac
       title: 'Request Rejected',
       message: `Your request for "${itemName}" has been rejected. Please contact admin for details.`,
       type: 'REQUEST_REJECTED'
+    },
+    Borrowed: {
+      title: 'Item Picked Up',
+      message: `You have successfully picked up "${itemName}". Please return it on time.`,
+      type: 'ITEM_BORROWED'
+    },
+    late_pickup: {
+      title: 'Item Picked Up (Late)',
+      message: `You picked up "${itemName}" late. Your return date has been adjusted accordingly. Please return on time.`,
+      type: 'ITEM_LATE_PICKUP'
+    },
+    Returned: {
+      title: 'Item Returned',
+      message: `Thank you for returning "${itemName}" on time. Your borrowing history has been recorded.`,
+      type: 'ITEM_RETURNED'
+    },
+    late_return: {
+      title: 'Late Return Recorded',
+      message: `"${itemName}" was returned past the due date. Please be mindful of return dates in future requests.`,
+      type: 'ITEM_LATE_RETURN'
+    },
+    No_Return: {
+      title: 'Item Not Returned',
+      message: `"${itemName}" has not been returned. Please contact the admin immediately to resolve this issue.`,
+      type: 'ITEM_NO_RETURN'
+    },
+    No_Pickup: {
+      title: 'Pickup Missed',
+      message: `You did not pick up "${itemName}" on the scheduled date. The request has been closed.`,
+      type: 'ITEM_NO_PICKUP'
     }
   };
 
   const config = messages[status];
   if (!config) return null;
+
+  // TEST 8.1-8.6: Notification System
+  const testNum = {
+    'Borrowed': '8.1',
+    'late_pickup': '8.2',
+    'Returned': '8.3',
+    'late_return': '8.4',
+    'No_Return': '8.5',
+    'No_Pickup': '8.6'
+  }[status];
+
+  if (testNum) {
+    console.log(`
+${'='.repeat(60)}
+📋 TEST ${testNum}: NOTIFICATION - ${status.toUpperCase()}
+${'='.repeat(60)}
+Account ID: ${accountId}
+Item name: ${itemName}
+Transaction ID: ${transactionId}
+Notification type: ${config.type}
+Title: ${config.title}
+Message: ${config.message}
+${'='.repeat(60)}
+✅ COPY THIS LOG TO CHECKLIST TEST ${testNum}
+${'='.repeat(60)}
+`);
+  }
 
   // Create in-app notification (fast)
   const notification = await createNotification({

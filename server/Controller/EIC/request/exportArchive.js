@@ -12,10 +12,10 @@ export default async function exportArchive(req, res) {
     const { status, dateFrom, dateTo, userId, itemId, adminId } = req.query;
 
     // Build where clause
-    // Note: late_return is NOT archived - it means overdue but still with user (shown in Borrowed tab)
+    // late_return is NOW archived - means item has been returned late
     const where = {
       status: {
-        in: ['Rejected', 'Returned', 'No_Return', 'No_Pickup', 'Cancelled']
+        in: ['Rejected', 'Returned', 'late_return', 'No_Return', 'No_Pickup', 'Cancelled']
       },
       itemStack: {
         status: 'EIC' // Only export EIC (Equipment in Circulation) transactions
@@ -50,6 +50,24 @@ export default async function exportArchive(req, res) {
         where.statusChangedAt.lte = endDate;
       }
     }
+
+    // TEST 2.3: Export API
+    console.log(`
+${'='.repeat(60)}
+📋 TEST 2.3: EXPORT ARCHIVE API
+${'='.repeat(60)}
+Filters applied:
+  Status: ${status || 'all'}
+  Date from: ${dateFrom || 'none'}
+  Date to: ${dateTo || 'none'}
+  User ID: ${userId || 'all'}
+  Item ID: ${itemId || 'all'}
+  Admin ID: ${adminId || 'all'}
+Where clause: ${JSON.stringify(where, null, 2)}
+${'='.repeat(60)}
+✅ COPY THIS LOG TO CHECKLIST TEST 2.3
+${'='.repeat(60)}
+`);
 
     // Fetch data with relations (fixed relation names)
     const transactions = await prisma.itemTransaction.findMany({
@@ -116,6 +134,7 @@ export default async function exportArchive(req, res) {
       { header: 'Status', key: 'status', width: 15 },
       { header: 'Pickup Date', key: 'pickupDate', width: 15 },
       { header: 'Return Date', key: 'returnDate', width: 15 },
+      { header: 'Adjusted Return Date', key: 'adjustedReturnDate', width: 18 },
       { header: 'Actual Pickup', key: 'actualPickup', width: 15 },
       { header: 'Actual Return', key: 'actualReturn', width: 15 },
       { header: 'Request Date', key: 'requestDate', width: 15 },
@@ -157,6 +176,7 @@ export default async function exportArchive(req, res) {
           status: tx.status,
           pickupDate: tx.pickupDate ? new Date(tx.pickupDate).toLocaleDateString() : '',
           returnDate: tx.returnDate ? new Date(tx.returnDate).toLocaleDateString() : '',
+          adjustedReturnDate: tx.adjustedReturnDate ? new Date(tx.adjustedReturnDate).toLocaleDateString() : '',
           actualPickup: tx.actual_pickup ? new Date(tx.actual_pickup).toLocaleDateString() : '',
           actualReturn: tx.actual_return ? new Date(tx.actual_return).toLocaleDateString() : '',
           requestDate: new Date(tx.createdAt).toLocaleDateString(),

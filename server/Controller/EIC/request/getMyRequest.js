@@ -45,12 +45,16 @@ async function getMyRequest(req, res) {
             count: requests.length,
             requests: requests.map((request) => ({
                 id: request.id,
+                itemStackId: request.itemStack.item.id, // Add item ID for frontend matching
                 itemName: request.itemStack.item.name,
                 itemCategory: request.itemStack.item.category,
                 quantity: request.quantity,
                 status: request.status,
                 pickupDate: request.pickupDate,
                 returnDate: request.returnDate,
+                adjustedReturnDate: request.adjustedReturnDate, // For late pickup adjusted due date
+                actual_pickup: request.actual_pickup, // For actual pickup timestamp
+                actual_return: request.actual_return, // For actual return timestamp
                 requestNote: request.requestNote,
                 createdAt: request.createdAt,
                 updatedAt: request.updatedAt,

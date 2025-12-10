@@ -74,11 +74,15 @@ async function checkDailyPickupLimit(req, res, next) {
           },
           status: {
             in: ['Pending', 'Approved']
+          },
+          itemStack: {
+            status: 'EIC' // Only count EIC items
           }
         }
       });
     } else {
-      existingCount = await prisma.distributionTransaction.count({
+      // Distribution also uses ItemTransaction but with 'Distributed' status
+      existingCount = await prisma.itemTransaction.count({
         where: {
           pickupDate: {
             gte: selectedDate,
@@ -86,6 +90,9 @@ async function checkDailyPickupLimit(req, res, next) {
           },
           status: {
             in: ['Pending', 'Approved']
+          },
+          itemStack: {
+            status: 'Distributed' // Only count Distribution items
           }
         }
       });

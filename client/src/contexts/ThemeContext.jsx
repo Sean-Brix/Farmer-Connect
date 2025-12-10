@@ -12,22 +12,16 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ children }) => {
   const [themePreference, setThemePreference] = useState(() => {
-    // Always default to light mode
-    const savedTheme = localStorage.getItem('theme');
-    console.log('🎨 [ThemeContext] Initial theme from localStorage:', savedTheme);
-    // Force light mode if no saved theme or if it's auto/dark
-    if (!savedTheme || savedTheme === 'auto') {
-      localStorage.setItem('theme', 'light');
-      return 'light';
-    }
-    return savedTheme;
+    // Always force light mode
+    localStorage.setItem('theme', 'light');
+    console.log('🎨 [ThemeContext] Forcing light mode');
+    return 'light';
   });
 
   const [isDark, setIsDark] = useState(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const initialDark = savedTheme === 'dark';
-    console.log('🎨 [ThemeContext] Initial isDark:', initialDark);
-    return initialDark;
+    // Always force light mode
+    console.log('🎨 [ThemeContext] Initial isDark: false (forced)');
+    return false;
   });
 
   // Function to apply theme to DOM
