@@ -8,7 +8,11 @@ async function getAll(req, res) {
                 status: 'Distributed',
             },
             include: {
-                item: true,
+                item: {
+                    include: {
+                        seedVariety: true,
+                    },
+                },
             },
             orderBy: {
                 quantity: 'desc',

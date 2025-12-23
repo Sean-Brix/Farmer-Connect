@@ -1,12 +1,15 @@
 model InventoryItem {
-  id          String        @id @default(cuid())
-  name        String        @unique
-  description String?
-  picture     Bytes?
-  category    item_category @default(Other)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  item_stacks ItemStack[]
+  id            String         @id @default(cuid())
+  name          String         @unique
+  description   String?
+  picture       Bytes?
+  category      item_category  @default(Other)
+  seedVarietyId String? // For Seeds category - links to seed variety
+  unit          String? // "bags", "kilograms", "packets"
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  item_stacks   ItemStack[]
+  seedVariety   SeedVariety?   @relation(fields: [seedVarietyId], references: [id])
 
   @@map("inventory_items")
 }
@@ -45,14 +48,24 @@ model ItemTransaction {
   statusChangedAt    DateTime?
   statusChangeReason String?
   previousStatus     String?
-  actual_pickup      DateTime?
-  actual_return      DateTime?
-  adjustedReturnDate DateTime?
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-  account            Account            @relation(fields: [accountId], references: [id])
-  admin              Account?           @relation("AdminTransactions", fields: [adminId], references: [id])
-  itemStack          ItemStack          @relation(fields: [itemStackId], references: [id])
+  actual_pickup              DateTime?
+  actual_return              DateTime?
+  adjustedReturnDate         DateTime?
+  plantingReportRequired     Boolean          @default(false)
+  plantingReportId           String? // String to match PlantingReport.id (cuid)
+  plantingReportDeadline     DateTime?
+  plantingReportSubmittedAt  DateTime?
+  plantingReportArchivedAt   DateTime?
+  // Farmer-provided distribution details (required on request creation)
+  farmLocation               String?
+  areaPlanted                Float?
+  plantingMethod             PlantingMethod?
+  createdAt                  DateTime         @default(now())
+  updatedAt                  DateTime         @updatedAt
+  account                    Account          @relation(fields: [accountId], references: [id])
+  admin                      Account?         @relation("AdminTransactions", fields: [adminId], references: [id])
+  itemStack                  ItemStack        @relation(fields: [itemStackId], references: [id])
+  plantingReport             PlantingReport?  @relation(fields: [plantingReportId], references: [id])
 
   @@index([accountId], map: "item_transactions_accountId_fkey")
   @@index([adminId], map: "item_transactions_adminId_fkey")
@@ -74,6 +87,9 @@ enum transaction_status {
   late_return
   No_Pickup
   Cancelled
+  Picked_Up    // Distribution: Seedling picked up on time
+  Planted      // Distribution: Planting report submitted
+  Archived     // Distribution: Report archived by admin
 }
 
 enum item_status {
@@ -82,6 +98,7 @@ enum item_status {
   Damaged
   EIC
   Distributed
+  Reserved
 }
 
 enum item_category {
@@ -96,5 +113,6 @@ enum item_category {
   Measuring_Tools
   Fisheries
   Machinery
+  Seeds            // NEW: For seedling distribution
   Other
 }

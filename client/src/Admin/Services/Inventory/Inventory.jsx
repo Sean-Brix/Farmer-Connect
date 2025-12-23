@@ -18,7 +18,7 @@ const categories = [
     'Other',
 ];
 
-const statuses = ['Available', 'Unavailable', 'Damaged', 'EIC', 'Distributed'];
+const statuses = ['Available', 'Unavailable', 'Damaged', 'EIC', 'Distributed', 'Reserved'];
 
 function Content() {
     const { isDark } = useTheme();
@@ -28,6 +28,8 @@ function Content() {
     const [showModal, setShowModal] = useState(false);
     const [search, setSearch] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('All');
+    const [statusFilter, setStatusFilter] = useState('All');
+    const [stockFilter, setStockFilter] = useState('All'); // 'All', 'In Stock', 'Low Stock', 'Out of Stock'
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
@@ -70,6 +72,7 @@ function Content() {
     const [selectedItemStacks, setSelectedItemStacks] = useState(null);
 
     // Sorting state
+    const [sortBy, setSortBy] = useState('name'); // 'name', 'category', 'totalStock', 'recentlyAdded'
     const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
 
     // Helper to show alert
@@ -231,6 +234,7 @@ function Content() {
 
     const filteredItems = items
         .filter((item) => {
+            // Search filter
             const matchesSearch =
                 (item.name || '')
                     .toLowerCase()
@@ -239,31 +243,55 @@ function Content() {
                     .toLowerCase()
                     .includes((search || '').toLowerCase());
             
+            // Category filter
             const itemCategory = item.category?.name || item.category;
             const matchesCategoryFilter =
                 categoryFilter === 'All' || 
                 itemCategory === categoryFilter;
             
-            // Debug logging for category filtering
-            if (categoryFilter !== 'All') {
-                console.log('🔍 [Category Filter]', {
-                    itemName: item.name,
-                    itemCategory: itemCategory,
-                    categoryFilter: categoryFilter,
-                    matches: matchesCategoryFilter,
-                    rawCategory: item.category
-                });
+            // Stock level filter
+            let matchesStockFilter = true;
+            if (stockFilter !== 'All' && item.stacks) {
+                const totalStock = item.stacks.reduce((sum, stack) => sum + (stack.quantity || 0), 0);
+                
+                if (stockFilter === 'In Stock') {
+                    matchesStockFilter = totalStock > 10; // More than 10 units
+                } else if (stockFilter === 'Low Stock') {
+                    matchesStockFilter = totalStock > 0 && totalStock <= 10; // 1-10 units
+                } else if (stockFilter === 'Out of Stock') {
+                    matchesStockFilter = totalStock === 0;
+                }
             }
             
-            return matchesSearch && matchesCategoryFilter;
+            return matchesSearch && matchesCategoryFilter && matchesStockFilter;
         })
         .sort((a, b) => {
-            // Sort by name (case-insensitive)
-            if (sortOrder === 'asc') {
-                return (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' });
-            } else {
-                return (b.name || '').localeCompare(a.name || '', undefined, { sensitivity: 'base' });
+            let compareValue = 0;
+            
+            switch (sortBy) {
+                case 'name':
+                    compareValue = (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' });
+                    break;
+                case 'category':
+                    const catA = a.category?.name || a.category || '';
+                    const catB = b.category?.name || b.category || '';
+                    compareValue = catA.localeCompare(catB, undefined, { sensitivity: 'base' });
+                    break;
+                case 'totalStock':
+                    const stockA = a.stacks?.reduce((sum, stack) => sum + (stack.quantity || 0), 0) || 0;
+                    const stockB = b.stacks?.reduce((sum, stack) => sum + (stack.quantity || 0), 0) || 0;
+                    compareValue = stockA - stockB;
+                    break;
+                case 'recentlyAdded':
+                    const dateA = new Date(a.createdAt || 0).getTime();
+                    const dateB = new Date(b.createdAt || 0).getTime();
+                    compareValue = dateB - dateA; // Most recent first
+                    break;
+                default:
+                    compareValue = 0;
             }
+            
+            return sortOrder === 'asc' ? compareValue : -compareValue;
         });
 
     console.log('📊 [Filtered Items] Total after filter:', filteredItems.length, 'Category Filter:', categoryFilter);
@@ -278,7 +306,7 @@ function Content() {
     // Reset to first page when filters change
     useEffect(() => {
         setCurrentPage(1);
-    }, [search, categoryFilter]);
+    }, [search, categoryFilter, stockFilter]);
 
     // Reset to first page when items per page changes or exceeds total items
     useEffect(() => {
@@ -932,9 +960,10 @@ function Content() {
 
             {/* Professional Controls Section */}
             <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-6 sm:pb-8 ${sizeClasses[uiSize].container}`}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 items-end mb-6 sm:mb-8">
+                {/* Filters Row */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end mb-6 sm:mb-8">
                         {/* Search Input */}
-                        <div className="xl:col-span-2">
+                        <div>
                             <label className={`block text-xs font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Search Items</label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
@@ -955,20 +984,43 @@ function Content() {
                         {/* Category Filter */}
                         <div>
                             <label className={`block text-xs font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Category</label>
-                            <div className="relative z-10">
+                            <div className="relative">
                                 <select
                                     value={categoryFilter}
                                     onChange={(e) => setCategoryFilter(e.target.value)}
-                                    className={`w-full px-3 py-2 pr-8 text-sm border rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200 appearance-none relative z-20 ${isDark ? 'bg-gray-800 border-gray-600 text-white' : 'bg-gray-50 border-gray-200 text-gray-900 focus:bg-white'}`}
+                                    className={`w-full px-3 py-2 pr-8 text-sm border rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200 appearance-none ${isDark ? 'bg-gray-800 border-gray-600 text-white' : 'bg-gray-50 border-gray-200 text-gray-900 focus:bg-white'}`}
                                 >
                                     <option value="All">All Categories</option>
+                                    <option value="Seeds">Seeds</option>
                                     {categories.map((cat) => (
                                         <option key={cat} value={cat}>
                                             {cat}
                                         </option>
                                     ))}
                                 </select>
-                                <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none z-30">
+                                <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                    <svg className={`w-4 h-4 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Stock Level Filter */}
+                        <div>
+                            <label className={`block text-xs font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Stock Level</label>
+                            <div className="relative">
+                                <select
+                                    value={stockFilter}
+                                    onChange={(e) => setStockFilter(e.target.value)}
+                                    className={`w-full px-3 py-2 pr-8 text-sm border rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200 appearance-none ${isDark ? 'bg-gray-800 border-gray-600 text-white' : 'bg-gray-50 border-gray-200 text-gray-900 focus:bg-white'}`}
+                                >
+                                    <option value="All">All Levels</option>
+                                    <option value="In Stock">In Stock (&gt;10)</option>
+                                    <option value="Low Stock">Low Stock (1-10)</option>
+                                    <option value="Out of Stock">Out of Stock (0)</option>
+                                </select>
+                                <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                                     <svg className={`w-4 h-4 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                                     </svg>
@@ -1001,6 +1053,31 @@ function Content() {
                             )}
                         </div>
                     </div>
+
+                    {/* Filter Summary Badge */}
+                    {(search || categoryFilter !== 'All' || stockFilter !== 'All') && (
+                        <div className={`mb-4 flex flex-wrap items-center gap-2 text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                            <span className="font-medium">Active Filters:</span>
+                            {search && (
+                                <span className={`px-3 py-1 rounded-full ${isDark ? 'bg-blue-900 text-blue-200' : 'bg-blue-100 text-blue-800'}`}>
+                                    Search: "{search}"
+                                </span>
+                            )}
+                            {categoryFilter !== 'All' && (
+                                <span className={`px-3 py-1 rounded-full ${isDark ? 'bg-purple-900 text-purple-200' : 'bg-purple-100 text-purple-800'}`}>
+                                    Category: {categoryFilter}
+                                </span>
+                            )}
+                            {stockFilter !== 'All' && (
+                                <span className={`px-3 py-1 rounded-full ${isDark ? 'bg-orange-900 text-orange-200' : 'bg-orange-100 text-orange-800'}`}>
+                                    Stock: {stockFilter}
+                                </span>
+                            )}
+                            <span className={`ml-auto px-3 py-1 rounded-full font-semibold ${isDark ? 'bg-gray-700 text-gray-200' : 'bg-gray-200 text-gray-800'}`}>
+                                {filteredItems.length} {filteredItems.length === 1 ? 'result' : 'results'}
+                            </span>
+                        </div>
+                    )}
 
                     {/* Delete Mode Actions */}
                     {showDelete && (
@@ -1324,8 +1401,13 @@ function Content() {
                                                                         return acc;
                                                                     }, {});
 
-                                                                    // Create entries for all statuses, including those without stacks
-                                                                    return statuses.map((status) => {
+                                                                    // Filter statuses based on item category
+                                                                    const availableStatuses = item.category === 'Seeds' 
+                                                                        ? ['Available', 'Unavailable', 'Distributed', 'Reserved']  // Seeds can have these statuses
+                                                                        : ['Available', 'Unavailable', 'Damaged', 'EIC', 'Reserved']; // Non-seeds cannot have Distributed
+                                                                    
+                                                                    // Create entries for filtered statuses only
+                                                                    return availableStatuses.map((status) => {
                                                                         const statusData = groupedStacks[status] || {
                                                                             stacks: [],
                                                                             totalQuantity: 0,
@@ -1367,6 +1449,13 @@ function Content() {
                                                                                         border: 'border-blue-200',
                                                                                         badge: 'bg-blue-500 text-white',
                                                                                         icon: 'text-blue-600',
+                                                                                    };
+                                                                                case 'Reserved':
+                                                                                    return {
+                                                                                        bg: 'bg-gradient-to-br from-yellow-50 to-amber-100',
+                                                                                        border: 'border-yellow-200',
+                                                                                        badge: 'bg-yellow-500 text-white',
+                                                                                        icon: 'text-yellow-600',
                                                                                     };
                                                                                 default:
                                                                                     return {
@@ -1417,14 +1506,23 @@ function Content() {
                                                                                                 <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
                                                                                             </svg>
                                                                                         )}
+                                                                                        {status === 'Reserved' && (
+                                                                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                                                                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                                                                                            </svg>
+                                                                                        )}
                                                                                     </div>
                                                                                 </div>
 
                                                                                 <div className="text-center mb-2">
                                                                                     {statusData.totalQuantity === 0 ? (
                                                                                         <div className="mb-1">
-                                                                                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-300">
-                                                                                                OUT OF STOCK
+                                                                                            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${
+                                                                                                status === 'Reserved' 
+                                                                                                    ? 'bg-yellow-100 text-yellow-800 border border-yellow-300'
+                                                                                                    : 'bg-red-100 text-red-800 border border-red-300'
+                                                                                            }`}>
+                                                                                                {status === 'Reserved' ? 'NO RESERVES' : 'OUT OF STOCK'}
                                                                                             </span>
                                                                                         </div>
                                                                                     ) : (
@@ -1893,6 +1991,8 @@ function Content() {
                                                                 </button>
                                                             </>
                                                         ) : (
+                                                            <>
+                                                            {stack.status !== 'Reserved' && (
                                                             <button
                                                                 onClick={() =>
                                                                     handleToggleStackEdit(
@@ -1920,7 +2020,13 @@ function Content() {
                                                                     />
                                                                 </svg>
                                                             </button>
+                                                            )}
+                                                            {stack.status === 'Reserved' && (
+                                                                <span className="text-xs text-gray-500 italic">Read-only</span>
+                                                            )}
+                                                            </>
                                                         )}
+                                                        {stack.status !== 'Reserved' && (
                                                         <button
                                                             onClick={() =>
                                                                 handleDeleteStack(
@@ -1952,6 +2058,7 @@ function Content() {
                                                                 />
                                                             </svg>
                                                         </button>
+                                                        )}
                                                     </div>
                                                 </div>
                                                 {!editingStacks.has(

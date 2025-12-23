@@ -73,6 +73,15 @@ export default function Dashboard() {
         setPage(elements.current[page]);
     };
 
+    // Check URL parameters for page navigation on mount
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page');
+        if (page && elements.current[page]) {
+            admin_navigate(page);
+        }
+    }, []);
+
     //Initial Request on Mount
     useEffect(() => {
         (async () => {

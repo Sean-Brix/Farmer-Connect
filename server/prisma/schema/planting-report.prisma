@@ -10,31 +10,43 @@ model PlantingReport {
   rsbsaNumber  String? // Optional RSBSA Number
 
   // Seeding Information
-  croppingSeasonId   String
-  areaPlanted        Float // in hectares
+  croppingSeasonId   String?
+  areaPlanted        Float // in hectares (required from farmer request)
   seedClassification SeedClassification
   typeOfCrop         CropType
   riceIrrigation     riceIrrigation? // Specific irrigation type if typeOfCrop is Rice
   varietyId          String
-  dateOfPlanting     DateTime
+  dateOfPlanting     DateTime?
   plantingMethod     PlantingMethod
   cropInsurance      Boolean            @default(false) // Crop insurance application checkbox
 
-  // Harvesting Information
+  // Harvesting Information (admin-managed, optional until harvest is done)
   harvestArea           Float? // in hectares
   numberOfBags          Int?
   weightPerBag          Float? // in kg
   yieldMtPerHa          Float? // Yield in mt/ha (metric tons per hectare)
   dateOfExpectedHarvest DateTime?
 
+  // Distribution linkage / metadata
+  distributionRequestId  String?
+  distributionItemId     String?
+  distributionQuantity   Int?
+  distributionUnit       String?
+  distributionPickupDate DateTime?
+  requestNote            String?
+  plantingReportDeadline DateTime?
+
   // System fields
-  isArchived Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  status       PlantingReportStatus @default(Draft)
+  isArchived   Boolean              @default(false)
+  lastUpdatedBy String? // account id of last editor
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
 
   // Relations
-  croppingSeason PlantingSeason @relation(fields: [croppingSeasonId], references: [id], onDelete: Restrict)
-  variety        SeedVariety    @relation(fields: [varietyId], references: [id], onDelete: Restrict)
+  croppingSeason   PlantingSeason?    @relation(fields: [croppingSeasonId], references: [id], onDelete: Restrict)
+  variety          SeedVariety        @relation(fields: [varietyId], references: [id], onDelete: Restrict)
+  itemTransactions ItemTransaction[] // Reverse relation for seedling distributions
 
   @@index([croppingSeasonId])
   @@index([varietyId])
@@ -44,6 +56,7 @@ model PlantingReport {
   @@index([rsbsaNumber])
   @@index([typeOfCrop, croppingSeasonId])
   @@index([dateOfPlanting, isArchived])
+  @@index([distributionRequestId])
   @@map("planting_reports")
 }
 
@@ -66,16 +79,18 @@ model PlantingSeason {
 
 // Seed Variety Reference Table
 model SeedVariety {
-  id              String           @id @default(cuid())
+  id              String            @id @default(cuid())
   name            String // e.g., "NSIC Rc222", "Pioneer 30G87"
   cropType        CropType
   directSeededDAS Int // Days After Sowing
   transplantedDAS Int // Days After Sowing
-  description     String?          @db.Text
-  isActive        Boolean          @default(true)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  description     String?           @db.Text
+  plantingWindow  Int               @default(30) // Days until must be planted (for distributions)
+  isActive        Boolean           @default(true)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
   plantingReports PlantingReport[]
+  inventoryItems  InventoryItem[]   // Reverse relation for seedling items
 
   @@unique([name, cropType]) // Prevent duplicate varieties for same crop
   @@index([cropType, isActive])
@@ -105,4 +120,10 @@ enum CropType {
 enum PlantingMethod {
   Direct_Seeded
   Transplanting
+}
+
+enum PlantingReportStatus {
+  Draft
+  Submitted
+  Archived
 }

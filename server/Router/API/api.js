@@ -40,6 +40,9 @@ router.use('/survey-forms', surveyForms);
 import plantingReport from './PlantingReport/index.js';
 router.use('/planting-reports', plantingReport);
 
+import seedVariety from '../seedVariety.js';
+router.use('/seed-varieties', seedVariety);
+
 import cron from './cron.js';
 router.use('/cron', cron);
 

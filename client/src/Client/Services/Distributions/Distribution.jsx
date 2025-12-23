@@ -9,6 +9,44 @@ import { CardGridSkeleton, PageHeaderSkeleton, FilterBarSkeleton } from '../../.
 import default_image from './Assets/default_image.webp';
 
 const ITEMS_PER_PAGE = 8;
+const MONTHLY_LIMIT = 2;
+const SEED_TYPES = ['Rice', 'Corn', 'High Value Crops'];
+
+const normalizeUnitLabel = (unit) => {
+    if (!unit) return 'units';
+    const value = unit.toString().trim();
+    const lower = value.toLowerCase();
+
+    if (lower.includes('kilogram') || lower === 'kg') return 'kg';
+    return value;
+};
+
+const getSeedType = (item) => {
+    const raw =
+        item?.seedVariety?.cropType ||
+        item?.seedVariety?.type ||
+        item?.cropType ||
+        item?.seedType ||
+        item?.type ||
+        item?.itemType ||
+        item?.category ||
+        '';
+
+    const normalized = raw.toString().replace(/_/g, ' ').trim();
+    const base = normalized.toLowerCase();
+    if (!base) return null;
+
+    const matched = SEED_TYPES.find((t) =>
+        base.includes(t.toLowerCase())
+    );
+
+    if (matched) return matched;
+
+    if (base === 'seed' || base === 'seeds') return null;
+
+    // Fallback: return the normalized value for unknown types
+    return normalized;
+};
 
 export default function Distribution() {
     const { theme, isDark } = useTheme();
@@ -25,27 +63,38 @@ export default function Distribution() {
         pickupDate: '',
         request_note: '',
         quantity: 1,
+        farmLocation: '',
+        areaPlanted: '',
+        plantingMethod: '',
     });
     const [myRequests, setMyRequests] = useState([]);
     const [showMyRequestsModal, setShowMyRequestsModal] = useState(false);
     const [formErrors, setFormErrors] = useState({});
+    const [monthlyUsage, setMonthlyUsage] = useState(null);
+    const [authInfo, setAuthInfo] = useState({
+        checked: false,
+        isAuthenticated: false,
+        role: null,
+    });
 
-    const categories = [
-        'All',
-        ...Array.from(new Set(distributionItems.map((i) => i.category))),
-    ];
+    const typeOptions = Array.from(
+        new Set(distributionItems.map((i) => getSeedType(i)).filter(Boolean))
+    );
+    const categories = ['All', ...typeOptions];
 
-    const filteredItems = distributionItems.filter(
-        (i) =>
-            (filter === 'All' || i.category === filter) &&
+    const filteredItems = distributionItems.filter((i) => {
+        const typeName = getSeedType(i);
+        return (
+            (filter === 'All' || typeName === filter) &&
             (search === '' ||
                 (i.Name &&
                     i.Name.toLowerCase().includes(search.toLowerCase())) ||
-                (i.category &&
-                    i.category.toLowerCase().includes(search.toLowerCase())) ||
+                (typeName &&
+                    typeName.toLowerCase().includes(search.toLowerCase())) ||
                 (i.description &&
                     i.description.toLowerCase().includes(search.toLowerCase())))
-    );
+        );
+    });
 
     useEffect(() => {
         const fetchDistributionItems = async () => {
@@ -71,6 +120,9 @@ export default function Distribution() {
                         description: stack.item.description,
                         quantity: stack.quantity,
                         status: stack.status,
+                        max_quantity_per_request:
+                            stack.max_quantity_per_request || null,
+                        date_limit: stack.date_limit || null,
                         img: stack.item.picture
                             ? `/api/dist/photo/${stack.itemId}`
                             : default_image,
@@ -102,6 +154,78 @@ export default function Distribution() {
     useEffect(() => {
         setCurrentPage(1);
     }, [filter, search]);
+
+    const calculateMonthlyUsage = (requests = []) => {
+        const now = new Date();
+        const used = requests.filter((req) => {
+            const created = new Date(req.createdAt);
+            return (
+                created.getFullYear() === now.getFullYear() &&
+                created.getMonth() === now.getMonth()
+            );
+        }).length;
+
+        return {
+            used,
+            remaining: Math.max(0, MONTHLY_LIMIT - used),
+        };
+    };
+
+    const isAdminUser = ['admin', 'super_admin', 'super admin'].includes(
+        (authInfo.role || '').toLowerCase()
+    );
+    const canShowUserActions = authInfo.checked && !isAdminUser;
+
+    useEffect(() => {
+        const fetchUsage = async () => {
+            try {
+                const response = await fetch('/api/dist/request/me', {
+                    credentials: 'include',
+                });
+
+                if (!response.ok) return;
+
+                const data = await response.json();
+                const requests = Array.isArray(data.requests)
+                    ? data.requests
+                    : [];
+
+                setMonthlyUsage(calculateMonthlyUsage(requests));
+            } catch (error) {
+                console.error('Failed to fetch monthly usage:', error);
+            }
+        };
+
+        fetchUsage();
+    }, []);
+
+    const fetchAuthStatus = async () => {
+        try {
+            const res = await fetch('/auth/is-authenticated', {
+                credentials: 'include',
+            });
+
+            if (!res.ok) {
+                setAuthInfo({ checked: true, isAuthenticated: false, role: null });
+                return { isAuthenticated: false };
+            }
+
+            const data = await res.json();
+            const isAuthed = Boolean(data?.check);
+            const role = data?.payload?.access || null;
+
+            setAuthInfo({ checked: true, isAuthenticated: isAuthed, role });
+            return { isAuthenticated: isAuthed, role };
+        } catch (error) {
+            console.error('Failed to fetch auth status:', error);
+            setAuthInfo({ checked: true, isAuthenticated: false, role: null });
+            return { isAuthenticated: false };
+        }
+    };
+
+    useEffect(() => {
+        fetchAuthStatus();
+    }, []);
 
     const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
     const paginatedItems = filteredItems.slice(
@@ -142,18 +266,12 @@ export default function Distribution() {
         );
 
         if (type === 'All') return icon('fa-solid fa-border-all text-blue-500');
-        if (type === 'Farming_Equipment') return icon('fa-solid fa-tractor text-green-600');
-        if (type === 'Harvesting_Tools') return icon('fa-solid fa-wheat-awn text-yellow-600');
-        if (type === 'Irrigation_Systems') return icon('fa-solid fa-droplet text-blue-500');
-        if (type === 'Storage_Equipment') return icon('fa-solid fa-warehouse text-gray-600');
-        if (type === 'Processing_Equipment') return icon('fa-solid fa-gear text-gray-700');
-        if (type === 'Safety_Gear') return icon('fa-solid fa-shield-halved text-orange-500');
-        if (type === 'Pest_Control') return icon('fa-solid fa-spray-can text-red-500');
-        if (type === 'Livestock_Equipment') return icon('fa-solid fa-horse text-yellow-600');
-        if (type === 'Measuring_Tools') return icon('fa-solid fa-ruler text-purple-500');
-        if (type === 'Fisheries') return icon('fa-solid fa-fish text-blue-600');
-        if (type === 'Machinery') return icon('fa-solid fa-screwdriver-wrench text-gray-600');
-        if (type === 'Other') return icon('fa-solid fa-box text-gray-500');
+        if (type === 'Seed' || type === 'Seeds')
+            return icon('fa-solid fa-seedling text-green-600');
+        if (type === 'Rice') return icon('fa-solid fa-bowl-rice text-amber-600');
+        if (type === 'Corn') return icon('fa-solid fa-seedling text-blue-600');
+        if (type === 'High Value Crops')
+            return icon('fa-solid fa-leaf text-emerald-600');
         return icon('fa-solid fa-question text-gray-500');
     };
 
@@ -178,18 +296,169 @@ export default function Distribution() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [currentPage]);
 
+    const showLoginPrompt = () => {
+        const alertDiv = document.createElement('div');
+        alertDiv.innerHTML = `
+            <div id="custom-login-alert" style="
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0.95);
+                z-index: 9999;
+                background: rgba(37,99,235,0.98);
+                background: linear-gradient(100deg, #2563eb 0%, #3b82f6 100%);
+                color: #fff;
+                padding: 2rem 3rem;
+                border-radius: 2rem;
+                box-shadow: 0 12px 40px 0 rgba(59,130,246,0.22);
+                font-size: 1.18rem;
+                font-weight: 700;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+                min-width: 320px;
+                max-width: 90vw;
+                animation: loginAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                overflow: hidden;
+                text-align: center;
+            ">
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: rgba(255,255,255,0.13);
+                    border-radius: 50%;
+                    width: 3rem;
+                    height: 3rem;
+                    box-shadow: 0 2px 8px 0 rgba(59,130,246,0.10);
+                ">
+                    <i class="fa-solid fa-user-lock" style="font-size:1.5rem; color: #fff; filter: drop-shadow(0 2px 8px #3b82f688);"></i>
+                </div>
+                <div>
+                    <div style="font-size: 1.2rem; margin-bottom: 0.35rem;">Login Required</div>
+                    <div style="font-size: 1rem; font-weight: 400; opacity: 0.9; line-height: 1.4;">
+                        Please login to request distribution items.
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                    <button id="login-btn" style="
+                        background: rgba(255,255,255,0.2);
+                        border: 2px solid rgba(255,255,255,0.3);
+                        color: #fff;
+                        padding: 0.75rem 1.5rem;
+                        border-radius: 1rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        font-size: 1rem;
+                    ">Go to Login</button>
+                    <button id="cancel-btn" style="
+                        background: transparent;
+                        border: 2px solid rgba(255,255,255,0.3);
+                        color: #fff;
+                        padding: 0.75rem 1.5rem;
+                        border-radius: 1rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        font-size: 1rem;
+                    ">Cancel</button>
+                </div>
+                <span class="login-alert-bar" style="
+                    position: absolute;
+                    bottom: 0; left: 0;
+                    height: 4px;
+                    width: 100%;
+                    background: linear-gradient(90deg, #dbeafe 0%, #3b82f6 100%);
+                "></span>
+            </div>
+            <style>
+                @keyframes loginAlertPopIn {
+                    0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);} 
+                    60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);} 
+                    100% { opacity: 1; transform: translate(-50%, -50%) scale(1);} 
+                }
+                #login-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+                #cancel-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+            </style>
+        `;
+        document.body.appendChild(alertDiv);
+
+        document.getElementById('login-btn').onclick = () => {
+            document.body.removeChild(alertDiv);
+            navigate('/login');
+        };
+
+        document.getElementById('cancel-btn').onclick = () => {
+            document.body.removeChild(alertDiv);
+        };
+    };
+
+    const showAdminBlockedPrompt = () => {
+        const alertDiv = document.createElement('div');
+        alertDiv.innerHTML = `
+            <div id="admin-block-alert" style="
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0.95);
+                z-index: 9999;
+                background: linear-gradient(135deg, #166534 0%, #22c55e 100%);
+                color: #fff;
+                padding: 1.75rem 2.5rem;
+                border-radius: 1.5rem;
+                box-shadow: 0 12px 40px rgba(22,101,52,0.35);
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                min-width: 320px;
+                max-width: 90vw;
+                font-weight: 700;
+                text-align: center;
+            ">
+                <div style="display:flex; justify-content:center;">
+                    <span style="display:flex; align-items:center; justify-content:center; width:3rem; height:3rem; border-radius:999px; background: rgba(255,255,255,0.14);">
+                        <i class="fa-solid fa-user-shield" style="font-size:1.2rem;"></i>
+                    </span>
+                </div>
+                <div>
+                    <div style="font-size:1.05rem;">Admin accounts cannot submit distribution requests.</div>
+                    <div style="font-size:0.95rem; font-weight:600; opacity:0.9;">Use a farmer/user account to create a request.</div>
+                </div>
+                <button id="admin-close-btn" style="
+                    margin: 0 auto;
+                    padding: 0.6rem 1.4rem;
+                    background: rgba(255,255,255,0.14);
+                    border: 2px solid rgba(255,255,255,0.35);
+                    border-radius: 999px;
+                    color: #fff;
+                    font-weight: 700;
+                    cursor: pointer;
+                ">Got it</button>
+            </div>
+        `;
+        document.body.appendChild(alertDiv);
+        document.getElementById('admin-close-btn').onclick = () => {
+            document.body.removeChild(alertDiv);
+        };
+    };
+
     // SEND REQUEST
     const handleRequestClick = async (item) => {
         try {
-            //Check if user is logged in
-            // const response = await fetch('/api/authentication/gotToken');
-            // if (!response.ok) {
-            //     if (confirm('Login first?')) {
-            //         navigate('/login');
-            //         return;
-            //     }
-            //     return;
-            // }
+            const status = authInfo.checked ? authInfo : await fetchAuthStatus();
+
+            if (!status.isAuthenticated) {
+                showLoginPrompt();
+                return;
+            }
+
+            const role = status.role?.toLowerCase();
+            if (role === 'admin' || role === 'super_admin' || role === 'super admin') {
+                showAdminBlockedPrompt();
+                return;
+            }
 
             setSelectedItem(item);
             setModalOpen(true);
@@ -201,6 +470,14 @@ export default function Distribution() {
     const handleCloseModal = () => {
         setModalOpen(false);
         setFormErrors({});
+        setRequestData({
+            pickupDate: '',
+            request_note: '',
+            quantity: 1,
+            farmLocation: '',
+            areaPlanted: '',
+            plantingMethod: '',
+        });
     };
 
     const handleInputChange = (e) => {
@@ -287,6 +564,21 @@ export default function Distribution() {
             errors.quantity = `Maximum ${selectedItem.max_quantity_per_request} units per request`;
         }
 
+        if (!requestData.farmLocation.trim()) {
+            errors.farmLocation = 'Farm location is required';
+        }
+
+        const areaValue = parseFloat(requestData.areaPlanted);
+        if (!requestData.areaPlanted) {
+            errors.areaPlanted = 'Area planted is required';
+        } else if (isNaN(areaValue) || areaValue <= 0) {
+            errors.areaPlanted = 'Area planted must be greater than 0';
+        }
+
+        if (!requestData.plantingMethod) {
+            errors.plantingMethod = 'Select a planting method';
+        }
+
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
     };
@@ -306,16 +598,19 @@ export default function Distribution() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     item_id: selectedItem.id,
                     pickupDate: requestData.pickupDate,
                     request_note: requestData.request_note,
                     quantity: parseInt(requestData.quantity),
+                    farmLocation: requestData.farmLocation.trim(),
+                    areaPlanted: parseFloat(requestData.areaPlanted),
+                    plantingMethod: requestData.plantingMethod,
                 }),
             });
 
             if (response.ok) {
-                // Show custom animated alert centered on screen
                 const alertDiv = document.createElement('div');
                 alertDiv.innerHTML = `
                     <div id="custom-dist-alert" style="
@@ -329,7 +624,7 @@ export default function Distribution() {
                         color: #fff;
                         padding: 1.5rem 2.8rem;
                         border-radius: 2rem;
-                        box-shadow: 0 12px 40px 0 rgba(59,130,246,0.22);
+                        box-shadow: 0 12px 40px 0 rgba(37,99,235,0.22);
                         font-size: 1.18rem;
                         font-weight: 700;
                         display: flex;
@@ -348,17 +643,17 @@ export default function Distribution() {
                             border-radius: 50%;
                             width: 2.8rem;
                             height: 2.8rem;
-                            box-shadow: 0 2px 8px 0 rgba(59,130,246,0.10);
+                            box-shadow: 0 2px 8px 0 rgba(37,99,235,0.10);
                         ">
                             <i class="fa-solid fa-circle-check" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #3b82f688);"></i>
                         </span>
-                        <span style="letter-spacing:0.01em;">Request submitted successfully!</span>
+                        <span style="letter-spacing:0.01em;">Request submitted successfully</span>
                         <span class="dist-alert-bar" style="
                             position: absolute;
                             bottom: 0; left: 0;
                             height: 4px;
                             width: 100%;
-                            background: linear-gradient(90deg, #dbeafe 0%, #3b82f6 100%);
+                            background: linear-gradient(90deg, #c7d2fe 0%, #2563eb 100%);
                             animation: distAlertBar 2.1s linear;
                         "></span>
                     </div>
@@ -395,96 +690,115 @@ export default function Distribution() {
                     pickupDate: '',
                     request_note: '',
                     quantity: 1,
+                    farmLocation: '',
+                    areaPlanted: '',
+                    plantingMethod: '',
                 });
                 setFormErrors({});
-            } else {
-                await response.json();
-                // Custom alert for admin cannot request distribution items
-                const alertDiv = document.createElement('div');
-                alertDiv.innerHTML = `
-                    <div id="custom-dist-alert" style="
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%) scale(0.95);
-                        z-index: 9999;
-                        background: #dc2626;
-                        background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
-                        color: #fff;
-                        padding: 1.5rem 2.8rem;
-                        border-radius: 2rem;
-                        box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
-                        font-size: 1.18rem;
-                        font-weight: 700;
-                        display: flex;
-                        align-items: center;
-                        gap: 1.1rem;
-                        min-width: 320px;
-                        max-width: 90vw;
-                        animation: distAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
-                        overflow: hidden;
-                    ">
-                        <span style="
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: rgba(255,255,255,0.13);
-                            border-radius: 50%;
-                            width: 2.8rem;
-                            height: 2.8rem;
-                            box-shadow: 0 2px 8px 0 rgba(239,68,68,0.10);
-                        ">
-                            <i class="fa-solid fa-circle-xmark" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #f8717188);"></i>
-                        </span>
-                        <span style="letter-spacing:0.01em;">Admin cannot request distribution items</span>
-                        <span class="dist-alert-bar" style="
-                            position: absolute;
-                            bottom: 0; left: 0;
-                            height: 4px;
-                            width: 100%;
-                            background: linear-gradient(90deg, #fecaca 0%, #dc2626 100%);
-                            animation: distAlertBar 2.1s linear;
-                        "></span>
-                    </div>
-                    <style>
-                        @keyframes distAlertPopIn {
-                            0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
-                            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
-                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
-                        }
-                        @keyframes distAlertBar {
-                            from { width: 0%; }
-                            to { width: 100%; }
-                        }
-                    </style>
-                `;
-                document.body.appendChild(alertDiv);
-
-                setTimeout(() => {
-                    const el = document.getElementById('custom-dist-alert');
-                    if (el) {
-                        el.style.transition = 'opacity 0.35s, transform 0.35s';
-                        el.style.opacity = '0';
-                        el.style.transform =
-                            'translate(-50%, -50%) scale(0.95)';
-                        setTimeout(() => {
-                            if (alertDiv.parentNode)
-                                alertDiv.parentNode.removeChild(alertDiv);
-                        }, 350);
-                    }
-                }, 2100);
-
-                setModalOpen(false);
-                setRequestData({
-                    pickupDate: '',
-                    request_note: '',
-                    quantity: 1,
+                setMonthlyUsage((prev) => {
+                    const used = Math.min(
+                        MONTHLY_LIMIT,
+                        (prev?.used || 0) + 1
+                    );
+                    return {
+                        used,
+                        remaining: Math.max(0, MONTHLY_LIMIT - used),
+                    };
                 });
-                setFormErrors({});
                 return;
             }
+
+            let message = 'Submission failed. Please check your inputs and try again.';
+            try {
+                const err = await response.json();
+                message = err.message || err.error || message;
+            } catch (err) {
+                // ignore JSON parse failures
+            }
+
+            const alertDiv = document.createElement('div');
+            alertDiv.innerHTML = `
+                <div id="custom-dist-alert" style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) scale(0.95);
+                    z-index: 9999;
+                    background: rgba(239,68,68,0.98);
+                    background: linear-gradient(100deg, #ef4444 0%, #f87171 100%);
+                    color: #fff;
+                    padding: 1.3rem 2.6rem;
+                    border-radius: 2rem;
+                    box-shadow: 0 12px 40px 0 rgba(248,113,113,0.22);
+                    font-size: 1.05rem;
+                    font-weight: 700;
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    min-width: 320px;
+                    max-width: 90vw;
+                    animation: distAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                    overflow: hidden;
+                ">
+                    <span style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: rgba(255,255,255,0.13);
+                        border-radius: 50%;
+                        width: 2.6rem;
+                        height: 2.6rem;
+                        box-shadow: 0 2px 8px 0 rgba(248,113,113,0.10);
+                    ">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.2rem;"></i>
+                    </span>
+                    <div>
+                        <div style="margin-bottom: 0.2rem;">Submission failed</div>
+                        <div style="font-size: 0.9rem; font-weight: 600; opacity: 0.9;">${message}</div>
+                    </div>
+                    <button onclick="document.getElementById('custom-dist-alert').remove()" style="
+                        margin-left: auto;
+                        background: rgba(255,255,255,0.16);
+                        border: none;
+                        color: #fff;
+                        padding: 0.4rem 0.8rem;
+                        border-radius: 999px;
+                        cursor: pointer;
+                        font-weight: 700;
+                    ">
+                        Close
+                    </button>
+                </div>
+                <style>
+                    @keyframes distAlertPopIn {
+                        0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                        60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                        100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                    }
+                    @keyframes distAlertBar {
+                        from { width: 0%; }
+                        to { width: 100%; }
+                    }
+                </style>
+            `;
+            document.body.appendChild(alertDiv);
+
+            setTimeout(() => {
+                const el = document.getElementById('custom-dist-alert');
+                if (el) {
+                    el.style.transition = 'opacity 0.35s, transform 0.35s';
+                    el.style.opacity = '0';
+                    el.style.transform = 'translate(-50%, -50%) scale(0.95)';
+                    setTimeout(() => {
+                        if (alertDiv.parentNode)
+                            alertDiv.parentNode.removeChild(alertDiv);
+                    }, 350);
+                }
+            }, 2100);
+
+            setModalOpen(false);
+            return;
         } catch (error) {
-            // Custom alert for error submitting request
             const alertDiv = document.createElement('div');
             alertDiv.innerHTML = `
                 <div id="custom-dist-alert" style="
@@ -565,7 +879,9 @@ export default function Distribution() {
     const handleMyRequestsClick = async () => {
         try {
             // Fetch user requests using the correct endpoint
-            const requestsResponse = await fetch('/api/dist/request/me');
+            const requestsResponse = await fetch('/api/dist/request/me', {
+                credentials: 'include',
+            });
 
             if (requestsResponse.status === 401) {
                 // Show custom login prompt when unauthorized
@@ -672,11 +988,12 @@ export default function Distribution() {
 
             if (requestsResponse.ok) {
                 const requestsData = await requestsResponse.json();
-                setMyRequests(
-                    Array.isArray(requestsData.requests)
-                        ? requestsData.requests
-                        : []
-                );
+                const requestsList = Array.isArray(requestsData.requests)
+                    ? requestsData.requests
+                    : [];
+
+                setMyRequests(requestsList);
+                setMonthlyUsage(calculateMonthlyUsage(requestsList));
                 setShowMyRequestsModal(true);
             } else {
                 // Show error alert for other errors
@@ -1224,16 +1541,35 @@ export default function Distribution() {
                         </header>
 
                         <div className="w-full max-w-5xl mb-8 mx-auto space-y-4">
-                            {/* Button Section - Top Right */}
-                            <div className="w-full flex justify-end">
-                                <button
-                                    className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-lg text-sm sm:text-base ${isDark ? 'bg-green-600 hover:bg-green-700' : 'bg-green-600 hover:bg-green-700'} text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-green-400`}
-                                    onClick={handleMyRequestsClick}
-                                >
-                                    <i className="fa-solid fa-list-check text-base sm:text-lg"></i>
-                                    <span className="hidden sm:inline">My Requests</span>
-                                    <span className="sm:hidden">Requests</span>
-                                </button>
+                            <div className="w-full flex flex-wrap items-center gap-3 justify-between">
+                                {canShowUserActions && monthlyUsage && (
+                                    <div className={`${isDark ? 'bg-gray-800 border-gray-700 text-gray-100' : 'bg-blue-50 border-blue-200 text-blue-900'} border rounded-2xl px-4 py-3 flex items-center gap-3 shadow-sm`}> 
+                                        <div className={`${isDark ? 'bg-green-700 text-white' : 'bg-green-600 text-white'} w-10 h-10 rounded-xl flex items-center justify-center shadow-md`}>
+                                            <i className="fa-solid fa-circle-info text-base"></i>
+                                        </div>
+                                        <div className="flex flex-col leading-tight">
+                                            <span className="font-semibold text-sm">{MONTHLY_LIMIT} requests / month</span>
+                                            <span className={`${isDark ? 'text-gray-300' : 'text-blue-900/80'} text-xs font-medium`}>
+                                                {monthlyUsage.remaining} remaining · {monthlyUsage.used} used
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="flex items-center gap-3 ml-auto">
+                                    {canShowUserActions && !monthlyUsage && (
+                                        <span className={`${isDark ? 'text-gray-400' : 'text-gray-500'} text-xs sm:text-sm`}>Login to view monthly limit</span>
+                                    )}
+                                    {canShowUserActions && (
+                                        <button
+                                            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-lg text-sm sm:text-base ${isDark ? 'bg-green-600 hover:bg-green-700' : 'bg-green-600 hover:bg-green-700'} text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-green-400`}
+                                            onClick={handleMyRequestsClick}
+                                        >
+                                            <i className="fa-solid fa-list-check text-base sm:text-lg"></i>
+                                            <span className="hidden sm:inline">My Requests</span>
+                                            <span className="sm:hidden">Requests</span>
+                                        </button>
+                                    )}
+                                </div>
                             </div>
 
                             {/* Search and Filter Section */}
@@ -1243,7 +1579,7 @@ export default function Distribution() {
                                     <input
                                         type="text"
                                         className={`w-full px-10 py-2.5 rounded-lg border text-sm sm:text-base ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-gray-500 focus:ring-2 focus:ring-gray-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-900 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 placeholder:text-gray-400'} shadow transition font-medium`}
-                                        placeholder="Search by name, category, description..."
+                                        placeholder="Search by name or description..."
                                         value={search}
                                         onChange={(e) => setSearch(e.target.value)}
                                     />
@@ -1303,10 +1639,19 @@ export default function Distribution() {
                                 </div>
                             ) : (
                                 paginatedItems.map((item) => {
+                                    const matchedType = getSeedType(item);
+                                    const availableQty =
+                                        item.availableQuantity ?? item.quantity ?? 0;
+                                    const maxPerRequest =
+                                        item.max_quantity_per_request ?? null;
+                                    const unitLabel = normalizeUnitLabel(
+                                        item.unit
+                                    );
+
                                     return (
                                         <div
                                             key={item.id}
-                                            className={`w-full max-w-sm ${isDark ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-200'} rounded-2xl shadow-lg hover:shadow-xl border transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[420px]`}
+                                            className={`w-full max-w-sm ${isDark ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-200'} rounded-2xl shadow-lg hover:shadow-xl border transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[430px]`}
                                         >
                                             <div className="relative">
                                                 <img
@@ -1321,38 +1666,6 @@ export default function Distribution() {
                                                         background: '#eff6ff',
                                                     }}
                                                 />
-                                                <span
-                                                    className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg
-                                                    ${
-                                                        item.category ===
-                                                        'Seeds'
-                                                            ? 'bg-green-500'
-                                                            : item.category ===
-                                                              'Fertilizers'
-                                                            ? 'bg-green-500'
-                                                            : item.category ===
-                                                              'Livestock'
-                                                            ? 'bg-yellow-500'
-                                                            : item.category ===
-                                                              'Fish Fingerlings'
-                                                            ? 'bg-green-500'
-                                                            : item.category ===
-                                                              'Organic Inputs'
-                                                            ? 'bg-green-700'
-                                                            : item.category ===
-                                                              'Tools'
-                                                            ? 'bg-gray-500'
-                                                            : item.category ===
-                                                              'Plants'
-                                                            ? 'bg-green-900'
-                                                            : item.category ===
-                                                              'Compost'
-                                                            ? 'bg-orange-500'
-                                                            : 'bg-gray-500'
-                                                    }`}
-                                                >
-                                                    {item.category}
-                                                </span>
                                             </div>
                                             <div className="p-5 flex flex-col flex-1">
                                                 <h3 className={`text-xl font-bold mb-2 ${isDark ? 'text-gray-100' : 'text-gray-900'} line-clamp-1 min-h-[28px]`}>
@@ -1364,15 +1677,36 @@ export default function Distribution() {
                                                 >
                                                     {item.description}
                                                 </p>
-                                                <div className="flex items-center justify-between mb-4">
-                                                    <span className={`text-sm ${isDark ? 'text-gray-200' : 'text-gray-700'} font-semibold`}>
-                                                        Qty: {item.quantity}
-                                                    </span>
-                                                    <div className="flex items-center gap-1">
-                                                        {typeIcon(
-                                                            item.category
-                                                        )}
+                                                {matchedType && (
+                                                    <div className="flex items-center gap-2 mb-3">
+                                                        <span
+                                                            className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                                                matchedType === 'Rice'
+                                                                    ? 'bg-amber-100 text-amber-800'
+                                                                    : matchedType === 'Corn'
+                                                                    ? 'bg-blue-100 text-blue-800'
+                                                                    : matchedType === 'High Value Crops'
+                                                                    ? 'bg-emerald-100 text-emerald-800'
+                                                                    : isDark
+                                                                    ? 'bg-gray-700 text-gray-200'
+                                                                    : 'bg-gray-100 text-gray-700'
+                                                            }`}
+                                                        >
+                                                            {matchedType}
+                                                        </span>
+                                                        {typeIcon(matchedType)}
                                                     </div>
+                                                )}
+                                                <div className="flex items-center justify-between mb-4 text-sm font-semibold">
+                                                    <span className={`${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                                                        Available: {availableQty} {unitLabel}
+                                                    </span>
+                                                    <span className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                                                        Max/request:{' '}
+                                                        {maxPerRequest != null
+                                                            ? `${maxPerRequest} ${unitLabel}`
+                                                            : '—'}
+                                                    </span>
                                                 </div>
                                                 <button
                                                     className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 mt-auto"
@@ -1553,8 +1887,8 @@ export default function Distribution() {
                 </main>
             </div>
             {modalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 transition-all pt-24 sm:pt-20 md:pt-16">
-                    <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-2xl p-0 max-w-lg w-full relative overflow-hidden animate-fade-in mx-4`}>
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 transition-all pt-24 sm:pt-20 md:pt-16 overflow-y-auto">
+                    <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-2xl p-0 max-w-4xl w-full relative overflow-hidden animate-fade-in mx-4`}> 
                         {/* Modal Header */}
                         <div className={`flex items-center justify-between px-8 py-6 ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b bg-gradient-to-r from-green-600 to-green-700`}>
                             <h2 className="text-xl font-bold text-white">
@@ -1572,199 +1906,316 @@ export default function Distribution() {
                         {/* Modal Body */}
                         <form
                             onSubmit={handleSubmit}
-                            className="px-8 py-6 space-y-5"
+                            className="px-8 py-6 flex flex-col gap-6 max-h-[80vh]"
                         >
-                            <div className="flex items-center gap-4 mb-4">
-                                <img
-                                    src={selectedItem?.img}
-                                    alt={selectedItem?.Name}
-                                    onError={(e) => {
-                                        e.target.src = default_image;
-                                    }}
-                                    className="w-16 h-16 rounded-xl object-cover border-2 border-gray-300 shadow"
-                                />
-                                <div className="flex-1">
-                                    <div className={`text-lg font-semibold ${isDark ? 'text-gray-100' : 'text-gray-900'} truncate`}>
-                                        {selectedItem?.Name}
-                                    </div>
-                                    <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                                        {selectedItem?.category}
-                                    </div>
-                                    <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                                        Available Stock:{' '}
-                                        {selectedItem?.quantity}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className={`${isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'} border rounded-lg p-3 mb-4`}>
-                                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                                    <i className="fa-solid fa-info-circle mr-2"></i>
-                                    <span className="text-red-500">*</span>{' '}
-                                    indicates required fields
-                                </p>
-                            </div>
-
-                            {/* Max Quantity Per Request Warning */}
-                            {selectedItem?.max_quantity_per_request && (
-                                <div className={`${isDark ? 'bg-blue-900/30 border-blue-600' : 'bg-blue-50 border-blue-400'} border-l-4 rounded-lg p-4 mb-4`}>
-                                    <div className="flex items-start">
-                                        <i className={`fa-solid fa-box ${isDark ? 'text-blue-400' : 'text-blue-600'} mr-2 mt-0.5`}></i>
-                                        <div className="flex-1">
-                                            <p className={`text-sm font-semibold ${isDark ? 'text-blue-200' : 'text-blue-800'} mb-1`}>
-                                                Quantity Limit Per Request
-                                            </p>
-                                            <p className={`text-sm ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>
-                                                You can request a maximum of{' '}
-                                                <strong>{selectedItem.max_quantity_per_request} units</strong> in a single request.
-                                                {requestData.quantity > 0 && (() => {
-                                                    const isExceeding = requestData.quantity > selectedItem.max_quantity_per_request;
-                                                    return (
-                                                        <span className={isExceeding ? 'text-red-600 font-bold' : 'text-green-600 font-semibold'}>
-                                                            {' '}Your request: <strong>{requestData.quantity} units</strong>
-                                                            {isExceeding && ' (Exceeds limit!)'}
-                                                        </span>
-                                                    );
-                                                })()}
-                                            </p>
+                            <div className="flex flex-col lg:flex-row gap-6 flex-1 overflow-y-auto pr-1">
+                                <div className="flex-1 space-y-5 min-w-0">
+                                    <div className="flex items-center gap-4">
+                                        <img
+                                            src={selectedItem?.img}
+                                            alt={selectedItem?.Name}
+                                            onError={(e) => {
+                                                e.target.src = default_image;
+                                            }}
+                                            className="w-16 h-16 rounded-xl object-cover border-2 border-gray-300 shadow"
+                                        />
+                                        <div className="flex-1 min-w-0">
+                                            <div className={`text-lg font-semibold ${isDark ? 'text-gray-100' : 'text-gray-900'} truncate`}>
+                                                {selectedItem?.Name}
+                                            </div>
+                                            <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                {selectedItem?.category}
+                                            </div>
+                                            <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                Available Stock: {selectedItem?.quantity} {normalizeUnitLabel(selectedItem?.unit)}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )}
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label
-                                        htmlFor="pickupDate"
-                                        className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
-                                    >
-                                        Pickup Date{' '}
-                                        <span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="date"
-                                        id="pickupDate"
-                                        name="pickupDate"
-                                        value={requestData.pickupDate}
-                                        onChange={handleInputChange}
-                                        onBlur={handleDateInput}
-                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition ${
-                                            formErrors.pickupDate
-                                                ? 'border-red-300 bg-red-50'
-                                                : isDark 
-                                                ? 'border-gray-600 bg-gray-700 text-gray-100'
-                                                : 'border-gray-300 bg-white text-gray-900'
-                                        }`}
-                                        required
-                                        min={new Date().toISOString().split('T')[0]}
-                                        max={addYears(new Date(), 2).toISOString().split('T')[0]}
-                                    />
-                                    {formErrors.pickupDate && (
-                                        <p className="text-red-500 text-xs mt-1">
-                                            {formErrors.pickupDate}
+                                    <div className={`${isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'} border rounded-lg p-3`}>
+                                        <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                            <i className="fa-solid fa-info-circle mr-2"></i>
+                                            <span className="text-red-500">*</span>{' '}
+                                            indicates required fields
                                         </p>
-                                    )}
-                                </div>
-                                <div>
-                                    <label
-                                        htmlFor="quantity"
-                                        className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
-                                    >
-                                        Quantity{' '}
-                                        <span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="number"
-                                        id="quantity"
-                                        name="quantity"
-                                        value={requestData.quantity}
-                                        onChange={handleQuantityChange}
-                                        onKeyDown={(e) => {
-                                            // Prevent typing negative, decimal, or 'e'
-                                            if (e.key === '-' || e.key === '.' || e.key === 'e' || e.key === 'E') {
-                                                e.preventDefault();
-                                            }
-                                        }}
-                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition ${
-                                            formErrors.quantity
-                                                ? 'border-red-300 bg-red-50'
-                                                : isDark 
-                                                ? 'border-gray-600 bg-gray-700 text-gray-100'
-                                                : 'border-gray-300 bg-white text-gray-900'
-                                        }`}
-                                        required
-                                        min="1"
-                                        max={
-                                            selectedItem?.max_quantity_per_request
-                                                ? Math.min(selectedItem.max_quantity_per_request, selectedItem?.quantity)
-                                                : selectedItem?.quantity
-                                        }
-                                    />
-                                    {formErrors.quantity && (
-                                        <p className="text-red-500 text-xs mt-1">
-                                            {formErrors.quantity}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
+                                    </div>
 
-                            <div>
-                                <label
-                                    htmlFor="request_note"
-                                    className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
-                                >
-                                    Purpose & Additional Notes
-                                    <span className={`${isDark ? 'text-gray-500' : 'text-gray-400'} text-xs ml-1`}>
-                                        (Optional)
-                                    </span>
-                                </label>
-                                <textarea
-                                    id="request_note"
-                                    name="request_note"
-                                    value={requestData.request_note}
-                                    onChange={handleInputChange}
-                                    rows="3"
-                                    className={`w-full rounded-xl border ${isDark ? 'border-gray-600 bg-gray-700 text-gray-100' : 'border-gray-300 bg-white text-gray-900'} px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition resize-none`}
-                                    placeholder="Describe the purpose for this distribution item and any special requirements..."
-                                ></textarea>
-                            </div>
-
-                            {/* Request Summary */}
-                            {requestData.pickupDate && requestData.quantity && (
-                                <div className={`${isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'} border rounded-lg p-4`}>
-                                    <h4 className={`text-sm font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'} mb-2`}>
-                                        <i className="fa-solid fa-clipboard-check mr-2"></i>
-                                        Request Summary
-                                    </h4>
-                                    <div className={`space-y-1 text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                                        <div className="flex justify-between">
-                                            <span>Pickup Date:</span>
-                                            <span className="font-medium">
-                                                {new Date(
-                                                    requestData.pickupDate
-                                                ).toLocaleDateString('en-US', {
-                                                    weekday: 'short',
-                                                    year: 'numeric',
-                                                    month: 'short',
-                                                    day: 'numeric',
-                                                })}
-                                            </span>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label
+                                                htmlFor="pickupDate"
+                                                className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
+                                            >
+                                                Pickup Date <span className="text-red-500">*</span>
+                                            </label>
+                                            <input
+                                                type="date"
+                                                id="pickupDate"
+                                                name="pickupDate"
+                                                value={requestData.pickupDate}
+                                                onChange={handleInputChange}
+                                                onBlur={handleDateInput}
+                                                className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition ${
+                                                    formErrors.pickupDate
+                                                        ? 'border-red-300 bg-red-50'
+                                                        : isDark 
+                                                        ? 'border-gray-600 bg-gray-700 text-gray-100'
+                                                        : 'border-gray-300 bg-white text-gray-900'
+                                                }`}
+                                                required
+                                                min={new Date().toISOString().split('T')[0]}
+                                                max={addYears(new Date(), 2).toISOString().split('T')[0]}
+                                            />
+                                            {formErrors.pickupDate && (
+                                                <p className="text-red-500 text-xs mt-1">
+                                                    {formErrors.pickupDate}
+                                                </p>
+                                            )}
                                         </div>
-                                        <div className="flex justify-between">
-                                            <span>Quantity:</span>
-                                            <span className="font-medium">
-                                                {requestData.quantity} unit(s)
-                                            </span>
-                                        </div>
-                                        <div className={`text-xs text-green-600 mt-2 p-2 ${isDark ? 'bg-green-900/30' : 'bg-green-50'} rounded border`}>
-                                            <i className="fa-solid fa-info-circle mr-1"></i>
-                                            Distribution items do not require
-                                            return
+                                        <div>
+                                            <label
+                                                htmlFor="quantity"
+                                                className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
+                                            >
+                                                Quantity <span className="text-red-500">*</span>
+                                            </label>
+                                            <input
+                                                type="number"
+                                                id="quantity"
+                                                name="quantity"
+                                                value={requestData.quantity}
+                                                onChange={handleQuantityChange}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === '-' || e.key === '.' || e.key === 'e' || e.key === 'E') {
+                                                        e.preventDefault();
+                                                    }
+                                                }}
+                                                className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition ${
+                                                    formErrors.quantity
+                                                        ? 'border-red-300 bg-red-50'
+                                                        : isDark 
+                                                        ? 'border-gray-600 bg-gray-700 text-gray-100'
+                                                        : 'border-gray-300 bg-white text-gray-900'
+                                                }`}
+                                                required
+                                                min="1"
+                                                max={
+                                                    selectedItem?.max_quantity_per_request
+                                                        ? Math.min(selectedItem.max_quantity_per_request, selectedItem?.quantity)
+                                                        : selectedItem?.quantity
+                                                }
+                                            />
+                                            {formErrors.quantity && (
+                                                <p className="text-red-500 text-xs mt-1">
+                                                    {formErrors.quantity}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label
+                                                htmlFor="farmLocation"
+                                                className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
+                                            >
+                                                Farm Location <span className="text-red-500">*</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="farmLocation"
+                                                name="farmLocation"
+                                                value={requestData.farmLocation}
+                                                onChange={handleInputChange}
+                                                className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition ${
+                                                    formErrors.farmLocation
+                                                        ? 'border-red-300 bg-red-50'
+                                                        : isDark 
+                                                        ? 'border-gray-600 bg-gray-700 text-gray-100'
+                                                        : 'border-gray-300 bg-white text-gray-900'
+                                                }`}
+                                                placeholder="Barangay, Municipality"
+                                                required
+                                            />
+                                            {formErrors.farmLocation && (
+                                                <p className="text-red-500 text-xs mt-1">
+                                                    {formErrors.farmLocation}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <label
+                                                htmlFor="areaPlanted"
+                                                className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
+                                            >
+                                                Area Planted (ha) <span className="text-red-500">*</span>
+                                            </label>
+                                            <input
+                                                type="number"
+                                                id="areaPlanted"
+                                                name="areaPlanted"
+                                                value={requestData.areaPlanted}
+                                                onChange={handleInputChange}
+                                                onKeyDown={(e) => {
+                                                    if (['e', 'E', '+', '-'].includes(e.key)) e.preventDefault();
+                                                }}
+                                                step="0.01"
+                                                min="0"
+                                                className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition ${
+                                                    formErrors.areaPlanted
+                                                        ? 'border-red-300 bg-red-50'
+                                                        : isDark 
+                                                        ? 'border-gray-600 bg-gray-700 text-gray-100'
+                                                        : 'border-gray-300 bg-white text-gray-900'
+                                                }`}
+                                                placeholder="e.g., 1.5"
+                                                required
+                                            />
+                                            {formErrors.areaPlanted && (
+                                                <p className="text-red-500 text-xs mt-1">
+                                                    {formErrors.areaPlanted}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label
+                                            htmlFor="plantingMethod"
+                                            className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
+                                        >
+                                            Planting Method <span className="text-red-500">*</span>
+                                        </label>
+                                        <select
+                                            id="plantingMethod"
+                                            name="plantingMethod"
+                                            value={requestData.plantingMethod}
+                                            onChange={handleInputChange}
+                                            className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition ${
+                                                formErrors.plantingMethod
+                                                    ? 'border-red-300 bg-red-50'
+                                                    : isDark 
+                                                    ? 'border-gray-600 bg-gray-700 text-gray-100'
+                                                    : 'border-gray-300 bg-white text-gray-900'
+                                            }`}
+                                            required
+                                        >
+                                            <option value="">Select method</option>
+                                            <option value="Direct_Seeded">Direct Seeded</option>
+                                            <option value="Transplanting">Transplanting</option>
+                                        </select>
+                                        {formErrors.plantingMethod && (
+                                            <p className="text-red-500 text-xs mt-1">
+                                                {formErrors.plantingMethod}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    <div>
+                                        <label
+                                            htmlFor="request_note"
+                                            className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
+                                        >
+                                            Purpose & Additional Notes
+                                            <span className={`${isDark ? 'text-gray-500' : 'text-gray-400'} text-xs ml-1`}>
+                                                (Optional)
+                                            </span>
+                                        </label>
+                                        <textarea
+                                            id="request_note"
+                                            name="request_note"
+                                            value={requestData.request_note}
+                                            onChange={handleInputChange}
+                                            rows="3"
+                                            className={`w-full rounded-xl border ${isDark ? 'border-gray-600 bg-gray-700 text-gray-100' : 'border-gray-300 bg-white text-gray-900'} px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition resize-none`}
+                                            placeholder="Describe the purpose for this distribution item and any special requirements..."
+                                        ></textarea>
+                                    </div>
                                 </div>
-                            )}
-                            <div className="flex justify-end gap-3 pt-2">
+
+                                <div className="w-full lg:w-80 xl:w-96 space-y-4 flex-shrink-0">
+                                    {selectedItem?.max_quantity_per_request && (
+                                        <div className={`${isDark ? 'bg-blue-900/30 border-blue-600 text-blue-100' : 'bg-blue-50 border-blue-400 text-blue-800'} border rounded-lg p-4`}> 
+                                            <div className="flex items-start gap-2">
+                                                <i className={`fa-solid fa-box mt-0.5 ${isDark ? 'text-blue-200' : 'text-blue-600'}`}></i>
+                                                <div>
+                                                    <p className="text-sm font-semibold">Quantity limit per request</p>
+                                                    <p className="text-sm">
+                                                        Up to <strong>{selectedItem.max_quantity_per_request} {normalizeUnitLabel(selectedItem.unit)}</strong> per submission.
+                                                    </p>
+                                                    {requestData.quantity > 0 && (
+                                                        <p className={`text-xs mt-1 font-semibold ${requestData.quantity > selectedItem.max_quantity_per_request ? 'text-red-200' : 'text-green-200'}`}>
+                                                            Your entry: {requestData.quantity} {normalizeUnitLabel(selectedItem.unit)}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div className={`${isDark ? 'bg-gray-750 border-gray-700' : 'bg-gray-50 border-gray-200'} border rounded-lg p-4 space-y-3`}> 
+                                        <div className="flex items-center gap-2">
+                                            <i className="fa-solid fa-clipboard-check text-green-600"></i>
+                                            <h4 className={`text-sm font-semibold ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>
+                                                Request Summary
+                                            </h4>
+                                        </div>
+                                        {requestData.pickupDate || requestData.quantity || requestData.farmLocation || requestData.areaPlanted || requestData.plantingMethod ? (
+                                            <div className={`space-y-1 text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                                                <div className="flex justify-between gap-2">
+                                                    <span>Pickup Date:</span>
+                                                    <span className="font-medium text-right">
+                                                        {requestData.pickupDate
+                                                            ? new Date(requestData.pickupDate).toLocaleDateString('en-US', {
+                                                                  weekday: 'short',
+                                                                  year: 'numeric',
+                                                                  month: 'short',
+                                                                  day: 'numeric',
+                                                              })
+                                                            : '—'}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between gap-2">
+                                                    <span>Quantity:</span>
+                                                    <span className="font-medium text-right">
+                                                        {requestData.quantity ? `${requestData.quantity} ${normalizeUnitLabel(selectedItem?.unit)}` : '—'}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between gap-2">
+                                                    <span>Farm Location:</span>
+                                                    <span className="font-medium text-right ml-2 truncate max-w-[160px]">
+                                                        {requestData.farmLocation || '—'}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between gap-2">
+                                                    <span>Area Planted:</span>
+                                                    <span className="font-medium text-right">
+                                                        {requestData.areaPlanted ? `${requestData.areaPlanted} ha` : '—'}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between gap-2">
+                                                    <span>Planting Method:</span>
+                                                    <span className="font-medium text-right">
+                                                        {requestData.plantingMethod === 'Direct_Seeded'
+                                                            ? 'Direct Seeded'
+                                                            : requestData.plantingMethod === 'Transplanting'
+                                                            ? 'Transplanting'
+                                                            : requestData.plantingMethod || '—'}
+                                                    </span>
+                                                </div>
+                                                <div className={`text-xs text-green-600 mt-2 p-2 ${isDark ? 'bg-green-900/30' : 'bg-green-50'} rounded border`}>
+                                                    <i className="fa-solid fa-info-circle mr-1"></i>
+                                                    Distribution items do not require return
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <p className={`${isDark ? 'text-gray-400' : 'text-gray-500'} text-sm`}>Fill out the form to see a quick summary.</p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className={`flex flex-col sm:flex-row sm:justify-end gap-3 pt-3 ${isDark ? 'border-gray-700' : 'border-gray-200'} border-t`}> 
                                 <button
                                     type="button"
                                     className={`${isDark ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'} font-semibold px-5 py-2 rounded-xl transition focus:outline-none`}
@@ -1777,6 +2228,9 @@ export default function Distribution() {
                                     disabled={
                                         !requestData.pickupDate ||
                                         !requestData.quantity ||
+                                        !requestData.farmLocation.trim() ||
+                                        !requestData.areaPlanted ||
+                                        !requestData.plantingMethod ||
                                         Object.keys(formErrors).length > 0
                                     }
                                     className={`font-semibold px-6 py-2 rounded-xl shadow transition focus:outline-none ${
@@ -1814,6 +2268,32 @@ export default function Distribution() {
                         </div>
                         {/* Modal Body */}
                         <div className="px-8 py-6 space-y-5 overflow-y-auto flex-1">
+                            {monthlyUsage && canShowUserActions && (
+                                <div className={`${isDark ? 'bg-gray-800 border-gray-700' : 'bg-blue-50 border-blue-200'} border rounded-2xl px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3`}>
+                                    <div className="flex items-center gap-3">
+                                        <div className={`${isDark ? 'bg-green-700 text-white' : 'bg-green-600 text-white'} w-10 h-10 rounded-xl flex items-center justify-center shadow-md`}>
+                                            <i className="fa-solid fa-circle-info"></i>
+                                        </div>
+                                        <div>
+                                            <div className="font-semibold text-sm sm:text-base">Monthly limit: {MONTHLY_LIMIT} requests</div>
+                                            <div className={`${isDark ? 'text-gray-300' : 'text-blue-900/80'} text-xs sm:text-sm`}>
+                                                {monthlyUsage.remaining} remaining · {monthlyUsage.used} used this month
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-3 sm:min-w-[220px] w-full sm:w-auto">
+                                        <div className={`${isDark ? 'bg-gray-700' : 'bg-white'} rounded-full h-2 flex-1 overflow-hidden border ${isDark ? 'border-gray-600' : 'border-blue-100'}`}>
+                                            <div
+                                                className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all"
+                                                style={{ width: `${Math.min(100, ((monthlyUsage?.used || 0) / MONTHLY_LIMIT) * 100)}%` }}
+                                            ></div>
+                                        </div>
+                                        <span className={`text-xs sm:text-sm font-semibold ${isDark ? 'text-gray-100' : 'text-blue-900/90'}`}>
+                                            {`${Math.min(monthlyUsage?.used || 0, MONTHLY_LIMIT)}/${MONTHLY_LIMIT}`}
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
                             {myRequests.length > 0 ? (
                                 <div>
                                     <div className={`mb-6 text-sm ${isDark ? 'text-gray-300 bg-gray-700 border-gray-600' : 'text-gray-600 bg-gray-50 border-gray-200'} p-4 rounded-xl border`}>
@@ -1919,20 +2399,38 @@ export default function Distribution() {
                                                                               'Approved'
                                                                             ? 'bg-green-100 text-green-800 border border-green-200'
                                                                             : request.status ===
+                                                                              'Picked_Up'
+                                                                            ? 'bg-blue-100 text-blue-800 border border-blue-200'
+                                                                            : request.status ===
+                                                                              'late_pickup'
+                                                                            ? 'bg-orange-100 text-orange-800 border border-orange-200'
+                                                                            : request.status ===
+                                                                              'Planted'
+                                                                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                                                                            : request.status ===
                                                                               'Rejected'
                                                                             ? 'bg-red-100 text-red-800 border border-red-200'
                                                                             : request.status ===
                                                                               'No_Pickup'
-                                                                            ? 'bg-orange-100 text-orange-800 border border-orange-200'
+                                                                            ? 'bg-indigo-100 text-indigo-800 border border-indigo-200'
                                                                             : request.status ===
                                                                               'Cancelled'
                                                                             ? 'bg-gray-100 text-gray-800 border border-gray-200'
-                                                                            : 'bg-green-100 text-green-800 border border-green-200'
+                                                                            : request.status ===
+                                                                              'Archived'
+                                                                            ? 'bg-slate-100 text-slate-600 border border-slate-200'
+                                                                            : 'bg-gray-100 text-gray-800 border border-gray-200'
                                                                     }`}
                                                                 >
                                                                     {request.status ===
                                                                     'No_Pickup'
                                                                         ? 'No Pickup'
+                                                                        : request.status ===
+                                                                          'Picked_Up'
+                                                                        ? 'Picked Up'
+                                                                        : request.status ===
+                                                                          'late_pickup'
+                                                                        ? 'Late Pickup'
                                                                         : request.status}
                                                                 </span>
                                                             </td>

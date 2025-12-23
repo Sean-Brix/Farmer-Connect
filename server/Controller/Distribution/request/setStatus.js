@@ -2,6 +2,8 @@
 import prisma from '../../../config/database.js';
 import auditLogger from '../../../Services/auditLogger.js';
 import { recordDistribution, removeFromWaitlist } from '../../../Services/distributionQuotaService.js';
+import { createNotification } from '../../../Services/notificationService.js';
+import { transferBetweenStacks } from '../../../Utils/stackTransfer.js';
 // Using centralized prisma instance
 
 async function setStatus(req, res) {
@@ -45,7 +47,11 @@ async function setStatus(req, res) {
             include: {
                 itemStack: {
                     include: {
-                        item: true,
+                        item: {
+                            include: {
+                                seedVariety: true, // Include seed variety for planting deadline calculation
+                            },
+                        },
                     },
                 },
                 account: {
@@ -70,15 +76,41 @@ async function setStatus(req, res) {
         const validStatuses = [
             'Pending',
             'Approved',
+            'Picked_Up',
+            'late_pickup',
+            'Planted',
             'Rejected',
             'No_Pickup',
             'Cancelled',
+            'Archived',
         ];
 
         if (!validStatuses.includes(status)) {
             return res.status(400).json({
                 error: 'Invalid status',
                 message: `Status must be one of: ${validStatuses.join(', ')}`,
+            });
+        }
+
+        // Modification #3: Status transition validation
+        const validTransitions = {
+            Pending: ['Approved', 'Rejected', 'Cancelled'],
+            Approved: ['Picked_Up', 'late_pickup', 'No_Pickup', 'Cancelled'],
+            Picked_Up: ['Planted'],
+            late_pickup: ['Planted'],
+            Planted: ['Archived'],
+            Rejected: [],
+            No_Pickup: [],
+            Cancelled: [],
+            Archived: []
+        };
+
+        const allowedTransitions = validTransitions[transaction.status] || [];
+        if (status && !allowedTransitions.includes(status)) {
+            return res.status(400).json({
+                error: 'Invalid status transition',
+                message: `Cannot change from "${transaction.status}" to "${status}"`,
+                allowedTransitions
             });
         }
 
@@ -142,31 +174,107 @@ async function setStatus(req, res) {
             updateData.adminId = userId;
         }
 
+        // Modification #2: Smart pickup detection (reuse EIC pattern)
+        if (transaction.status === 'Approved' && ['Picked_Up', 'late_pickup'].includes(status)) {
+            const now = new Date();
+            const pickupDate = new Date(transaction.pickupDate);
+            
+            updateData.actual_pickup = now;
+            
+            // Calculate planting report deadline based on seed variety's planting window
+            const seedVariety = transaction.itemStack?.item?.seedVariety;
+            const plantingWindowDays = seedVariety?.plantingWindow || 30; // Default 30 days if not specified
+            
+            if (now > pickupDate) {
+                // LATE PICKUP
+                const daysLate = Math.ceil((now - pickupDate) / (1000 * 60 * 60 * 24));
+                updateData.status = 'late_pickup';
+                
+                // Calculate planting deadline from actual pickup date
+                const plantingDeadline = new Date(now);
+                plantingDeadline.setDate(plantingDeadline.getDate() + plantingWindowDays);
+                updateData.plantingReportDeadline = plantingDeadline;
+                
+                console.log(`⏰ Late pickup: ${daysLate} days. Planting deadline set to ${plantingDeadline} (${plantingWindowDays} days from now)`);
+            } else {
+                // ON-TIME PICKUP
+                updateData.status = 'Picked_Up';
+                
+                // Calculate planting deadline from actual pickup date
+                const plantingDeadline = new Date(now);
+                plantingDeadline.setDate(plantingDeadline.getDate() + plantingWindowDays);
+                updateData.plantingReportDeadline = plantingDeadline;
+                
+                console.log(`✅ On-time pickup. Planting deadline set to ${plantingDeadline} (${plantingWindowDays} days from now)`);
+            }
+            
+            // Log pickup event
+            console.log(`📦 Seeds picked up: ${transaction.itemStack.item.name} (${transaction.quantity} ${transaction.itemStack.item.unit})`);
+            if (seedVariety) {
+                console.log(`🌱 Seed variety: ${seedVariety.name} (${seedVariety.cropType})`);
+            }
+        }
+
         // Handle stack quantity adjustments based on status change
         let stackQuantityChange = 0;
         const currentStatus = transaction.status;
         const newStatus = status;
 
-        // Distribution-specific logic:
-        // Approved - Subtract (items are distributed out)
-        // Rejected - None (request denied, no items moved)
-        // Cancelled - (Approved? Add back) (Pending? None)
-        // No_Pickup - Add back (items not picked up, return to stock)
+        // Distribution-specific logic with Reserved stack:
+        // Approved - Transfer from Distributed to Reserved
+        // Picked_Up - Deduct from Reserved
+        // Rejected - No change
+        // Cancelled - Transfer from Reserved back to Distributed (if was Approved)
+        // No_Pickup - Transfer from Reserved back to Distributed
 
         if (newStatus === 'Approved') {
-            // Subtract quantity when approved (items are distributed out)
+            // Transfer from Distributed to Reserved
+            await transferBetweenStacks(
+                prisma,
+                transaction.itemStack.item.id,
+                'Distributed',
+                'Reserved',
+                transaction.quantity
+            );
+        } else if (newStatus === 'Picked_Up') {
+            // Deduct from Reserved stack (quantity goes to 0)
             stackQuantityChange = -transaction.quantity;
+            // Find Reserved stack to deduct from
+            const reservedStack = await prisma.itemStack.findFirst({
+                where: {
+                    itemId: transaction.itemStack.item.id,
+                    status: 'Reserved'
+                }
+            });
+            if (reservedStack) {
+                await prisma.itemStack.update({
+                    where: { id: reservedStack.id },
+                    data: { quantity: reservedStack.quantity - transaction.quantity }
+                });
+            }
         } else if (newStatus === 'Rejected') {
             // No change for rejected
             stackQuantityChange = 0;
         } else if (newStatus === 'No_Pickup') {
-            // Add quantity back when no pickup (items return to stock)
-            stackQuantityChange = transaction.quantity;
+            // Transfer from Reserved back to Distributed
+            await transferBetweenStacks(
+                prisma,
+                transaction.itemStack.item.id,
+                'Reserved',
+                'Distributed',
+                transaction.quantity
+            );
         } else if (newStatus === 'Cancelled') {
             // Handle cancellation logic
             if (currentStatus === 'Approved') {
-                // If cancelling an approved transaction, add quantity back
-                stackQuantityChange = transaction.quantity;
+                // Transfer from Reserved back to Distributed
+                await transferBetweenStacks(
+                    prisma,
+                    transaction.itemStack.item.id,
+                    'Reserved',
+                    'Distributed',
+                    transaction.quantity
+                );
             } else if (currentStatus === 'Pending') {
                 // If cancelling a pending transaction, no quantity change needed
                 stackQuantityChange = 0;
@@ -187,7 +295,11 @@ async function setStatus(req, res) {
                 include: {
                     itemStack: {
                         include: {
-                            item: true,
+                            item: {
+                                include: {
+                                    seedVariety: true,
+                                },
+                            },
                         },
                     },
                     account: {
@@ -196,6 +308,7 @@ async function setStatus(req, res) {
                             firstName: true,
                             surname: true,
                             email: true,
+                            client_profile: true,
                         },
                     },
                     admin: {
@@ -292,25 +405,112 @@ async function setStatus(req, res) {
                 });
             }
 
-            return updatedTransaction;
+            // Auto-create planting report on pickup if none exists
+            let createdReport = null;
+            const shouldCreateReport = ['Picked_Up', 'late_pickup'].includes(updateData.status);
+            if (shouldCreateReport && !updatedTransaction.plantingReportId) {
+                const seedVariety = updatedTransaction.itemStack.item.seedVariety;
+                const varietyId = updatedTransaction.itemStack.item.seedVarietyId;
+
+                if (varietyId && updatedTransaction.plantingMethod && updatedTransaction.farmLocation && updatedTransaction.areaPlanted) {
+                    try {
+                        createdReport = await prisma.plantingReport.create({
+                            data: {
+                                farmerName: `${updatedTransaction.account.firstName} ${updatedTransaction.account.surname}`.trim(),
+                                farmLocation: updatedTransaction.farmLocation,
+                                rsbsaNumber: updatedTransaction.account.client_profile?.rsbsaNumber ?? null,
+                                croppingSeasonId: null,
+                                areaPlanted: updatedTransaction.areaPlanted,
+                                seedClassification: 'Inbred_Certified',
+                                typeOfCrop: seedVariety?.cropType || 'Rice',
+                                riceIrrigation: null,
+                                varietyId,
+                                dateOfPlanting: null,
+                                plantingMethod: updatedTransaction.plantingMethod,
+                                cropInsurance: false,
+                                harvestArea: null,
+                                numberOfBags: null,
+                                weightPerBag: null,
+                                yieldMtPerHa: null,
+                                dateOfExpectedHarvest: null,
+                                distributionRequestId: updatedTransaction.id,
+                                distributionItemId: updatedTransaction.itemStack.item.id,
+                                distributionQuantity: updatedTransaction.quantity,
+                                distributionUnit: updatedTransaction.itemStack.item.unit,
+                                distributionPickupDate: updatedTransaction.actual_pickup || updatedTransaction.pickupDate,
+                                requestNote: updatedTransaction.requestNote,
+                                plantingReportDeadline: updatedTransaction.plantingReportDeadline,
+                                status: 'Draft',
+                                lastUpdatedBy: userId,
+                            },
+                        });
+
+                        await prisma.itemTransaction.update({
+                            where: { id: updatedTransaction.id },
+                            data: { plantingReportId: createdReport.id },
+                        });
+
+                        updatedTransaction.plantingReportId = createdReport.id;
+                    } catch (createError) {
+                        console.error('⚠️ Failed to auto-create planting report:', createError);
+                    }
+                } else {
+                    console.warn('⚠️ Skipping planting report auto-create: missing varietyId or farmer-provided details');
+                }
+            }
+
+            return { updatedTransaction, createdReport };
         });
+
+        const updatedTransaction = result.updatedTransaction;
+        const createdReport = result.createdReport;
+
+        // Send notification to farmer about planting deadline (outside transaction)
+        if (['Picked_Up', 'late_pickup'].includes(updatedTransaction.status) && updatedTransaction.plantingReportDeadline) {
+            const seedVariety = updatedTransaction.itemStack?.item?.seedVariety;
+            const plantingWindowDays = seedVariety?.plantingWindow || 30;
+            const deadlineDate = new Date(updatedTransaction.plantingReportDeadline).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            await createNotification({
+                accountId: updatedTransaction.accountId,
+                type: 'distribution_picked_up',
+                title: '🌱 Seeds Picked Up - Planting Deadline',
+                message: `You have picked up ${updatedTransaction.itemStack.item.name} (${updatedTransaction.quantity} ${updatedTransaction.itemStack.item.unit}). Please plant within ${plantingWindowDays} days (by ${deadlineDate}) and submit a planting report.`,
+                relatedId: updatedTransaction.id
+            }).catch(err => {
+                console.error('Failed to send pickup notification:', err);
+                // Don't fail the request if notification fails
+            });
+            
+            console.log(`📬 Sent planting deadline notification to user ${updatedTransaction.accountId}`);
+        }
 
         return res.status(200).json({
             success: true,
             message: 'Distribution transaction status updated successfully',
             transaction: {
-                id: result.id,
-                itemName: result.itemStack.item.name,
-                requestor: `${result.account.firstName} ${result.account.surname}`,
-                quantity: result.quantity,
-                status: result.status,
-                pickupDate: result.pickupDate,
+                id: updatedTransaction.id,
+                itemName: updatedTransaction.itemStack.item.name,
+                requestor: `${updatedTransaction.account.firstName} ${updatedTransaction.account.surname}`,
+                quantity: updatedTransaction.quantity,
+                status: updatedTransaction.status,
+                pickupDate: updatedTransaction.pickupDate,
                 returnDate: null, // Always null for distribution items
-                requestNote: result.requestNote,
-                updatedBy: result.admin
-                    ? `${result.admin.firstName} ${result.admin.surname}`
+                requestNote: updatedTransaction.requestNote,
+                updatedBy: updatedTransaction.admin
+                    ? `${updatedTransaction.admin.firstName} ${updatedTransaction.admin.surname}`
                     : 'User',
-                updatedAt: result.updatedAt,
+                updatedAt: updatedTransaction.updatedAt,
+                plantingReportId: updatedTransaction.plantingReportId,
+                plantingReportDeadline: updatedTransaction.plantingReportDeadline,
+                plantingReportCreated: createdReport?.id || null,
+                farmLocation: updatedTransaction.farmLocation,
+                areaPlanted: updatedTransaction.areaPlanted,
+                plantingMethod: updatedTransaction.plantingMethod,
                 stackQuantityChange: stackQuantityChange, // Include the quantity change for debugging
             },
         });

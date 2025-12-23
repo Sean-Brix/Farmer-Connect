@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../../contexts/ThemeContext';
+import { PlantingReportProvider } from '../../../contexts/PlantingReportContext';
 
 // ASSETS
 import default_image from '../../../Assets/eic_default.png';
@@ -7,7 +8,7 @@ import default_image from '../../../Assets/eic_default.png';
 // COMPONENTS
 import DistributionLoadingState from './components/DistributionLoadingState';
 import DistributionErrorState from './components/DistributionErrorState';
-import RequestsTable from './components/RequestsTable';
+import RequestSection from './components/RequestSection';
 import DistributionItemCard from './components/DistributionItemCard';
 import RequestCalendar from '../../../Components/Calendar/RequestCalendar.jsx';
 
@@ -41,11 +42,6 @@ export default function Distribution() {
     const [imageUpdateTimestamp, setImageUpdateTimestamp] = useState(
         Date.now()
     );
-
-    // Request section states
-    const [requestSearch, setRequestSearch] = useState('');
-    const [requestStatusFilter, setRequestStatusFilter] = useState('all');
-    const [requestSortBy, setRequestSortBy] = useState('status');
 
     // Alert state for success/error messages
     const [alert, setAlert] = useState({
@@ -249,16 +245,10 @@ export default function Distribution() {
     // Handle view requests - redirect to requests section with search filter
     const handleViewRequests = (itemName) => {
         setActiveSection('requests');
-        setRequestSearch(itemName);
     };
 
-    // Handle requests button click - reset all filters and go to requests section
+    // Handle requests button click - go to requests section
     const handleRequestsButtonClick = () => {
-        // Reset all request filters
-        setRequestSearch('');
-        setRequestStatusFilter('all');
-        setRequestSortBy('status');
-        // Switch to requests section
         setActiveSection('requests');
     };
 
@@ -567,7 +557,7 @@ export default function Distribution() {
                 return; // User cancelled
             }
 
-            await updateRequestStatusMutation.mutateAsync({
+            const result = await updateRequestStatusMutation.mutateAsync({
                 requestId,
                 status: newStatus,
                 itemName,
@@ -577,7 +567,9 @@ export default function Distribution() {
             });
 
             showAlert(
-                `Request status successfully changed to ${newStatus}`,
+                result?.transaction?.plantingReportCreated
+                    ? `Status changed to ${newStatus}. Draft planting report auto-created.`
+                    : `Request status successfully changed to ${newStatus}`,
                 'success'
             );
         } catch (error) {
@@ -614,160 +606,21 @@ export default function Distribution() {
                     {alert.message}
                 </div>
             )}
-
-            {/* Schedule Section Back Button */}
-            {activeSection === 'schedule' && (
-                <div className="max-w-7xl mx-auto mb-6 px-2 md:px-8">
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => setActiveSection('items')}
-                            className={`px-4 py-2 rounded-lg transition-colors ${
-                                isDark 
-                                    ? 'bg-gray-800 hover:bg-gray-700 text-white' 
-                                    : 'bg-gray-200 hover:bg-gray-300 text-gray-900'
-                            }`}
-                        >
-                            <i className="fa-solid fa-arrow-left mr-2"></i>
-                            Back to Items
-                        </button>
-                        <h1 className={`text-2xl md:text-3xl font-bold flex items-center gap-3 ${
-                            isDark ? 'text-white' : 'text-gray-900'
-                        }`}>
-                            <i className="fa-solid fa-calendar text-indigo-600"></i>
-                            Pickup Schedule
-                        </h1>
-                    </div>
-                </div>
-            )}
-
+            
             {activeSection === 'schedule' ? (
                 <RequestCalendar source="distribution" />
             ) : activeSection === 'requests' ? (
-                <div className="max-w-7xl mx-auto">
-                    {/* Request Search and Filters */}
-                    <div className="w-full mb-6 space-y-3">
-                        {/* Search Input - Full Width */}
-                        <div className="relative w-full">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <svg
-                                    className={`w-5 h-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                            </div>
-                            <input
-                                type="search"
-                                placeholder="Search by item name, requestor, or note..."
-                                className={`block w-full p-2.5 sm:p-3 pl-10 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all ${
-                                    isDark 
-                                        ? 'text-white bg-gray-800 border-gray-600 placeholder-gray-400' 
-                                        : 'text-gray-900 bg-gray-50 border-gray-300 placeholder-gray-500'
-                                }`}
-                                value={requestSearch}
-                                onChange={(e) =>
-                                    setRequestSearch(e.target.value)
-                                }
-                            />
-                        </div>
-
-                        {/* Filters and Actions Row */}
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full">
-                            <select
-                                className={`border text-sm rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 block p-2.5 sm:p-3 transition-all ${
-                                    isDark 
-                                        ? 'bg-gray-800 border-gray-600 text-white' 
-                                        : 'bg-gray-50 border-gray-300 text-gray-900'
-                                }`}
-                                value={requestStatusFilter}
-                                onChange={(e) =>
-                                    setRequestStatusFilter(e.target.value)
-                                }
-                            >
-                                <option value="all">All Statuses</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Approved">Approved</option>
-                                <option value="Rejected">Rejected</option>
-                                <option value="No_Pickup">No Pickup</option>
-                                <option value="Cancelled">Cancelled</option>
-                            </select>
-
-                            <select
-                                className={`border text-sm rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 block p-2.5 sm:p-3 transition-all ${
-                                    isDark 
-                                        ? 'bg-gray-800 border-gray-600 text-white' 
-                                        : 'bg-gray-50 border-gray-300 text-gray-900'
-                                }`}
-                                value={requestSortBy}
-                                onChange={(e) =>
-                                    setRequestSortBy(e.target.value)
-                                }
-                            >
-                                <option value="status">Sort by Status</option>
-                                <option value="date">Sort by Date</option>
-                                <option value="item">Sort by Item</option>
-                                <option value="client">Sort by Client</option>
-                            </select>
-
-                            <button
-                                onClick={refetchRequests}
-                                className="flex items-center justify-center px-4 py-2.5 sm:py-3 rounded-lg text-sm font-medium bg-green-500 hover:bg-green-600 text-white transition-all shadow-sm"
-                            >
-                                <svg
-                                    className="w-4 h-4 mr-2"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                                Refresh
-                            </button>
-
-                            <button
-                                onClick={() => setActiveSection('items')}
-                                className="flex items-center justify-center px-4 py-2.5 sm:py-3 rounded-lg text-sm font-medium bg-gray-500 hover:bg-gray-600 text-white transition-all shadow-sm sm:ml-auto"
-                            >
-                                <svg
-                                    className="w-4 h-4 mr-2"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                                Back to Items
-                            </button>
-                        </div>
+                <PlantingReportProvider>
+                    <div className="max-w-7xl mx-auto">
+                        <RequestSection
+                            requests={requests}
+                            onStatusChange={handleStatusChange}
+                            onRefresh={refetchRequests}
+                            onBack={() => setActiveSection('items')}
+                            isLoading={isLoadingRequests}
+                        />
                     </div>
-
-                    {/* Requests Table */}
-                    <RequestsTable
-                        requests={requests}
-                        search={requestSearch}
-                        statusFilter={requestStatusFilter}
-                        sortBy={requestSortBy}
-                        onStatusChange={handleStatusChange}
-                        isDark={isDark}
-                    />
-                </div>
+                </PlantingReportProvider>
             ) : (
                 <>
                     {/* Divider line removed for minimal UI */}
@@ -878,26 +731,7 @@ export default function Distribution() {
                                                     <option value="quantity">Sort by Quantity</option>
                                                     <option value="date">Sort by Date</option>
                                                 </select>
-                                                {/* Desktop: Schedule and Requests buttons inline */}
-                                                <button
-                                                    onClick={() => setActiveSection('schedule')}
-                                                    className="hidden md:flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-sm"
-                                                >
-                                                    <svg
-                                                        className="w-4 h-4 mr-2"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <path
-                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                    </svg>
-                                                    Schedule
-                                                </button>
+                                                
                                                 <button
                                                     onClick={handleRequestsButtonClick}
                                                     className="hidden md:flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"
@@ -1376,9 +1210,13 @@ function InternalRequestsTable({
         const statusStyles = {
             Pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
             Approved: 'bg-green-100 text-green-800 border-green-200',
+            Picked_Up: 'bg-blue-100 text-blue-800 border-blue-200',
+            late_pickup: 'bg-orange-100 text-orange-800 border-orange-200',
+            Planted: 'bg-emerald-100 text-emerald-800 border-emerald-200',
             Rejected: 'bg-red-100 text-red-800 border-red-200',
             No_Pickup: 'bg-indigo-100 text-indigo-800 border-indigo-200',
             Cancelled: 'bg-gray-100 text-gray-600 border-gray-200',
+            Archived: 'bg-slate-100 text-slate-600 border-slate-200',
         };
 
         return (
@@ -1388,7 +1226,9 @@ function InternalRequestsTable({
                     'bg-gray-100 text-gray-800 border-gray-200'
                 }`}
             >
-                {status.replace('_', ' ')}
+                {status === 'Picked_Up' ? 'Picked Up' : 
+                 status === 'late_pickup' ? 'Late Pickup' :
+                 status.replace('_', ' ')}
             </span>
         );
     };
@@ -1398,11 +1238,17 @@ function InternalRequestsTable({
             case 'Pending':
                 return ['Approved', 'Rejected'];
             case 'Approved':
-                return ['No_Pickup'];
+                return ['Picked_Up', 'No_Pickup'];
+            case 'Picked_Up':
+            case 'late_pickup':
+                return []; // Auto-transitions to Planted when report submitted
+            case 'Planted':
+                return []; // Auto-transitions to Archived when report archived
             case 'Rejected':
                 return ['Approved', 'Rejected'];
             case 'Cancelled':
-                return []; // No actions available for cancelled requests
+            case 'Archived':
+                return []; // Terminal states
             default:
                 return [];
         }
@@ -2103,44 +1949,52 @@ function DistributionEditModal({
     imageUpdateTimestamp,
     isDark,
 }) {
-    const [formData, setFormData] = useState({
-        name: stack.item?.name || '',
-        description: stack.item?.description || '',
-        category: stack.item?.category || 'Other',
-        quantity: stack.quantity || 1,
-        max_quantity_per_request: stack.max_quantity_per_request || '',
+    const normalizeCropType = (value) => {
+        if (!value) return 'Rice';
+        const base = value.toString().toLowerCase();
+        if (base.includes('corn')) return 'Corn';
+        if (base.includes('high_value') || base.includes('high value'))
+            return 'High_Value_Crops';
+        return 'Rice';
+    };
+
+    const computeInitialForm = () => ({
+        quantity: stack?.quantity?.toString() || '1',
+        max_quantity_per_request: stack?.max_quantity_per_request
+            ? stack.max_quantity_per_request.toString()
+            : '',
+        description: stack?.item?.description || '',
+        cropType: normalizeCropType(
+            stack?.item?.seedVariety?.cropType ||
+                stack?.item?.cropType ||
+                stack?.item?.seedType ||
+                stack?.item?.type ||
+                'Rice'
+        ),
+        seedVarietyId:
+            stack?.item?.seedVarietyId || stack?.item?.seedVariety?.id || '',
+        varietyName: '',
+        directSeededDAS: '',
+        transplantedDAS: '',
+        plantingWindow:
+            stack?.item?.seedVariety?.plantingWindow?.toString() || '30',
+        varietyDescription: '',
     });
 
-    const [originalData] = useState({
-        name: stack.item?.name || '',
-        description: stack.item?.description || '',
-        category: stack.item?.category || 'Other',
-        quantity: stack.quantity || 1,
-        max_quantity_per_request: stack.max_quantity_per_request || '',
-    });
-
+    const [form, setForm] = useState(computeInitialForm);
+    const [createNewVariety, setCreateNewVariety] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [currentImageUrl, setCurrentImageUrl] = useState(null);
     const [showImagePreview, setShowImagePreview] = useState(false);
+    const [errors, setErrors] = useState({});
 
-    const categories = [
-        'Farming Equipment',
-        'Harvesting Tools',
-        'Irrigation Systems',
-        'Storage Equipment',
-        'Processing Equipment',
-        'Safety Gear',
-        'Pest Control',
-        'Livestock Equipment',
-        'Measuring Tools',
-        'Fisheries',
-        'Machinery',
-        'Other',
-    ];
+    const { varieties, loading: loadingVarieties } = useSeedVarieties(
+        form.cropType
+    );
 
     // Load current image when modal opens
-    React.useEffect(() => {
+    useEffect(() => {
         if (stack?.item?.id) {
             setCurrentImageUrl(
                 `/api/dist/photo/${stack.item.id}?t=${imageUpdateTimestamp}`
@@ -2148,18 +2002,52 @@ function DistributionEditModal({
         }
     }, [stack?.item?.id, imageUpdateTimestamp]);
 
+    // Reset form when the stack changes
+    useEffect(() => {
+        setForm(computeInitialForm());
+        setCreateNewVariety(false);
+        setSelectedImage(null);
+        setImagePreview(null);
+        setErrors({});
+    }, [stack]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: name === 'quantity' ? parseInt(value) || 0 : value,
-        }));
+
+        if (name === 'cropType') {
+            setForm((prev) => ({ ...prev, cropType: value, seedVarietyId: '' }));
+            setCreateNewVariety(false);
+            if (errors.seedVarietyId) {
+                setErrors((prev) => ({ ...prev, seedVarietyId: undefined }));
+            }
+            return;
+        }
+
+        if (name === 'quantity' || name === 'max_quantity_per_request') {
+            const numValue = parseInt(value);
+            if (numValue < 1 && value !== '') return;
+        }
+
+        setForm((prev) => ({ ...prev, [name]: value }));
+
+        if (errors[name]) {
+            setErrors((prev) => ({ ...prev, [name]: undefined }));
+        }
+    };
+
+    const handleSeedVarietyChange = (e) => {
+        const value = e.target.value;
+        setForm((prev) => ({ ...prev, seedVarietyId: value }));
+        setCreateNewVariety(value === 'new');
+
+        if (errors.seedVarietyId) {
+            setErrors((prev) => ({ ...prev, seedVarietyId: undefined }));
+        }
     };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            // Validate file type
             const allowedTypes = [
                 'image/jpeg',
                 'image/jpg',
@@ -2171,7 +2059,6 @@ function DistributionEditModal({
                 return;
             }
 
-            // Validate file size (5MB limit)
             const maxSize = 5 * 1024 * 1024; // 5MB
             if (file.size > maxSize) {
                 alert('File size must be less than 5MB');
@@ -2180,10 +2067,9 @@ function DistributionEditModal({
 
             setSelectedImage(file);
 
-            // Create preview
             const reader = new FileReader();
-            reader.onload = (e) => {
-                setImagePreview(e.target.result);
+            reader.onload = (event) => {
+                setImagePreview(event.target.result);
             };
             reader.readAsDataURL(file);
         }
@@ -2197,27 +2083,85 @@ function DistributionEditModal({
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Check if name or description changed
-        const hasNameOrDescriptionChange =
-            formData.name !== originalData.name ||
-            formData.description !== originalData.description ||
-            formData.category !== originalData.category;
+        const newErrors = {};
 
-        // Create FormData for file upload
-        const submitData = new FormData();
-        submitData.append('name', formData.name);
-        submitData.append('description', formData.description);
-        submitData.append('category', formData.category);
-        submitData.append('quantity', formData.quantity);
-        
-        // Send max_quantity_per_request as null if empty, otherwise as integer
-        if (formData.max_quantity_per_request && formData.max_quantity_per_request !== '') {
-            submitData.append('max_quantity_per_request', parseInt(formData.max_quantity_per_request));
-        } else {
-            submitData.append('max_quantity_per_request', '');
+        if (!form.quantity || parseInt(form.quantity) <= 0) {
+            newErrors.quantity = 'Please enter a valid quantity greater than 0';
         }
 
-        // Add image if selected
+        if (!createNewVariety && !form.seedVarietyId) {
+            newErrors.seedVarietyId =
+                'Please select an existing seed variety or create a new one';
+        }
+
+        if (createNewVariety && (!form.varietyName || !form.varietyName.trim())) {
+            newErrors.varietyName = 'Variety name is required';
+        }
+
+        if (createNewVariety) {
+            if (!form.directSeededDAS || parseInt(form.directSeededDAS) <= 0) {
+                newErrors.directSeededDAS = 'Direct seeded DAS is required';
+            }
+            if (!form.transplantedDAS || parseInt(form.transplantedDAS) <= 0) {
+                newErrors.transplantedDAS = 'Transplanted DAS is required';
+            }
+        }
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
+        setErrors({});
+
+        const selectedVariety = varieties.find(
+            (v) => v.id === form.seedVarietyId
+        );
+        const seedName = createNewVariety
+            ? form.varietyName.trim()
+            : selectedVariety?.name || stack.item?.name || '';
+
+        const hasNameOrDescriptionChange =
+            seedName !== (stack.item?.name || '') ||
+            (form.description || '') !== (stack.item?.description || '');
+
+        const submitData = new FormData();
+        submitData.append('name', seedName);
+        submitData.append('quantity', parseInt(form.quantity));
+        // The distribution edit API only accepts fixed equipment categories; use a safe fallback
+        submitData.append('category', 'Other');
+        submitData.append('unit', 'kg');
+
+        if (form.max_quantity_per_request) {
+            submitData.append(
+                'max_quantity_per_request',
+                parseInt(form.max_quantity_per_request)
+            );
+        }
+
+        submitData.append('description', form.description || '');
+        submitData.append('status', stack.status || 'Distributed');
+
+        if (createNewVariety) {
+            submitData.append('cropType', form.cropType);
+            submitData.append('name', seedName);
+            submitData.append(
+                'directSeededDAS',
+                parseInt(form.directSeededDAS)
+            );
+            submitData.append(
+                'transplantedDAS',
+                parseInt(form.transplantedDAS)
+            );
+            submitData.append(
+                'plantingWindow',
+                form.plantingWindow ? parseInt(form.plantingWindow) : 30
+            );
+            submitData.append('varietyDescription', form.varietyDescription || '');
+        } else {
+            submitData.append('seedVarietyId', form.seedVarietyId);
+        }
+
         if (selectedImage) {
             submitData.append('image', selectedImage);
         }
@@ -2225,11 +2169,22 @@ function DistributionEditModal({
         onSubmit(submitData, hasNameOrDescriptionChange);
     };
 
+    const handleClose = () => {
+        setForm(computeInitialForm());
+        setCreateNewVariety(false);
+        setSelectedImage(null);
+        setErrors({});
+        setImagePreview(null);
+        onClose();
+    };
+
+    if (!stack) return null;
+
     return (
-        <div className={`fixed inset-0 z-50 flex items-center justify-center px-4 ${isDark ? 'bg-black/80' : 'bg-black/60'}`}> 
-            <div className={`rounded-xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto border ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}> 
+        <div className={`fixed inset-0 z-50 flex items-center justify-center px-4 ${isDark ? 'bg-black/80' : 'bg-black/60'}`}>
+            <div className={`rounded-xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto border ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}>
                 {/* Header */}
-                <div className={`px-6 py-4 border-b ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
+                <div className={`px-6 py-4 border-b ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-600 rounded-lg">
@@ -2238,12 +2193,12 @@ function DistributionEditModal({
                                 </svg>
                             </div>
                             <div>
-                                <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>Edit Distribution Item</h3>
-                                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Modify item details and inventory</p>
+                                <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>Edit Distribution Seed</h3>
+                                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Update crop type, variety, and inventory details</p>
                             </div>
                         </div>
                         <button
-                            onClick={onClose}
+                            onClick={handleClose}
                             className={`p-2 rounded-lg transition-colors duration-200 focus:outline-none ${isDark ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-900 focus:ring-2 focus:ring-gray-700' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:ring-2 focus:ring-gray-300'}`}
                             aria-label="Close"
                         >
@@ -2257,123 +2212,59 @@ function DistributionEditModal({
                 {/* FORM */}
                 <form onSubmit={handleSubmit} className="p-6">
                     <div className="space-y-6">
-                        {/* Item Name */}
-                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
-                            <label
-                                htmlFor="name"
-                                className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}
-                            >
-                                Item Name
+                        {/* Crop Type Selection */}
+                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                            <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                Crop Type <span className="text-red-500">*</span>
                             </label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                value={formData.name}
+                            <select
+                                name="cropType"
+                                value={form.cropType}
                                 onChange={handleChange}
                                 className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                                 required
-                            />
-                            {formData.name !== originalData.name && (
-                                <div className={`mt-2 p-3 rounded-lg border ${isDark ? 'bg-amber-900 border-amber-700' : 'bg-amber-50 border-amber-200'}`}> 
-                                    <p className={`text-sm font-medium flex items-center gap-2 ${isDark ? 'text-amber-200' : 'text-amber-700'}`}> 
-                                        <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L5.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                                        </svg>
-                                        Changing the name will update the item in inventory
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Description */}
-                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
-                            <label
-                                htmlFor="description"
-                                className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}
                             >
-                                Description
-                            </label>
-                            <textarea
-                                id="description"
-                                name="description"
-                                value={formData.description}
-                                onChange={handleChange}
-                                rows="3"
-                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
-                                placeholder="Enter item description..."
-                            />
-                            {formData.description !== originalData.description && (
-                                <div className={`mt-2 p-3 rounded-lg border ${isDark ? 'bg-amber-900 border-amber-700' : 'bg-amber-50 border-amber-200'}`}> 
-                                    <p className={`text-sm font-medium flex items-center gap-2 ${isDark ? 'text-amber-200' : 'text-amber-700'}`}> 
-                                        <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L5.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                                        </svg>
-                                        Changing the description will update the item in inventory
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Category */}
-                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
-                            <label
-                                htmlFor="category"
-                                className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}
-                            >
-                                Category
-                            </label>
-                            <select
-                                id="category"
-                                name="category"
-                                value={formData.category}
-                                onChange={handleChange}
-                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
-                            >
-                                {categories.map((cat) => (
-                                    <option key={cat} value={cat}>
-                                        {cat}
+                                {cropTypes.map((type) => (
+                                    <option key={type} value={type}>
+                                        {type.replace(/_/g, ' ')}
                                     </option>
                                 ))}
                             </select>
-                            {formData.category !== originalData.category && (
-                                <div className={`mt-2 p-3 rounded-lg border ${isDark ? 'bg-amber-900 border-amber-700' : 'bg-amber-50 border-amber-200'}`}> 
-                                    <p className={`text-sm font-medium flex items-center gap-2 ${isDark ? 'text-amber-200' : 'text-amber-700'}`}> 
-                                        <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L5.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                                        </svg>
-                                        Changing the category will update the item in inventory
-                                    </p>
-                                </div>
-                            )}
                         </div>
 
-                        {/* Quantity */}
-                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
-                            <label
-                                htmlFor="quantity"
-                                className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}
-                            >
-                                Available Quantity
+                        {/* Quantity (kg) */}
+                        <div className={`rounded-lg p-4 border ${errors.quantity ? 'border-red-500' : isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                            <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                Quantity (kg) <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="number"
-                                id="quantity"
                                 name="quantity"
-                                value={formData.quantity}
+                                value={form.quantity}
                                 onChange={handleChange}
-                                min="0"
-                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                placeholder="100"
+                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${errors.quantity ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-green-500 focus:border-green-500'} ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                min="1"
+                                step="0.01"
                                 required
                             />
+                            {errors.quantity ? (
+                                <p className="text-xs mt-2 text-red-500 flex items-center gap-1">
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                    {errors.quantity}
+                                </p>
+                            ) : (
+                                <p className={`text-xs mt-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                    Enter the total weight in kg
+                                </p>
+                            )}
                         </div>
 
                         {/* Maximum Quantity Per Request */}
                         <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
-                            <label
-                                htmlFor="max_quantity_per_request"
-                                className={`block text-sm font-semibold mb-1 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}
-                            >
+                            <label className={`block text-sm font-semibold mb-1 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
                                 Maximum Quantity Per Request
                                 <span className={`text-xs font-normal ml-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>(Optional)</span>
                             </label>
@@ -2383,26 +2274,196 @@ function DistributionEditModal({
                             </p>
                             <input
                                 type="number"
-                                id="max_quantity_per_request"
                                 name="max_quantity_per_request"
-                                value={formData.max_quantity_per_request}
+                                value={form.max_quantity_per_request}
                                 onChange={handleChange}
                                 placeholder="e.g., 10"
+                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                                 min="1"
+                            />
+                        </div>
+
+                        {/* Seed Variety Selection */}
+                        <div className={`rounded-lg p-4 border ${errors.seedVarietyId ? 'border-red-500' : isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                            <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                Seed Variety <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                                value={form.seedVarietyId}
+                                onChange={handleSeedVarietyChange}
+                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${errors.seedVarietyId ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-green-500 focus:border-green-500'} ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                required={!createNewVariety}
+                            >
+                                <option value="">-- Select Existing Variety --</option>
+                                {loadingVarieties ? (
+                                    <option disabled>Loading varieties...</option>
+                                ) : (
+                                    varieties.map((variety) => (
+                                        <option key={variety.id} value={variety.id}>
+                                            {variety.name} ({variety.cropType.replace(/_/g, ' ')})
+                                        </option>
+                                    ))
+                                )}
+                                <option value="new">+ Create New Variety</option>
+                            </select>
+                            {errors.seedVarietyId ? (
+                                <p className="text-xs mt-2 text-red-500 flex items-center gap-1">
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                    {errors.seedVarietyId}
+                                </p>
+                            ) : (
+                                <p className={`text-xs mt-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                    Select an existing seed variety or create a new one
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Create New Variety Fields */}
+                        {createNewVariety && (
+                            <>
+                                <div className={`rounded-lg p-4 border-2 ${isDark ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-300'}`}>
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                        </svg>
+                                        <h4 className={`font-semibold ${isDark ? 'text-blue-200' : 'text-blue-700'}`}>
+                                            Create New Seed Variety
+                                        </h4>
+                                    </div>
+
+                                    <div className="mb-4">
+                                        <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                            Variety Name <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="varietyName"
+                                            value={form.varietyName}
+                                            onChange={handleChange}
+                                            placeholder="e.g., NSIC Rc222"
+                                            className={`w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 ${errors.varietyName ? 'border-red-500 focus:ring-red-500' : 'focus:ring-blue-500'} ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                            required={createNewVariety}
+                                        />
+                                        {errors.varietyName && (
+                                            <p className="text-xs mt-1 text-red-500 flex items-center gap-1">
+                                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                </svg>
+                                                {errors.varietyName}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                                Direct Seeded DAS <span className="text-red-500">*</span>
+                                            </label>
+                                            <input
+                                                type="number"
+                                                name="directSeededDAS"
+                                                value={form.directSeededDAS}
+                                                onChange={handleChange}
+                                                placeholder="e.g., 120"
+                                                className={`w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 ${errors.directSeededDAS ? 'border-red-500 focus:ring-red-500' : 'focus:ring-blue-500'} ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                                min="1"
+                                                required={createNewVariety}
+                                            />
+                                            {errors.directSeededDAS && (
+                                                <p className="text-xs mt-1 text-red-500 flex items-center gap-1">
+                                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                    </svg>
+                                                    {errors.directSeededDAS}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                                Transplanted DAS <span className="text-red-500">*</span>
+                                            </label>
+                                            <input
+                                                type="number"
+                                                name="transplantedDAS"
+                                                value={form.transplantedDAS}
+                                                onChange={handleChange}
+                                                placeholder="e.g., 115"
+                                                className={`w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 ${errors.transplantedDAS ? 'border-red-500 focus:ring-red-500' : 'focus:ring-blue-500'} ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                                min="1"
+                                                required={createNewVariety}
+                                            />
+                                            {errors.transplantedDAS && (
+                                                <p className="text-xs mt-1 text-red-500 flex items-center gap-1">
+                                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                    </svg>
+                                                    {errors.transplantedDAS}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="mb-4">
+                                        <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                            Planting Window (days after pickup)
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="plantingWindow"
+                                            value={form.plantingWindow}
+                                            onChange={handleChange}
+                                            placeholder="30"
+                                            className={`w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                            min="1"
+                                        />
+                                        <p className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            Default: 30 days. Seeds must be planted within this period after pickup.
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                            Variety Description
+                                        </label>
+                                        <textarea
+                                            name="varietyDescription"
+                                            value={form.varietyDescription}
+                                            onChange={handleChange}
+                                            placeholder="e.g., High-yielding variety resistant to drought and pests"
+                                            rows="3"
+                                            className={`w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                        />
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
+                        {/* Description */}
+                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                            <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                General Description
+                            </label>
+                            <textarea
+                                name="description"
+                                value={form.description}
+                                onChange={handleChange}
+                                placeholder="Additional notes about this seed distribution batch"
+                                rows="2"
                                 className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                             />
                         </div>
 
                         {/* Image Upload */}
-                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
-                            <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}> 
-                                Item Image
+                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                            <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                Seed Image (Optional)
                             </label>
 
-                            {/* Current Image Display */}
                             {currentImageUrl && !imagePreview && (
                                 <div className="mb-4">
-                                    <p className={`text-sm mb-2 font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}> 
+                                    <p className={`text-sm mb-2 font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                                         Current Image:
                                     </p>
                                     <img
@@ -2416,12 +2477,8 @@ function DistributionEditModal({
                                 </div>
                             )}
 
-                            {/* Image Preview */}
                             {imagePreview && (
-                                <div className="mb-4">
-                                    <p className={`text-sm mb-2 font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}> 
-                                        New Image Preview:
-                                    </p>
+                                <div className="mb-3">
                                     <img
                                         src={imagePreview}
                                         alt="Preview"
@@ -2430,8 +2487,7 @@ function DistributionEditModal({
                                 </div>
                             )}
 
-                            {/* Upload Controls */}
-                            <div className="flex flex-wrap items-center gap-3">
+                            <div className="flex flex-wrap items-center gap-3 mb-3">
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -2498,20 +2554,18 @@ function DistributionEditModal({
                                     </button>
                                 )}
                             </div>
-
-                            <p className={`text-xs mt-3 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}> 
-                                Optional. Supported formats: JPEG, PNG, GIF. Max
-                                size: 5MB.
+                            <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                Supported formats: JPEG, PNG, GIF. Max size: 5MB.
                             </p>
                         </div>
                     </div>
 
                     {/* Buttons */}
-                    <div className={`px-6 py-4 -mx-6 -mb-6 rounded-b-xl border-t ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
+                    <div className={`px-6 py-4 -mx-6 -mb-6 rounded-b-xl border-t ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
                         <div className="flex flex-col sm:flex-row justify-end gap-3">
                             <button
                                 type="button"
-                                onClick={onClose}
+                                onClick={handleClose}
                                 className={`px-6 py-3 rounded-lg transition-colors duration-200 font-medium focus:outline-none focus:ring-2 ${isDark ? 'text-gray-200 bg-gray-900 border-gray-700 hover:bg-gray-800 focus:ring-gray-700' : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50 focus:ring-gray-300'}`}
                             >
                                 Cancel
@@ -2530,7 +2584,7 @@ function DistributionEditModal({
             {/* Image Preview Modal */}
             {showImagePreview && (
                 <div className={`fixed inset-0 z-[60] flex items-center justify-center px-4 ${isDark ? 'bg-black/90' : 'bg-black/80'}`}>
-                    <div className={`relative max-w-4xl max-h-[90vh] rounded-lg overflow-hidden ${isDark ? 'bg-gray-900' : 'bg-white'}`}> 
+                    <div className={`relative max-w-4xl max-h-[90vh] rounded-lg overflow-hidden ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
                         <button
                             onClick={() => setShowImagePreview(false)}
                             className={`absolute top-4 right-4 z-10 p-2 rounded-full transition-colors duration-200 ${isDark ? 'bg-gray-800 text-gray-200 hover:bg-gray-700' : 'bg-black/50 text-white hover:bg-black/70'}`}
@@ -2555,33 +2609,43 @@ function DistributionEditModal({
 }
 
 /* ================================================================================== */
-/* ADD DISTRIBUTION ITEM MODAL COMPONENT */
+/* ADD DISTRIBUTION SEED MODAL COMPONENT (SEED-SPECIFIC) */
 /* ================================================================================== */
 
-// Constants
-const categories = [
-    'Farming Equipment',
-    'Harvesting Tools',
-    'Irrigation Systems',
-    'Storage Equipment',
-    'Processing Equipment',
-    'Safety Gear',
-    'Pest Control',
-    'Livestock Equipment',
-    'Measuring Tools',
-    'Fisheries',
-    'Machinery',
-    'Other',
-];
+// Constants for seed-specific distribution
+const cropTypes = ['Rice', 'Corn', 'High_Value_Crops'];
 
-// Convert category to snake case with title case words
-const convertToSnakeCase = (category) => {
-    return category
-        .split(' ')
-        .map(
-            (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-        )
-        .join('_');
+// Fetch seed varieties hook
+const useSeedVarieties = (cropType = null) => {
+    const [varieties, setVarieties] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchVarieties = async () => {
+            try {
+                const url = cropType 
+                    ? `/api/seed-varieties?cropType=${cropType}&isActive=true`
+                    : '/api/seed-varieties?isActive=true';
+                
+                const response = await fetch(url, {
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    setVarieties(data.varieties || []);
+                }
+            } catch (error) {
+                console.error('Error fetching seed varieties:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchVarieties();
+    }, [cropType]);
+
+    return { varieties, loading };
 };
 
 function AddDistributionItemModal({
@@ -2592,108 +2656,59 @@ function AddDistributionItemModal({
     distributionItems,
     isDark,
 }) {
+    // Seed-specific form state
     const [form, setForm] = useState({
-        name: '',
         quantity: '1',
         max_quantity_per_request: '',
         description: '',
-        category: 'Other',
-        status: 'Available', // For distribution items
+        cropType: 'Rice',
+        seedVarietyId: '',
+        varietyName: '',
+        // New variety fields (if creating inline)
+        directSeededDAS: '',
+        transplantedDAS: '',
+        plantingWindow: '30',
+        varietyDescription: '',
     });
 
-    const [nameInput, setNameInput] = useState('');
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [filteredItems, setFilteredItems] = useState([]);
-    const [isNewItem, setIsNewItem] = useState(false);
+    const [createNewVariety, setCreateNewVariety] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
+    const [errors, setErrors] = useState({});
+    
+    // Fetch seed varieties based on crop type
+    const { varieties, loading: loadingVarieties } = useSeedVarieties(form.cropType);
 
-    // Combine existing items and distribution items for the dropdown
-    const allAvailableItems = [
-        ...existingItems,
-        ...(distributionItems || [])
-            .map((stack) => stack.item)
-            .filter((item) => item), // Extract items from distribution stacks
-    ];
-
-    // Remove duplicates based on item name
-    const uniqueItems = React.useMemo(() => {
-        return allAvailableItems.filter(
-            (item, index, self) =>
-                index ===
-                self.findIndex(
-                    (i) => i.name.toLowerCase() === item.name.toLowerCase()
-                )
-        );
-    }, [existingItems, distributionItems]);
-
-    // Filter items based on name input
+    // When crop type changes, reset variety selection
     useEffect(() => {
-        if (nameInput.trim() === '') {
-            setFilteredItems(uniqueItems);
-            setIsNewItem(false);
-        } else {
-            const filtered = uniqueItems.filter((item) =>
-                item.name.toLowerCase().includes(nameInput.toLowerCase())
-            );
-            setFilteredItems(filtered);
-
-            // Check if the input exactly matches an existing item
-            const exactMatch = uniqueItems.some(
-                (item) => item.name.toLowerCase() === nameInput.toLowerCase()
-            );
-            const wasExistingItem = !isNewItem;
-            const willBeNewItem = !exactMatch;
-
-            setIsNewItem(willBeNewItem);
-
-            // Reset category to "Other" when switching from existing item to new item
-            if (wasExistingItem && willBeNewItem) {
-                setForm((prev) => ({ ...prev, category: 'Other' }));
-            }
-        }
-    }, [nameInput, uniqueItems, isNewItem]);
-
-    // Update form when name input changes
-    useEffect(() => {
-        setForm((prev) => ({ ...prev, name: nameInput }));
-    }, [nameInput]);
+        setForm(prev => ({ ...prev, seedVarietyId: '' }));
+    }, [form.cropType]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        if (name === 'quantity') {
+        if (name === 'quantity' || name === 'max_quantity_per_request') {
             // Ensure quantity is at least 1
             const numValue = parseInt(value);
             if (numValue < 1 && value !== '') return;
         }
 
         setForm((prev) => ({ ...prev, [name]: value }));
+        
+        // Clear error for this field when user starts typing
+        if (errors[name]) {
+            setErrors(prev => ({ ...prev, [name]: undefined }));
+        }
     };
 
-    const handleNameInputChange = (e) => {
-        setNameInput(e.target.value);
-        setShowDropdown(true);
-    };
-
-    const handleNameSelect = (selectedName) => {
-        setNameInput(selectedName);
-        setShowDropdown(false);
-
-        // Find the selected item and populate category if it's not new
-        const selectedItem = uniqueItems.find(
-            (item) => item.name === selectedName
-        );
-        if (selectedItem) {
-            setForm((prev) => ({
-                ...prev,
-                name: selectedName,
-                category:
-                    selectedItem.category?.name ||
-                    selectedItem.category ||
-                    'Other',
-            }));
-            setIsNewItem(false);
+    const handleSeedVarietyChange = (e) => {
+        const value = e.target.value;
+        setForm(prev => ({ ...prev, seedVarietyId: value }));
+        setCreateNewVariety(value === 'new');
+        
+        // Clear error when user selects a variety
+        if (errors.seedVarietyId) {
+            setErrors(prev => ({ ...prev, seedVarietyId: undefined }));
         }
     };
 
@@ -2737,18 +2752,75 @@ function AddDistributionItemModal({
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!form.name || !form.quantity) return;
+        
+        // Validation with field-level errors
+        const newErrors = {};
+        
+        if (!form.quantity || parseInt(form.quantity) <= 0) {
+            newErrors.quantity = 'Please enter a valid quantity greater than 0';
+        }
+
+        if (!createNewVariety && !form.seedVarietyId) {
+            newErrors.seedVarietyId = 'Please select an existing seed variety or create a new one';
+        }
+
+        if (createNewVariety && (!form.varietyName || !form.varietyName.trim())) {
+            newErrors.varietyName = 'Variety name is required';
+        }
+
+        if (createNewVariety) {
+            if (!form.directSeededDAS || parseInt(form.directSeededDAS) <= 0) {
+                newErrors.directSeededDAS = 'Direct seeded DAS is required';
+            }
+            if (!form.transplantedDAS || parseInt(form.transplantedDAS) <= 0) {
+                newErrors.transplantedDAS = 'Transplanted DAS is required';
+            }
+        }
+        
+        // If there are errors, set them and stop submission
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+        
+        // Clear errors if validation passed
+        setErrors({});
+
+        // Derive seed name from selected or new variety
+        const selectedVariety = varieties.find(
+            (v) => v.id === form.seedVarietyId
+        );
+        const seedName = createNewVariety
+            ? form.varietyName.trim()
+            : selectedVariety?.name || '';
 
         // Create FormData for file upload
         const formData = new FormData();
-        formData.append('name', form.name);
+        formData.append('name', seedName);
         formData.append('quantity', parseInt(form.quantity));
+        formData.append('category', 'Seeds'); // Force Seeds category
+        formData.append('unit', 'kg'); // Fixed unit
+        
         if (form.max_quantity_per_request) {
             formData.append('max_quantity_per_request', parseInt(form.max_quantity_per_request));
         }
-        formData.append('description', form.description);
-        formData.append('category', convertToSnakeCase(form.category));
+        
+        formData.append('description', form.description || '');
         formData.append('status', 'Distributed');
+
+        // Add seed variety info
+        if (createNewVariety) {
+            // Creating new variety inline
+            formData.append('cropType', form.cropType);
+            formData.append('name', seedName);
+            formData.append('directSeededDAS', parseInt(form.directSeededDAS));
+            formData.append('transplantedDAS', parseInt(form.transplantedDAS));
+            formData.append('plantingWindow', form.plantingWindow ? parseInt(form.plantingWindow) : 30);
+            formData.append('varietyDescription', form.varietyDescription || '');
+        } else {
+            // Using existing variety
+            formData.append('seedVarietyId', form.seedVarietyId);
+        }
 
         // Add image if selected
         if (selectedImage) {
@@ -2759,15 +2831,18 @@ function AddDistributionItemModal({
 
         // Reset form
         setForm({
-            name: '',
             quantity: '1',
             max_quantity_per_request: '',
             description: '',
-            category: 'Other',
-            status: 'Distributed',
+            cropType: 'Rice',
+            seedVarietyId: '',
+            varietyName: '',
+            directSeededDAS: '',
+            transplantedDAS: '',
+            plantingWindow: '30',
+            varietyDescription: '',
         });
-        setNameInput('');
-        setIsNewItem(false);
+        setCreateNewVariety(false);
         setSelectedImage(null);
         setImagePreview(null);
     };
@@ -2775,17 +2850,20 @@ function AddDistributionItemModal({
     const handleClose = () => {
         // Reset form when closing
         setForm({
-            name: '',
             quantity: '1',
             max_quantity_per_request: '',
             description: '',
-            category: 'Other',
-            status: 'Distributed',
+            cropType: 'Rice',
+            seedVarietyId: '',
+            varietyName: '',
+            directSeededDAS: '',
+            transplantedDAS: '',
+            plantingWindow: '30',
+            varietyDescription: '',
         });
-        setNameInput('');
-        setIsNewItem(false);
-        setShowDropdown(false);
+        setCreateNewVariety(false);
         setSelectedImage(null);
+        setErrors({});
         setImagePreview(null);
         onClose();
     };
@@ -2805,8 +2883,8 @@ function AddDistributionItemModal({
                                 </svg>
                             </div>
                             <div>
-                                <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>Add Distribution Item</h3>
-                                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Add new item to distribution inventory</p>
+                                <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>Add Distribution Seed</h3>
+                                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Add new seed to distribution inventory</p>
                             </div>
                         </div>
                         <button
@@ -2824,62 +2902,54 @@ function AddDistributionItemModal({
                 {/* FORM */}
                 <form className="p-6" onSubmit={handleSubmit}>
                     <div className="space-y-6">
-                        {/* Name Input with Dropdown */}
-                        <div className={`rounded-lg p-4 relative border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
-                            <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}> 
-                                Item Name
+                        {/* Crop Type Selection */}
+                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                            <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                Crop Type <span className="text-red-500">*</span>
                             </label>
-                            <input
-                                type="text"
-                                value={nameInput}
-                                onChange={handleNameInputChange}
-                                onFocus={() => setShowDropdown(true)}
-                                onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
-                                placeholder="Enter or select item name"
+                            <select
+                                name="cropType"
+                                value={form.cropType}
+                                onChange={handleChange}
                                 className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                                 required
-                            />
-                            {showDropdown && filteredItems.length > 0 && (
-                                <div className={`absolute top-full left-4 right-4 rounded-lg max-h-44 overflow-y-auto z-20 shadow-xl mt-1 border ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-300'}`}> 
-                                    {filteredItems.map((item, index) => (
-                                        <div
-                                            key={item.id || index}
-                                            className={`px-4 py-3 cursor-pointer text-sm last:border-b-0 transition-colors duration-200 border-b ${isDark ? 'hover:bg-green-900 text-gray-200 border-gray-700' : 'hover:bg-green-50 text-gray-700 border-gray-100'}`}
-                                            onClick={() => handleNameSelect(item.name)}
-                                        >
-                                            {item.name}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                            {isNewItem && nameInput.trim() !== '' && (
-                                <div className={`mt-3 p-3 rounded-lg border ${isDark ? 'bg-green-900 border-green-700' : 'bg-green-50 border-green-200'}`}> 
-                                    <p className={`text-sm font-medium flex items-center gap-2 ${isDark ? 'text-green-200' : 'text-green-700'}`}> 
-                                        <svg className='w-4 h-4 text-green-600' fill='none' stroke='currentColor' strokeWidth='2' viewBox='0 0 24 24'>
-                                            <path d='M5 13l4 4L19 7' strokeLinecap='round' strokeLinejoin='round'/>
-                                        </svg>
-                                        Creating a new item
-                                    </p>
-                                </div>
-                            )}
+                            >
+                                {cropTypes.map((type) => (
+                                    <option key={type} value={type}>
+                                        {type.replace(/_/g, ' ')}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
-                        {/* Quantity Input */}
-                        <div className={`rounded-lg p-4 mb-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
+                        {/* Quantity (kg) */}
+                        <div className={`rounded-lg p-4 border ${errors.quantity ? 'border-red-500' : isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
                             <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}> 
-                                Quantity
+                                Quantity (kg) <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="number"
                                 name="quantity"
                                 value={form.quantity}
                                 onChange={handleChange}
-                                placeholder="Enter quantity"
-                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                placeholder="100"
+                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${errors.quantity ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-green-500 focus:border-green-500'} ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
                                 min="1"
+                                step="0.01"
                                 required
                             />
-                            <div style={{paddingBottom: '0.75rem'}}></div>
+                            {errors.quantity ? (
+                                <p className="text-xs mt-2 text-red-500 flex items-center gap-1">
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                    {errors.quantity}
+                                </p>
+                            ) : (
+                                <p className={`text-xs mt-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                    Enter the total weight in kg
+                                </p>
+                            )}
                         </div>
 
                         {/* Maximum Quantity Per Request */}
@@ -2903,100 +2973,236 @@ function AddDistributionItemModal({
                             />
                         </div>
 
-                        {/* Conditional Fields - Only show if it's a new item */}
-                        {isNewItem && (
+                        {/* Seed Variety Selection */}
+                        <div className={`rounded-lg p-4 border ${errors.seedVarietyId ? 'border-red-500' : isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                            <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                Seed Variety <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                                value={form.seedVarietyId}
+                                onChange={handleSeedVarietyChange}
+                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${errors.seedVarietyId ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-green-500 focus:border-green-500'} ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                required={!createNewVariety}
+                            >
+                                <option value="">-- Select Existing Variety --</option>
+                                {loadingVarieties ? (
+                                    <option disabled>Loading varieties...</option>
+                                ) : (
+                                    varieties.map((variety) => (
+                                        <option key={variety.id} value={variety.id}>
+                                            {variety.name} ({variety.cropType.replace(/_/g, ' ')})
+                                        </option>
+                                    ))
+                                )}
+                                <option value="new">+ Create New Variety</option>
+                            </select>
+                            {errors.seedVarietyId ? (
+                                <p className="text-xs mt-2 text-red-500 flex items-center gap-1">
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                    {errors.seedVarietyId}
+                                </p>
+                            ) : (
+                                <p className={`text-xs mt-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                    Select an existing seed variety or create a new one
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Create New Variety Fields */}
+                        {createNewVariety && (
                             <>
-                                {/* Description Input */}
-                                <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
-                                    <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}> 
-                                        Description
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="description"
-                                        value={form.description}
-                                        onChange={handleChange}
-                                        placeholder="Enter item description"
-                                        className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
-                                    />
-                                </div>
+                                <div className={`rounded-lg p-4 border-2 ${isDark ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-300'}`}>
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                        </svg>
+                                        <h4 className={`font-semibold ${isDark ? 'text-blue-200' : 'text-blue-700'}`}>
+                                            Create New Seed Variety
+                                        </h4>
+                                    </div>
 
-                                {/* Category Dropdown */}
-                                <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
-                                    <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}> 
-                                        Category
-                                    </label>
-                                    <select
-                                        name="category"
-                                        value={form.category}
-                                        onChange={handleChange}
-                                        className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
-                                    >
-                                        {categories.map((cat) => (
-                                            <option key={cat} value={cat}>
-                                                {cat}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                {/* Image Upload */}
-                                <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
-                                    <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}> 
-                                        Item Image (Optional)
-                                    </label>
-                                    <div className="flex flex-wrap items-center gap-3 mb-3">
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={handleImageChange}
-                                            className="hidden"
-                                            id="image-upload"
-                                        />
-                                        <label
-                                            htmlFor="image-upload"
-                                            className={`flex items-center px-4 py-2 rounded-lg cursor-pointer transition-colors duration-200 text-sm font-medium shadow-sm ${isDark ? 'bg-green-700 text-green-100 hover:bg-green-600' : 'bg-green-600 text-white hover:bg-green-700'}`}
-                                        >
-                                            <svg
-                                                className="w-4 h-4 mr-2"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                                />
-                                            </svg>
-                                            Choose Image
+                                    {/* Variety Name & DAS Values Row */}
+                                    <div className="mb-4">
+                                        <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                            Variety Name <span className="text-red-500">*</span>
                                         </label>
-                                        {selectedImage && (
-                                            <button
-                                                type="button"
-                                                onClick={removeImage}
-                                                className={`px-4 py-2 rounded-lg text-sm transition-colors duration-200 font-medium border ${isDark ? 'bg-red-900 text-red-200 hover:bg-red-800 border-red-700' : 'bg-red-100 text-red-700 hover:bg-red-200 border-red-200'}`}
-                                            >
-                                                Remove
-                                            </button>
+                                        <input
+                                            type="text"
+                                            name="varietyName"
+                                            value={form.varietyName}
+                                            onChange={handleChange}
+                                            placeholder="e.g., NSIC Rc222"
+                                            className={`w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 ${errors.varietyName ? 'border-red-500 focus:ring-red-500' : 'focus:ring-blue-500'} ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                            required={createNewVariety}
+                                        />
+                                        {errors.varietyName && (
+                                            <p className="text-xs mt-1 text-red-500 flex items-center gap-1">
+                                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                </svg>
+                                                {errors.varietyName}
+                                            </p>
                                         )}
                                     </div>
-                                    {imagePreview && (
-                                        <div className="mb-3">
-                                            <img
-                                                src={imagePreview}
-                                                alt="Preview"
-                                                className={`w-24 h-24 object-cover rounded-lg border-2 shadow-sm ${isDark ? 'border-green-700' : 'border-green-300'}`}
+                                    {/* DAS Values Row */}
+                                    <div className="grid grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                                Direct Seeded DAS <span className="text-red-500">*</span>
+                                            </label>
+                                            <input
+                                                type="number"
+                                                name="directSeededDAS"
+                                                value={form.directSeededDAS}
+                                                onChange={handleChange}
+                                                placeholder="e.g., 120"
+                                                className={`w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 ${errors.directSeededDAS ? 'border-red-500 focus:ring-red-500' : 'focus:ring-blue-500'} ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                                min="1"
+                                                required={createNewVariety}
                                             />
+                                            {errors.directSeededDAS && (
+                                                <p className="text-xs mt-1 text-red-500 flex items-center gap-1">
+                                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                    </svg>
+                                                    {errors.directSeededDAS}
+                                                </p>
+                                            )}
                                         </div>
-                                    )}
-                                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}> 
-                                        Supported formats: JPEG, PNG, GIF. Max size: 5MB.
-                                    </p>
+                                        <div>
+                                            <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                                Transplanted DAS <span className="text-red-500">*</span>
+                                            </label>
+                                            <input
+                                                type="number"
+                                                name="transplantedDAS"
+                                                value={form.transplantedDAS}
+                                                onChange={handleChange}
+                                                placeholder="e.g., 115"
+                                                className={`w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 ${errors.transplantedDAS ? 'border-red-500 focus:ring-red-500' : 'focus:ring-blue-500'} ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                                min="1"
+                                                required={createNewVariety}
+                                            />
+                                            {errors.transplantedDAS && (
+                                                <p className="text-xs mt-1 text-red-500 flex items-center gap-1">
+                                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                    </svg>
+                                                    {errors.transplantedDAS}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Planting Window */}
+                                    <div className="mb-4">
+                                        <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                            Planting Window (days after pickup)
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="plantingWindow"
+                                            value={form.plantingWindow}
+                                            onChange={handleChange}
+                                            placeholder="30"
+                                            className={`w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                            min="1"
+                                        />
+                                        <p className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            Default: 30 days. Seeds must be planted within this period after pickup.
+                                        </p>
+                                    </div>
+
+                                    {/* Variety Description */}
+                                    <div>
+                                        <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                            Variety Description
+                                        </label>
+                                        <textarea
+                                            name="varietyDescription"
+                                            value={form.varietyDescription}
+                                            onChange={handleChange}
+                                            placeholder="e.g., High-yielding variety resistant to drought and pests"
+                                            rows="3"
+                                            className={`w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                                        />
+                                    </div>
                                 </div>
                             </>
                         )}
+
+                        {/* Description */}
+                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                            <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                General Description
+                            </label>
+                            <textarea
+                                name="description"
+                                value={form.description}
+                                onChange={handleChange}
+                                placeholder="Additional notes about this seed distribution batch"
+                                rows="2"
+                                className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+                            />
+                        </div>
+
+                        {/* Image Upload */}
+                        <div className={`rounded-lg p-4 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}> 
+                            <label className={`block text-sm font-semibold mb-3 ${isDark ? 'text-gray-200' : 'text-gray-700'}`}> 
+                                Seed Image (Optional)
+                            </label>
+                            <div className="flex flex-wrap items-center gap-3 mb-3">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    className="hidden"
+                                    id="image-upload"
+                                />
+                                <label
+                                    htmlFor="image-upload"
+                                    className={`flex items-center px-4 py-2 rounded-lg cursor-pointer transition-colors duration-200 text-sm font-medium shadow-sm ${isDark ? 'bg-green-700 text-green-100 hover:bg-green-600' : 'bg-green-600 text-white hover:bg-green-700'}`}
+                                >
+                                    <svg
+                                        className="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                        />
+                                    </svg>
+                                    Choose Image
+                                </label>
+                                {selectedImage && (
+                                    <button
+                                        type="button"
+                                        onClick={removeImage}
+                                        className={`px-4 py-2 rounded-lg text-sm transition-colors duration-200 font-medium border ${isDark ? 'bg-red-900 text-red-200 hover:bg-red-800 border-red-700' : 'bg-red-100 text-red-700 hover:bg-red-200 border-red-200'}`}
+                                    >
+                                        Remove
+                                    </button>
+                                )}
+                            </div>
+                            {imagePreview && (
+                                <div className="mb-3">
+                                    <img
+                                        src={imagePreview}
+                                        alt="Preview"
+                                        className={`w-24 h-24 object-cover rounded-lg border-2 shadow-sm ${isDark ? 'border-green-700' : 'border-green-300'}`}
+                                    />
+                                </div>
+                            )}
+                            <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}> 
+                                Supported formats: JPEG, PNG, GIF. Max size: 5MB.
+                            </p>
+                        </div>
                     </div>
 
                     {/* Buttons */}
@@ -3013,7 +3219,7 @@ function AddDistributionItemModal({
                                 type="submit"
                                 className={`px-6 py-3 rounded-lg transition-colors duration-200 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${isDark ? 'bg-green-700 text-green-100 hover:bg-green-600' : 'bg-green-600 text-white hover:bg-green-700'}`}
                             >
-                                Add Distribution Item
+                                Add Distribution Seed
                             </button>
                         </div>
                     </div>

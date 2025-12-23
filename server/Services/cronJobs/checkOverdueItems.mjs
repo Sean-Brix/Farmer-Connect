@@ -362,6 +362,49 @@ ${'='.repeat(60)}
       console.error(`[CRON - ${now.toISOString()}] Auto-archive is disabled.`);
     }
 
+    // ===== PART 5: Check overdue planting reports (NEW for seedling distribution) =====
+    const overdueReports = await prisma.itemTransaction.findMany({
+      where: {
+        plantingReportRequired: true,
+        status: { in: ['Picked_Up', 'late_pickup'] },
+        plantingReportDeadline: { lt: now },
+        plantingReportId: null
+      },
+      include: {
+        account: { select: { id: true, email: true, user_fname: true, user_lname: true } },
+        itemStack: { include: { item: true } }
+      }
+    });
+
+    if (overdueReports.length > 0) {
+      console.error(`[CRON - ${now.toISOString()}] Found ${overdueReports.length} overdue planting report(s). Sending notifications...`);
+
+      const notificationPromises = overdueReports.map(async (transaction) => {
+        const daysOverdue = Math.floor((now - new Date(transaction.plantingReportDeadline)) / (1000 * 60 * 60 * 24));
+        
+        try {
+          const notificationModule = await import('../notificationService.mjs');
+          await notificationModule.createNotification({
+            accountId: transaction.account.id,
+            type: 'PLANTING_REPORT_OVERDUE',
+            title: '⏰ Planting Report Overdue',
+            message: `Your planting report for ${transaction.itemStack.item.name} is ${daysOverdue} day(s) overdue. Please submit it as soon as possible.`,
+            link: `/planting-report/create?transactionId=${transaction.id}`,
+            severity: daysOverdue >= 14 ? 'urgent' : 'warning'
+          });
+
+          console.error(`  ⚠️ Notified ${transaction.account.user_fname} ${transaction.account.user_lname} - Transaction ${transaction.id} - ${daysOverdue} days overdue`);
+        } catch (notifError) {
+          console.error(`  ❌ Failed to send notification for transaction ${transaction.id}:`, notifError.message);
+        }
+      });
+
+      await Promise.all(notificationPromises);
+      console.error(`[CRON - ${now.toISOString()}] Planting report notifications sent.`);
+    } else {
+      console.error(`[CRON - ${now.toISOString()}] No overdue planting reports found.`);
+    }
+
   } catch (error) {
     console.error(`[CRON ERROR - ${new Date().toISOString()}] Failed to check overdue items:`, error);
   }

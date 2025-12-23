@@ -74,12 +74,18 @@ async function seedRequests() {
         { type: 'EIC', status: 'Approved', pickupDays: 1, returnDays: 8, quantity: 1, note: 'Water pump approved', adminRequired: true },
         { type: 'EIC', status: 'Borrowed', pickupDays: -3, returnDays: 4, quantity: 1, note: 'Currently using harvester', adminRequired: true, actual_pickup: -3 },
         
+        // DISTRIBUTION ACTIVE
+        { type: 'DIST', status: 'Pending', pickupDays: 3, returnDays: null, quantity: 10, note: 'Requesting corn seeds for spring planting', adminRequired: false },
+        { type: 'DIST', status: 'Approved', pickupDays: 2, returnDays: null, quantity: 15, note: 'Rice seeds approved - ready for pickup', adminRequired: true },
+        { type: 'DIST', status: 'Picked_Up', pickupDays: -5, returnDays: null, quantity: 8, note: 'Seeds collected on time', adminRequired: true, actual_pickup: -5 },
+        
         // ARCHIVED (multiple allowed)
         { type: 'EIC', status: 'Returned', pickupDays: -30, returnDays: -25, quantity: 1, note: 'Previous rental completed', adminRequired: true, actual_pickup: -30, actual_return: -25 },
         { type: 'EIC', status: 'Returned', pickupDays: -60, returnDays: -55, quantity: 1, note: 'Older completed request', adminRequired: true, actual_pickup: -60, actual_return: -55 },
         { type: 'EIC', status: 'late_return', pickupDays: -45, returnDays: -35, quantity: 1, note: 'Returned 5 days late', adminRequired: true, actual_pickup: -45, actual_return: -30, adjustedReturnDays: -35 },
         { type: 'EIC', status: 'Cancelled', pickupDays: -20, returnDays: -15, quantity: 1, note: 'Changed plans', adminRequired: false },
-        { type: 'DIST', status: 'Returned', pickupDays: -40, returnDays: null, quantity: 5, note: 'Received seeds last month', adminRequired: true, actual_pickup: -40 },
+        { type: 'DIST', status: 'Planted', pickupDays: -40, returnDays: null, quantity: 5, note: 'Planting report submitted successfully', adminRequired: true, actual_pickup: -40 },
+        { type: 'DIST', status: 'Archived', pickupDays: -60, returnDays: null, quantity: 12, note: 'Completed distribution - archived', adminRequired: true, actual_pickup: -60 },
       ],
       
       // User 2: Focus on late scenarios
@@ -89,11 +95,17 @@ async function seedRequests() {
         { type: 'EIC', status: 'Approved', pickupDays: -2, returnDays: 5, quantity: 1, note: 'Approved but pickup 2 days late', adminRequired: true },
         { type: 'EIC', status: 'late_pickup', pickupDays: -10, returnDays: 2, quantity: 1, note: 'Picked up 3 days late', adminRequired: true, actual_pickup: -7, adjustedReturnDays: 5 },
         
+        // DISTRIBUTION ACTIVE
+        { type: 'DIST', status: 'Pending', pickupDays: -2, returnDays: null, quantity: 20, note: 'OVERDUE: Approval needed urgently', adminRequired: false },
+        { type: 'DIST', status: 'Approved', pickupDays: -3, returnDays: null, quantity: 12, note: 'Approved but pickup is 3 days late', adminRequired: true },
+        { type: 'DIST', status: 'late_pickup', pickupDays: -15, returnDays: null, quantity: 18, note: 'Picked up 5 days late - report due soon', adminRequired: true, actual_pickup: -10 },
+        
         // ARCHIVED
         { type: 'EIC', status: 'No_Pickup', pickupDays: -15, returnDays: -10, quantity: 1, note: 'Approved but never collected', adminRequired: true },
         { type: 'EIC', status: 'No_Return', pickupDays: -50, returnDays: -45, quantity: 1, note: 'Equipment lost', adminRequired: true, actual_pickup: -50 },
         { type: 'EIC', status: 'Rejected', pickupDays: -25, returnDays: -20, quantity: 5, note: 'Too many items requested', adminRequired: true },
         { type: 'DIST', status: 'No_Pickup', pickupDays: -12, returnDays: null, quantity: 10, note: 'Seeds approved but not claimed', adminRequired: true },
+        { type: 'DIST', status: 'Rejected', pickupDays: -18, returnDays: null, quantity: 50, note: 'Quantity exceeds available stock', adminRequired: true },
       ],
       
       // User 3: Overdue return scenarios
@@ -103,10 +115,16 @@ async function seedRequests() {
         { type: 'EIC', status: 'Borrowed', pickupDays: -10, returnDays: -1, quantity: 1, note: 'OVERDUE by 1 day', adminRequired: true, actual_pickup: -10 },
         { type: 'EIC', status: 'Borrowed', pickupDays: -15, returnDays: -5, quantity: 1, note: 'OVERDUE by 5 days', adminRequired: true, actual_pickup: -15 },
         
+        // DISTRIBUTION ACTIVE
+        { type: 'DIST', status: 'Pending', pickupDays: 1, returnDays: null, quantity: 25, note: 'Tomato seeds for greenhouse', adminRequired: false },
+        { type: 'DIST', status: 'Approved', pickupDays: 0, returnDays: null, quantity: 30, note: 'Pickup scheduled TODAY', adminRequired: true },
+        { type: 'DIST', status: 'Picked_Up', pickupDays: -8, returnDays: null, quantity: 22, note: 'Seeds collected - planting in progress', adminRequired: true, actual_pickup: -8 },
+        
         // ARCHIVED
         { type: 'EIC', status: 'Returned', pickupDays: -35, returnDays: -30, quantity: 1, note: 'Past successful return', adminRequired: true, actual_pickup: -35, actual_return: -30 },
         { type: 'EIC', status: 'late_return', pickupDays: -50, returnDays: -40, quantity: 1, note: 'Returned 7 days late', adminRequired: true, actual_pickup: -50, actual_return: -33, adjustedReturnDays: -40 },
         { type: 'DIST', status: 'Cancelled', pickupDays: -18, returnDays: null, quantity: 3, note: 'Cancelled seed order', adminRequired: false },
+        { type: 'DIST', status: 'Planted', pickupDays: -25, returnDays: null, quantity: 14, note: 'Successfully planted - report submitted', adminRequired: true, actual_pickup: -25 },
       ],
       
       // User 4: Near deadline scenarios
@@ -116,10 +134,16 @@ async function seedRequests() {
         { type: 'EIC', status: 'Borrowed', pickupDays: -6, returnDays: 1, quantity: 1, note: 'Due tomorrow', adminRequired: true, actual_pickup: -6 },
         { type: 'EIC', status: 'Borrowed', pickupDays: -7, returnDays: 0, quantity: 1, note: 'Due TODAY', adminRequired: true, actual_pickup: -7 },
         
+        // DISTRIBUTION ACTIVE
+        { type: 'DIST', status: 'Pending', pickupDays: 0, returnDays: null, quantity: 16, note: 'Urgent request - pickup date is TODAY', adminRequired: false },
+        { type: 'DIST', status: 'Approved', pickupDays: 1, returnDays: null, quantity: 9, note: 'Ready for pickup tomorrow', adminRequired: true },
+        { type: 'DIST', status: 'late_pickup', pickupDays: -20, returnDays: null, quantity: 11, note: 'Picked up 8 days late - report overdue', adminRequired: true, actual_pickup: -12 },
+        
         // ARCHIVED
         { type: 'EIC', status: 'Returned', pickupDays: -25, returnDays: -20, quantity: 1, note: 'On-time return', adminRequired: true, actual_pickup: -25, actual_return: -20 },
         { type: 'EIC', status: 'Rejected', pickupDays: -10, returnDays: -5, quantity: 2, note: 'Item unavailable', adminRequired: true },
-        { type: 'DIST', status: 'Returned', pickupDays: -30, returnDays: null, quantity: 8, note: 'Seed distribution completed', adminRequired: true, actual_pickup: -30 },
+        { type: 'DIST', status: 'Planted', pickupDays: -30, returnDays: null, quantity: 8, note: 'Seed distribution completed - planted successfully', adminRequired: true, actual_pickup: -30 },
+        { type: 'DIST', status: 'Archived', pickupDays: -45, returnDays: null, quantity: 7, note: 'Old distribution - archived by admin', adminRequired: true, actual_pickup: -45 },
       ],
       
       // User 5: Mixed scenarios
@@ -129,10 +153,17 @@ async function seedRequests() {
         { type: 'EIC', status: 'Approved', pickupDays: 2, returnDays: 9, quantity: 1, note: 'Ready in 2 days', adminRequired: true },
         { type: 'EIC', status: 'late_pickup', pickupDays: -12, returnDays: -1, quantity: 1, note: 'Late pickup AND now overdue', adminRequired: true, actual_pickup: -9, adjustedReturnDays: 2 },
         
+        // DISTRIBUTION ACTIVE
+        { type: 'DIST', status: 'Pending', pickupDays: 4, returnDays: null, quantity: 35, note: 'Cabbage seeds for next season', adminRequired: false },
+        { type: 'DIST', status: 'Approved', pickupDays: 3, returnDays: null, quantity: 19, note: 'Wheat seeds approved - pickup in 3 days', adminRequired: true },
+        { type: 'DIST', status: 'Picked_Up', pickupDays: -12, returnDays: null, quantity: 28, note: 'Seeds picked up - awaiting planting report', adminRequired: true, actual_pickup: -12 },
+        
         // ARCHIVED
         { type: 'EIC', status: 'Returned', pickupDays: -40, returnDays: -35, quantity: 1, note: 'Completed rental', adminRequired: true, actual_pickup: -40, actual_return: -35 },
         { type: 'EIC', status: 'Cancelled', pickupDays: -8, returnDays: -3, quantity: 1, note: 'User cancelled early', adminRequired: false },
         { type: 'DIST', status: 'Rejected', pickupDays: -22, returnDays: null, quantity: 15, note: 'Stock insufficient', adminRequired: true },
+        { type: 'DIST', status: 'Cancelled', pickupDays: -14, returnDays: null, quantity: 6, note: 'Farmer cancelled - weather delay', adminRequired: false },
+        { type: 'DIST', status: 'No_Pickup', pickupDays: -28, returnDays: null, quantity: 13, note: 'Approved but never collected', adminRequired: true },
       ],
     };
 
@@ -159,6 +190,12 @@ async function seedRequests() {
           stack = getRandom(stacks);
           attempts++;
         } while (usedStacks.has(`${user.id}-${stack.id}`) && attempts < 10);
+        
+        // Refresh stack data to get current quantity
+        stack = await prisma.itemStack.findUnique({
+          where: { id: stack.id },
+          include: { item: true }
+        });
         
         // Mark as used if it's an active request (not archived)
         if (!['Returned', 'late_return', 'No_Return', 'No_Pickup', 'Rejected', 'Cancelled'].includes(scenario.status)) {
@@ -191,6 +228,49 @@ async function seedRequests() {
               adjustedReturnDate: adjustedReturnDate,
             }
           });
+
+          // Update Reserved stack for approved requests
+          if (scenario.status === 'Approved') {
+            // Check if source stack has enough quantity
+            if (stack.quantity >= scenario.quantity) {
+              // Find or create Reserved stack
+              const sourceStatus = scenario.type === 'EIC' ? 'EIC' : 'Distributed';
+              let reservedStack = await prisma.itemStack.findFirst({
+                where: {
+                  itemId: stack.itemId,
+                  status: 'Reserved'
+                }
+              });
+
+              if (!reservedStack) {
+                reservedStack = await prisma.itemStack.create({
+                  data: {
+                    itemId: stack.itemId,
+                    status: 'Reserved',
+                    quantity: 0
+                  }
+                });
+              }
+
+              // Transfer quantity to Reserved stack
+              await prisma.itemStack.update({
+                where: { id: reservedStack.id },
+                data: { quantity: { increment: scenario.quantity } }
+              });
+
+              // Deduct from source stack
+              await prisma.itemStack.update({
+                where: { id: stack.id },
+                data: { quantity: { decrement: scenario.quantity } }
+              });
+            } else {
+              console.log(`   ⚠️  Skipped Reserved transfer - insufficient stock (${stack.quantity} < ${scenario.quantity})`);
+            }
+          }
+
+          // For Borrowed/late_pickup in EIC, quantity was already deducted from Reserved
+          // For Picked_Up/late_pickup in Distribution, quantity was already deducted from Reserved
+          // These statuses mean the item has already been picked up, so Reserved should be 0
 
           totalCreated++;
           const statusIcon = ['Returned', 'Approved'].includes(scenario.status) ? '✅' : 

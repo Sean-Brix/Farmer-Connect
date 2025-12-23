@@ -49,6 +49,50 @@ export function getPrismaClient() {
     process.on('SIGINT', cleanup);
     process.on('SIGTERM', cleanup);
     process.on('beforeExit', cleanup);
+
+    // Modification #5: Prisma Client Extension for archive cascade
+    // Auto-archive distributions when planting report is archived
+    prisma = prisma.$extends({
+      query: {
+        plantingReport: {
+          async update({ args, query }) {
+            // Execute the update
+            const result = await query(args);
+            
+            // Check if report was archived
+            if (args.data.isArchived === true) {
+              const reportId = args.where.id;
+              
+              // Get linked transactions
+              const report = await prisma.plantingReport.findUnique({
+                where: { id: reportId },
+                select: { itemTransactions: { select: { id: true } } }
+              });
+
+              if (report && report.itemTransactions.length > 0) {
+                const now = new Date();
+                
+                // Update all linked distributions to Archived
+                await prisma.itemTransaction.updateMany({
+                  where: {
+                    plantingReportId: reportId,
+                    status: 'Planted'
+                  },
+                  data: {
+                    status: 'Archived',
+                    plantingReportArchivedAt: now
+                  }
+                });
+
+                console.log(`📦 Auto-archived ${report.itemTransactions.length} distribution(s) for report ${reportId}`);
+              }
+            }
+            
+            return result;
+          }
+        }
+      }
+    });
   }
 
   return prisma;

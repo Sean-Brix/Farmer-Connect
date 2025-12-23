@@ -17,6 +17,8 @@ function calculateYield(harvestArea, numberOfBags, weightPerBag) {
 // Helper function to calculate expected harvest date
 async function calculateExpectedHarvest(varietyId, dateOfPlanting, plantingMethod) {
     try {
+        if (!dateOfPlanting) return null;
+
         const variety = await prisma.seedVariety.findUnique({
             where: { id: varietyId },
             select: { directSeededDAS: true, transplantedDAS: true, cropType: true }
@@ -59,13 +61,20 @@ export async function createPlantingReport(req, res) {
             cropInsurance,
             harvestArea,
             numberOfBags,
-            weightPerBag
+            weightPerBag,
+            distributionRequestId,
+            distributionItemId,
+            distributionQuantity,
+            distributionUnit,
+            distributionPickupDate,
+            requestNote,
+            plantingReportDeadline,
+            status,
+            lastUpdatedBy
         } = req.body;
 
-        // Validate required fields
-        if (!farmerName || !farmLocation || !croppingSeasonId || 
-            !areaPlanted || !seedClassification || !typeOfCrop || !varietyId || 
-            !dateOfPlanting || !plantingMethod) {
+        // Validate required fields (draft-friendly: allow planting/harvest fields to be empty)
+        if (!farmerName || !farmLocation || !areaPlanted || !seedClassification || !typeOfCrop || !varietyId || !plantingMethod) {
             return res.status(400).json({
                 success: false,
                 message: 'Missing required fields'
@@ -76,7 +85,9 @@ export async function createPlantingReport(req, res) {
         const yieldMtPerHa = calculateYield(harvestArea, numberOfBags, weightPerBag);
 
         // Calculate expected harvest date for Rice crops
-        const dateOfExpectedHarvest = await calculateExpectedHarvest(varietyId, dateOfPlanting, plantingMethod);
+        const dateOfExpectedHarvest = dateOfPlanting
+            ? await calculateExpectedHarvest(varietyId, dateOfPlanting, plantingMethod)
+            : null;
 
         // Create the planting report
         const report = await prisma.plantingReport.create({
@@ -84,20 +95,29 @@ export async function createPlantingReport(req, res) {
                 farmerName,
                 farmLocation,
                 rsbsaNumber: rsbsaNumber || null,
-                croppingSeasonId,
+                croppingSeasonId: croppingSeasonId || null,
                 areaPlanted: parseFloat(areaPlanted),
                 seedClassification,
                 typeOfCrop,
                 riceIrrigation: (riceIrrigation && riceIrrigation.trim() !== '') ? riceIrrigation : null,
                 varietyId,
-                dateOfPlanting: new Date(dateOfPlanting),
+                dateOfPlanting: dateOfPlanting ? new Date(dateOfPlanting) : null,
                 plantingMethod,
                 cropInsurance: cropInsurance || false,
                 harvestArea: harvestArea ? parseFloat(harvestArea) : null,
                 numberOfBags: numberOfBags ? parseInt(numberOfBags) : null,
                 weightPerBag: weightPerBag ? parseFloat(weightPerBag) : null,
                 yieldMtPerHa,
-                dateOfExpectedHarvest
+                dateOfExpectedHarvest,
+                distributionRequestId: distributionRequestId || null,
+                distributionItemId: distributionItemId || null,
+                distributionQuantity: distributionQuantity ? parseInt(distributionQuantity) : null,
+                distributionUnit: distributionUnit || null,
+                distributionPickupDate: distributionPickupDate ? new Date(distributionPickupDate) : null,
+                requestNote: requestNote || null,
+                plantingReportDeadline: plantingReportDeadline ? new Date(plantingReportDeadline) : null,
+                status: status || 'Draft',
+                lastUpdatedBy: lastUpdatedBy || null
             },
             include: {
                 croppingSeason: true,
@@ -106,6 +126,43 @@ export async function createPlantingReport(req, res) {
         });
 
         console.log('✅ [Planting Report] Created:', report.id);
+
+        // Phase 4: Auto-transition linked distribution to Planted
+        // Accept both distributionId and itemTransactionId for backward compatibility
+        const { distributionId, itemTransactionId } = req.body;
+        const transactionId = distributionId || itemTransactionId;
+        
+        if (transactionId) {
+            try {
+                const transaction = await prisma.itemTransaction.update({
+                    where: { id: transactionId },
+                    data: {
+                        status: 'Planted',
+                        plantingReportId: report.id,
+                        plantingReportSubmittedAt: new Date()
+                    },
+                    include: { 
+                        itemStack: { include: { item: true } }, 
+                        account: true 
+                    }
+                });
+
+                // Create notification for user
+                const notificationModule = await import('../../Services/notificationService.mjs');
+                await notificationModule.createNotification({
+                    accountId: transaction.accountId,
+                    type: 'planting_report_submitted',
+                    title: '✅ Planting Report Submitted',
+                    message: `Your planting report for ${transaction.itemStack.item.name} has been recorded. Distribution status updated to "Planted".`,
+                    relatedId: report.id
+                }).catch(err => console.error('Failed to send notification:', err));
+
+                console.log(`✅ Distribution ${transactionId} → Planted (report ${report.id})`);
+            } catch (linkError) {
+                console.error('⚠️ Failed to link report to distribution:', linkError);
+                // Don't fail the report creation if linking fails
+            }
+        }
 
         return res.status(201).json({
             success: true,
@@ -201,6 +258,15 @@ export async function getAllPlantingReports(req, res) {
                     numberOfBags: true,
                     weightPerBag: true,
                     yieldMtPerHa: true,
+                    distributionRequestId: true,
+                    distributionItemId: true,
+                    distributionQuantity: true,
+                    distributionUnit: true,
+                    distributionPickupDate: true,
+                    requestNote: true,
+                    plantingReportDeadline: true,
+                    status: true,
+                    lastUpdatedBy: true,
                     isArchived: true,
                     createdAt: true,
                     updatedAt: true,
@@ -310,9 +376,16 @@ export async function updatePlantingReport(req, res) {
         if (updateData.harvestArea) updateData.harvestArea = parseFloat(updateData.harvestArea);
         if (updateData.numberOfBags) updateData.numberOfBags = parseInt(updateData.numberOfBags);
         if (updateData.weightPerBag) updateData.weightPerBag = parseFloat(updateData.weightPerBag);
+        if (updateData.distributionQuantity) updateData.distributionQuantity = parseInt(updateData.distributionQuantity);
 
         // Parse dates
         if (updateData.dateOfPlanting) updateData.dateOfPlanting = new Date(updateData.dateOfPlanting);
+        if (updateData.hasOwnProperty('dateOfPlanting') && !updateData.dateOfPlanting) {
+            updateData.dateOfPlanting = null;
+            updateData.dateOfExpectedHarvest = null;
+        }
+        if (updateData.distributionPickupDate) updateData.distributionPickupDate = new Date(updateData.distributionPickupDate);
+        if (updateData.plantingReportDeadline) updateData.plantingReportDeadline = new Date(updateData.plantingReportDeadline);
 
         // Recalculate yield if harvest data is updated
         const harvestArea = updateData.harvestArea || existingReport.harvestArea;
@@ -335,11 +408,9 @@ export async function updatePlantingReport(req, res) {
         const dateOfPlanting = updateData.dateOfPlanting || existingReport.dateOfPlanting;
         const plantingMethod = updateData.plantingMethod || existingReport.plantingMethod;
         
-        if (updateData.varietyId || updateData.dateOfPlanting || updateData.plantingMethod) {
+        if ((updateData.varietyId || updateData.dateOfPlanting || updateData.plantingMethod) && dateOfPlanting) {
             const expectedHarvest = await calculateExpectedHarvest(varietyId, dateOfPlanting, plantingMethod);
-            if (expectedHarvest) {
-                updateData.dateOfExpectedHarvest = expectedHarvest;
-            }
+            updateData.dateOfExpectedHarvest = expectedHarvest || null;
         }
 
         // Update the report

@@ -5,6 +5,7 @@ import { useTheme } from '../../../contexts/ThemeContext';
 import ReportModal from './ReportModal';
 import ManageReferences from './ManageReferences';
 import { usePlantingReport } from '../../../contexts/PlantingReportContext';
+import { useUpdateRequestStatus } from '../Distribution/hooks/useDistributionQueries';
 
 const PlantingReports = () => {
     const { theme } = useTheme();
@@ -20,6 +21,8 @@ const PlantingReports = () => {
         loadingVarieties
     } = usePlantingReport();
 
+    const { mutateAsync: updateRequestStatus } = useUpdateRequestStatus();
+
     const [reports, setReports] = useState([]);
     const [seasons, setSeasons] = useState([]);
     const [varieties, setVarieties] = useState([]);
@@ -28,6 +31,7 @@ const PlantingReports = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterCropType, setFilterCropType] = useState('');
     const [filterSeason, setFilterSeason] = useState('');
+    const [filterStatus, setFilterStatus] = useState('');
     const [viewMode, setViewMode] = useState('active'); // 'active' or 'archived'
     const [showManageReferences, setShowManageReferences] = useState(false); // Toggle management page
     const [isLoading, setIsLoading] = useState(true);
@@ -37,6 +41,23 @@ const PlantingReports = () => {
     useEffect(() => {
         loadData();
     }, []);
+
+    // Check for bookmarked report after data loads
+    useEffect(() => {
+        if (!isLoading && !error) {
+            setTimeout(() => {
+                const viewReportId = localStorage.getItem('viewReportId');
+                if (viewReportId) {
+                    const reportToView = reports.find(r => r.id === parseInt(viewReportId));
+                    if (reportToView) {
+                        setSelectedReport(reportToView);
+                        setIsModalOpen(true);
+                    }
+                    localStorage.removeItem('viewReportId');
+                }
+            }, 200);
+        }
+    }, [isLoading, error, reports]);
 
     const loadData = useCallback(async () => {
         setIsLoading(true);
@@ -66,7 +87,7 @@ const PlantingReports = () => {
         
         const statistics = {
             totalReports: active.length,
-            totalAreaPlanted: active.reduce((sum, r) => sum + r.areaPlanted, 0).toFixed(2),
+            totalAreaPlanted: active.reduce((sum, r) => sum + (r.areaPlanted || 0), 0).toFixed(2),
             harvestedReports: active.filter(r => r.dateOfHarvest).length,
             averageYield: active.filter(r => r.yieldMtPerHa).length > 0
                 ? (active.reduce((sum, r) => sum + (r.yieldMtPerHa || 0), 0) / active.filter(r => r.yieldMtPerHa).length).toFixed(2)
@@ -92,10 +113,11 @@ const PlantingReports = () => {
             
             const matchesCropType = !filterCropType || report.typeOfCrop === filterCropType;
             const matchesSeason = !filterSeason || report.croppingSeasonId === filterSeason;
+            const matchesStatus = !filterStatus || (report.status || 'Draft') === filterStatus;
 
-            return matchesSearch && matchesCropType && matchesSeason;
+            return matchesSearch && matchesCropType && matchesSeason && matchesStatus;
         });
-    }, [activeReports, archivedReports, viewMode, searchTerm, filterCropType, filterSeason]);
+    }, [activeReports, archivedReports, viewMode, searchTerm, filterCropType, filterSeason, filterStatus]);
 
     const handleCreateReport = () => {
         setSelectedReport(null);
@@ -130,19 +152,63 @@ const PlantingReports = () => {
         }
     }, [selectedReport, updateReport, createReport]);
 
+    const canArchiveReport = (report) => {
+        if (!report) return false;
+        const required = [
+            report.farmerName,
+            report.farmLocation,
+            report.croppingSeasonId,
+            report.areaPlanted,
+            report.seedClassification,
+            report.typeOfCrop,
+            report.varietyId,
+            report.dateOfPlanting,
+            report.plantingMethod,
+            report.dateOfExpectedHarvest,
+        ];
+        return required.every(Boolean);
+    };
+
     const handleArchiveReport = useCallback(async (reportId) => {
         try {
+            const target = reports.find(r => r.id === reportId);
+            if (!canArchiveReport(target)) {
+                toast.error('Complete planting and expected harvest details before archiving.');
+                return;
+            }
             const archivedReport = await archiveReport(reportId);
             setReports(prev => prev.map(r => 
                 r.id === reportId ? archivedReport : r
             ));
+
+            // Keep distribution request in sync: move to Planted then Archived
+            if (target?.distributionRequestId) {
+                const requestId = target.distributionRequestId;
+                const ensureStatus = async (status) => {
+                    try {
+                        await updateRequestStatus({ requestId, status });
+                        return true;
+                    } catch (err) {
+                        console.warn('Failed to set distribution status', status, err?.message || err);
+                        return false;
+                    }
+                };
+
+                // Some requests may still be Picked_Up/late_pickup; promote to Planted first
+                await ensureStatus('Planted');
+                const archivedOk = await ensureStatus('Archived');
+                if (!archivedOk) {
+                    toast.error('Report archived, but failed to archive linked distribution request.');
+                }
+            }
+
             setIsModalOpen(false);
             toast.success('Report archived successfully');
         } catch (error) {
             console.error('Error archiving report:', error);
             toast.error(error.message || 'Failed to archive report');
         }
-    }, [archiveReport]);
+    }, [archiveReport, reports, updateRequestStatus]);
 
     const getCropTypeColor = (cropType) => {
         switch (cropType) {
@@ -154,18 +220,15 @@ const PlantingReports = () => {
     };
 
     const getStatusBadge = (report) => {
-        if (report.dateOfHarvest) {
-            return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Harvested</span>;
+        const status = report.status || 'Draft';
+        switch (status) {
+            case 'Submitted':
+                return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800">Submitted</span>;
+            case 'Draft':
+                return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Draft</span>;
+            default:
+                return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">{status}</span>;
         }
-        const expectedDate = report.dateOfExpectedHarvest ? new Date(report.dateOfExpectedHarvest) : null;
-        const today = new Date();
-        if (expectedDate && expectedDate > today) {
-            return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Growing</span>;
-        }
-        if (expectedDate && expectedDate <= today) {
-            return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800">Ready to Harvest</span>;
-        }
-        return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Pending</span>;
     };
 
     // Show management page if toggled
@@ -299,7 +362,7 @@ const PlantingReports = () => {
 
                 {/* Search and Filters */}
                 <div className={`p-4 rounded-lg shadow ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                             <input
@@ -338,6 +401,18 @@ const PlantingReports = () => {
                                 ))}
                             </select>
                         </div>
+                        <div className="relative">
+                            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                            <select
+                                value={filterStatus}
+                                onChange={(e) => setFilterStatus(e.target.value)}
+                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 appearance-none"
+                            >
+                                <option value="">All Statuses</option>
+                                <option value="Draft">Draft</option>
+                                <option value="Submitted">Submitted</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -364,7 +439,10 @@ const PlantingReports = () => {
                                     Area (ha)
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Planting Date
+                                    Date Planted
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Yield (mt/ha)
@@ -377,7 +455,7 @@ const PlantingReports = () => {
                         <tbody className={`divide-y ${theme === 'dark' ? 'bg-gray-800 divide-gray-700' : 'bg-white divide-gray-200'}`}>
                             {filteredReports.length === 0 ? (
                                 <tr>
-                                    <td colSpan="9" className="px-6 py-8 text-center text-gray-500">
+                                    <td colSpan={9} className="px-6 py-8 text-center text-gray-500">
                                         <FileText className="mx-auto mb-2 text-gray-400" size={48} />
                                         <p className="text-lg">No reports found</p>
                                         <p className="text-sm">Try adjusting your search or filters</p>
@@ -409,13 +487,16 @@ const PlantingReports = () => {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {report.variety.name}
+                                            {report.variety?.name || '—'}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {report.areaPlanted}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {new Date(report.dateOfPlanting).toLocaleDateString()}
+                                            {report.dateOfPlanting ? new Date(report.dateOfPlanting).toLocaleDateString() : '—'}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {getStatusBadge(report)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                                             {report.yieldMtPerHa ? (
@@ -437,7 +518,12 @@ const PlantingReports = () => {
                                                         >
                                                             Edit
                                                         </button>
-                                                     
+                                                        <button
+                                                            onClick={() => handleArchiveReport(report.id)}
+                                                            className="text-gray-600 hover:text-gray-800 font-medium"
+                                                        >
+                                                            Archive
+                                                        </button>
                                                     </>
                                                 ) : (
                                                     <button
@@ -485,7 +571,9 @@ const PlantingReports = () => {
             {/* Report Modal */}
             <ReportModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                onClose={() => {
+                    setIsModalOpen(false);
+                }}
                 report={selectedReport}
                 onSave={handleSaveReport}
                 onArchive={handleArchiveReport}

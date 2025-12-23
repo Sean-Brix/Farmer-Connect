@@ -2,6 +2,7 @@
 import prisma from '../../../config/database.js';
 import auditLogger from '../../../Services/auditLogger.js';
 import { notifyRequestStatus } from '../../../Services/notificationService.js';
+import { transferBetweenStacks } from '../../../Utils/stackTransfer.js';
 // Using centralized prisma instance
 
 async function setStatus(req, res) {
@@ -276,50 +277,90 @@ async function setStatus(req, res) {
             updateData.actual_return = new Date();
         }
 
-        // ============ RESERVED STOCK MANAGEMENT ============
-        let reservedQuantityChange = 0;
         const currentStatus = transaction.status;
         const newStatus = updateData.status || status; // Use smart-detected status
 
-        // Reserve stock when request is approved
+        // ===================================================
+        // RESERVED STACK MANAGEMENT (Proper Stack Tracking)
+        // ===================================================
+        // Approved: Transfer from EIC to Reserved
         if (newStatus === 'Approved' && currentStatus === 'Pending') {
-            reservedQuantityChange = transaction.quantity;
-            console.log(`🔒 Stock reserved: ${transaction.quantity} units of ${transaction.itemStack.item.name}`);
+            await transferBetweenStacks(
+                prisma,
+                transaction.itemStack.item.id,
+                'EIC',
+                'Reserved',
+                transaction.quantity
+            );
+            console.log(`🔒 Reserved ${transaction.quantity} units: EIC → Reserved`);
         }
 
-        // Release reservation when picked up (already deducting from actual quantity)
+        // Pickup: Deduct from Reserved (borrowed/late_pickup)
         if (['Borrowed', 'late_pickup'].includes(newStatus) && currentStatus === 'Approved') {
-            reservedQuantityChange = -transaction.quantity;
-            console.log(`🔓 Reservation released on pickup: ${transaction.quantity} units`);
+            const reservedStack = await prisma.itemStack.findFirst({
+                where: {
+                    itemId: transaction.itemStack.item.id,
+                    status: 'Reserved'
+                }
+            });
+            if (reservedStack) {
+                await prisma.itemStack.update({
+                    where: { id: reservedStack.id },
+                    data: { quantity: reservedStack.quantity - transaction.quantity }
+                });
+                console.log(`📦 Deducted from Reserved: ${transaction.quantity} units`);
+            }
         }
 
-        // Release reservation when rejected/cancelled/no-pickup (without affecting actual quantity)
-        if (['Rejected', 'Cancelled', 'No_Pickup'].includes(newStatus) && currentStatus === 'Approved') {
-            reservedQuantityChange = -transaction.quantity;
-            console.log(`🔓 Reservation released (not picked up): ${transaction.quantity} units`);
+        // No Pickup: Transfer from Reserved back to EIC
+        if (newStatus === 'No_Pickup' && currentStatus === 'Approved') {
+            await transferBetweenStacks(
+                prisma,
+                transaction.itemStack.item.id,
+                'Reserved',
+                'EIC',
+                transaction.quantity
+            );
+            console.log(`🔓 Released reservation: Reserved → EIC`);
+        }
+
+        // Cancelled before pickup: Transfer from Reserved back to EIC
+        if (newStatus === 'Cancelled' && currentStatus === 'Approved') {
+            await transferBetweenStacks(
+                prisma,
+                transaction.itemStack.item.id,
+                'Reserved',
+                'EIC',
+                transaction.quantity
+            );
+            console.log(`🔓 Cancelled - returned: Reserved → EIC`);
+        }
+
+        // Cancelled after pickup: Restore to EIC (item returned)
+        if (newStatus === 'Cancelled' && ['Borrowed', 'late_pickup'].includes(currentStatus)) {
+            const eicStack = await prisma.itemStack.findFirst({
+                where: {
+                    itemId: transaction.itemStack.item.id,
+                    status: 'EIC'
+                }
+            });
+            if (eicStack) {
+                await prisma.itemStack.update({
+                    where: { id: eicStack.id },
+                    data: { quantity: eicStack.quantity + transaction.quantity }
+                });
+                console.log(`🔙 Restored to EIC: ${transaction.quantity} units`);
+            }
         }
         // ===================================================
 
-        // Handle stack quantity adjustments based on status change
+        // Handle stock action logging
         let stackQuantityChange = 0;
         let stockAction = 'NO CHANGE';
 
-        // DEDUCT STOCK: When item physically LEAVES office (pickup)
-        if (['Borrowed', 'late_pickup'].includes(newStatus) && currentStatus === 'Approved') {
-            stackQuantityChange = -transaction.quantity;
-            stockAction = `DEDUCT ${transaction.quantity} units`;
-        }
-
-        // RESTORE STOCK: When item RETURNS to office
+        // Set stock action based on status changes (for logging purposes)
         if (['Returned', 'late_return'].includes(newStatus) && ['Borrowed', 'late_pickup'].includes(currentStatus)) {
-            stackQuantityChange = transaction.quantity;
             stockAction = `RESTORE ${transaction.quantity} units`;
-        }
-
-        // NO STOCK CHANGE: Never picked up (stock was never deducted)
-        if (newStatus === 'No_Pickup' && currentStatus === 'Approved') {
-            stackQuantityChange = 0;
-            stockAction = 'NO CHANGE (never picked up)';
         }
 
         // TEST 6.1, 6.2, 6.3: Stock Management Logging
@@ -355,33 +396,38 @@ ${'='.repeat(60)}
         });
         // ====================================================================
 
-        // NO STOCK CHANGE: Cancelled before pickup
+        // Set stock action text for various cancellation scenarios
         if (newStatus === 'Cancelled' && currentStatus === 'Approved') {
-            stackQuantityChange = 0;
-            stockAction = 'NO CHANGE (cancelled before pickup)';
+            stockAction = 'Reserved → EIC (cancelled before pickup)';
         }
 
-        // RESTORE STOCK: Cancelled after pickup (user returns item)
         if (newStatus === 'Cancelled' && ['Borrowed', 'late_pickup'].includes(currentStatus)) {
-            stackQuantityChange = transaction.quantity;
-            stockAction = `RESTORE ${transaction.quantity} units (cancelled after pickup)`;
+            stockAction = `RESTORE ${transaction.quantity} units to EIC (cancelled after pickup)`;
         }
 
-        // NO STOCK CHANGE: Pending cancellation
         if (newStatus === 'Cancelled' && currentStatus === 'Pending') {
-            stackQuantityChange = 0;
             stockAction = 'NO CHANGE (cancelled from pending)';
         }
 
-        // NO RESTORATION: Item lost/damaged
         if (newStatus === 'No_Return') {
-            stackQuantityChange = 0;
+            stockAction = 'NO CHANGE (item not returned)';
             console.log(`📦 No stock restoration - item marked as not returned`);
         }
 
-        // NO CHANGE: Rejected requests
         if (newStatus === 'Rejected') {
-            stackQuantityChange = 0;
+            stockAction = 'NO CHANGE (rejected)';
+        }
+        
+        if (newStatus === 'No_Pickup' && currentStatus === 'Approved') {
+            stockAction = 'Reserved → EIC (no pickup)';
+        }
+        
+        if (newStatus === 'Approved' && currentStatus === 'Pending') {
+            stockAction = `EIC → Reserved (${transaction.quantity} units)`;
+        }
+        
+        if (['Borrowed', 'late_pickup'].includes(newStatus) && currentStatus === 'Approved') {
+            stockAction = `DEDUCT ${transaction.quantity} units from Reserved`;
         }
 
         // Update the transaction and stack quantity in a transaction
@@ -416,51 +462,10 @@ ${'='.repeat(60)}
                 },
             });
 
-            // Update stock and reservations if needed
-            if (stackQuantityChange !== 0 || reservedQuantityChange !== 0) {
-                const currentStackQuantity = transaction.itemStack.quantity;
-                const currentReservedQuantity = transaction.itemStack.reservedQuantity || 0;
-                
-                const stockUpdateData = {};
-                
-                if (stackQuantityChange !== 0) {
-                    const newStackQuantity = currentStackQuantity + stackQuantityChange;
-                    
-                    // Ensure quantity doesn't go negative
-                    if (newStackQuantity < 0) {
-                        throw new Error(
-                            `Insufficient stock. Current quantity: ${currentStackQuantity}, Requested: ${Math.abs(
-                                stackQuantityChange
-                            )}`
-                        );
-                    }
-                    
-                    stockUpdateData.quantity = newStackQuantity;
-                }
-                
-                if (reservedQuantityChange !== 0) {
-                    const newReservedQuantity = currentReservedQuantity + reservedQuantityChange;
-                    
-                    if (newReservedQuantity < 0) {
-                        console.warn(`⚠️ Warning: Reserved quantity would be negative, setting to 0`);
-                        stockUpdateData.reservedQuantity = 0;
-                    } else {
-                        stockUpdateData.reservedQuantity = newReservedQuantity;
-                    }
-                }
-                
-                stockUpdateData.updatedAt = new Date();
-
-                await prisma.itemStack.update({
-                    where: { id: transaction.itemStackId },
-                    data: stockUpdateData,
-                });
-                
-                console.log(`📊 Stock update applied:`, {
-                    itemStackId: transaction.itemStackId,
-                    quantityChange: stackQuantityChange,
-                    reservedChange: reservedQuantityChange
-                });
+            // Note: Stack updates now handled by transferBetweenStacks utility
+            // Only logging remaining for audit trail
+            if (stackQuantityChange !== 0) {
+                console.log(`📊 Stock action performed: ${stockAction}`);
             }
 
             return updatedTransaction;

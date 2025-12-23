@@ -37,7 +37,8 @@ const ReportModal = ({
         harvestArea: '',
         numberOfBags: '',
         weightPerBag: '',
-        dateOfExpectedHarvest: ''
+        dateOfExpectedHarvest: '',
+        status: 'Submitted'
     });
 
     const [filteredVarieties, setFilteredVarieties] = useState([]);
@@ -96,18 +97,29 @@ const ReportModal = ({
                     harvestArea: report.harvestArea || '',
                     numberOfBags: report.numberOfBags || '',
                     weightPerBag: report.weightPerBag || '',
-                    dateOfExpectedHarvest: report.dateOfExpectedHarvest ? report.dateOfExpectedHarvest.split('T')[0] : ''
+                    dateOfExpectedHarvest: report.dateOfExpectedHarvest ? report.dateOfExpectedHarvest.split('T')[0] : '',
+                    status: 'Submitted'
                 });
                 setCalculatedYield(report.yieldMtPerHa);
                 
-                // Set filtered varieties based on crop type
-                if (report.typeOfCrop && Array.isArray(freshVarieties)) {
-                    setFilteredVarieties(freshVarieties.filter(v => v.cropType === report.typeOfCrop && v.isActive));
+                // Set calculated expected harvest for Rice crops
+                if (report.typeOfCrop === 'Rice' && report.dateOfExpectedHarvest) {
+                    setCalculatedExpectedHarvest(report.dateOfExpectedHarvest.split('T')[0]);
                 }
                 
-                // Set selected variety
+                // Set filtered varieties based on crop type
+                if (report.typeOfCrop && Array.isArray(freshVarieties)) {
+                    const filtered = freshVarieties.filter(v => v.cropType === report.typeOfCrop && v.isActive);
+                    // If report has a variety object and it's not in the filtered list, add it
+                    if (report.variety && !filtered.find(v => v.id === report.variety.id)) {
+                        filtered.unshift(report.variety);
+                    }
+                    setFilteredVarieties(filtered);
+                }
+                
+                // Set selected variety - prioritize report.variety object
                 if (report.varietyId) {
-                    const variety = freshVarieties.find(v => v.id === report.varietyId);
+                    const variety = report.variety || freshVarieties.find(v => v.id === report.varietyId);
                     setSelectedVariety(variety);
                 }
             } else {
@@ -200,7 +212,8 @@ const ReportModal = ({
             harvestArea: '',
             numberOfBags: '',
             weightPerBag: '',
-            dateOfExpectedHarvest: ''
+            dateOfExpectedHarvest: '',
+            status: 'Submitted'
         });
         setFilteredVarieties([]);
         setSelectedVariety(null);
@@ -247,16 +260,19 @@ const ReportModal = ({
         // Prevent submission if archived
         if (isArchived) return;
         
+        const { status, ...cleanForm } = formData;
+
         // Prepare data for submission
         const submitData = {
-            ...formData,
+            ...cleanForm,
             yieldMtPerHa: calculatedYield ? parseFloat(calculatedYield) : null,
             areaPlanted: parseFloat(formData.areaPlanted),
             harvestArea: formData.harvestArea ? parseFloat(formData.harvestArea) : null,
             numberOfBags: formData.numberOfBags ? parseInt(formData.numberOfBags) : null,
             weightPerBag: formData.weightPerBag ? parseFloat(formData.weightPerBag) : null,
-            dateOfPlanting: new Date(formData.dateOfPlanting).toISOString(),
-            dateOfExpectedHarvest: formData.dateOfExpectedHarvest ? new Date(formData.dateOfExpectedHarvest).toISOString() : null
+            dateOfPlanting: formData.dateOfPlanting ? new Date(formData.dateOfPlanting).toISOString() : null,
+            dateOfExpectedHarvest: formData.dateOfExpectedHarvest ? new Date(formData.dateOfExpectedHarvest).toISOString() : null,
+            status: 'Submitted'
         };
 
         onSave(submitData);
@@ -289,7 +305,9 @@ const ReportModal = ({
 
     if (!isOpen) return null;
 
-    const activeSeasons = seasons.filter(s => s.isActive);
+    // Use freshSeasons if available (fetched from API), otherwise fallback to seasons prop
+    const seasonsToUse = freshSeasons.length > 0 ? freshSeasons : seasons;
+    const activeSeasons = seasonsToUse.filter(s => s.isActive);
 
     return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -491,7 +509,7 @@ const ReportModal = ({
                                             name="varietyId"
                                             value={
                                                 formData.varietyId 
-                                                    ? { value: formData.varietyId, label: filteredVarieties.find(v => v.id === formData.varietyId)?.name || '' }
+                                                    ? { value: formData.varietyId, label: filteredVarieties.find(v => v.id === formData.varietyId)?.name || selectedVariety?.name || report?.variety?.name || '' }
                                                     : null
                                             }
                                             onChange={handleVarietyChange}
@@ -583,15 +601,17 @@ const ReportModal = ({
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
                                             Expected Harvest Date
                                         </label>
-                                        {formData.typeOfCrop === 'Rice' ? (
+                                        {(formData.typeOfCrop === 'Rice' && (calculatedExpectedHarvest || formData.dateOfExpectedHarvest)) ? (
                                             <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-700">
-                                                {calculatedExpectedHarvest 
-                                                    ? new Date(calculatedExpectedHarvest).toLocaleDateString('en-US', { 
-                                                        year: 'numeric', 
-                                                        month: 'long', 
-                                                        day: 'numeric' 
-                                                    })
-                                                    : 'Auto-calculated based on DAS + Date of Planting'}
+                                                {new Date(calculatedExpectedHarvest || formData.dateOfExpectedHarvest).toLocaleDateString('en-US', { 
+                                                    year: 'numeric', 
+                                                    month: 'long', 
+                                                    day: 'numeric' 
+                                                })}
+                                            </div>
+                                        ) : formData.typeOfCrop === 'Rice' ? (
+                                            <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 italic">
+                                                Auto-calculated based on DAS + Date of Planting
                                             </div>
                                         ) : (
                                             <input

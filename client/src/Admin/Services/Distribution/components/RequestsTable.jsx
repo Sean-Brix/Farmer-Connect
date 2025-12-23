@@ -11,17 +11,51 @@ export default function RequestsTable({
     const [expandedNotes, setExpandedNotes] = React.useState(new Set());
     const [currentPage, setCurrentPage] = React.useState(1);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
+    const [activeTab, setActiveTab] = React.useState('pending');
+    const isSeedingComplete = React.useCallback((req) => {
+        const r = req.plantingReport;
+        if (!r) return false;
+        const required = [
+            r.dateOfPlanting,
+            r.areaPlanted,
+            r.seedClassification,
+            r.typeOfCrop,
+            r.plantingMethod,
+            r.varietyId,
+        ];
+        return required.every(Boolean);
+    }, []);
 
     const statusOrder = {
         Pending: 1,
         Approved: 2,
-        Rejected: 3,
-        No_Pickup: 4,
-        Cancelled: 5,
+        Picked_Up: 3,
+        late_pickup: 4,
+        Planted: 5,
+        Rejected: 6,
+        No_Pickup: 7,
+        Cancelled: 8,
+        Archived: 9,
     };
 
+    // Categorize requests by tab
+    const categorizedRequests = React.useMemo(() => {
+        const plantingInProgress = requests.filter(req => ['Picked_Up', 'late_pickup'].includes(req.status) && !isSeedingComplete(req));
+        const planted = requests.filter(req => req.status === 'Planted' || (['Picked_Up', 'late_pickup'].includes(req.status) && isSeedingComplete(req)));
+        return {
+            pending: requests.filter(req => req.status === 'Pending'),
+            approved: requests.filter(req => req.status === 'Approved'),
+            pickedUp: plantingInProgress,
+            planted,
+            archive: requests.filter(req => ['Rejected', 'No_Pickup', 'Cancelled', 'Archived'].includes(req.status))
+        };
+    }, [requests, isSeedingComplete]);
+
+    // Get current tab's requests
+    const tabRequests = categorizedRequests[activeTab] || [];
+
     // Filter and sort requests
-    const filteredRequests = requests
+    const filteredRequests = tabRequests
         .filter((request) => {
             const searchLower = search.toLowerCase();
             const itemName = request.itemName || request.item?.name || '';
@@ -32,10 +66,7 @@ export default function RequestsTable({
                 request.requestNote?.toLowerCase().includes(searchLower) ||
                 request.requestorEmail?.toLowerCase().includes(searchLower);
 
-            const matchesStatus =
-                statusFilter === 'all' || request.status === statusFilter;
-
-            return matchesSearch && matchesStatus;
+            return matchesSearch;
         })
         .sort((a, b) => {
             switch (sortBy) {
@@ -179,15 +210,23 @@ export default function RequestsTable({
         const statusStyles = isDark ? {
             Pending: 'bg-yellow-900 text-yellow-200 border-yellow-700',
             Approved: 'bg-green-900 text-green-200 border-green-700',
+            Picked_Up: 'bg-blue-900 text-blue-200 border-blue-700',
+            late_pickup: 'bg-orange-900 text-orange-200 border-orange-700',
+            Planted: 'bg-emerald-900 text-emerald-200 border-emerald-700',
             Rejected: 'bg-red-900 text-red-200 border-red-700',
             No_Pickup: 'bg-indigo-900 text-indigo-200 border-indigo-700',
             Cancelled: 'bg-gray-700 text-gray-300 border-gray-600',
+            Archived: 'bg-slate-700 text-slate-300 border-slate-600',
         } : {
             Pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
             Approved: 'bg-green-100 text-green-800 border-green-200',
+            Picked_Up: 'bg-blue-100 text-blue-800 border-blue-200',
+            late_pickup: 'bg-orange-100 text-orange-800 border-orange-200',
+            Planted: 'bg-emerald-100 text-emerald-800 border-emerald-200',
             Rejected: 'bg-red-100 text-red-800 border-red-200',
             No_Pickup: 'bg-indigo-100 text-indigo-800 border-indigo-200',
             Cancelled: 'bg-gray-100 text-gray-600 border-gray-200',
+            Archived: 'bg-slate-100 text-slate-600 border-slate-200',
         };
 
         return (
@@ -197,7 +236,9 @@ export default function RequestsTable({
                     (isDark ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-gray-100 text-gray-800 border-gray-200')
                 }`}
             >
-                {status.replace('_', ' ')}
+                {status === 'Picked_Up' ? 'Picked Up' : 
+                 status === 'late_pickup' ? 'Late Pickup' :
+                 status.replace('_', ' ')}
             </span>
         );
     };
@@ -207,49 +248,29 @@ export default function RequestsTable({
             case 'Pending':
                 return ['Approved', 'Rejected'];
             case 'Approved':
-                return ['No_Pickup'];
+                return ['Picked_Up', 'No_Pickup'];
+            case 'Picked_Up':
+            case 'late_pickup':
+                return []; // Auto-transitions to Planted when report submitted
+            case 'Planted':
+                return []; // Auto-transitions to Archived when report archived
             case 'Rejected':
                 return ['Approved', 'Rejected'];
             case 'Cancelled':
-                return []; // No actions available for cancelled requests
+            case 'Archived':
+                return []; // Terminal states
             default:
                 return [];
         }
     };
 
-    if (filteredRequests.length === 0) {
-        return (
-            <div className="text-center py-16">
-                <div className="mb-4">
-                    <svg
-                        className={`w-16 h-16 mx-auto ${
-                            isDark ? 'text-gray-600' : 'text-gray-300'
-                        }`}
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </svg>
-                </div>
-                <h3 className={`text-lg font-semibold mb-2 ${
-                    isDark ? 'text-gray-300' : 'text-gray-600'
-                }`}>
-                    No Requests Found
-                </h3>
-                <p className={`${
-                    isDark ? 'text-gray-400' : 'text-gray-500'
-                }`}>
-                    Try adjusting your search criteria or filters.
-                </p>
-            </div>
-        );
-    }
+    const tabs = [
+        { id: 'pending', label: 'Pending', count: categorizedRequests.pending.length },
+        { id: 'approved', label: 'Approved', count: categorizedRequests.approved.length },
+        { id: 'pickedUp', label: 'Picked Up', count: categorizedRequests.pickedUp.length },
+        { id: 'planted', label: 'Planted', count: categorizedRequests.planted.length },
+        { id: 'archive', label: 'Archive', count: categorizedRequests.archive.length }
+    ];
 
     return (
         <div className={`rounded-xl shadow-sm border overflow-hidden ${
@@ -296,6 +317,41 @@ export default function RequestsTable({
                 </div>
             </div>
 
+            {/* Tabs */}
+            <div className={`border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+                <div className="flex space-x-1 p-2">
+                    {tabs.map(tab => (
+                        <button
+                            key={tab.id}
+                            onClick={() => {
+                                setActiveTab(tab.id);
+                                setCurrentPage(1);
+                            }}
+                            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                                activeTab === tab.id
+                                    ? isDark
+                                        ? 'bg-green-600 text-white'
+                                        : 'bg-green-500 text-white'
+                                    : isDark
+                                        ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700'
+                                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                            }`}
+                        >
+                            {tab.label}
+                            <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
+                                activeTab === tab.id
+                                    ? 'bg-white/20'
+                                    : isDark
+                                        ? 'bg-gray-700'
+                                        : 'bg-gray-200'
+                            }`}>
+                                {tab.count}
+                            </span>
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             {/* Table */}
             <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -320,6 +376,20 @@ export default function RequestsTable({
                             }`}>
                                 Status
                             </th>
+                            {activeTab === 'planted' && (
+                                <th className={`text-left py-3 px-6 font-semibold ${
+                                    isDark ? 'text-gray-200' : 'text-gray-700'
+                                }`}>
+                                    Planting Date
+                                </th>
+                            )}
+                            {activeTab === 'planted' && (
+                                <th className={`text-left py-3 px-6 font-semibold ${
+                                    isDark ? 'text-gray-200' : 'text-gray-700'
+                                }`}>
+                                    Harvest Date
+                                </th>
+                            )}
                             <th className={`text-left py-3 px-6 font-semibold ${
                                 isDark ? 'text-gray-200' : 'text-gray-700'
                             }`}>
@@ -330,7 +400,18 @@ export default function RequestsTable({
                     <tbody className={`divide-y ${
                         isDark ? 'divide-gray-700' : 'divide-gray-100'
                     }`}>
-                        {paginatedRequests.map((request) => (
+                        {paginatedRequests.length === 0 ? (
+                            <tr>
+                                <td colSpan={activeTab === 'planted' ? 6 : 4} className="px-4 py-12 text-center">
+                                    <div className={isDark ? 'text-gray-400' : 'text-gray-500'}>
+                                        {search 
+                                            ? 'No requests match your search' 
+                                            : `No ${tabs.find(t => t.id === activeTab)?.label.toLowerCase()} requests`}
+                                    </div>
+                                </td>
+                            </tr>
+                        ) : (
+                            paginatedRequests.map((request) => (
                             <tr
                                 key={request.id}
                                 className={`transition-colors duration-150 ${
@@ -347,11 +428,13 @@ export default function RequestsTable({
                                         }`}>
                                             {request.itemName || request.item?.name || 'Unknown Item'}
                                         </div>
-                                        <div className={`text-xs ${
-                                            isDark ? 'text-gray-400' : 'text-gray-500'
-                                        }`}>
-                                            Quantity: {request.requestQuantity || request.quantity || 0}
-                                        </div>
+                                        {activeTab !== 'planted' && (
+                                            <div className={`text-xs ${
+                                                isDark ? 'text-gray-400' : 'text-gray-500'
+                                            }`}>
+                                                Quantity: {request.requestQuantity || request.quantity || 0}
+                                            </div>
+                                        )}
                                         <div className={`text-xs ${
                                             isDark ? 'text-gray-400' : 'text-gray-500'
                                         }`}>
@@ -389,43 +472,142 @@ export default function RequestsTable({
                                 <td className="py-4 px-6">
                                     {getStatusBadge(request.status)}
                                 </td>
+                                {activeTab === 'planted' && (
+                                    <td className="py-4 px-6 whitespace-nowrap">
+                                        <div className={`text-xs ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                            {request.plantingReport?.dateOfPlanting
+                                                ? new Date(request.plantingReport.dateOfPlanting).toLocaleDateString()
+                                                : '—'}
+                                        </div>
+                                    </td>
+                                )}
+                                {activeTab === 'planted' && (
+                                    <td className="py-4 px-6 whitespace-nowrap">
+                                        <div className={`text-xs ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                                            {request.plantingReport?.dateOfExpectedHarvest
+                                                ? new Date(request.plantingReport.dateOfExpectedHarvest).toLocaleDateString()
+                                                : '—'}
+                                        </div>
+                                    </td>
+                                )}
 
                                 {/* Actions */}
                                 <td className="py-4 px-6">
                                     {getStatusOptions(request.status).length > 0 ? (
-                                        <div className="flex items-center">
-                                            <select
-                                                className={`px-2 py-1 rounded-md text-xs font-medium border focus:outline-none focus:ring-1 focus:ring-green-400 shadow-sm ${isDark ? 'bg-gray-800 text-gray-100 border-gray-700' : 'bg-white text-gray-700 border-gray-300'}`}
-                                                defaultValue=""
-                                                onChange={e => {
-                                                    if (e.target.value) {
+                                        <div className="flex items-center gap-2">
+                                            {/* Pending status actions */}
+                                            {request.status === 'Pending' && (
+                                                <>
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            onStatusChange(
+                                                                request.id,
+                                                                'Approved',
+                                                                request.itemName || request.item?.name || 'Unknown Item',
+                                                                request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || 'Unknown User',
+                                                                request.requestQuantity || request.quantity || 0,
+                                                                request.currentStock || request.stack?.quantity || 0
+                                                            );
+                                                        }}
+                                                        className="px-3 py-1.5 rounded-lg bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
+                                                        title="Approve"
+                                                    >
+                                                        Approve
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            onStatusChange(
+                                                                request.id,
+                                                                'Rejected',
+                                                                request.itemName || request.item?.name || 'Unknown Item',
+                                                                request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || 'Unknown User',
+                                                                request.requestQuantity || request.quantity || 0,
+                                                                request.currentStock || request.stack?.quantity || 0
+                                                            );
+                                                        }}
+                                                        className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-medium transition-colors"
+                                                        title="Reject"
+                                                    >
+                                                        Reject
+                                                    </button>
+                                                </>
+                                            )}
+
+                                            {/* Approved status actions */}
+                                            {request.status === 'Approved' && (
+                                                <>
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            onStatusChange(
+                                                                request.id,
+                                                                'Picked_Up',
+                                                                request.itemName || request.item?.name || 'Unknown Item',
+                                                                request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || 'Unknown User',
+                                                                request.requestQuantity || request.quantity || 0,
+                                                                request.currentStock || request.stack?.quantity || 0
+                                                            );
+                                                        }}
+                                                        className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition-colors"
+                                                    >
+                                                        Mark Picked Up
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            onStatusChange(
+                                                                request.id,
+                                                                'No_Pickup',
+                                                                request.itemName || request.item?.name || 'Unknown Item',
+                                                                request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || 'Unknown User',
+                                                                request.requestQuantity || request.quantity || 0,
+                                                                request.currentStock || request.stack?.quantity || 0
+                                                            );
+                                                        }}
+                                                        className="px-3 py-1.5 rounded-lg bg-yellow-600 hover:bg-yellow-700 text-white text-xs font-medium transition-colors"
+                                                        title="Mark as No Pickup"
+                                                    >
+                                                        No Pickup
+                                                    </button>
+                                                </>
+                                            )}
+
+                                            {/* Rejected status actions */}
+                                            {request.status === 'Rejected' && (
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
                                                         onStatusChange(
                                                             request.id,
-                                                            e.target.value,
+                                                            'Approved',
                                                             request.itemName || request.item?.name || 'Unknown Item',
                                                             request.requestorName || `${request.user?.firstName || ''} ${request.user?.surname || ''}`.trim() || 'Unknown User',
                                                             request.requestQuantity || request.quantity || 0,
                                                             request.currentStock || request.stack?.quantity || 0
                                                         );
-                                                    }
-                                                }}
-                                            >
-                                                <option value="" disabled>Change status...</option>
-                                                {getStatusOptions(request.status).map((status) => (
-                                                    <option key={status} value={status}>
-                                                        {status === 'Approved' ? 'Approve' : status === 'Rejected' ? 'Reject' : status.replace('_', ' ')}
-                                                    </option>
-                                                ))}
-                                            </select>
+                                                    }}
+                                                    className="px-3 py-1.5 rounded-lg bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
+                                                    title="Re-approve"
+                                                >
+                                                    Re-approve
+                                                </button>
+                                            )}
                                         </div>
                                     ) : (
                                         <span className="text-xs text-gray-400">
-                                            No actions available
+                                            {request.status === 'Picked_Up' || request.status === 'late_pickup'
+                                                ? 'Awaiting planting report'
+                                                : request.status === 'Planted'
+                                                ? 'View report in Planted tab'
+                                                : 'No actions available'}
                                         </span>
                                     )}
                                 </td>
                             </tr>
-                        ))}
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>

@@ -158,50 +158,6 @@ export default function RequestSection({ requests = [], onStatusChange, onRefres
       )
     };
     
-    // Calculate breakdown for borrowed tab
-    const borrowedBreakdown = result.borrowed.reduce((acc, req) => {
-      acc[req.status] = (acc[req.status] || 0) + 1;
-      return acc;
-    }, {});
-    
-    // TEST 2.1: Borrowed Tab Display
-    console.log(`
-${'='.repeat(60)}
-📋 TEST 2.1: BORROWED TAB DISPLAY
-${'='.repeat(60)}
-Total requests: ${requests.length}
-Borrowed tab count: ${result.borrowed.length}
-Borrowed status breakdown:
-  - Borrowed: ${borrowedBreakdown['Borrowed'] || 0}
-  - late_pickup: ${borrowedBreakdown['late_pickup'] || 0}
-Borrowed IDs: ${result.borrowed.map(r => r.id).join(', ')}
-Request tab count: ${result.request.length}
-Reserved tab count: ${result.reserved.length}
-Archive tab count: ${result.archive.length}
-${'='.repeat(60)}
-✅ COPY THIS LOG TO CHECKLIST TEST 2.1
-${'='.repeat(60)}
-`);
-    
-    // TEST 2.2: Archive Tab Display
-    console.log(`
-${'='.repeat(60)}
-📋 TEST 2.2: ARCHIVE TAB DISPLAY
-${'='.repeat(60)}
-Total requests: ${requests.length}
-Archive tab count: ${result.archive.length}
-Archive status breakdown:
-${JSON.stringify(result.archive.reduce((acc, req) => {
-  acc[req.status] = (acc[req.status] || 0) + 1;
-  return acc;
-}, {}), null, 2)}
-Archive IDs: ${result.archive.map(r => r.id).join(', ')}
-Expected statuses: Rejected, Returned, late_return, No_Return, No_Pickup, Cancelled
-${'='.repeat(60)}
-✅ COPY THIS LOG TO CHECKLIST TEST 2.2
-${'='.repeat(60)}
-`);
-    
     return result;
   }, [requests]);
 
@@ -326,21 +282,6 @@ ${'='.repeat(60)}
   // Reset to page 1 when filters or tab changes
   React.useEffect(() => {
     setCurrentPage(1);
-    // TEST 1.2: Admin Dashboard Data Fetching
-    console.log(`
-${'='.repeat(60)}
-📋 TEST 1.2: ADMIN DASHBOARD DATA FETCHING
-${'='.repeat(60)}
-Active tab: ${activeTab}
-Total requests: ${requests.length}
-Filtered requests: ${filteredRequests.length}
-Current page: ${currentPage}
-Items per page: ${itemsPerPage}
-Filters applied: search=${search}, itemFilter=${itemFilter}, userFilter=${userFilter}
-${'='.repeat(60)}
-✅ COPY THIS LOG TO CHECKLIST TEST 1.2
-${'='.repeat(60)}
-`);
   }, [activeTab, search, itemFilter, userFilter, dateFilter, statusFilter, overdueFilter, quantityMin, quantityMax, dateRangeStart, dateRangeEnd, overdueDurationFilter, processingAdminFilter]);
 
   // Memoized action handlers for better performance
@@ -392,18 +333,11 @@ ${'='.repeat(60)}
       const pickupDate = new Date(request.pickupDate);
       const isLate = now > pickupDate;
       const status = isLate ? 'late_pickup' : 'Borrowed';
-      const returnDate = request.returnDate ? new Date(request.returnDate) : null;
-      
-      const testNum = isLate ? '3.2' : '3.1';
-      console.log(`\n${'='.repeat(60)}\n📋 TEST ${testNum}: ADMIN PICKUP ACTION (${isLate ? 'LATE' : 'ON-TIME'})\n${'='.repeat(60)}\nRequest ID: ${request.id}\nItem: ${itemName}\nUser: ${requestorName}\nScheduled Pickup: ${pickupDate.toLocaleString()}\nCurrent Time: ${now.toLocaleString()}\nIs Late: ${isLate ? 'YES' : 'NO'}\nStatus Will Be: ${status}\nQuantity: ${requestQuantity}\nCurrent Stock: ${currentStock}\nStock After: ${currentStock - requestQuantity}\nReturn Date: ${returnDate ? returnDate.toLocaleString() : 'N/A'}\n${'='.repeat(60)}\n`);
       
       const success = await onStatusChange(request.id, status, itemName, requestorName, requestQuantity, currentStock);
       
       if (success) {
-        console.log(`✅ RESULT: Admin Pickup Success - ${status}\n${'='.repeat(60)}\n✅ COPY THIS LOG TO CHECKLIST TEST ${testNum}\n${'='.repeat(60)}\n`);
         onRefresh?.();
-      } else {
-        console.log(`❌ RESULT: Admin Pickup Failed\n${'='.repeat(60)}\n`);
       }
     } catch (error) {
       console.error('❌ Error in handlePickup:', error);
@@ -454,37 +388,10 @@ ${'='.repeat(60)}
       const currentStock = request.currentStock || 0;
       const requestNote = request.requestNote || null;
       
-      // TEST 4.1/4.2: Smart return detection (logged on server)
-      const now = new Date();
-      const dueDate = request.adjustedReturnDate ? new Date(request.adjustedReturnDate) : (request.returnDate ? new Date(request.returnDate) : null);
-      const isLate = dueDate && now > dueDate;
-      const testNum = isLate ? '4.2' : '4.1';
-      
-      console.log(`
-${'='.repeat(60)}
-📋 TEST ${testNum}: ADMIN RETURN ACTION (${isLate ? 'LATE' : 'ON-TIME'})
-${'='.repeat(60)}
-Request ID: ${request.id}
-Item: ${itemName}
-User: ${requestorName}
-Current Status: ${request.status}
-Due Date: ${dueDate ? dueDate.toLocaleString() : 'N/A'}${request.adjustedReturnDate ? ' (Adjusted)' : ''}
-Current Time: ${now.toLocaleString()}
-Is Late: ${isLate ? 'YES' : 'NO'}
-Expected Status: ${isLate ? 'late_return' : 'Returned'}
-Quantity: ${requestQuantity}
-Current Stock: ${currentStock}
-Stock After: ${currentStock + requestQuantity}
-${'='.repeat(60)}
-`);
-      
       const success = await onStatusChange(request.id, 'Returned', itemName, requestorName, requestQuantity, currentStock, requestNote);
       
       if (success) {
-        console.log(`✅ RESULT: Admin Return Success\n${'='.repeat(60)}\n✅ COPY THIS LOG TO CHECKLIST TEST ${testNum}\n${'='.repeat(60)}\n`);
         onRefresh?.();
-      } else {
-        console.log(`❌ RESULT: Admin Return Failed\n${'='.repeat(60)}\n`);
       }
     } catch (error) {
       console.error('❌ Error in handleMarkReturned:', error);

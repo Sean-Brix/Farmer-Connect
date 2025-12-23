@@ -2,14 +2,14 @@ import prisma from '../../../config/database.js';
 
 async function addRequest(req, res) {
     try {
-        const { item_id, pickupDate, request_note, quantity } = req.body;
+        const { item_id, pickupDate, request_note, quantity, farmLocation, areaPlanted, plantingMethod } = req.body;
         const accountId = req.user.id; // From JWT token
 
         // Validate required fields
-        if (!item_id || !pickupDate || !quantity) {
+        if (!item_id || !pickupDate || !quantity || !farmLocation || !areaPlanted || !plantingMethod) {
             return res.status(400).json({
                 error: 'Missing required fields',
-                message: 'item_id, pickupDate, and quantity are required',
+                message: 'item_id, pickupDate, quantity, farmLocation, areaPlanted, and plantingMethod are required',
             });
         }
 
@@ -18,6 +18,23 @@ async function addRequest(req, res) {
             return res.status(400).json({
                 error: 'Invalid quantity',
                 message: 'Quantity must be at least 1',
+            });
+        }
+
+        // Validate planting method against enum
+        const allowedPlantingMethods = ['Direct_Seeded', 'Transplanting'];
+        if (!allowedPlantingMethods.includes(plantingMethod)) {
+            return res.status(400).json({
+                error: 'Invalid planting method',
+                message: `plantingMethod must be one of: ${allowedPlantingMethods.join(', ')}`,
+            });
+        }
+
+        // Validate area planted
+        if (Number(areaPlanted) <= 0) {
+            return res.status(400).json({
+                error: 'Invalid area',
+                message: 'areaPlanted must be greater than 0',
             });
         }
 
@@ -124,6 +141,9 @@ async function addRequest(req, res) {
                 pickupDate: new Date(pickupDate),
                 returnDate: null, // Distribution items don't need to be returned
                 requestNote: request_note || null,
+                farmLocation: farmLocation.trim(),
+                areaPlanted: parseFloat(areaPlanted),
+                plantingMethod,
             },
             include: {
                 itemStack: {
@@ -152,6 +172,9 @@ async function addRequest(req, res) {
                 pickupDate: transaction.pickupDate,
                 returnDate: null, // Always null for distribution items
                 requestNote: transaction.requestNote,
+                farmLocation: transaction.farmLocation,
+                areaPlanted: transaction.areaPlanted,
+                plantingMethod: transaction.plantingMethod,
                 status: transaction.status,
                 createdAt: transaction.createdAt,
                 itemDateLimit: transaction.itemStack.date_limit, // Include the stack's date limit for frontend reference
