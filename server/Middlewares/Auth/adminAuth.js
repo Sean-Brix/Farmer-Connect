@@ -8,7 +8,9 @@ export const adminAuth = (req, res, next) => {
     }
 
     const adminRoles = ['Admin', 'Super_Admin'];
-    if (!adminRoles.includes(req.user.role)) {
+    const role = req.user.role || req.user.access; // access is the persisted field
+
+    if (!adminRoles.includes(role)) {
         return res.status(403).json({
             success: false,
             message: 'Admin access required'

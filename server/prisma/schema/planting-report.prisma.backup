@@ -17,7 +17,7 @@ model PlantingReport {
   riceIrrigation     riceIrrigation? // Specific irrigation type if typeOfCrop is Rice
   varietyId          String
   dateOfPlanting     DateTime?
-  plantingMethod     PlantingMethod?   // Optional in State 1; required when transitioning to State 2
+  plantingMethod     PlantingMethod
   cropInsurance      Boolean            @default(false) // Crop insurance application checkbox
 
   // Harvesting Information (admin-managed, optional until harvest is done)
@@ -32,45 +32,31 @@ model PlantingReport {
   distributionItemId     String?
   distributionQuantity   Int?
   distributionUnit       String?
-  distributedQuantity    Float? // Track original distributed amount for comparison
   distributionPickupDate DateTime?
   requestNote            String?
   plantingReportDeadline DateTime?
 
   // System fields
-  // NEW: Three-state workflow
-  state        PlantingReportState  @default(Request_Report)
-
-  // Archive system (separate from state)
+  status       PlantingReportStatus @default(Draft)
   isArchived   Boolean              @default(false)
-  archivedAt   DateTime?
-  archivedBy   String?              // Account ID of user who archived
-
-  // Soft Delete (30-day recovery period)
-  isDeleted    Boolean              @default(false)
-  deletedAt    DateTime?
-  deletedBy    String?              // Account ID of user who deleted
-
   lastUpdatedBy String? // account id of last editor
   createdAt    DateTime             @default(now())
   updatedAt    DateTime             @updatedAt
-
-  // Audit Trail
-  stateHistory Json?                // Tracks all state transitions with timestamps and users
 
   // Relations
   croppingSeason   PlantingSeason?    @relation(fields: [croppingSeasonId], references: [id], onDelete: Restrict)
   variety          SeedVariety        @relation(fields: [varietyId], references: [id], onDelete: Restrict)
   itemTransactions ItemTransaction[] // Reverse relation for seedling distributions
 
-  // Indexes for optimized queries
-  @@index([state, isArchived, isDeleted])  // Primary filtering index
-  @@index([distributionRequestId])         // Distribution lookups
-  @@index([isDeleted, deletedAt])          // Cleanup job queries
-  @@index([state, typeOfCrop])             // Filtered state queries
-  @@index([createdAt])                     // Sorting by date
-  @@index([varietyId])                     // Variety-based queries
-  @@index([croppingSeasonId])              // Season-based queries
+  @@index([croppingSeasonId])
+  @@index([varietyId])
+  @@index([typeOfCrop])
+  @@index([dateOfPlanting])
+  @@index([isArchived])
+  @@index([rsbsaNumber])
+  @@index([typeOfCrop, croppingSeasonId])
+  @@index([dateOfPlanting, isArchived])
+  @@index([distributionRequestId])
   @@map("planting_reports")
 }
 
@@ -136,10 +122,8 @@ enum PlantingMethod {
   Transplanting
 }
 
-// ==================== NEW: Three-State System ====================
-// Replaces old PlantingReportStatus enum
-enum PlantingReportState {
-  Request_Report  // State 1: Seeds distributed/allocated, NOT planted yet
-  Planted         // State 2: Crop PLANTED, NOT harvested
-  Completed       // State 3: Crop HARVESTED, all data complete
+enum PlantingReportStatus {
+  Draft
+  Submitted
+  Archived
 }

@@ -1,4 +1,6 @@
 import express from 'express';
+import { cookieAuth } from '../../../Middlewares/Auth/cookieAuth.js';
+import { adminAuth } from '../../../Middlewares/Auth/adminAuth.js';
 import {
     createPlantingReport,
     getAllPlantingReports,
@@ -30,6 +32,9 @@ import {
 } from '../../../Controller/PlantingReport/varietyController.js';
 
 const router = express.Router();
+
+// Require authenticated admin for all planting report routes
+router.use(cookieAuth, adminAuth);
 
 // ==================== PLANTING REPORTS ====================
 

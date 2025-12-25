@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -5,4 +6,980 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+
+model Account {
+  id             String         @id @default(cuid())
+  firstName      String
+  middleName     String?
+  surname        String
+  extensionName  String?
+  sex            sexOption      @default(Male)
+  contactNumber  String?
+  dateOfBirth    DateTime?
+  picturePath    String?
+  username       String         @unique
+  password       String
+  access         access         @default(User)
+  email          String?
+  client_profile client_profile @default(Other)
+  resetTokenHash String?
+  resetTokenExpiry DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  // Relations
+  auditLogs               AuditLog[]             @relation("AdminAuditLogs")
+  chatAttachments         ChatAttachment[]
+  chatMessages            ChatMessage[]
+  chatParticipants        ChatParticipant[]
+  chatReadReceipts        ChatReadReceipt[]
+  createdFAQCategories    FAQCategory[]
+  createdFAQs             FAQ[]
+  assignedInquiries       Inquiry[]              @relation("AssignedInquiries")
+  resolvedInquiries       Inquiry[]              @relation("ResolvedInquiries")
+  inquiries               Inquiry[]
+  inquiryAttachments      InquiryAttachment[]
+  inquiryReplies          InquiryReply[]
+  itemTransactions        ItemTransaction[]
+  adminTransactions       ItemTransaction[]      @relation("AdminTransactions")
+  seminars                SeminarParticipant[]
+  seminarsCreated         Seminar[]              @relation("SeminarsCreated")
+  surveyFormsCreated      SurveyForm[]           @relation("SurveyFormsCreated")
+  surveyResponses         SurveyResponse[]       @relation("SurveyResponses")
+  surveyStatisticsCreated SurveyStatistic[]      @relation("SurveyStatisticsCreated")
+  preferences             UserPreference[]
+  notifications           Notification[]
+  notificationSettings    NotificationSettings?
+  systemSettingsUpdated   SystemSettings[]       @relation("SystemSettingsUpdater")
+  distributionHistory     DistributionHistory[]
+  distributionWaitlist    DistributionWaitlist[]
+
+  @@map("accounts")
+}
+
+enum sexOption {
+  Male
+  Female
+}
+
+enum client_profile {
+  Fishfolk                          @map("Fishfolk")
+  Rural_Based_Org                   @map("Rural Based Org")
+  Student                           @map("Student")
+  Agricultural_Fisheries_Technician @map("Agricultural/Fisheries Technician")
+  Youth                             @map("Youth")
+  Women                             @map("Women")
+  Govt_Employee                     @map("Govt Employee")
+  PWD                               @map("PWD")
+  Indigenous_People                 @map("Indigenous People")
+  Other                             @map("Other")
+}
+
+enum access {
+  Admin
+  User
+  Super_Admin @map("Super Admin")
+}
+
+
+model AuditLog {
+  id         String       @id @default(cuid())
+  adminId    String
+  action     audit_action
+  targetType String?
+  targetId   String?
+  targetName String?
+  details    String?      @db.Text
+  metadata   String?      @db.LongText
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime     @default(now())
+  admin      Account      @relation("AdminAuditLogs", fields: [adminId], references: [id])
+
+  @@index([adminId], map: "audit_logs_adminId_fkey")
+  @@index([createdAt(sort: Desc)])
+  @@index([action])
+  @@index([targetType])
+  @@index([adminId, createdAt(sort: Desc)])
+  @@index([action, createdAt(sort: Desc)])
+  @@map("audit_logs")
+}
+
+enum audit_action {
+  ACCOUNT_CREATE
+  ACCOUNT_UPDATE
+  ACCOUNT_DELETE
+  ACCOUNT_ROLE_CHANGE
+  ACCOUNT_STATUS_CHANGE
+  LOGIN
+  LOGOUT
+  LOGIN_FAILED
+  INVENTORY_CREATE
+  INVENTORY_UPDATE
+  INVENTORY_DELETE
+  INVENTORY_STATUS_CHANGE
+  DISTRIBUTION_CREATE
+  DISTRIBUTION_UPDATE
+  DISTRIBUTION_DELETE
+  DISTRIBUTION_REQUEST_APPROVE
+  DISTRIBUTION_REQUEST_REJECT
+  DISTRIBUTION_REQUEST_NO_PICKUP
+  EIC_CREATE
+  EIC_UPDATE
+  EIC_DELETE
+  EIC_STATUS_CHANGE
+  EIC_REQUEST_APPROVE
+  EIC_REQUEST_REJECT
+  EIC_REQUEST_NO_PICKUP
+  SEMINAR_CREATE
+  SEMINAR_UPDATE
+  SEMINAR_DELETE
+  SEMINAR_STATUS_CHANGE
+  SEMINAR_PARTICIPANT_UPDATE
+  CONTENT_CREATE
+  CONTENT_UPDATE
+  CONTENT_DELETE
+  SYSTEM_BACKUP
+  SYSTEM_RESTORE
+  SYSTEM_MAINTENANCE
+  PROFILE_UPDATE
+  PROFILE_PICTURE_UPDATE
+  SETTINGS_UPDATE
+  INQUIRY_CREATE
+  INQUIRY_REPLY
+  INQUIRY_ASSIGN
+  INQUIRY_RESOLVE
+  INQUIRY_ATTACHMENT_UPLOAD
+  SURVEY_FORM_CREATE
+  SURVEY_FORM_UPDATE
+  SURVEY_FORM_DELETE
+  SURVEY_RESPONSE_SUBMIT
+  SURVEY_STATISTIC_UPDATE
+  REGISTERED_CROP_CREATE
+  REGISTERED_CROP_UPDATE
+  REGISTERED_CROP_DELETE
+  CROP_REPORT_SUBMIT
+}
+
+
+model ChatRoom {
+  id           String            @id @default(cuid())
+  name         String?
+  isGroup      Boolean           @default(false)
+  roomType     RoomType          @default(DIRECT)
+  isActive     Boolean           @default(true)
+  lastActivity DateTime          @default(now())
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  messages     ChatMessage[]
+  participants ChatParticipant[]
+
+  @@index([isActive])
+  @@index([lastActivity])
+  @@index([roomType])
+  @@map("chat_rooms")
+}
+
+model ChatParticipant {
+  id          String          @id @default(cuid())
+  userId      String
+  roomId      String
+  role        ParticipantRole @default(MEMBER)
+  isActive    Boolean         @default(true)
+  lastSeen    DateTime        @default(now())
+  unreadCount Int             @default(0)
+  joinedAt    DateTime        @default(now())
+  room        ChatRoom        @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user        Account         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roomId])
+  @@index([userId])
+  @@index([roomId])
+  @@map("chat_participants")
+}
+
+model ChatMessage {
+  id           String            @id @default(cuid())
+  content      String            @db.LongText
+  messageType  MessageType       @default(TEXT)
+  senderId     String
+  roomId       String
+  isEdited     Boolean           @default(false)
+  isDeleted    Boolean           @default(false)
+  replyToId    String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  attachments  ChatAttachment[]
+  replyTo      ChatMessage?      @relation("MessageReply", fields: [replyToId], references: [id])
+  replies      ChatMessage[]     @relation("MessageReply")
+  room         ChatRoom          @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  sender       Account           @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  readReceipts ChatReadReceipt[]
+
+  @@index([roomId])
+  @@index([senderId])
+  @@index([createdAt])
+  @@index([isDeleted])
+  @@index([replyToId], map: "chat_messages_replyToId_fkey")
+  @@map("chat_messages")
+}
+
+model ChatAttachment {
+  id           String      @id @default(cuid())
+  filename     String
+  filepath     String
+  filesize     Int
+  mimetype     String
+  messageId    String
+  uploadedById String
+  createdAt    DateTime    @default(now())
+  message      ChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  uploadedBy   Account     @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+  @@index([uploadedById], map: "chat_attachments_uploadedById_fkey")
+  @@map("chat_attachments")
+}
+
+model ChatReadReceipt {
+  id        String      @id @default(cuid())
+  messageId String
+  userId    String
+  readAt    DateTime    @default(now())
+  message   ChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      Account     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@index([messageId])
+  @@index([userId])
+  @@map("chat_read_receipts")
+}
+
+enum RoomType {
+  DIRECT
+  GROUP
+  SUPPORT
+}
+
+enum ParticipantRole {
+  ADMIN
+  MEMBER
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  SYSTEM
+}
+
+
+// Distribution quota and eligibility management
+// Used for controlling access to distribution items based on rules
+
+model DistributionQuota {
+  id                  String   @id @default(cuid())
+  itemStackId         String   @unique
+  maxPerUser          Int      @default(1) // Maximum quantity per user (lifetime)
+  maxRequestsPerMonth Int      @default(1) // Maximum requests per month
+  cooldownDays        Int      @default(30) // Days to wait between requests
+  eligibilityCriteria Json? // { "livelihood": ["Farming", "Livestock"], "barangay": ["Brgy A"] }
+  active              Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  itemStack ItemStack @relation(fields: [itemStackId], references: [id], onDelete: Cascade)
+
+  @@index([itemStackId])
+  @@index([active])
+  @@map("distribution_quotas")
+}
+
+model DistributionHistory {
+  id            String   @id @default(cuid())
+  accountId     String
+  itemStackId   String
+  quantity      Int
+  receivedAt    DateTime @default(now())
+  transactionId String? // Link to ItemTransaction if applicable
+
+  account   Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  itemStack ItemStack @relation(fields: [itemStackId], references: [id], onDelete: Cascade)
+
+  @@index([accountId, itemStackId])
+  @@index([accountId, receivedAt]) // For monthly counting
+  @@index([itemStackId])
+  @@map("distribution_history")
+}
+
+model DistributionWaitlist {
+  id          String   @id @default(cuid())
+  accountId   String
+  itemStackId String
+  quantity    Int      @default(1)
+  position    Int // Queue position
+  notified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime // Auto-remove if not claimed
+
+  account   Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  itemStack ItemStack @relation(fields: [itemStackId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, itemStackId]) // One waitlist entry per user per item
+  @@index([itemStackId, position]) // For queue ordering
+  @@index([expiresAt])
+  @@index([notified])
+  @@map("distribution_waitlist")
+}
+
+
+model Inquiry {
+  id           String              @id @default(cuid())
+  subject      String
+  message      String              @db.LongText
+  status       InquiryStatus       @default(PENDING)
+  userId       String
+  guestName    String?
+  guestEmail   String?
+  assignedToId String?
+  resolvedById String?
+  resolvedAt   DateTime?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  assignedTo   Account?            @relation("AssignedInquiries", fields: [assignedToId], references: [id])
+  resolvedBy   Account?            @relation("ResolvedInquiries", fields: [resolvedById], references: [id])
+  user         Account             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attachments  InquiryAttachment[]
+  replies      InquiryReply[]
+
+  @@index([status])
+  @@index([userId])
+  @@index([assignedToId])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@index([status, updatedAt]) // Composite index for sorted active queries
+  @@index([resolvedById], map: "inquiries_resolvedById_fkey")
+  @@map("inquiries")
+}
+
+model InquiryReply {
+  id            String         @id @default(cuid())
+  message       String         @db.LongText
+  senderId      String?
+  senderType    SenderType
+  senderName    String?
+  inquiryId     String
+  parentReplyId String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  readByUser    Boolean        @default(false)
+  readByAdmin   Boolean        @default(false)
+  readAt        DateTime?
+  inquiry       Inquiry        @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  parentReply   InquiryReply?  @relation("ReplyThread", fields: [parentReplyId], references: [id])
+  childReplies  InquiryReply[] @relation("ReplyThread")
+  sender        Account?       @relation(fields: [senderId], references: [id])
+
+  @@index([inquiryId])
+  @@index([senderId])
+  @@index([createdAt])
+  @@index([senderType])
+  @@index([readByAdmin, senderType]) // Composite index for unread admin messages
+  @@index([readByUser, senderType]) // Composite index for unread user messages
+  @@index([parentReplyId], map: "inquiry_replies_parentReplyId_fkey")
+  @@map("inquiry_replies")
+}
+
+model InquiryAttachment {
+  id           String   @id @default(cuid())
+  filename     String
+  filepath     String?
+  filesize     Int
+  mimetype     String
+  fileData     Bytes?
+  inquiryId    String
+  uploadedById String?
+  createdAt    DateTime @default(now())
+  inquiry      Inquiry  @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  uploadedBy   Account? @relation(fields: [uploadedById], references: [id])
+
+  @@index([inquiryId])
+  @@index([uploadedById], map: "inquiry_attachments_uploadedById_fkey")
+  @@map("inquiry_attachments")
+}
+
+model FAQCategory {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  orderIndex  Int      @default(0)
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   Account? @relation(fields: [createdById], references: [id])
+  faqs        FAQ[]
+
+  @@index([isActive])
+  @@index([orderIndex])
+  @@index([createdById], map: "faq_categories_createdById_fkey")
+  @@map("faq_categories")
+}
+
+model FAQ {
+  id           String       @id @default(cuid())
+  question     String
+  answer       String       @db.LongText
+  isActive     Boolean      @default(true)
+  orderIndex   Int          @default(0)
+  createdById  String?
+  viewCount    Int          @default(0)
+  helpfulCount Int          @default(0)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  categoryId   String?
+  category     FAQCategory? @relation(fields: [categoryId], references: [id])
+  createdBy    Account?     @relation(fields: [createdById], references: [id])
+
+  @@index([isActive])
+  @@index([orderIndex])
+  @@index([categoryId])
+  @@index([createdById], map: "faqs_createdById_fkey")
+  @@map("faqs")
+}
+
+enum InquiryStatus {
+  PENDING
+  IN_PROGRESS
+  WAITING_USER
+  RESOLVED
+  CANCELLED
+
+  @@map("inquiry_status")
+}
+
+enum SenderType {
+  USER
+  ADMIN
+  BOT
+
+  @@map("sender_type")
+}
+
+
+model InventoryItem {
+  id            String         @id @default(cuid())
+  name          String         @unique
+  description   String?
+  picture       Bytes?
+  category      item_category  @default(Other)
+  seedVarietyId String? // For Seeds category - links to seed variety
+  unit          String? // "bags", "kilograms", "packets"
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  item_stacks   ItemStack[]
+  seedVariety   SeedVariety?   @relation(fields: [seedVarietyId], references: [id])
+
+  @@map("inventory_items")
+}
+
+model ItemStack {
+  id                       String                 @id @default(cuid())
+  itemId                   String
+  quantity                 Int                    @default(1)
+  reservedQuantity         Int                    @default(0)
+  status                   item_status            @default(Available)
+  date_limit               Int?
+  max_quantity_per_request Int?
+  createdAt                DateTime               @default(now())
+  updatedAt                DateTime               @updatedAt
+  item                     InventoryItem          @relation(fields: [itemId], references: [id])
+  itemTransactions         ItemTransaction[]
+  distributionQuota        DistributionQuota?
+  distributionHistory      DistributionHistory[]
+  distributionWaitlist     DistributionWaitlist[]
+
+  @@index([itemId], map: "item_stacks_itemId_fkey")
+  @@map("item_stacks")
+}
+
+model ItemTransaction {
+  id                 String             @id @default(cuid())
+  itemStackId        String
+  accountId          String
+  adminId            String?
+  quantity           Int                @default(1)
+  status             transaction_status @default(Pending)
+  pickupDate         DateTime
+  returnDate         DateTime?
+  requestNote        String?
+  autoStatusChanged  Boolean            @default(false)
+  statusChangedAt    DateTime?
+  statusChangeReason String?
+  previousStatus     String?
+  actual_pickup              DateTime?
+  actual_return              DateTime?
+  adjustedReturnDate         DateTime?
+  plantingReportRequired     Boolean          @default(false)
+  plantingReportId           String? // String to match PlantingReport.id (cuid)
+  plantingReportDeadline     DateTime?
+  plantingReportSubmittedAt  DateTime?
+  plantingReportArchivedAt   DateTime?
+  // Farmer-provided distribution details (required on request creation)
+  farmLocation               String?
+  areaPlanted                Float?
+  plantingMethod             PlantingMethod?
+  createdAt                  DateTime         @default(now())
+  updatedAt                  DateTime         @updatedAt
+  account                    Account          @relation(fields: [accountId], references: [id])
+  admin                      Account?         @relation("AdminTransactions", fields: [adminId], references: [id])
+  itemStack                  ItemStack        @relation(fields: [itemStackId], references: [id])
+  plantingReport             PlantingReport?  @relation(fields: [plantingReportId], references: [id])
+
+  @@index([accountId], map: "item_transactions_accountId_fkey")
+  @@index([adminId], map: "item_transactions_adminId_fkey")
+  @@index([itemStackId], map: "item_transactions_itemStackId_fkey")
+  @@index([status, returnDate])
+  @@index([actual_pickup])
+  @@index([actual_return])
+  @@map("item_transactions")
+}
+
+enum transaction_status {
+  Pending
+  Approved
+  Borrowed
+  late_pickup
+  Rejected
+  Returned
+  No_Return
+  late_return
+  No_Pickup
+  Cancelled
+  Picked_Up    // Distribution: Seedling picked up on time
+  Planted      // Distribution: Planting report submitted
+  Archived     // Distribution: Report archived by admin
+}
+
+enum item_status {
+  Available
+  Unavailable
+  Damaged
+  EIC
+  Distributed
+  Reserved
+}
+
+enum item_category {
+  Farming_Equipment
+  Harvesting_Tools
+  Irrigation_Systems
+  Storage_Equipment
+  Processing_Equipment
+  Safety_Gear
+  Pest_Control
+  Livestock_Equipment
+  Measuring_Tools
+  Fisheries
+  Machinery
+  Seeds            // NEW: For seedling distribution
+  Other
+}
+
+
+model Notification {
+  id        String            @id @default(cuid())
+  accountId String
+  type      notification_type
+  title     String
+  message   String            @db.Text
+  relatedId String? // Related transaction/item/seminar ID
+  read      Boolean           @default(false)
+  createdAt DateTime          @default(now())
+  account   Account           @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId], map: "notifications_accountId_idx")
+  @@index([accountId, read], map: "notifications_accountId_read_idx")
+  @@index([createdAt], map: "notifications_createdAt_idx")
+  @@map("notifications")
+}
+
+model NotificationSettings {
+  id              String  @id @default(cuid())
+  accountId       String  @unique
+  emailEnabled    Boolean @default(true)
+  requestApproved Boolean @default(true)
+  requestRejected Boolean @default(true)
+  itemDueSoon     Boolean @default(true)
+  itemOverdue     Boolean @default(true)
+  seminarReminder Boolean @default(true)
+  account         Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@map("notification_settings")
+}
+
+enum notification_type {
+  REQUEST_APPROVED
+  REQUEST_REJECTED
+  ITEM_DUE_SOON
+  ITEM_OVERDUE
+  SEMINAR_REMINDER
+  SYSTEM_ALERT
+}
+
+
+// Planting Report System - Complete Redesign
+// Tracks planting and harvesting information for farmers
+
+model PlantingReport {
+  id String @id @default(cuid())
+
+  // Farmer Information
+  farmerName   String
+  farmLocation String
+  rsbsaNumber  String? // Optional RSBSA Number
+
+  // Seeding Information
+  croppingSeasonId   String?
+  areaPlanted        Float // in hectares (required from farmer request)
+  seedClassification SeedClassification
+  typeOfCrop         CropType
+  riceIrrigation     riceIrrigation? // Specific irrigation type if typeOfCrop is Rice
+  varietyId          String
+  dateOfPlanting     DateTime?
+  plantingMethod     PlantingMethod?   // Optional in State 1; required when transitioning to State 2
+  cropInsurance      Boolean            @default(false) // Crop insurance application checkbox
+
+  // Harvesting Information (admin-managed, optional until harvest is done)
+  harvestArea           Float? // in hectares
+  numberOfBags          Int?
+  weightPerBag          Float? // in kg
+  yieldMtPerHa          Float? // Yield in mt/ha (metric tons per hectare)
+  dateOfExpectedHarvest DateTime?
+
+  // Distribution linkage / metadata
+  distributionRequestId  String?
+  distributionItemId     String?
+  distributionQuantity   Int?
+  distributionUnit       String?
+  distributedQuantity    Float? // Track original distributed amount for comparison
+  distributionPickupDate DateTime?
+  requestNote            String?
+  plantingReportDeadline DateTime?
+
+  // System fields
+  // NEW: Three-state workflow
+  state        PlantingReportState  @default(Request_Report)
+
+  // Archive system (separate from state)
+  isArchived   Boolean              @default(false)
+  archivedAt   DateTime?
+  archivedBy   String?              // Account ID of user who archived
+
+  // Soft Delete (30-day recovery period)
+  isDeleted    Boolean              @default(false)
+  deletedAt    DateTime?
+  deletedBy    String?              // Account ID of user who deleted
+
+  lastUpdatedBy String? // account id of last editor
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  // Audit Trail
+  stateHistory Json?                // Tracks all state transitions with timestamps and users
+
+  // Relations
+  croppingSeason   PlantingSeason?    @relation(fields: [croppingSeasonId], references: [id], onDelete: Restrict)
+  variety          SeedVariety        @relation(fields: [varietyId], references: [id], onDelete: Restrict)
+  itemTransactions ItemTransaction[] // Reverse relation for seedling distributions
+
+  // Indexes for optimized queries
+  @@index([state, isArchived, isDeleted])  // Primary filtering index
+  @@index([distributionRequestId])         // Distribution lookups
+  @@index([isDeleted, deletedAt])          // Cleanup job queries
+  @@index([state, typeOfCrop])             // Filtered state queries
+  @@index([createdAt])                     // Sorting by date
+  @@index([varietyId])                     // Variety-based queries
+  @@index([croppingSeasonId])              // Season-based queries
+  @@map("planting_reports")
+}
+
+// Planting Season Reference Table
+model PlantingSeason {
+  id              String           @id @default(cuid())
+  name            String           @unique // e.g., "Wet Season 2024", "Dry Season 2025"
+  description     String?
+  startDate       DateTime
+  endDate         DateTime
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  plantingReports PlantingReport[]
+
+  @@index([isActive])
+  @@index([startDate, endDate])
+  @@map("planting_seasons")
+}
+
+// Seed Variety Reference Table
+model SeedVariety {
+  id              String            @id @default(cuid())
+  name            String // e.g., "NSIC Rc222", "Pioneer 30G87"
+  cropType        CropType
+  directSeededDAS Int // Days After Sowing
+  transplantedDAS Int // Days After Sowing
+  description     String?           @db.Text
+  plantingWindow  Int               @default(30) // Days until must be planted (for distributions)
+  isActive        Boolean           @default(true)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  plantingReports PlantingReport[]
+  inventoryItems  InventoryItem[]   // Reverse relation for seedling items
+
+  @@unique([name, cropType]) // Prevent duplicate varieties for same crop
+  @@index([cropType, isActive])
+  @@map("seed_varieties")
+}
+
+// Enumerations
+
+enum riceIrrigation {
+  Irrigated
+  RainfedLowland @map("Rainfed Lowland")
+}
+
+enum SeedClassification {
+  Inbred_Certified // Inbred (Certified Seeds)
+  Hybrid_F1 // Hybrid (F1)
+  Inbred_Good // Inbred (Good Seeds)
+  Inbred_Farmers // Inbred (Farmer's Seed)
+}
+
+enum CropType {
+  Rice
+  Corn
+  High_Value_Crops
+}
+
+enum PlantingMethod {
+  Direct_Seeded
+  Transplanting
+}
+
+// ==================== NEW: Three-State System ====================
+// Replaces old PlantingReportStatus enum
+enum PlantingReportState {
+  Request_Report  // State 1: Seeds distributed/allocated, NOT planted yet
+  Planted         // State 2: Crop PLANTED, NOT harvested
+  Completed       // State 3: Crop HARVESTED, all data complete
+}
+
+
+model UserPreference {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  key       String
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      Account  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, key])
+  @@map("user_preferences")
+}
+
+
+model Seminar {
+  id                    String               @id @default(cuid())
+  title                 String
+  description           String               @db.Text
+  location              String
+  speaker               String
+  start_date            DateTime             @db.Date
+  end_date              DateTime             @db.Date
+  start_time            String
+  end_time              String
+  capacity              Int
+  registration_deadline DateTime             @db.Date
+  status                seminar_status       @default(Upcoming)
+  picture               Bytes?
+  mimeType              String?
+  createdById           String
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  participants          SeminarParticipant[]
+  creator               Account              @relation("SeminarsCreated", fields: [createdById], references: [id])
+
+  @@index([createdById], map: "seminars_createdById_fkey")
+  @@map("seminars")
+}
+
+model SeminarParticipant {
+  id         String             @id @default(cuid())
+  seminar_id String
+  account_id String
+  status     participant_status @default(Registered)
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @default(now()) @updatedAt
+  account    Account            @relation(fields: [account_id], references: [id])
+  seminar    Seminar            @relation(fields: [seminar_id], references: [id])
+
+  @@unique([seminar_id, account_id])
+  @@index([account_id], map: "seminar_participants_account_id_fkey")
+  @@map("seminar_participants")
+}
+
+enum seminar_status {
+  Upcoming
+  Ongoing
+  Completed
+  Cancelled
+}
+
+enum participant_status {
+  Attended
+  Not_Attended @map("Not Attended")
+  Registered
+  Cancelled
+}
+
+
+model SurveyForm {
+  id          String            @id @default(cuid())
+  title       String
+  description String?           @db.Text
+  status      survey_status     @default(DRAFT)
+  category    String
+  createdById String
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  fields      SurveyField[]
+  creator     Account           @relation("SurveyFormsCreated", fields: [createdById], references: [id])
+  responses   SurveyResponse[]
+  statistics  SurveyStatistic[] @relation("SurveyStatistics")
+
+  @@index([status])
+  @@index([category])
+  @@index([createdAt])
+  @@index([status, category]) // Composite index for filtered queries
+  @@index([createdById], map: "survey_forms_createdById_fkey")
+  @@map("survey_forms")
+}
+
+model SurveyField {
+  id           String         @id @default(cuid())
+  surveyFormId String
+  type         field_type
+  label        String
+  placeholder  String?
+  required     Boolean        @default(false)
+  options      String?        @db.LongText
+  order        Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  answers      SurveyAnswer[]
+  surveyForm   SurveyForm     @relation(fields: [surveyFormId], references: [id], onDelete: Cascade)
+
+  @@index([surveyFormId], map: "survey_fields_surveyFormId_fkey")
+  @@map("survey_fields")
+}
+
+model SurveyResponse {
+  id           String         @id @default(cuid())
+  surveyFormId String
+  userId       String?
+  submittedAt  DateTime       @default(now())
+  metadata     String?        @db.LongText
+  answers      SurveyAnswer[]
+  surveyForm   SurveyForm     @relation(fields: [surveyFormId], references: [id], onDelete: Cascade)
+  user         Account?       @relation("SurveyResponses", fields: [userId], references: [id])
+
+  @@index([surveyFormId])
+  @@index([submittedAt])
+  @@index([surveyFormId], map: "survey_responses_surveyFormId_fkey")
+  @@index([userId], map: "survey_responses_userId_fkey")
+  @@map("survey_responses")
+}
+
+model SurveyAnswer {
+  id         String         @id @default(cuid())
+  responseId String
+  fieldId    String
+  answer     String         @db.LongText
+  createdAt  DateTime       @default(now())
+  field      SurveyField    @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  response   SurveyResponse @relation(fields: [responseId], references: [id], onDelete: Cascade)
+
+  @@unique([responseId, fieldId])
+  @@index([fieldId], map: "survey_answers_fieldId_fkey")
+  @@map("survey_answers")
+}
+
+model SurveyStatistic {
+  id           String     @id @default(cuid())
+  surveyFormId String
+  chartType    chart_type
+  title        String
+  description  String?    @db.Text
+  config       String     @db.LongText
+  createdById  String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  creator      Account    @relation("SurveyStatisticsCreated", fields: [createdById], references: [id])
+  surveyForm   SurveyForm @relation("SurveyStatistics", fields: [surveyFormId], references: [id], onDelete: Cascade)
+
+  @@index([createdById], map: "survey_statistics_createdById_fkey")
+  @@index([surveyFormId], map: "survey_statistics_surveyFormId_fkey")
+  @@map("survey_statistics")
+}
+
+enum survey_status {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum field_type {
+  TEXT
+  TEXTAREA
+  EMAIL
+  NUMBER
+  DATE
+  SELECT
+  RADIO
+  CHECKBOX
+  FILE
+}
+
+enum chart_type {
+  BAR
+  PIE
+  LINE
+  DOUGHNUT
+  AREA
+  COLUMN
+  SCATTER
+}
+
+
+// System-wide configuration settings
+// Used for: borrowing limits, quotas, cooldowns, feature toggles
+model SystemSettings {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  category    String   @default("general") // 'eic', 'distribution', 'general', 'notification'
+  dataType    String   @default("string") // 'string', 'number', 'boolean', 'json'
+  updatedBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  updater Account? @relation(fields: [updatedBy], references: [id], name: "SystemSettingsUpdater")
+
+  @@index([category])
+  @@map("system_settings")
 }

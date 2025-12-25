@@ -203,13 +203,13 @@ Files are split based on:
 
 ### Current Status
 ```
-[ ] Phase 1: Foundation (Files 01-03)
-    [ ] 01_Database_Migration.md (0/15 steps)
-    [ ] 02_Validation_Schemas.md (0/12 steps)
-    [ ] 03_Utils_and_Helpers.md (0/10 steps)
+[x] Phase 1: Foundation (Files 01-03)
+  [x] 01_Database_Migration.md (15/15 steps)
+  [x] 02_Validation_Schemas.md (12/12 steps)
+  [x] 03_Utils_and_Helpers.md (10/10 steps)
 
 [ ] Phase 2: Controllers (Files 04-07)
-    [ ] 04_Controller_PlantingReport_Part1.md (0/18 steps)
+  [ ] 04_Controller_PlantingReport_Part1.md (10/18 steps)
     [ ] 05_Controller_PlantingReport_Part2.md (0/14 steps)
     [ ] 06_Controller_Seasons.md (0/6 steps)
     [ ] 07_Controller_Varieties.md (0/8 steps)
