@@ -45,9 +45,26 @@ app.use(express.static(reactAppPath));
 
 // CORS configuration - allow specific origin with credentials
 const APP_URL = process.env.APP_URL || 'http://localhost:5173';
+const allowedOrigins = [
+    APP_URL,
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'https://farmer-connect.onrender.com',  // Production frontend
+];
+
 app.use(
     cors({
-        origin: [APP_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+        origin: (origin, callback) => {
+            // Allow requests with no origin (like mobile apps, curl, Postman)
+            if (!origin) return callback(null, true);
+            
+            if (allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                console.warn(`CORS blocked request from origin: ${origin}`);
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
         methods: ['POST', 'GET', 'DELETE', 'PUT', 'PATCH'],
         credentials: true,
         allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
