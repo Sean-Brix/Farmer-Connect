@@ -131,7 +131,7 @@ export async function seedPlantingReports(prisma, seasons, varieties) {
     { name: 'Sofia Castillo', location: 'Barangay Aguinaldo, Bulacan', rsbsa: 'BU-02-004-000678' }
   ];
 
-  const seedClassifications = ['Certified', 'Good', 'Registered', 'Foundation', 'Breeder'];
+  const seedClassifications = ['Inbred_Certified', 'Hybrid_F1', 'Inbred_Good', 'Inbred_Farmers'];
   const riceIrrigations = ['Irrigated', 'RainfedLowland'];
   const plantingMethods = ['Direct_Seeded', 'Transplanting'];
   const activeSeason = seasons.find((s) => s.isActive) || seasons[0];
@@ -183,7 +183,7 @@ export async function seedPlantingReports(prisma, seasons, varieties) {
       dateOfPlanting: null,  // Not planted yet
       plantingMethod: dist.plantingMethod || null,  // From distribution request
       cropInsurance: Math.random() > 0.6,
-      state: 'Request_Report',
+      state: 'Distributed',
       distributionRequestId: dist.distributionRequestId,
       distributionItemId: dist.distributionItemId,
       distributionQuantity: dist.distributionQuantity,
@@ -215,7 +215,7 @@ export async function seedPlantingReports(prisma, seasons, varieties) {
       dateOfPlanting: null,
       plantingMethod: null,  // Optional in State 1
       cropInsurance: Math.random() > 0.6,
-      state: 'Request_Report',
+      state: 'Planting',
       lastUpdatedBy: 'admin',
       isArchived: false,
       isDeleted: false
@@ -295,7 +295,7 @@ export async function seedPlantingReports(prisma, seasons, varieties) {
       numberOfBags,
       weightPerBag: parseFloat(weightPerBag.toFixed(2)),
       yieldMtPerHa: parseFloat(yieldMtPerHa.toFixed(2)),
-      state: 'Completed',
+      state: 'Harvested',
       lastUpdatedBy: 'admin',
       isArchived: false,
       isDeleted: false
@@ -340,7 +340,7 @@ export async function seedPlantingReports(prisma, seasons, varieties) {
       numberOfBags,
       weightPerBag: parseFloat(weightPerBag.toFixed(2)),
       yieldMtPerHa: parseFloat(yieldMtPerHa.toFixed(2)),
-      state: 'Completed',
+      state: 'Harvested',
       lastUpdatedBy: 'admin',
       isArchived: true,
       archivedAt: new Date(),
@@ -368,7 +368,7 @@ export async function seedPlantingReports(prisma, seasons, varieties) {
       dateOfPlanting: null,
       plantingMethod: null,
       cropInsurance: Math.random() > 0.6,
-      state: 'Request_Report',
+      state: 'Planting',
       lastUpdatedBy: 'admin',
       isArchived: false,
       isDeleted: true,
@@ -396,9 +396,9 @@ export async function seedPlantingReports(prisma, seasons, varieties) {
     }
   }
 
-  const requestReports = createdReports.filter((r) => r.state === 'Request_Report' && !r.isDeleted && !r.isArchived).length;
+  const requestReports = createdReports.filter((r) => (r.state === 'Distributed' || r.state === 'Planting') && !r.isDeleted && !r.isArchived).length;
   const plantedReports = createdReports.filter((r) => r.state === 'Planted' && !r.isDeleted && !r.isArchived).length;
-  const completedReports = createdReports.filter((r) => r.state === 'Completed' && !r.isDeleted && !r.isArchived).length;
+  const completedReports = createdReports.filter((r) => r.state === 'Harvested' && !r.isDeleted && !r.isArchived).length;
   const archivedReports = createdReports.filter((r) => r.isArchived).length;
   const deletedReports = createdReports.filter((r) => r.isDeleted).length;
   const distributionLinked = createdReports.filter((r) => r.distributionRequestId).length;

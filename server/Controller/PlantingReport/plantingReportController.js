@@ -173,9 +173,9 @@ export async function getAllPlantingReports(req, res) {
         const where = buildReportQuery({
             state: req.query.state,
             isArchived: req.query.isArchived === 'true' ? true :
-                       req.query.isArchived === 'false' ? false : undefined,
+            req.query.isArchived === 'false' ? false : undefined,
             distributionLinked: req.query.distributionLinked === 'true' ? true :
-                              req.query.distributionLinked === 'false' ? false : undefined,
+            req.query.distributionLinked === 'false' ? false : undefined,
             distributionRequestId: req.query.distributionRequestId,
             typeOfCrop: req.query.typeOfCrop,
             varietyId: req.query.varietyId,
