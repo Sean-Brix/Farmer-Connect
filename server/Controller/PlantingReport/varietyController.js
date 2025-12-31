@@ -1,4 +1,96 @@
 import prisma from '../../config/database.js';
+import { calculatePagination, getPaginationParams } from '../../Utils/plantingReportHelpers.js';
+
+// HELPER - Usage statistics for a variety
+export async function getVarietyUsageStatistics(varietyId) {
+    const [
+        totalActive,
+        totalDeleted,
+        totalArchived,
+        requestReports,
+        plantedReports,
+        completedReports,
+        yieldStats
+    ] = await Promise.all([
+        prisma.plantingReport.count({
+            where: {
+                varietyId,
+                isDeleted: false
+            }
+        }),
+        prisma.plantingReport.count({
+            where: {
+                varietyId,
+                isDeleted: true
+            }
+        }),
+        prisma.plantingReport.count({
+            where: {
+                varietyId,
+                isDeleted: false,
+                isArchived: true
+            }
+        }),
+        prisma.plantingReport.count({
+            where: {
+                varietyId,
+                isDeleted: false,
+                state: 'Request_Report'
+            }
+        }),
+        prisma.plantingReport.count({
+            where: {
+                varietyId,
+                isDeleted: false,
+                state: 'Planted'
+            }
+        }),
+        prisma.plantingReport.count({
+            where: {
+                varietyId,
+                isDeleted: false,
+                state: 'Completed'
+            }
+        }),
+        prisma.plantingReport.aggregate({
+            where: {
+                varietyId,
+                isDeleted: false,
+                state: 'Completed',
+                yieldMtPerHa: { not: null }
+            },
+            _avg: {
+                yieldMtPerHa: true
+            },
+            _min: {
+                yieldMtPerHa: true
+            },
+            _max: {
+                yieldMtPerHa: true
+            },
+            _count: {
+                yieldMtPerHa: true
+            }
+        })
+    ]);
+
+    return {
+        total: totalActive,
+        deleted: totalDeleted,
+        archived: totalArchived,
+        byState: {
+            Request_Report: requestReports,
+            Planted: plantedReports,
+            Completed: completedReports
+        },
+        yieldPerformance: {
+            averageYield: yieldStats._avg?.yieldMtPerHa ?? null,
+            minYield: yieldStats._min?.yieldMtPerHa ?? null,
+            maxYield: yieldStats._max?.yieldMtPerHa ?? null,
+            sampleSize: yieldStats._count?.yieldMtPerHa ?? 0
+        }
+    };
+}
 
 // CREATE - Create a new seed variety
 export async function createSeedVariety(req, res) {
@@ -119,6 +211,34 @@ export async function getAllSeedVarieties(req, res) {
     }
 }
 
+// READ - Get active varieties only
+export async function getActiveVarieties(req, res) {
+    try {
+        const varieties = await prisma.seedVariety.findMany({
+            where: {
+                isActive: true
+            },
+            orderBy: [
+                { cropType: 'asc' },
+                { name: 'asc' }
+            ]
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: 'Active seed varieties retrieved successfully',
+            varieties
+        });
+    } catch (error) {
+        console.error('❌ [Seed Variety] Get active varieties error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to retrieve active varieties',
+            error: error.message
+        });
+    }
+}
+
 // READ - Get varieties by crop type
 export async function getVarietiesByCropType(req, res) {
     try {
@@ -163,6 +283,9 @@ export async function getSeedVarietyById(req, res) {
                         farmerName: true,
                         dateOfPlanting: true,
                         areaPlanted: true
+                    },
+                    where: {
+                        isDeleted: false
                     }
                 }
             }
@@ -175,18 +298,114 @@ export async function getSeedVarietyById(req, res) {
             });
         }
 
+        const usageStatistics = await getVarietyUsageStatistics(id);
+
         console.log('📄 [Seed Variety] Retrieved:', variety.name);
 
         return res.status(200).json({
             success: true,
             message: 'Seed variety retrieved successfully',
-            variety
+            variety: {
+                ...variety,
+                usageStatistics
+            }
         });
     } catch (error) {
         console.error('❌ [Seed Variety] Get by ID error:', error);
         return res.status(500).json({
             success: false,
             message: 'Failed to retrieve seed variety',
+            error: error.message
+        });
+    }
+}
+
+// READ - Get planting reports using a specific variety
+export async function getReportsByVariety(req, res) {
+    try {
+        const { id } = req.params;
+
+        const variety = await prisma.seedVariety.findUnique({
+            where: { id },
+            select: {
+                id: true,
+                name: true,
+                cropType: true,
+                directSeededDAS: true,
+                transplantedDAS: true,
+                plantingWindow: true
+            }
+        });
+
+        if (!variety) {
+            return res.status(404).json({
+                success: false,
+                message: 'Seed variety not found'
+            });
+        }
+
+        const { page, limit, skip } = getPaginationParams(req.query);
+
+        const where = {
+            varietyId: id,
+            isDeleted: false,
+            ...(req.query.state && { state: req.query.state }),
+            ...(req.query.croppingSeasonId && { croppingSeasonId: req.query.croppingSeasonId })
+        };
+
+        if (req.query.isArchived !== undefined) {
+            where.isArchived = req.query.isArchived === 'true';
+        }
+
+        const [total, reports] = await Promise.all([
+            prisma.plantingReport.count({ where }),
+            prisma.plantingReport.findMany({
+                where,
+                skip,
+                take: limit,
+                orderBy: {
+                    createdAt: 'desc'
+                },
+                select: {
+                    id: true,
+                    farmerName: true,
+                    farmLocation: true,
+                    rsbsaNumber: true,
+                    areaPlanted: true,
+                    dateOfPlanting: true,
+                    yieldMtPerHa: true,
+                    state: true,
+                    isArchived: true,
+                    createdAt: true,
+                    croppingSeason: {
+                        select: {
+                            id: true,
+                            name: true,
+                            startDate: true,
+                            endDate: true
+                        }
+                    }
+                }
+            })
+        ]);
+
+        const pagination = calculatePagination(total, page, limit);
+
+        console.log(`✅ [Seed Variety] Retrieved ${reports.length}/${total} reports for variety ${id}`);
+
+        return res.status(200).json({
+            success: true,
+            data: {
+                variety,
+                reports
+            },
+            pagination
+        });
+    } catch (error) {
+        console.error('❌ [Seed Variety] Get reports by variety error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to retrieve reports for variety',
             error: error.message
         });
     }
@@ -259,16 +478,10 @@ export async function updateSeedVariety(req, res) {
 export async function deleteSeedVariety(req, res) {
     try {
         const { id } = req.params;
-        const { cascade } = req.query; // Check if cascade delete is requested
 
         // Check if variety exists
         const existingVariety = await prisma.seedVariety.findUnique({
-            where: { id },
-            include: {
-                plantingReports: { 
-                    select: { id: true, isArchived: true }
-                }
-            }
+            where: { id }
         });
 
         if (!existingVariety) {
@@ -278,20 +491,70 @@ export async function deleteSeedVariety(req, res) {
             });
         }
 
-        const reportCount = existingVariety.plantingReports.length;
+        const [
+            totalCount,
+            requestCount,
+            plantedCount,
+            completedCount,
+            archivedCount
+        ] = await Promise.all([
+            prisma.plantingReport.count({
+                where: {
+                    varietyId: id,
+                    isDeleted: false
+                }
+            }),
+            prisma.plantingReport.count({
+                where: {
+                    varietyId: id,
+                    isDeleted: false,
+                    state: 'Request_Report'
+                }
+            }),
+            prisma.plantingReport.count({
+                where: {
+                    varietyId: id,
+                    isDeleted: false,
+                    state: 'Planted'
+                }
+            }),
+            prisma.plantingReport.count({
+                where: {
+                    varietyId: id,
+                    isDeleted: false,
+                    state: 'Completed'
+                }
+            }),
+            prisma.plantingReport.count({
+                where: {
+                    varietyId: id,
+                    isDeleted: false,
+                    isArchived: true
+                }
+            })
+        ]);
 
-        // If cascade is requested or no reports exist, proceed with deletion
-        if (cascade === 'true' && reportCount > 0) {
-            // Delete all associated reports first
-            await prisma.plantingReport.deleteMany({
-                where: { varietyId: id }
-            });
-            console.log(`🗑️ [Seed Variety] Cascade deleted ${reportCount} associated reports`);
-        } else if (reportCount > 0) {
-            // Cascade not requested but reports exist
+        if (totalCount > 0) {
+            const warning = plantedCount > 0
+                ? `WARNING: ${plantedCount} reports are currently in Planted state (harvest in progress). Deleting this variety may affect harvest date predictions.`
+                : null;
+
             return res.status(400).json({
                 success: false,
-                message: `Cannot delete variety with ${reportCount} associated reports. Enable cascade delete or set variety to inactive.`
+                message: `Cannot delete variety "${existingVariety.name}": ${totalCount} planting reports are using this variety`,
+                details: {
+                    total: totalCount,
+                    byState: {
+                        Request_Report: requestCount,
+                        Planted: plantedCount,
+                        Completed: completedCount
+                    },
+                    archived: archivedCount,
+                    warning,
+                    recommendation: completedCount > 0
+                        ? 'Archive completed reports first, then reassign the rest to a different variety'
+                        : 'Reassign all linked reports to a different variety first'
+                }
             });
         }
 
@@ -303,10 +566,7 @@ export async function deleteSeedVariety(req, res) {
 
         return res.status(200).json({
             success: true,
-            message: reportCount > 0 
-                ? `Seed variety and ${reportCount} associated report(s) deleted successfully`
-                : 'Seed variety deleted successfully',
-            deletedReports: reportCount
+            message: `Seed variety "${existingVariety.name}" deleted successfully`
         });
     } catch (error) {
         console.error('❌ [Seed Variety] Delete error:', error);

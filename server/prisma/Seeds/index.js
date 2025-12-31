@@ -5,6 +5,7 @@ import { seedFAQCategories, seedFAQs } from './faq.seed.js';
 import { seedSurveyForms } from './surveys.seed.js';
 import { seedInventoryItems, seedItemStacks } from './inventory.seed.js';
 import { seedSeminars } from './seminars.seed.js';
+import { seedDistributionRequests } from './distribution.seed.js';
 
 const prisma = new PrismaClient();
 
@@ -109,9 +110,13 @@ async function main() {
     // Seminars
     await runStep('Seminars', () => seedSeminars(prisma));
     
-    // Planting Reports (original)
+    // Planting Reports (with distribution integration)
     const seasons = await runStep('Planting Seasons', () => seedPlantingSeasons(prisma));
     const varieties = await runStep('Seed Varieties', () => seedSeedVarieties(prisma));
+    
+    // Create distribution requests BEFORE planting reports for linking
+    await runStep('Distribution Requests', () => seedDistributionRequests(prisma));
+    
     await runStep('Planting Reports', () => seedPlantingReports(prisma, seasons, varieties));
 
     // Final summary - Use single batch query
@@ -124,6 +129,7 @@ async function main() {
       inventoryItems,
       itemStacks,
       seminars,
+      distributionRequests,
       seasonCount,
       varietyCount,
       plantingReportCount
@@ -135,22 +141,24 @@ async function main() {
       prisma.inventoryItem.count(),
       prisma.itemStack.count(),
       prisma.seminar.count(),
+      prisma.itemTransaction.count({ where: { status: { in: ['Picked_Up', 'Planted'] } } }),
       prisma.plantingSeason.count(),
       prisma.seedVariety.count(),
       prisma.plantingReport.count(),
     ]);
     
     console.log('\n📊 Seeding Summary:');
-    console.log(`  Accounts:         ${accounts} (System Admin)`);
-    console.log(`  FAQ Categories:   ${faqCategories}`);
-    console.log(`  FAQs:             ${faqs}`);
-    console.log(`  Survey Forms:     ${surveyForms}`);
-    console.log(`  Inventory Items:  ${inventoryItems}`);
-    console.log(`  Item Stacks:      ${itemStacks}`);
-    console.log(`  Seminars:         ${seminars}`);
-    console.log(`  Planting Seasons: ${seasonCount}`);
-    console.log(`  Seed Varieties:   ${varietyCount}`);
-    console.log(`  Planting Reports: ${plantingReportCount}`);
+    console.log(`  Accounts:              ${accounts} (System Admin)`);
+    console.log(`  FAQ Categories:        ${faqCategories}`);
+    console.log(`  FAQs:                  ${faqs}`);
+    console.log(`  Survey Forms:          ${surveyForms}`);
+    console.log(`  Inventory Items:       ${inventoryItems}`);
+    console.log(`  Item Stacks:           ${itemStacks}`);
+    console.log(`  Seminars:              ${seminars}`);
+    console.log(`  Distribution Requests: ${distributionRequests}`);
+    console.log(`  Planting Seasons:      ${seasonCount}`);
+    console.log(`  Seed Varieties:        ${varietyCount}`);
+    console.log(`  Planting Reports:      ${plantingReportCount}`);
     console.log('\n✨ All done! Database seeded successfully.\n');
     
     console.log('📝 Login Credentials:');

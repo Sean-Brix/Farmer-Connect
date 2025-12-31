@@ -72,13 +72,14 @@ async function setStatus(req, res) {
             });
         }
 
-        // Define valid statuses for Distribution (no return-related statuses)
+        // Define valid statuses for Distribution (aligned with planting report states)
         const validStatuses = [
             'Pending',
             'Approved',
             'Picked_Up',
             'late_pickup',
             'Planted',
+            'Harvested',
             'Rejected',
             'No_Pickup',
             'Cancelled',
@@ -92,13 +93,14 @@ async function setStatus(req, res) {
             });
         }
 
-        // Modification #3: Status transition validation
+        // Modification #3: Status transition validation (aligned with planting reports)
         const validTransitions = {
             Pending: ['Approved', 'Rejected', 'Cancelled'],
             Approved: ['Picked_Up', 'late_pickup', 'No_Pickup', 'Cancelled'],
             Picked_Up: ['Planted'],
             late_pickup: ['Planted'],
-            Planted: ['Archived'],
+            Planted: ['Harvested'],
+            Harvested: ['Archived'],
             Rejected: [],
             No_Pickup: [],
             Cancelled: [],
@@ -412,7 +414,7 @@ async function setStatus(req, res) {
                 const seedVariety = updatedTransaction.itemStack.item.seedVariety;
                 const varietyId = updatedTransaction.itemStack.item.seedVarietyId;
 
-                if (varietyId && updatedTransaction.plantingMethod && updatedTransaction.farmLocation && updatedTransaction.areaPlanted) {
+                if (varietyId && updatedTransaction.farmLocation && updatedTransaction.areaPlanted) {
                     try {
                         createdReport = await prisma.plantingReport.create({
                             data: {
@@ -426,7 +428,7 @@ async function setStatus(req, res) {
                                 riceIrrigation: null,
                                 varietyId,
                                 dateOfPlanting: null,
-                                plantingMethod: updatedTransaction.plantingMethod,
+                                plantingMethod: updatedTransaction.plantingMethod || null,
                                 cropInsurance: false,
                                 harvestArea: null,
                                 numberOfBags: null,
@@ -440,7 +442,7 @@ async function setStatus(req, res) {
                                 distributionPickupDate: updatedTransaction.actual_pickup || updatedTransaction.pickupDate,
                                 requestNote: updatedTransaction.requestNote,
                                 plantingReportDeadline: updatedTransaction.plantingReportDeadline,
-                                status: 'Draft',
+                                state: 'Planting', // All reports start in Planting state
                                 lastUpdatedBy: userId,
                             },
                         });
@@ -451,11 +453,12 @@ async function setStatus(req, res) {
                         });
 
                         updatedTransaction.plantingReportId = createdReport.id;
+                        console.log(`✅ Auto-created planting report ${createdReport.id} for distribution request ${updatedTransaction.id}`);
                     } catch (createError) {
                         console.error('⚠️ Failed to auto-create planting report:', createError);
                     }
                 } else {
-                    console.warn('⚠️ Skipping planting report auto-create: missing varietyId or farmer-provided details');
+                    console.warn(`⚠️ Skipping planting report auto-create: missing required fields (varietyId: ${varietyId}, farmLocation: ${updatedTransaction.farmLocation}, areaPlanted: ${updatedTransaction.areaPlanted})`);
                 }
             }
 

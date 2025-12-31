@@ -70,7 +70,54 @@ export async function seedSeedVarieties(prisma) {
 }
 
 export async function seedPlantingReports(prisma, seasons, varieties) {
-  // Sample farmer data
+  // ============================================================================
+  // THREE-STATE SYSTEM FOR PLANTING REPORTS
+  // ============================================================================
+  // State 1: Request_Report - Seeds distributed, NOT planted yet
+  // State 2: Planted - Crop planted, NOT harvested yet
+  // State 3: Completed - Crop harvested, all data complete
+  // Additional: isArchived (separate from state), isDeleted (soft delete)
+  // ============================================================================
+
+  // Fetch existing distribution requests to link planting reports
+  const distributionRequests = await prisma.itemTransaction.findMany({
+    where: {
+      itemStack: {
+        status: 'Distributed'
+      },
+      status: {
+        in: ['Picked_Up', 'Planted', 'late_pickup']
+      },
+      plantingReportId: null
+    },
+    include: {
+      itemStack: {
+        include: {
+          item: {
+            include: {
+              seedVariety: true
+            }
+          }
+        }
+      },
+      account: {
+        select: {
+          firstName: true,
+          surname: true,
+          client_profile: {
+            select: {
+              rsbsaNumber: true
+            }
+          }
+        }
+      }
+    },
+    take: 8
+  });
+
+  console.log(`📦 Found ${distributionRequests.length} distribution requests to link`);
+
+  // Sample farmer data for non-distribution reports
   const farmers = [
     { name: 'Juan Dela Cruz', location: 'Barangay San Jose, Nueva Ecija', rsbsa: 'NE-01-001-000123' },
     { name: 'Maria Santos', location: 'Barangay Poblacion, Bulacan', rsbsa: 'BU-02-003-000456' },
@@ -84,76 +131,285 @@ export async function seedPlantingReports(prisma, seasons, varieties) {
     { name: 'Sofia Castillo', location: 'Barangay Aguinaldo, Bulacan', rsbsa: 'BU-02-004-000678' }
   ];
 
-  const seedClassifications = ['Inbred_Certified', 'Hybrid_F1', 'Inbred_Good', 'Inbred_Farmers'];
+  const seedClassifications = ['Certified', 'Good', 'Registered', 'Foundation', 'Breeder'];
   const riceIrrigations = ['Irrigated', 'RainfedLowland'];
   const plantingMethods = ['Direct_Seeded', 'Transplanting'];
+  const activeSeason = seasons.find((s) => s.isActive) || seasons[0];
+
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
   const reports = [];
-  
-  // Get active season (Wet Season 2025)
-  const activeSeason = seasons.find(s => s.name === 'Wet Season 2025');
-  
-  for (let i = 0; i < 10; i++) {
-    const farmer = farmers[i];
-    const variety = varieties[Math.floor(Math.random() * varieties.length)];
-    const plantingMethod = plantingMethods[Math.floor(Math.random() * plantingMethods.length)];
+  let distributionIndex = 0;
+
+  // Helper to get distribution link data
+  const getDistributionLink = () => {
+    if (distributionIndex < distributionRequests.length) {
+      const req = distributionRequests[distributionIndex++];
+      return {
+        distributionRequestId: req.id,
+        distributionItemId: req.itemStack.item.id,
+        distributionQuantity: req.quantity,
+        distributionUnit: req.itemStack.item.unit,
+        distributionPickupDate: req.actual_pickup || req.pickupDate,
+        distributedQuantity: req.quantity,
+        farmerName: `${req.account.firstName} ${req.account.surname}`.trim(),
+        rsbsaNumber: req.account.client_profile?.rsbsaNumber || null,
+        farmLocation: req.farmLocation,
+        areaPlanted: req.areaPlanted,
+        plantingMethod: req.plantingMethod,
+        varietyId: req.itemStack.item.seedVarietyId
+      };
+    }
+    return null;
+  };
+
+  // Create distribution-linked Request_Report entries (State 1)
+  for (let i = 0; i < Math.min(3, distributionRequests.length); i++) {
+    const dist = getDistributionLink();
+    if (!dist) break;
+
+    const variety = varieties.find(v => v.id === dist.varietyId) || pick(varieties);
     
-    // Random planting date in last 90 days
-    const plantingDate = new Date();
-    plantingDate.setDate(plantingDate.getDate() - Math.floor(Math.random() * 90));
-    
-    // Calculate expected harvest based on variety and planting method
-    const expectedHarvestDate = new Date(plantingDate);
-    const daysToHarvest = plantingMethod === 'Direct_Seeded' ? variety.directSeededDAS : variety.transplantedDAS;
-    expectedHarvestDate.setDate(expectedHarvestDate.getDate() + daysToHarvest);
-    
-    const areaPlanted = 0.5 + Math.random() * 2; // 0.5 to 2.5 hectares
-    
-    // Some reports have harvest data (if planting was >100 days ago)
-    const daysAgo = Math.floor((new Date() - plantingDate) / (1000 * 60 * 60 * 24));
-    const hasHarvestData = daysAgo > 100;
-    
-    const reportData = {
+    reports.push({
+      farmerName: dist.farmerName,
+      farmLocation: dist.farmLocation,
+      rsbsaNumber: dist.rsbsaNumber,
+      croppingSeasonId: activeSeason?.id || null,
+      areaPlanted: dist.areaPlanted,
+      seedClassification: pick(seedClassifications),
+      typeOfCrop: variety.cropType,
+      riceIrrigation: variety.cropType === 'Rice' ? pick(riceIrrigations) : null,
+      varietyId: variety.id,
+      dateOfPlanting: null,  // Not planted yet
+      plantingMethod: dist.plantingMethod || null,  // From distribution request
+      cropInsurance: Math.random() > 0.6,
+      state: 'Request_Report',
+      distributionRequestId: dist.distributionRequestId,
+      distributionItemId: dist.distributionItemId,
+      distributionQuantity: dist.distributionQuantity,
+      distributionUnit: dist.distributionUnit,
+      distributionPickupDate: dist.distributionPickupDate,
+      distributedQuantity: dist.distributedQuantity,
+      lastUpdatedBy: 'admin',
+      isArchived: false,
+      isDeleted: false
+    });
+  }
+
+  // Create regular Request_Report entries (no distribution link)
+  for (let i = 0; i < 2; i++) {
+    const farmer = farmers[i % farmers.length];
+    const variety = pick(varieties);
+    const areaPlanted = 0.5 + Math.random() * 2;
+
+    reports.push({
       farmerName: farmer.name,
       farmLocation: farmer.location,
       rsbsaNumber: farmer.rsbsa,
-      croppingSeasonId: activeSeason.id,
+      croppingSeasonId: activeSeason?.id || null,
       areaPlanted: parseFloat(areaPlanted.toFixed(2)),
-      seedClassification: seedClassifications[Math.floor(Math.random() * seedClassifications.length)],
+      seedClassification: pick(seedClassifications),
       typeOfCrop: variety.cropType,
-      riceIrrigation: variety.cropType === 'Rice' ? riceIrrigations[Math.floor(Math.random() * riceIrrigations.length)] : null,
+      riceIrrigation: variety.cropType === 'Rice' ? pick(riceIrrigations) : null,
       varietyId: variety.id,
-      dateOfPlanting: plantingDate,
-      plantingMethod: plantingMethod,
+      dateOfPlanting: null,
+      plantingMethod: null,  // Optional in State 1
       cropInsurance: Math.random() > 0.6,
-      dateOfExpectedHarvest: expectedHarvestDate,
-      isArchived: Math.random() > 0.8 // 20% archived
-    };
-
-    // Add harvest data if applicable
-    if (hasHarvestData) {
-      const harvestArea = areaPlanted * (0.9 + Math.random() * 0.1); // 90-100% of planted area
-      const numberOfBags = Math.floor(harvestArea * (30 + Math.random() * 40)); // 30-70 bags per hectare
-      const weightPerBag = 45 + Math.random() * 10; // 45-55 kg per bag
-      
-      // Calculate yield in mt/ha
-      const totalWeight = numberOfBags * weightPerBag; // in kg
-      const totalWeightMT = totalWeight / 1000; // convert to metric tons
-      const yieldMtPerHa = totalWeightMT / harvestArea;
-      
-      reportData.harvestArea = parseFloat(harvestArea.toFixed(2));
-      reportData.numberOfBags = numberOfBags;
-      reportData.weightPerBag = parseFloat(weightPerBag.toFixed(2));
-      reportData.yieldMtPerHa = parseFloat(yieldMtPerHa.toFixed(2));
-    }
-
-    const report = await prisma.plantingReport.create({ data: reportData });
-    reports.push(report);
+      state: 'Request_Report',
+      lastUpdatedBy: 'admin',
+      isArchived: false,
+      isDeleted: false
+    });
   }
 
-  const withHarvest = reports.filter(r => r.harvestArea).length;
-  const archived = reports.filter(r => r.isArchived).length;
-  console.log(`✅ Created ${reports.length} planting reports (${withHarvest} with harvest data, ${archived} archived)`);
-  
-  return reports;
+  // Create Planted reports (State 2)
+  for (let i = 0; i < 5; i++) {
+    const farmer = farmers[(i + 2) % farmers.length];
+    const variety = pick(varieties);
+    const areaPlanted = 0.5 + Math.random() * 2;
+    const plantingMethod = pick(plantingMethods);
+    
+    const dateOfPlanting = new Date();
+    dateOfPlanting.setDate(dateOfPlanting.getDate() - (30 + Math.floor(Math.random() * 60)));
+    
+    const expectedHarvestDate = new Date(dateOfPlanting);
+    const daysToHarvest = plantingMethod === 'Direct_Seeded' ? variety.directSeededDAS : variety.transplantedDAS;
+    expectedHarvestDate.setDate(expectedHarvestDate.getDate() + daysToHarvest);
+
+    reports.push({
+      farmerName: farmer.name,
+      farmLocation: farmer.location,
+      rsbsaNumber: farmer.rsbsa,
+      croppingSeasonId: activeSeason?.id || null,
+      areaPlanted: parseFloat(areaPlanted.toFixed(2)),
+      seedClassification: pick(seedClassifications),
+      typeOfCrop: variety.cropType,
+      riceIrrigation: variety.cropType === 'Rice' ? pick(riceIrrigations) : null,
+      varietyId: variety.id,
+      dateOfPlanting,
+      plantingMethod,
+      cropInsurance: Math.random() > 0.6,
+      dateOfExpectedHarvest: expectedHarvestDate,
+      state: 'Planted',
+      lastUpdatedBy: 'admin',
+      isArchived: false,
+      isDeleted: false
+    });
+  }
+
+  // Create Completed reports (State 3)
+  for (let i = 0; i < 5; i++) {
+    const farmer = farmers[(i + 7) % farmers.length];
+    const variety = pick(varieties);
+    const areaPlanted = 0.5 + Math.random() * 2;
+    const plantingMethod = pick(plantingMethods);
+    
+    const dateOfPlanting = new Date();
+    dateOfPlanting.setDate(dateOfPlanting.getDate() - (90 + Math.floor(Math.random() * 60)));
+    
+    const expectedHarvestDate = new Date(dateOfPlanting);
+    const daysToHarvest = plantingMethod === 'Direct_Seeded' ? variety.directSeededDAS : variety.transplantedDAS;
+    expectedHarvestDate.setDate(expectedHarvestDate.getDate() + daysToHarvest);
+
+    const harvestArea = areaPlanted * (0.9 + Math.random() * 0.1);
+    const numberOfBags = Math.floor(harvestArea * (30 + Math.random() * 40));
+    const weightPerBag = 45 + Math.random() * 10;
+    const totalWeightMT = (numberOfBags * weightPerBag) / 1000;
+    const yieldMtPerHa = totalWeightMT / harvestArea;
+
+    reports.push({
+      farmerName: farmer.name,
+      farmLocation: farmer.location,
+      rsbsaNumber: farmer.rsbsa,
+      croppingSeasonId: activeSeason?.id || null,
+      areaPlanted: parseFloat(areaPlanted.toFixed(2)),
+      seedClassification: pick(seedClassifications),
+      typeOfCrop: variety.cropType,
+      riceIrrigation: variety.cropType === 'Rice' ? pick(riceIrrigations) : null,
+      varietyId: variety.id,
+      dateOfPlanting,
+      plantingMethod,
+      cropInsurance: Math.random() > 0.6,
+      dateOfExpectedHarvest: expectedHarvestDate,
+      harvestArea: parseFloat(harvestArea.toFixed(2)),
+      numberOfBags,
+      weightPerBag: parseFloat(weightPerBag.toFixed(2)),
+      yieldMtPerHa: parseFloat(yieldMtPerHa.toFixed(2)),
+      state: 'Completed',
+      lastUpdatedBy: 'admin',
+      isArchived: false,
+      isDeleted: false
+    });
+  }
+
+  // Create Archived reports
+  for (let i = 0; i < 3; i++) {
+    const farmer = farmers[(i + 5) % farmers.length];
+    const variety = pick(varieties);
+    const areaPlanted = 0.5 + Math.random() * 2;
+    const plantingMethod = pick(plantingMethods);
+    
+    const dateOfPlanting = new Date();
+    dateOfPlanting.setDate(dateOfPlanting.getDate() - (120 + Math.floor(Math.random() * 60)));
+    
+    const expectedHarvestDate = new Date(dateOfPlanting);
+    const daysToHarvest = plantingMethod === 'Direct_Seeded' ? variety.directSeededDAS : variety.transplantedDAS;
+    expectedHarvestDate.setDate(expectedHarvestDate.getDate() + daysToHarvest);
+
+    const harvestArea = areaPlanted * (0.9 + Math.random() * 0.1);
+    const numberOfBags = Math.floor(harvestArea * (30 + Math.random() * 40));
+    const weightPerBag = 45 + Math.random() * 10;
+    const totalWeightMT = (numberOfBags * weightPerBag) / 1000;
+    const yieldMtPerHa = totalWeightMT / harvestArea;
+
+    reports.push({
+      farmerName: farmer.name,
+      farmLocation: farmer.location,
+      rsbsaNumber: farmer.rsbsa,
+      croppingSeasonId: activeSeason?.id || null,
+      areaPlanted: parseFloat(areaPlanted.toFixed(2)),
+      seedClassification: pick(seedClassifications),
+      typeOfCrop: variety.cropType,
+      riceIrrigation: variety.cropType === 'Rice' ? pick(riceIrrigations) : null,
+      varietyId: variety.id,
+      dateOfPlanting,
+      plantingMethod,
+      cropInsurance: Math.random() > 0.6,
+      dateOfExpectedHarvest: expectedHarvestDate,
+      harvestArea: parseFloat(harvestArea.toFixed(2)),
+      numberOfBags,
+      weightPerBag: parseFloat(weightPerBag.toFixed(2)),
+      yieldMtPerHa: parseFloat(yieldMtPerHa.toFixed(2)),
+      state: 'Completed',
+      lastUpdatedBy: 'admin',
+      isArchived: true,
+      archivedAt: new Date(),
+      archivedBy: 'admin',
+      isDeleted: false
+    });
+  }
+
+  // Create Deleted reports (soft delete)
+  for (let i = 0; i < 2; i++) {
+    const farmer = farmers[i % farmers.length];
+    const variety = pick(varieties);
+    const areaPlanted = 0.5 + Math.random() * 2;
+
+    reports.push({
+      farmerName: farmer.name,
+      farmLocation: farmer.location,
+      rsbsaNumber: farmer.rsbsa,
+      croppingSeasonId: activeSeason?.id || null,
+      areaPlanted: parseFloat(areaPlanted.toFixed(2)),
+      seedClassification: pick(seedClassifications),
+      typeOfCrop: variety.cropType,
+      riceIrrigation: variety.cropType === 'Rice' ? pick(riceIrrigations) : null,
+      varietyId: variety.id,
+      dateOfPlanting: null,
+      plantingMethod: null,
+      cropInsurance: Math.random() > 0.6,
+      state: 'Request_Report',
+      lastUpdatedBy: 'admin',
+      isArchived: false,
+      isDeleted: true,
+      deletedAt: new Date(Date.now() - (7 + i * 3) * 24 * 60 * 60 * 1000),
+      deletedBy: 'admin'
+    });
+  }
+
+  // Create all reports
+  const createdReports = [];
+  for (const report of reports) {
+    try {
+      const created = await prisma.plantingReport.create({ data: report });
+      createdReports.push(created);
+      
+      // Link distribution request if applicable
+      if (report.distributionRequestId) {
+        await prisma.itemTransaction.update({
+          where: { id: report.distributionRequestId },
+          data: { plantingReportId: created.id }
+        });
+      }
+    } catch (error) {
+      console.error(`Error creating report for ${report.farmerName}:`, error.message);
+    }
+  }
+
+  const requestReports = createdReports.filter((r) => r.state === 'Request_Report' && !r.isDeleted && !r.isArchived).length;
+  const plantedReports = createdReports.filter((r) => r.state === 'Planted' && !r.isDeleted && !r.isArchived).length;
+  const completedReports = createdReports.filter((r) => r.state === 'Completed' && !r.isDeleted && !r.isArchived).length;
+  const archivedReports = createdReports.filter((r) => r.isArchived).length;
+  const deletedReports = createdReports.filter((r) => r.isDeleted).length;
+  const distributionLinked = createdReports.filter((r) => r.distributionRequestId).length;
+
+  console.log(`✅ Created ${createdReports.length} planting reports:`);
+  console.log(`   - Request Reports: ${requestReports}`);
+  console.log(`   - Planted Reports: ${plantedReports}`);
+  console.log(`   - Completed Reports: ${completedReports}`);
+  console.log(`   - Archived: ${archivedReports}`);
+  console.log(`   - Deleted: ${deletedReports}`);
+  console.log(`   - Distribution Linked: ${distributionLinked}`);
+
+  return createdReports;
 }

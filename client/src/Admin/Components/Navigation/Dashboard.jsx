@@ -13,7 +13,7 @@ import Content from '../../Services/Inventory/Inventory.jsx';
 import Distribution from '../../Services/Distribution/Distribution.jsx';
 import Chat from '../../Services/Customer_Service/Chat_Module.jsx';
 import Survey from '../../Services/Survey/Survey.jsx';
-import PlantingReports from '../../Services/PlantingReport/PlantingReports.jsx';
+import PlantingReports from '../../PlantingReports/PlantingReports.jsx';
 import Settings from '../../Services/Settings/Settings.jsx';
 import { PlantingReportProvider } from '../../../contexts/PlantingReportContext.jsx';
 

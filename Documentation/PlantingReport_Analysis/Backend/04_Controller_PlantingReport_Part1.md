@@ -47,8 +47,8 @@ import {
 ```
 
 **Verification:**
-- [ ] No import errors
-- [ ] Helper functions accessible
+- [x] No import errors
+- [x] Helper functions accessible
 
 ---
 
@@ -225,10 +225,10 @@ export async function createPlantingReport(req, res) {
 - `plantingMethod` can be null in State 1
 
 **Verification:**
-- [ ] Function compiles without errors
-- [ ] Creates report in State 1
-- [ ] stateHistory initialized correctly
-- [ ] No status field references
+- [x] Function compiles without errors
+- [x] Creates report in State 1
+- [x] stateHistory initialized correctly
+- [x] No status field references
 
 ---
 
@@ -360,10 +360,10 @@ export async function getAllPlantingReports(req, res) {
 - Add `isArchived`, `distributionLinked` filters
 
 **Verification:**
-- [ ] Always excludes soft-deleted records
-- [ ] Pagination working correctly
-- [ ] State filter works
-- [ ] Returns pagination metadata
+- [x] Always excludes soft-deleted records
+- [x] Pagination working correctly
+- [x] State filter works
+- [x] Returns pagination metadata
 
 ---
 
@@ -415,8 +415,8 @@ export async function getPlantingReportById(req, res) {
 ```
 
 **Verification:**
-- [ ] Excludes soft-deleted records
-- [ ] Returns 404 if deleted
+- [x] Excludes soft-deleted records
+- [x] Returns 404 if deleted
 
 ---
 
@@ -579,10 +579,10 @@ export async function updatePlantingReport(req, res) {
 - Better error handling
 
 **Verification:**
-- [ ] Excludes soft-deleted records
-- [ ] Cannot update state directly
-- [ ] Auto-calculations work
-- [ ] Validation applies
+- [x] Excludes soft-deleted records
+- [x] Cannot update state directly
+- [x] Auto-calculations work
+- [x] Validation applies
 
 ---
 

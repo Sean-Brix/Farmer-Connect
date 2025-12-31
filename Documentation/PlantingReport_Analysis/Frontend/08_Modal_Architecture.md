@@ -256,16 +256,16 @@ export default ReportModal;
 
 ### Progress
 
-- [ ] Modal orchestrator structure created
-- [ ] Dialog component configured
-- [ ] Form state management integrated
-- [ ] Mutations setup
-- [ ] Header/Body/Footer structure
-- [ ] State-based section rendering
-- [ ] Read-only mode support
-- [ ] Loading states
-- [ ] Error handling
-- [ ] Component under 200 lines
+- [x] Modal orchestrator structure created
+- [x] Dialog component configured
+- [x] Form state management integrated
+- [x] Mutations setup
+- [x] Header/Body/Footer structure
+- [x] State-based section rendering
+- [x] Read-only mode support
+- [x] Loading states
+- [x] Error handling
+- [x] Component under 200 lines
 
 ---
 
@@ -311,13 +311,13 @@ export default StateWorkflowIndicator;
 
 ### Progress
 
-- [ ] StateWorkflowIndicator component created
-- [ ] Material-UI Stepper used
-- [ ] 3 steps (Request → Planted → Completed)
-- [ ] Active step highlighted
-- [ ] Completed steps marked
-- [ ] Alternative label (below line)
-- [ ] Responsive layout
+- [x] StateWorkflowIndicator component created
+- [x] Material-UI Stepper used
+- [x] 3 steps (Request → Planted → Completed)
+- [x] Active step highlighted
+- [x] Completed steps marked
+- [x] Alternative label (below line)
+- [x] Responsive layout
 
 ---
 
@@ -463,14 +463,14 @@ export const useReportForm = (initialState = 'Request_Report') => {
 
 ### Progress
 
-- [ ] useReportForm hook verified
-- [ ] Initial state setup
-- [ ] handleChange updates formData
-- [ ] handleBlur marks field touched
-- [ ] validateForm checks all rules
-- [ ] Errors clear on valid input
-- [ ] resetForm clears all data
-- [ ] isValid computed correctly
+- [x] useReportForm hook verified
+- [x] Initial state setup
+- [x] handleChange updates formData
+- [x] handleBlur marks field touched
+- [x] validateForm checks all rules
+- [x] Errors clear on valid input
+- [x] resetForm clears all data
+- [x] isValid computed correctly
 
 ---
 
@@ -597,14 +597,14 @@ export const getReadOnlySections = (state, mode) => {
 
 ### Progress
 
-- [ ] modalHelpers.js created
-- [ ] getModalTitle function works
-- [ ] getVisibleSections returns correct flags
-- [ ] getReadOnlySections returns correct flags
-- [ ] Request state shows 2 sections
-- [ ] Planted state shows 3 sections
-- [ ] Completed state shows 4 sections
-- [ ] Read-only logic correct
+- [x] modalHelpers.js created
+- [x] getModalTitle function works
+- [x] getVisibleSections returns correct flags
+- [x] getReadOnlySections returns correct flags
+- [x] Request state shows 2 sections
+- [x] Planted state shows 3 sections
+- [x] Completed state shows 4 sections
+- [x] Read-only logic correct
 
 ---
 
@@ -667,14 +667,14 @@ Modal header is already implemented in Step 1. Verify the components:
 
 ### Progress
 
-- [ ] Title displays correctly for all modes
-- [ ] Close button works
-- [ ] Close button disabled during save
-- [ ] StateWorkflowIndicator displays for edit/view
-- [ ] No indicator in create mode
-- [ ] Workflow shows correct active step
-- [ ] Mobile layout wraps properly
-- [ ] aria-label added
+- [x] Title displays correctly for all modes
+- [x] Close button works
+- [x] Close button disabled during save
+- [x] StateWorkflowIndicator displays for edit/view
+- [x] No indicator in create mode
+- [x] Workflow shows correct active step
+- [x] Mobile layout wraps properly
+- [x] aria-label added
 
 ---
 
@@ -749,14 +749,14 @@ export default ErrorDisplay;
 
 ### Progress
 
-- [ ] DialogContent padding correct
-- [ ] ErrorDisplay component created
-- [ ] Error shows at top of body
-- [ ] Retry button works
-- [ ] Vertical flex layout
-- [ ] Gap between sections (24px)
-- [ ] Scroll behavior smooth
-- [ ] Mobile fullscreen works
+- [x] DialogContent padding correct
+- [x] ErrorDisplay component created
+- [x] Error shows at top of body
+- [x] Retry button works
+- [x] Vertical flex layout
+- [x] Gap between sections (24px)
+- [x] Scroll behavior smooth
+- [x] Mobile fullscreen works
 
 ---
 

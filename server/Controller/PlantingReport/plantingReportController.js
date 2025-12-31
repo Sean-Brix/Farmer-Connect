@@ -5,11 +5,21 @@ import {
     buildReportQuery,
     getPaginationParams,
     calculatePagination,
-    updateStateHistory
+    updateStateHistory,
+    buildDeletedReportsQuery,
+    daysUntilPermanentDelete,
+    validateBulkArchive,
+    validateBulkDelete
 } from '../../Utils/plantingReportHelpers.js';
 import {
     createReportSchema,
-    updateReportSchema
+    updateReportSchema,
+    toPlantedSchema,
+    toCompletedSchema,
+    archiveReportSchema,
+    unarchiveReportSchema,
+    bulkArchiveSchema,
+    bulkDeleteSchema
 } from '../../validation/plantingReportValidation.js';
 
 // Note: Ensure these indexes exist in your Prisma schema for optimal performance:
@@ -88,13 +98,19 @@ export async function createPlantingReport(req, res) {
                 // Notes
                 requestNote: requestNote || null,
 
-                // State system
-                state: 'Request_Report',
+                // State system - ALL reports start in 'Planting' state
+                state: 'Planting',
                 isArchived: false,
                 isDeleted: false,
 
                 // Audit trail
-                stateHistory: updateStateHistory([], null, 'Request_Report', actorId, 'Report created'),
+                stateHistory: JSON.stringify(updateStateHistory(
+                    [], 
+                    null, 
+                    'Planting', 
+                    actorId, 
+                    distributionRequestId ? 'Report created from distribution' : 'Report created manually'
+                )),
                 lastUpdatedBy: actorId
             },
             include: {
@@ -169,7 +185,7 @@ export async function getAllPlantingReports(req, res) {
             dateTo: req.query.dateTo
         });
 
-        const [total, reports] = await Promise.all([
+        const [total, reportsRaw] = await Promise.all([
             prisma.plantingReport.count({ where }),
             prisma.plantingReport.findMany({
                 where,
@@ -230,6 +246,14 @@ export async function getAllPlantingReports(req, res) {
             })
         ]);
 
+        // Sort by state order: Distributed/Planting → Planted → Harvested, then by createdAt desc
+        const stateOrder = { 'Distributed': 1, 'Planting': 2, 'Planted': 3, 'Harvested': 4 };
+        const reports = reportsRaw.sort((a, b) => {
+            const stateCompare = (stateOrder[a.state] || 999) - (stateOrder[b.state] || 999);
+            if (stateCompare !== 0) return stateCompare;
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+
         const pagination = calculatePagination(total, page, limit);
 
         console.log(`✅ [Planting Report] Retrieved ${reports.length}/${total} reports (page ${page})`);
@@ -248,6 +272,62 @@ export async function getAllPlantingReports(req, res) {
             error: error.message
         });
     }
+}
+
+// SUMMARY - Aggregated counts for dashboard cards
+export async function getPlantingReportSummary(req, res) {
+    try {
+        const [
+            total,
+            plantingCount,
+            plantedCount,
+            harvestedCount,
+            archivedCount,
+            deletedCount,
+            distributionCount,
+            areaAgg
+        ] = await Promise.all([
+            prisma.plantingReport.count({ where: { isDeleted: false } }),
+            prisma.plantingReport.count({ where: { isDeleted: false, isArchived: false, state: 'Planting' } }),
+            prisma.plantingReport.count({ where: { isDeleted: false, isArchived: false, state: 'Planted' } }),
+            prisma.plantingReport.count({ where: { isDeleted: false, isArchived: false, state: 'Harvested' } }),
+            prisma.plantingReport.count({ where: { isDeleted: false, isArchived: true } }),
+            prisma.plantingReport.count({ where: { isDeleted: true } }),
+            prisma.plantingReport.count({ where: { isDeleted: false, distributionRequestId: { not: null } } }),
+            prisma.plantingReport.aggregate({
+                where: { isDeleted: false },
+                _sum: { areaPlanted: true }
+            })
+        ]);
+
+        const summary = {
+            total,
+            byState: {
+                planting: plantingCount,
+                planted: plantedCount,
+                harvested: harvestedCount
+            },
+            archived: archivedCount,
+            deleted: deletedCount,
+            distribution: distributionCount,
+            harvested: harvestedCount,
+            totalArea: areaAgg?._sum?.areaPlanted || 0
+        };
+
+        return res.status(200).json({ success: true, ...summary });
+    } catch (error) {
+        console.error('❌ [Planting Report] Summary error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to retrieve planting report summary',
+            error: error.message
+        });
+    }
+}
+
+// STATISTICS - Alias to summary for backward compatibility
+export async function getPlantingReportStatistics(req, res) {
+    return getPlantingReportSummary(req, res);
 }
 
 // READ - Get single planting report by ID
@@ -500,8 +580,7 @@ export async function getReportsByRSBSA(req, res) {
         // Build where clause
         const where = {
             rsbsaNumber: {
-                equals: rsbsaNumber,
-                mode: 'insensitive'
+                equals: rsbsaNumber
             },
             isDeleted: false
         };
@@ -672,6 +751,619 @@ export async function recalculateYield(req, res) {
         return res.status(500).json({
             success: false,
             message: 'Failed to calculate yield',
+            error: error.message
+        });
+    }
+}
+
+// STATE TRANSITION - Request_Report -> Planted
+export async function transitionToPlanted(req, res) {
+    try {
+        const { id } = req.params;
+        const userId = req.user?.id || null;
+
+        const report = await prisma.plantingReport.findFirst({
+            where: {
+                id,
+                isDeleted: false
+            },
+            include: {
+                variety: true,
+                croppingSeason: true
+            }
+        });
+
+        if (!report) {
+            return res.status(404).json({
+                success: false,
+                message: 'Planting report not found or has been deleted'
+            });
+        }
+
+        if (!['Distributed', 'Planting'].includes(report.state)) {
+            return res.status(400).json({
+                success: false,
+                message: `Cannot transition to Planted from ${report.state} state. Report must be in Distributed or Planting state.`
+            });
+        }
+
+        const { error, value } = toPlantedSchema.validate(req.body);
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.details[0].message
+            });
+        }
+
+        const { dateOfPlanting, plantingMethod, riceIrrigation, transitionNote } = value;
+
+        if (report.typeOfCrop === 'Rice' && !riceIrrigation) {
+            return res.status(400).json({
+                success: false,
+                message: 'Rice crops require riceIrrigation field'
+            });
+        }
+
+        const dateOfExpectedHarvest = await calculateExpectedHarvest(
+            report.varietyId,
+            dateOfPlanting,
+            plantingMethod
+        );
+
+        const updatedReport = await prisma.plantingReport.update({
+            where: { id },
+            data: {
+                dateOfPlanting: new Date(dateOfPlanting),
+                plantingMethod,
+                riceIrrigation: riceIrrigation || report.riceIrrigation || null,
+                dateOfExpectedHarvest,
+                state: 'Planted',
+                stateHistory: JSON.stringify(updateStateHistory(
+                    typeof report.stateHistory === 'string' ? JSON.parse(report.stateHistory) : report.stateHistory,
+                    report.state, // From Distributed or Planting
+                    'Planted',
+                    userId,
+                    transitionNote || 'Planting completed'
+                )),
+                lastUpdatedBy: userId,
+                updatedAt: new Date()
+            },
+            include: {
+                croppingSeason: true,
+                variety: true
+            }
+        });
+
+        console.log(`✅ [Planting Report] ${id} transitioned: Request_Report → Planted`);
+
+        // Auto-update distribution request status if linked
+        if (updatedReport.distributionRequestId) {
+            try {
+                await prisma.itemTransaction.update({
+                    where: { id: updatedReport.distributionRequestId },
+                    data: { 
+                        status: 'Planted',
+                        updatedAt: new Date()
+                    }
+                });
+                console.log(`✅ [Distribution] Auto-updated request ${updatedReport.distributionRequestId} status to Planted`);
+            } catch (distError) {
+                console.error('⚠️ Failed to auto-update distribution request status:', distError);
+                // Don't fail the whole operation if distribution update fails
+            }
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'Report successfully transitioned to Planted state',
+            data: updatedReport
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Transition to Planted error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to transition report to Planted state',
+            error: error.message
+        });
+    }
+}
+
+// STATE TRANSITION - Planted -> Harvested
+export async function transitionToHarvested(req, res) {
+    try {
+        const { id } = req.params;
+        const userId = req.user?.id || null;
+
+        const report = await prisma.plantingReport.findFirst({
+            where: {
+                id,
+                isDeleted: false
+            }
+        });
+
+        if (!report) {
+            return res.status(404).json({
+                success: false,
+                message: 'Planting report not found or has been deleted'
+            });
+        }
+
+        if (report.state !== 'Planted') {
+            return res.status(400).json({
+                success: false,
+                message: `Cannot transition to Harvested from ${report.state} state. Report must be in Planted state.`
+            });
+        }
+
+        const { error, value } = toCompletedSchema.validate(req.body, {
+            context: { areaPlanted: report.areaPlanted }
+        });
+
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.details[0].message
+            });
+        }
+
+        const { harvestArea, numberOfBags, weightPerBag, transitionNote } = value;
+
+        const yieldResult = calculateYield(
+            harvestArea,
+            numberOfBags,
+            weightPerBag,
+            report.typeOfCrop
+        );
+
+        if (!yieldResult.valid) {
+            return res.status(400).json({
+                success: false,
+                message: yieldResult.warning
+            });
+        }
+
+        const updatedReport = await prisma.plantingReport.update({
+            where: { id },
+            data: {
+                harvestArea: parseFloat(harvestArea),
+                numberOfBags: parseInt(numberOfBags, 10),
+                weightPerBag: parseFloat(weightPerBag),
+                yieldMtPerHa: yieldResult.yield,
+                state: 'Harvested',
+                stateHistory: JSON.stringify(updateStateHistory(
+                    typeof report.stateHistory === 'string' ? JSON.parse(report.stateHistory) : report.stateHistory,
+                    'Planted',
+                    'Harvested',
+                    userId,
+                    transitionNote || 'Harvest completed'
+                )),
+                lastUpdatedBy: userId,
+                updatedAt: new Date()
+            },
+            include: {
+                croppingSeason: true,
+                variety: true
+            }
+        });
+
+        console.log(`✅ [Planting Report] ${id} transitioned: Planted → Harvested (yield: ${yieldResult.yield} Mt/Ha)`);
+
+        // Auto-update distribution request status if linked
+        if (updatedReport.distributionRequestId) {
+            try {
+                await prisma.itemTransaction.update({
+                    where: { id: updatedReport.distributionRequestId },
+                    data: { 
+                        status: 'Harvested',
+                        updatedAt: new Date()
+                    }
+                });
+                console.log(`✅ [Distribution] Auto-updated request ${updatedReport.distributionRequestId} status to Harvested`);
+            } catch (distError) {
+                console.error('⚠️ Failed to auto-update distribution request status:', distError);
+                // Don't fail the whole operation if distribution update fails
+            }
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'Report successfully transitioned to Harvested state',
+            data: updatedReport,
+            yieldInfo: {
+                yield: yieldResult.yield,
+                warning: yieldResult.warning || null
+            }
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Transition to Completed error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to transition report to Completed state',
+            error: error.message
+        });
+    }
+}
+
+// ARCHIVE - Archive a completed report
+export async function archiveReport(req, res) {
+    try {
+        const { id } = req.params;
+        const userId = req.user?.id || req.body.archivedBy;
+
+        const { error } = archiveReportSchema.validate(req.body || {});
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.details[0].message
+            });
+        }
+
+        const report = await prisma.plantingReport.findFirst({
+            where: {
+                id,
+                isDeleted: false
+            }
+        });
+
+        if (!report) {
+            return res.status(404).json({
+                success: false,
+                message: 'Planting report not found or has been deleted'
+            });
+        }
+
+        if (report.isArchived) {
+            return res.status(400).json({
+                success: false,
+                message: 'Report is already archived'
+            });
+        }
+
+        if (report.state !== 'Completed') {
+            return res.status(400).json({
+                success: false,
+                message: 'Only completed reports can be archived'
+            });
+        }
+
+        const archivedReport = await prisma.plantingReport.update({
+            where: { id },
+            data: {
+                isArchived: true,
+                archivedAt: new Date(),
+                archivedBy: userId,
+                updatedAt: new Date()
+            }
+        });
+
+        console.log(`📦 [Planting Report] Archived: ${id} by user ${userId}`);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Planting report archived successfully',
+            data: archivedReport
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Archive error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to archive planting report',
+            error: error.message
+        });
+    }
+}
+
+// UNARCHIVE - Remove archive status
+export async function unarchiveReport(req, res) {
+    try {
+        const { id } = req.params;
+
+        const { error } = unarchiveReportSchema.validate(req.body || {});
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.details[0].message
+            });
+        }
+
+        const report = await prisma.plantingReport.findFirst({
+            where: {
+                id,
+                isDeleted: false
+            }
+        });
+
+        if (!report) {
+            return res.status(404).json({
+                success: false,
+                message: 'Planting report not found or has been deleted'
+            });
+        }
+
+        if (!report.isArchived) {
+            return res.status(400).json({
+                success: false,
+                message: 'Report is not archived'
+            });
+        }
+
+        const unarchivedReport = await prisma.plantingReport.update({
+            where: { id },
+            data: {
+                isArchived: false,
+                archivedAt: null,
+                archivedBy: null,
+                updatedAt: new Date()
+            }
+        });
+
+        console.log(`📤 [Planting Report] Unarchived: ${id}`);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Planting report restored from archive',
+            data: unarchivedReport
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Unarchive error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to unarchive planting report',
+            error: error.message
+        });
+    }
+}
+
+// RESTORE - Undo soft delete within 30 days
+export async function restoreReport(req, res) {
+    try {
+        const { id } = req.params;
+
+        const report = await prisma.plantingReport.findFirst({
+            where: {
+                id,
+                isDeleted: true
+            }
+        });
+
+        if (!report) {
+            return res.status(404).json({
+                success: false,
+                message: 'Deleted report not found. It may have been permanently deleted after 30 days.'
+            });
+        }
+
+        const daysRemaining = daysUntilPermanentDelete(report.deletedAt);
+        if (daysRemaining <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Report was deleted more than 30 days ago and cannot be restored'
+            });
+        }
+
+        const restoredReport = await prisma.plantingReport.update({
+            where: { id },
+            data: {
+                isDeleted: false,
+                deletedAt: null,
+                deletedBy: null,
+                updatedAt: new Date(),
+                lastUpdatedBy: req.user?.id || report.lastUpdatedBy || null
+            }
+        });
+
+        console.log(`♻️ [Planting Report] Restored: ${id}`);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Planting report restored successfully',
+            data: restoredReport
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Restore error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to restore planting report',
+            error: error.message
+        });
+    }
+}
+
+// BULK ARCHIVE - Completed reports only
+export async function bulkArchiveReports(req, res) {
+    try {
+        const userId = req.user?.id || req.body.archivedBy;
+        const { reportIds } = req.body;
+
+        const { error } = bulkArchiveSchema.validate(req.body || {});
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.details[0].message
+            });
+        }
+
+        const validation = await validateBulkArchive(reportIds);
+        if (!validation.valid) {
+            return res.status(400).json({
+                success: false,
+                message: 'Bulk archive validation failed',
+                errors: validation.errors
+            });
+        }
+
+        const result = await prisma.plantingReport.updateMany({
+            where: {
+                id: { in: validation.eligibleIds }
+            },
+            data: {
+                isArchived: true,
+                archivedAt: new Date(),
+                archivedBy: userId,
+                updatedAt: new Date()
+            }
+        });
+
+        console.log(`📦 [Planting Report] Bulk archived ${result.count} reports by user ${userId}`);
+
+        return res.status(200).json({
+            success: true,
+            message: `Successfully archived ${result.count} reports`,
+            data: {
+                archived: result.count,
+                reportIds: validation.eligibleIds
+            }
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Bulk archive error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to bulk archive reports',
+            error: error.message
+        });
+    }
+}
+
+// BULK DELETE - Soft delete multiple reports
+export async function bulkDeleteReports(req, res) {
+    try {
+        const userId = req.user?.id || req.body.deletedBy;
+        const { reportIds } = req.body;
+
+        const { error } = bulkDeleteSchema.validate(req.body || {});
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.details[0].message
+            });
+        }
+
+        const validation = await validateBulkDelete(reportIds);
+        if (!validation.valid) {
+            return res.status(400).json({
+                success: false,
+                message: 'Bulk delete validation failed',
+                errors: validation.errors
+            });
+        }
+
+        const result = await prisma.plantingReport.updateMany({
+            where: {
+                id: { in: validation.eligibleIds }
+            },
+            data: {
+                isDeleted: true,
+                deletedAt: new Date(),
+                deletedBy: userId,
+                updatedAt: new Date()
+            }
+        });
+
+        console.log(`🗑️ [Planting Report] Bulk deleted ${result.count} reports by user ${userId}`);
+
+        return res.status(200).json({
+            success: true,
+            message: `Successfully deleted ${result.count} reports. Can be restored within 30 days.`,
+            data: {
+                deleted: result.count,
+                reportIds: validation.eligibleIds,
+                recoveryDeadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+            }
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Bulk delete error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to bulk delete reports',
+            error: error.message
+        });
+    }
+}
+
+// GET deleted reports (within recovery window)
+export async function getDeletedReports(req, res) {
+    try {
+        // Auto-cleanup: Delete expired reports before querying
+        const cutoffDate = new Date();
+        cutoffDate.setDate(cutoffDate.getDate() - 30); // 30 days retention
+        
+        const expiredCount = await prisma.plantingReport.deleteMany({
+            where: {
+                isDeleted: true,
+                deletedAt: { lte: cutoffDate }
+            }
+        });
+
+        if (expiredCount.count > 0) {
+            console.log(`🗑️ [Planting Report] Auto-cleanup: Permanently deleted ${expiredCount.count} expired reports`);
+        }
+
+        const { page, limit, skip } = getPaginationParams(req.query);
+
+        const where = buildDeletedReportsQuery({
+            typeOfCrop: req.query.typeOfCrop,
+            varietyId: req.query.varietyId,
+            search: req.query.search
+        });
+
+        const [total, reports] = await Promise.all([
+            prisma.plantingReport.count({ where }),
+            prisma.plantingReport.findMany({
+                where,
+                skip,
+                take: limit,
+                select: {
+                    id: true,
+                    farmerName: true,
+                    farmLocation: true,
+                    typeOfCrop: true,
+                    areaPlanted: true,
+                    state: true,
+                    deletedAt: true,
+                    deletedBy: true,
+                    croppingSeason: {
+                        select: {
+                            id: true,
+                            name: true,
+                            isActive: true
+                        }
+                    },
+                    variety: {
+                        select: {
+                            id: true,
+                            name: true
+                        }
+                    }
+                },
+                orderBy: {
+                    deletedAt: 'desc'
+                }
+            })
+        ]);
+
+        const reportsWithMetadata = reports.map((report) => {
+            const daysRemaining = daysUntilPermanentDelete(report.deletedAt);
+            return {
+                ...report,
+                daysUntilPermanentDelete: daysRemaining,
+                canRestore: daysRemaining > 0
+            };
+        });
+
+        const pagination = calculatePagination(total, page, limit);
+
+        console.log(`🗑️ [Planting Report] Retrieved ${reports.length}/${total} deleted reports`);
+
+        return res.status(200).json({
+            success: true,
+            data: reportsWithMetadata,
+            pagination
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Get deleted error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to retrieve deleted reports',
             error: error.message
         });
     }

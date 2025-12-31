@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext.jsx';
 import { Toaster } from 'react-hot-toast';
 
@@ -38,9 +38,8 @@ import DevPage from './Dev/DevPage.jsx';
 function App() {
     return (
         <ThemeProvider>
-                <BrowserRouter>
-                    <Toaster position="top-right" />
-                    <Routes>
+            <Toaster position="top-right" />
+            <Routes>
                     {/* AUTHENTICATION */}
                     <Route path="/login" element={<Login />} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -78,8 +77,7 @@ function App() {
                     
                     {/* 404 - Catch all unmatched routes */}
                     <Route path="*" element={<NotFound />} />
-                </Routes>
-            </BrowserRouter>
+            </Routes>
         </ThemeProvider>
     );
 }

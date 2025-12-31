@@ -9,17 +9,17 @@
 
 ## ✅ PROGRESS CHECKLIST
 
-- [ ] **Step 5.1:** Add transitionToPlanted function
-- [ ] **Step 5.2:** Add transitionToCompleted function
-- [ ] **Step 5.3:** Add archiveReport function
-- [ ] **Step 5.4:** Add unarchiveReport function
-- [ ] **Step 5.5:** Add restoreReport function (un-delete)
-- [ ] **Step 5.6:** Add bulkArchiveReports function
-- [ ] **Step 5.7:** Add bulkDeleteReports function
-- [ ] **Step 5.8:** Add getDeletedReports function
-- [ ] **Step 5.9:** Test all state transitions
-- [ ] **Step 5.10:** Test bulk operations
-- [ ] **Step 5.11:** Verify state history tracking
+- [x] **Step 5.1:** Add transitionToPlanted function
+- [x] **Step 5.2:** Add transitionToCompleted function
+- [x] **Step 5.3:** Add archiveReport function
+- [x] **Step 5.4:** Add unarchiveReport function
+- [x] **Step 5.5:** Add restoreReport function (un-delete)
+- [x] **Step 5.6:** Add bulkArchiveReports function
+- [x] **Step 5.7:** Add bulkDeleteReports function
+- [x] **Step 5.8:** Add getDeletedReports function
+- [x] **Step 5.9:** Test all state transitions
+- [x] **Step 5.10:** Test bulk operations
+- [x] **Step 5.11:** Verify state history tracking
 
 ---
 

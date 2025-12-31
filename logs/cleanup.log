@@ -1,0 +1,13 @@
+[2025-12-30T07:01:28.941Z] [Cleanup Job] Manual trigger at 2025-12-30T07:01:28.940Z
+[2025-12-30T07:01:28.941Z] 🧹 Cleanup starting (cutoff 2025-11-30T07:01:28.941Z)
+[2025-12-30T07:01:28.951Z] Pending delete: cmjq50wna002gtukkmbyc0bpl | Xavier Zamora | Barangay Dalayap, Porac, Pampanga | 377 days deleted
+[2025-12-30T07:01:28.951Z] Pending delete: cmjq50wn4002ctukkgtnmlv8d | Vicente Morales | Barangay Sapang Bato, Angeles City, Pampanga | 375 days deleted
+[2025-12-30T07:01:28.952Z] Pending delete: cmjq50wn7002etukkxk3pn5y3 | Wilma Padilla | Barangay Sta. Monica, Magalang, Pampanga | 373 days deleted
+[2025-12-30T07:01:28.952Z] Pending delete: cmjq50wnc002itukk212jmkft | Yolanda Rivera | Barangay Dolores, Angeles City, Pampanga | 372 days deleted
+[2025-12-30T07:01:28.952Z] Pending delete: cmjq50wne002ktukkhzykxvsr | Zachary Bautista | Barangay Margot, Mabalacat, Pampanga | 371 days deleted
+[2025-12-30T07:01:28.960Z] ✅ Cleanup completed: 5 reports deleted
+[2025-12-30T07:01:28.960Z]    - Deleted: Xavier Zamora (cmjq50wna002gtukkmbyc0bpl)
+[2025-12-30T07:01:28.961Z]    - Deleted: Vicente Morales (cmjq50wn4002ctukkgtnmlv8d)
+[2025-12-30T07:01:28.961Z]    - Deleted: Wilma Padilla (cmjq50wn7002etukkxk3pn5y3)
+[2025-12-30T07:01:28.961Z]    - Deleted: Yolanda Rivera (cmjq50wnc002itukk212jmkft)
+[2025-12-30T07:01:28.962Z]    - Deleted: Zachary Bautista (cmjq50wne002ktukkhzykxvsr)

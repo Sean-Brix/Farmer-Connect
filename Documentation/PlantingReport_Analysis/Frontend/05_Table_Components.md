@@ -437,14 +437,14 @@ export default RegularReportsTable;
 
 ### Progress
 
-- [ ] Component file created
-- [ ] Query filters built from props
-- [ ] Data fetching with Tanstack Query
-- [ ] Mobile/Desktop view logic
-- [ ] Selection state management
-- [ ] Confirm dialogs
-- [ ] Loading/Error/Empty states
-- [ ] No syntax errors
+- [x] Component file created
+- [x] Query filters built from props
+- [x] Data fetching with Tanstack Query
+- [x] Mobile/Desktop view logic
+- [x] Selection state management
+- [x] Confirm dialogs
+- [x] Loading/Error/Empty states
+- [x] No syntax errors
 
 ---
 
@@ -500,12 +500,12 @@ export const TABLE_COLUMNS = {
 
 ### Progress
 
-- [ ] TABLE_COLUMNS constants verified
-- [ ] Desktop table view renders
-- [ ] All columns display correctly
-- [ ] Row hover effect works
-- [ ] Checkbox selection works
-- [ ] Responsive at ≥1024px
+- [x] TABLE_COLUMNS constants verified
+- [x] Desktop table view renders
+- [x] All columns display correctly
+- [x] Row hover effect works
+- [x] Checkbox selection works
+- [x] Responsive at ≥1024px
 
 ---
 
@@ -717,13 +717,13 @@ export default MobileReportCard;
 
 ### Progress
 
-- [ ] MobileReportCard component created
-- [ ] Card displays farmer info
-- [ ] Crop details shown with icons
-- [ ] Status chips render correctly
-- [ ] Action buttons functional
-- [ ] Touch targets ≥44px
-- [ ] Responsive at <768px
+- [x] MobileReportCard component created
+- [x] Card displays farmer info
+- [x] Crop details shown with icons
+- [x] Status chips render correctly
+- [x] Action buttons functional
+- [x] Touch targets ≥44px
+- [x] Responsive at <768px
 
 ---
 
@@ -785,14 +785,14 @@ Ensure archive button is disabled for Request_Report state:
 
 ### Progress
 
-- [ ] View action opens modal (read-only)
-- [ ] Edit action opens modal (edit mode)
-- [ ] Delete action shows confirmation
-- [ ] Archive action shows confirmation
-- [ ] Unarchive action works immediately
-- [ ] Archive disabled for Request state
-- [ ] Toast notifications display
-- [ ] Optimistic updates work
+- [x] View action opens modal (read-only)
+- [x] Edit action opens modal (edit mode)
+- [x] Delete action shows confirmation
+- [x] Archive action shows confirmation
+- [x] Unarchive action works immediately
+- [x] Archive disabled for Request state
+- [x] Toast notifications display
+- [x] Optimistic updates work
 
 ---
 
@@ -863,14 +863,14 @@ const handleSelectOne = (id, event) => {
 
 ### Progress
 
-- [ ] Select all checkbox works
-- [ ] Individual checkboxes work
-- [ ] Indeterminate state displays
-- [ ] Bulk toolbar appears when selected
-- [ ] Selection count displays
-- [ ] Bulk archive works
-- [ ] Bulk delete works
-- [ ] Shift+Click range selection works
+- [x] Select all checkbox works
+- [x] Individual checkboxes work
+- [x] Indeterminate state displays
+- [x] Bulk toolbar appears when selected
+- [x] Selection count displays
+- [x] Bulk archive works
+- [x] Bulk delete works
+- [x] Shift+Click range selection works
 
 ---
 
@@ -928,14 +928,14 @@ export const useDeleteReport = () => {
 
 ### Progress
 
-- [ ] Pagination displays correctly
-- [ ] Next/Previous buttons work
-- [ ] Page size selector works
-- [ ] Total count displays
-- [ ] Jump to page works (desktop)
-- [ ] Mobile layout stacks vertically
-- [ ] Query invalidation refreshes data
-- [ ] URL params update
+- [x] Pagination displays correctly
+- [x] Next/Previous buttons work
+- [x] Page size selector works
+- [x] Total count displays
+- [x] Jump to page works (desktop)
+- [x] Mobile layout stacks vertically
+- [x] Query invalidation refreshes data
+- [x] URL params update
 
 ---
 
@@ -1284,14 +1284,14 @@ export default DistributionReportsTable;
 
 ### Progress
 
-- [ ] DistributionReportsTable component created
-- [ ] distributionLinked filter set to true
-- [ ] Distribution ID column added
-- [ ] Link to distribution detail works
-- [ ] Opens in new tab
-- [ ] No archive button (distributions can't archive)
-- [ ] Delete functionality works
-- [ ] Bulk delete works
+- [x] DistributionReportsTable component created
+- [x] distributionLinked filter set to true
+- [x] Distribution ID column added
+- [x] Link to distribution detail works
+- [x] Opens in new tab
+- [x] No archive button (distributions can't archive)
+- [x] Delete functionality works
+- [x] Bulk delete works
 
 ---
 
@@ -1334,13 +1334,13 @@ Distribution metadata column is already added in Step 7. Test the link functiona
 
 ### Progress
 
-- [ ] Distribution ID column displays
-- [ ] Link opens new tab
-- [ ] OpenInNewIcon shows
-- [ ] Tooltip displays on hover
-- [ ] Mobile chip displays correctly
-- [ ] Null handling (N/A)
-- [ ] No broken links
+- [x] Distribution ID column displays
+- [x] Link opens new tab
+- [x] OpenInNewIcon shows
+- [x] Tooltip displays on hover
+- [x] Mobile chip displays correctly
+- [x] Null handling (N/A)
+- [x] No broken links
 
 ---
 
@@ -1722,15 +1722,15 @@ export default DeletedReportsTable;
 
 ### Progress
 
-- [ ] DeletedReportsTable component created
-- [ ] isDeleted filter set to true
-- [ ] Restore button functional
-- [ ] Permanent delete button functional
-- [ ] Days remaining calculated
-- [ ] Red highlight for ≤7 days
-- [ ] Warning icon on danger chips
-- [ ] Bulk restore works
-- [ ] Bulk permanent delete works
+- [x] DeletedReportsTable component created
+- [x] isDeleted filter set to true
+- [x] Restore button functional
+- [x] Permanent delete button functional
+- [x] Days remaining calculated
+- [x] Red highlight for ≤7 days
+- [x] Warning icon on danger chips
+- [x] Bulk restore works
+- [x] Bulk permanent delete works
 
 ---
 
@@ -1782,14 +1782,14 @@ export const calculateDaysRemaining = (deletedAt, retentionDays = 30) => {
 
 ### Progress
 
-- [ ] calculateDaysRemaining utility created
-- [ ] Days calculated correctly
-- [ ] Warning chip for 8-30 days
-- [ ] Error chip for 0-7 days
-- [ ] Row highlight for danger
-- [ ] Warning icon displays
-- [ ] Mobile card shows chip
-- [ ] Expired reports show 0 days
+- [x] calculateDaysRemaining utility created
+- [x] Days calculated correctly
+- [x] Warning chip for 8-30 days
+- [x] Error chip for 0-7 days
+- [x] Row highlight for danger
+- [x] Warning icon displays
+- [x] Mobile card shows chip
+- [x] Expired reports show 0 days
 
 ---
 
@@ -1895,14 +1895,14 @@ import { TableSortLabel } from '@mui/material';
 
 ### Progress
 
-- [ ] Sortable property added to columns
-- [ ] TableSortLabel imported
-- [ ] Sort state (sortBy, sortOrder) added
-- [ ] handleSort handler created
-- [ ] TableHead updated with sort labels
-- [ ] Clicking header toggles sort
-- [ ] Active column shows indicator
-- [ ] Sort works for all sortable columns
+- [x] Sortable property added to columns
+- [x] TableSortLabel imported
+- [x] Sort state (sortBy, sortOrder) added
+- [x] handleSort handler created
+- [x] TableHead updated with sort labels
+- [x] Clicking header toggles sort
+- [x] Active column shows indicator
+- [x] Sort works for all sortable columns
 
 ---
 
@@ -2015,14 +2015,14 @@ export function FormLoadingSkeleton() {
 
 ### Progress
 
-- [ ] TableLoadingSkeleton component created
-- [ ] CardLoadingSkeleton component created
-- [ ] FormLoadingSkeleton component created
-- [ ] Skeletons display on loading
-- [ ] Smooth animation
-- [ ] Correct row/column count
-- [ ] Mobile card skeleton works
-- [ ] No layout shift on data load
+- [x] TableLoadingSkeleton component created
+- [x] CardLoadingSkeleton component created
+- [x] FormLoadingSkeleton component created
+- [x] Skeletons display on loading
+- [x] Smooth animation
+- [x] Correct row/column count
+- [x] Mobile card skeleton works
+- [x] No layout shift on data load
 
 ---
 
@@ -2121,15 +2121,15 @@ export default EmptyState;
 
 ### Progress
 
-- [ ] EmptyState component created
-- [ ] Icon variants (info, error, search)
-- [ ] Title and message display
-- [ ] Optional action button
-- [ ] Centered layout (300px min height)
-- [ ] Shows on no data
-- [ ] Shows on search no results
-- [ ] Shows on error
-- [ ] Responsive on mobile
+- [x] EmptyState component created
+- [x] Icon variants (info, error, search)
+- [x] Title and message display
+- [x] Optional action button
+- [x] Centered layout (300px min height)
+- [x] Shows on no data
+- [x] Shows on search no results
+- [x] Shows on error
+- [x] Responsive on mobile
 
 ---
 
@@ -2138,29 +2138,29 @@ export default EmptyState;
 **Final Verification Checklist:**
 
 **1. RegularReportsTable:**
-- [ ] Component renders without errors
-- [ ] Desktop table view displays correctly
-- [ ] Mobile card view displays on <768px
-- [ ] Filters work (state sub-tab, search, custom filters)
-- [ ] Pagination works (next, prev, page size, jump)
-- [ ] Row actions work (view, edit, delete, archive, unarchive)
-- [ ] Bulk selection works (select all, individual, shift+click)
-- [ ] Bulk actions work (archive, delete)
-- [ ] Sorting works on sortable columns
-- [ ] Loading skeleton displays
-- [ ] Empty state displays
-- [ ] Error state displays
-- [ ] Confirm dialogs work
-- [ ] Toast notifications display
-- [ ] Query invalidation refreshes data
-- [ ] Optimistic updates work
+- [x] Component renders without errors
+- [x] Desktop table view displays correctly
+- [x] Mobile card view displays on <768px
+- [x] Filters work (state sub-tab, search, custom filters)
+- [x] Pagination works (next, prev, page size, jump)
+- [x] Row actions work (view, edit, delete, archive, unarchive)
+- [x] Bulk selection works (select all, individual, shift+click)
+- [x] Bulk actions work (archive, delete)
+- [x] Sorting works on sortable columns
+- [x] Loading skeleton displays
+- [x] Empty state displays
+- [x] Error state displays
+- [x] Confirm dialogs work
+- [x] Toast notifications display
+- [x] Query invalidation refreshes data
+- [x] Optimistic updates work
 
 **2. DistributionReportsTable:**
-- [ ] Component renders without errors
-- [ ] distributionLinked filter applied
-- [ ] Distribution ID column displays
-- [ ] Distribution link opens new tab
-- [ ] No archive button (correct behavior)
+- [x] Component renders without errors
+- [x] distributionLinked filter applied
+- [x] Distribution ID column displays
+- [x] Distribution link opens new tab
+- [x] No archive button (correct behavior)
 - [ ] Delete works
 - [ ] Bulk delete works
 - [ ] Mobile card shows distribution chip

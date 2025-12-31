@@ -119,10 +119,10 @@ enum riceIrrigation {
 }
 
 enum SeedClassification {
-  Inbred_Certified // Inbred (Certified Seeds)
-  Hybrid_F1 // Hybrid (F1)
-  Inbred_Good // Inbred (Good Seeds)
-  Inbred_Farmers // Inbred (Farmer's Seed)
+  Inbred_Certified
+  Hybrid_F1
+  Inbred_Good
+  Inbred_Farmers
 }
 
 enum CropType {
@@ -136,10 +136,11 @@ enum PlantingMethod {
   Transplanting
 }
 
-// ==================== NEW: Three-State System ====================
-// Replaces old PlantingReportStatus enum
+// ==================== NEW: Four-State System ====================
+// States: Distributed/Planting → Planted → Harvested
 enum PlantingReportState {
-  Request_Report  // State 1: Seeds distributed/allocated, NOT planted yet
-  Planted         // State 2: Crop PLANTED, NOT harvested
-  Completed       // State 3: Crop HARVESTED, all data complete
+  Distributed  // From distribution - seed distributed to farmer
+  Planting     // Manual creation - awaiting planting
+  Planted      // Crop has been planted
+  Harvested    // Crop has been harvested with complete data
 }

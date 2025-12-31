@@ -57,7 +57,7 @@ export default function EIC() {
         action: 'approve',
         request: null,
         requireReason: false,
-        onConfirm: null,
+        onConfirm: () => {}, // Default empty function instead of null
     });
 
     // TanStack Query hooks

@@ -89,6 +89,7 @@ enum transaction_status {
   Cancelled
   Picked_Up    // Distribution: Seedling picked up on time
   Planted      // Distribution: Planting report submitted
+  Harvested    // Distribution: Planting report harvested
   Archived     // Distribution: Report archived by admin
 }
 

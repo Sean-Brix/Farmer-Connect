@@ -5,13 +5,17 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 // Import translation files
 import enCommon from './locales/en/common.json';
 import tlCommon from './locales/tl/common.json';
+import enPlantingReports from './locales/en/plantingReports.json';
+import tlPlantingReports from './locales/tl/plantingReports.json';
 
 const resources = {
   en: {
     common: enCommon,
+    plantingReports: enPlantingReports.plantingReports,
   },
   tl: {
     common: tlCommon,
+    plantingReports: tlPlantingReports.plantingReports,
   },
 };
 
@@ -31,7 +35,7 @@ i18n
     
     // Default namespace
     defaultNS: 'common',
-    ns: ['common'],
+    ns: ['common', 'plantingReports'],
 
     // Key separator
     keySeparator: '.',

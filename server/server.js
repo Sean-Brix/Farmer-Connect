@@ -4,6 +4,7 @@ import colors from 'colors'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import app from './config/app.js'
+import { scheduleCleanupJob } from './jobs/cleanupDeletedReports.js'
 
 // Configuration
 dotenv.config();
@@ -19,6 +20,13 @@ server.listen(PORT, ()=>{
     console.log(
         '\n\n\n\nLINK: '.cyan + ('http://127.0.0.1:' + PORT + '/\n').yellow.italic.underline
     );
+
+    // Start scheduled cleanup for soft-deleted planting reports unless disabled
+    if (process.env.DISABLE_CLEANUP_JOB !== 'true') {
+        scheduleCleanupJob();
+    } else {
+        console.log('⚠️  [Cleanup Job] Disabled via DISABLE_CLEANUP_JOB env flag');
+    }
 
 })
 

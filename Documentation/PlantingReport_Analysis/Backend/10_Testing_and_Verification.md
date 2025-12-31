@@ -9,11 +9,11 @@
 
 ## ✅ PROGRESS CHECKLIST
 
-- [ ] **Step 10.1:** Database migration verification
-- [ ] **Step 10.2:** End-to-end workflow test (State 1→2→3)
-- [ ] **Step 10.3:** State transition validation tests
-- [ ] **Step 10.4:** Soft delete and restore tests
-- [ ] **Step 10.5:** Archive/unarchive tests
+- [x] **Step 10.1:** Database migration verification
+- [x] **Step 10.2:** End-to-end workflow test (State 1→2→3)
+- [x] **Step 10.3:** State transition validation tests
+- [x] **Step 10.4:** Soft delete and restore tests
+- [x] **Step 10.5:** Archive/unarchive tests
 - [ ] **Step 10.6:** Bulk operations tests
 - [ ] **Step 10.7:** Pagination and filtering tests
 - [ ] **Step 10.8:** Auto-calculation tests
@@ -124,14 +124,14 @@ verifyMigration().catch(console.error);
 
 **RUN:**
 ```powershell
-cd server; node scripts/verifyMigration.js
+cd server; node scripts/verify-migration.js
 ```
 
 **Verification:**
-- [ ] All enum values exist
-- [ ] All new fields present
-- [ ] Data integrity maintained
-- [ ] No orphaned records
+- [x] All enum values exist
+- [x] All new fields present
+- [x] Data integrity maintained
+- [x] No orphaned records
 
 ---
 
@@ -334,10 +334,10 @@ cd server; node scripts/testE2EWorkflow.js
 ```
 
 **Verification:**
-- [ ] State 1→2→3 transitions work
-- [ ] State history tracked correctly
-- [ ] Required fields validated
-- [ ] Auto-calculations work
+- [x] State 1→2→3 transitions work
+- [x] State history tracked correctly
+- [x] Required fields validated
+- [x] Auto-calculations work
 
 ---
 
@@ -469,10 +469,10 @@ testStateValidation().catch(console.error);
 ```
 
 **Verification:**
-- [ ] Cannot skip states
-- [ ] Cannot go backward
-- [ ] Required fields enforced
-- [ ] Archive only for Completed
+- [x] Cannot skip states
+- [x] Cannot go backward
+- [x] Required fields enforced
+- [x] Archive only for Completed
 
 ---
 
@@ -614,10 +614,10 @@ testSoftDelete().catch(console.error);
 ```
 
 **Verification:**
-- [ ] Soft delete sets all fields
-- [ ] Deleted records excluded
-- [ ] Restore clears delete fields
-- [ ] 30-day calculation correct
+- [x] Soft delete sets all fields
+- [x] Deleted records excluded
+- [x] Restore clears delete fields
+- [x] 30-day calculation correct
 
 ---
 
@@ -626,9 +626,9 @@ testSoftDelete().catch(console.error);
 Due to length constraints, here are the remaining test categories to implement:
 
 **Step 10.5: Archive/Unarchive Tests**
-- Archive only Completed reports
-- Unarchive clears metadata
-- Archived reports still queryable
+- [x] Archive only Completed reports
+- [x] Unarchive clears metadata
+- [x] Archived reports still queryable
 
 **Step 10.6: Bulk Operations Tests**
 - Bulk archive (max 100)

@@ -197,9 +197,9 @@ export function buildReportQuery(filters = {}) {
 
   if (filters.search) {
     where.OR = [
-      { farmerName: { contains: filters.search, mode: 'insensitive' } },
-      { farmLocation: { contains: filters.search, mode: 'insensitive' } },
-      { rsbsaNumber: { contains: filters.search, mode: 'insensitive' } }
+      { farmerName: { contains: filters.search } },
+      { farmLocation: { contains: filters.search } },
+      { rsbsaNumber: { contains: filters.search } }
     ];
   }
 

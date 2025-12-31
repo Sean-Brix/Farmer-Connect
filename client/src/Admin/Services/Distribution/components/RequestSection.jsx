@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { useTheme } from '../../../../contexts/ThemeContext';
 import { ChevronDown, CheckCircle, XCircle, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
-import ReportModal from '../../PlantingReport/ReportModal';
+import ReportModal from '../../../PlantingReports/components/ReportModal';
 import { usePlantingReport } from '../../../../contexts/PlantingReportContext';
 
 // Helper function to determine smart date labels
@@ -143,14 +143,9 @@ export default function RequestSection({
   const [statusFilter, setStatusFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const [selectedReportId, setSelectedReportId] = useState(null);
+  const [reportModalMode, setReportModalMode] = useState('create');
+  const [selectedReport, setSelectedReport] = useState(null);
   const [currentDistributionRequest, setCurrentDistributionRequest] = useState(null);
-  const selectedRequest = useMemo(() => {
-    if (selectedReportId) {
-      return requests.find(r => r.plantingReportId === selectedReportId) || null;
-    }
-    return null;
-  }, [selectedReportId, requests]);
   const isSeedingComplete = useCallback((req) => {
     const r = req.plantingReport;
     if (!r) return false;
@@ -817,9 +812,9 @@ export default function RequestSection({
                                   <button
                                     onClick={(e) => { 
                                       e.stopPropagation();
-                                      // Open the report modal in view/edit mode
-                                      setSelectedReportId(request.plantingReportId);
-                                      setCurrentDistributionRequest(null);
+                                      setReportModalMode('view');
+                                      setSelectedReport(request.plantingReport);
+                                      setCurrentDistributionRequest(request);
                                       setIsReportModalOpen(true);
                                     }}
                                     className="px-3 py-1.5 rounded-lg bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors flex items-center gap-1"
@@ -832,8 +827,45 @@ export default function RequestSection({
                                 <button
                                   onClick={(e) => { 
                                     e.stopPropagation();
-                                    // Open the report modal directly with distribution data for auto-fill
-                                    setSelectedReportId(null);
+                                    
+                                    // Helper to convert backend planting method to frontend format
+                                    const convertPlantingMethod = (method) => {
+                                      if (!method) return '';
+                                      if (method === 'Direct_Seeded') return 'Direct Seeding';
+                                      if (method === 'Transplanting') return 'Transplanting';
+                                      return '';
+                                    };
+                                    
+                                    // Pre-fill from distribution request
+                                    // The backend flattens seed variety data with 'seed' prefix
+                                    const preFilledReport = {
+                                      // Distribution metadata (stored but not shown in UI)
+                                      distributionRequestId: request.id,
+                                      distributionItemId: request.itemStackId,
+                                      distributionQuantity: request.quantity || request.requestQuantity,
+                                      distributionUnit: request.itemUnit || 'kg',
+                                      distributedQuantity: request.quantity || request.requestQuantity,
+                                      distributionPickupDate: request.pickedUpAt || request.pickupDate,
+                                      // Farmer info
+                                      farmerName: request.requestorName || '',
+                                      farmLocation: request.farmLocation || '',
+                                      rsbsaNumber: '',
+                                      // Seeding details from distributed seed
+                                      typeOfCrop: request.seedCropType || '',
+                                      varietyId: request.seedVarietyId || '',
+                                      croppingSeasonId: '',
+                                      areaPlanted: request.areaPlanted || '',
+                                      seedClassification: '',
+                                      cropInsurance: false,
+                                      // Planting details
+                                      dateOfPlanting: null,
+                                      plantingMethod: convertPlantingMethod(request.plantingMethod),
+                                      riceIrrigation: '',
+                                      dateOfExpectedHarvest: null
+                                    };
+                                    
+                                    setReportModalMode('create');
+                                    setSelectedReport(preFilledReport);
                                     setCurrentDistributionRequest(request);
                                     setIsReportModalOpen(true);
                                   }}
@@ -852,8 +884,9 @@ export default function RequestSection({
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  setSelectedReportId(request.plantingReportId);
-                                  setCurrentDistributionRequest(null);
+                                  setReportModalMode('view');
+                                  setSelectedReport(request.plantingReport);
+                                  setCurrentDistributionRequest(request);
                                   setIsReportModalOpen(true);
                                 }}
                                 className="px-3 py-1.5 rounded-lg bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors flex items-center gap-1"
@@ -1038,7 +1071,9 @@ export default function RequestSection({
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        setSelectedReportId(request.plantingReportId);
+                                        setReportModalMode('view');
+                                        setSelectedReport(request.plantingReport);
+                                        setCurrentDistributionRequest(request);
                                         setIsReportModalOpen(true);
                                       }}
                                       className="text-blue-600 dark:text-blue-400 hover:underline font-medium ml-2"
@@ -1406,37 +1441,18 @@ export default function RequestSection({
       )}
 
       {/* Report Modal */}
-      {isReportModalOpen && (
-        <ReportModal
-          isOpen={isReportModalOpen}
-          onClose={() => {
-            setIsReportModalOpen(false);
-            setSelectedReportId(null);
-            setCurrentDistributionRequest(null);
-          }}
-          report={selectedRequest?.plantingReport || null}
-          distributionRequest={currentDistributionRequest}
-          onArchive={selectedRequest ? () => handleArchiveRequest(selectedRequest) : undefined}
-          onSave={async (reportData) => {
-            try {
-              if (selectedReportId) {
-                await updateReport(selectedReportId, reportData);
-                toast.success('Report updated successfully');
-              } else {
-                await createReport(reportData);
-                toast.success('Report created successfully');
-              }
-              setIsReportModalOpen(false);
-              setSelectedReportId(null);
-              setCurrentDistributionRequest(null);
-              onRefresh();
-            } catch (error) {
-              console.error('Error saving report:', error);
-              toast.error(error.message || 'Failed to save report');
-            }
-          }}
-        />
-      )}
+      <ReportModal
+        open={isReportModalOpen}
+        mode={reportModalMode}
+        report={selectedReport}
+        onClose={() => {
+          setIsReportModalOpen(false);
+          setReportModalMode('create');
+          setSelectedReport(null);
+          setCurrentDistributionRequest(null);
+          onRefresh?.();
+        }}
+      />
     </div>
   );
 }

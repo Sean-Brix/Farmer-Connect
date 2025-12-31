@@ -1,5 +1,89 @@
 import prisma from '../../config/database.js';
 
+// HELPER - Get planting report statistics for a season
+export async function getSeasonReportStatistics(seasonId) {
+    const [
+        totalActive,
+        totalDeleted,
+        totalArchived,
+        requestReports,
+        plantedReports,
+        completedReports,
+        riceReports,
+        cornReports
+    ] = await Promise.all([
+        prisma.plantingReport.count({
+            where: {
+                croppingSeasonId: seasonId,
+                isDeleted: false
+            }
+        }),
+        prisma.plantingReport.count({
+            where: {
+                croppingSeasonId: seasonId,
+                isDeleted: true
+            }
+        }),
+        prisma.plantingReport.count({
+            where: {
+                croppingSeasonId: seasonId,
+                isDeleted: false,
+                isArchived: true
+            }
+        }),
+        prisma.plantingReport.count({
+            where: {
+                croppingSeasonId: seasonId,
+                isDeleted: false,
+                state: 'Request_Report'
+            }
+        }),
+        prisma.plantingReport.count({
+            where: {
+                croppingSeasonId: seasonId,
+                isDeleted: false,
+                state: 'Planted'
+            }
+        }),
+        prisma.plantingReport.count({
+            where: {
+                croppingSeasonId: seasonId,
+                isDeleted: false,
+                state: 'Completed'
+            }
+        }),
+        prisma.plantingReport.count({
+            where: {
+                croppingSeasonId: seasonId,
+                isDeleted: false,
+                typeOfCrop: 'Rice'
+            }
+        }),
+        prisma.plantingReport.count({
+            where: {
+                croppingSeasonId: seasonId,
+                isDeleted: false,
+                typeOfCrop: 'Corn'
+            }
+        })
+    ]);
+
+    return {
+        total: totalActive,
+        deleted: totalDeleted,
+        archived: totalArchived,
+        byState: {
+            Request_Report: requestReports,
+            Planted: plantedReports,
+            Completed: completedReports
+        },
+        byCrop: {
+            Rice: riceReports,
+            Corn: cornReports
+        }
+    };
+}
+
 // CREATE - Create a new planting season
 export async function createPlantingSeason(req, res) {
     try {
@@ -119,12 +203,10 @@ export async function getPlantingSeasonById(req, res) {
         const season = await prisma.plantingSeason.findUnique({
             where: { id },
             include: {
-                plantingReports: {
+                createdByUser: {
                     select: {
                         id: true,
-                        farmerName: true,
-                        typeOfCrop: true,
-                        dateOfPlanting: true
+                        username: true
                     }
                 }
             }
@@ -137,12 +219,17 @@ export async function getPlantingSeasonById(req, res) {
             });
         }
 
+        const reportStatistics = await getSeasonReportStatistics(id);
+
         console.log('📄 [Planting Season] Retrieved:', season.name);
 
         return res.status(200).json({
             success: true,
             message: 'Planting season retrieved successfully',
-            season
+            season: {
+                ...season,
+                reportStatistics
+            }
         });
     } catch (error) {
         console.error('❌ [Planting Season] Get by ID error:', error);
@@ -214,12 +301,7 @@ export async function deletePlantingSeason(req, res) {
 
         // Check if season exists
         const existingSeason = await prisma.plantingSeason.findUnique({
-            where: { id },
-            include: {
-                plantingReports: { 
-                    select: { id: true, isArchived: true }
-                }
-            }
+            where: { id }
         });
 
         if (!existingSeason) {
@@ -229,21 +311,29 @@ export async function deletePlantingSeason(req, res) {
             });
         }
 
-        const reportCount = existingSeason.plantingReports.length;
+        const reportStats = await getSeasonReportStatistics(id);
 
-        // If cascade is requested or no reports exist, proceed with deletion
-        if (cascade === 'true' && reportCount > 0) {
-            // Delete all associated reports first
+        // Block deletion when active (not soft-deleted) reports exist and cascade not requested
+        if (reportStats.total > 0 && cascade !== 'true') {
+            return res.status(400).json({
+                success: false,
+                message: `Cannot delete season: ${reportStats.total} planting reports are linked`,
+                details: {
+                    total: reportStats.total,
+                    byState: reportStats.byState,
+                    recommendation: reportStats.byState.Completed > 0
+                        ? 'Archive or migrate completed reports first, or use cascade delete if safe.'
+                        : 'Remove or reassign linked reports, or use cascade delete if safe.'
+                }
+            });
+        }
+
+        // Cascade delete all reports if explicitly requested
+        if (reportStats.total > 0 && cascade === 'true') {
             await prisma.plantingReport.deleteMany({
                 where: { croppingSeasonId: id }
             });
-            console.log(`🗑️ [Planting Season] Cascade deleted ${reportCount} associated reports`);
-        } else if (reportCount > 0) {
-            // Cascade not requested but reports exist
-            return res.status(400).json({
-                success: false,
-                message: `Cannot delete season with ${reportCount} associated reports. Enable cascade delete or set season to inactive.`
-            });
+            console.log(`🗑️ [Planting Season] Cascade deleted ${reportStats.total} associated reports`);
         }
 
         await prisma.plantingSeason.delete({

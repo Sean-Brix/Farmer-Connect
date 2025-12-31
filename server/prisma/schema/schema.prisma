@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,33 +7,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Account {
-  id             String         @id @default(cuid())
-  firstName      String
-  middleName     String?
-  surname        String
-  extensionName  String?
-  sex            sexOption      @default(Male)
-  contactNumber  String?
-  dateOfBirth    DateTime?
-  picturePath    String?
-  username       String         @unique
-  password       String
-  access         access         @default(User)
-  email          String?
-  client_profile client_profile @default(Other)
-  resetTokenHash String?
-  resetTokenExpiry DateTime?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-
-  // Relations
+  id                      String                 @id @default(cuid())
+  firstName               String
+  middleName              String?
+  surname                 String
+  extensionName           String?
+  sex                     sexOption              @default(Male)
+  contactNumber           String?
+  dateOfBirth             DateTime?
+  picturePath             String?
+  username                String                 @unique
+  password                String
+  access                  access                 @default(User)
+  email                   String?
+  client_profile          client_profile         @default(Other)
+  createdAt               DateTime               @default(now())
+  updatedAt               DateTime               @updatedAt
+  resetTokenExpiry        DateTime?
+  resetTokenHash          String?
   auditLogs               AuditLog[]             @relation("AdminAuditLogs")
   chatAttachments         ChatAttachment[]
   chatMessages            ChatMessage[]
   chatParticipants        ChatParticipant[]
   chatReadReceipts        ChatReadReceipt[]
+  distributionHistory     DistributionHistory[]
+  distributionWaitlist    DistributionWaitlist[]
   createdFAQCategories    FAQCategory[]
   createdFAQs             FAQ[]
   assignedInquiries       Inquiry[]              @relation("AssignedInquiries")
@@ -44,45 +42,18 @@ model Account {
   inquiryReplies          InquiryReply[]
   itemTransactions        ItemTransaction[]
   adminTransactions       ItemTransaction[]      @relation("AdminTransactions")
+  notificationSettings    NotificationSettings?
+  notifications           Notification[]
   seminars                SeminarParticipant[]
   seminarsCreated         Seminar[]              @relation("SeminarsCreated")
   surveyFormsCreated      SurveyForm[]           @relation("SurveyFormsCreated")
   surveyResponses         SurveyResponse[]       @relation("SurveyResponses")
   surveyStatisticsCreated SurveyStatistic[]      @relation("SurveyStatisticsCreated")
-  preferences             UserPreference[]
-  notifications           Notification[]
-  notificationSettings    NotificationSettings?
   systemSettingsUpdated   SystemSettings[]       @relation("SystemSettingsUpdater")
-  distributionHistory     DistributionHistory[]
-  distributionWaitlist    DistributionWaitlist[]
+  preferences             UserPreference[]
 
   @@map("accounts")
 }
-
-enum sexOption {
-  Male
-  Female
-}
-
-enum client_profile {
-  Fishfolk                          @map("Fishfolk")
-  Rural_Based_Org                   @map("Rural Based Org")
-  Student                           @map("Student")
-  Agricultural_Fisheries_Technician @map("Agricultural/Fisheries Technician")
-  Youth                             @map("Youth")
-  Women                             @map("Women")
-  Govt_Employee                     @map("Govt Employee")
-  PWD                               @map("PWD")
-  Indigenous_People                 @map("Indigenous People")
-  Other                             @map("Other")
-}
-
-enum access {
-  Admin
-  User
-  Super_Admin @map("Super Admin")
-}
-
 
 model AuditLog {
   id         String       @id @default(cuid())
@@ -99,70 +70,13 @@ model AuditLog {
   admin      Account      @relation("AdminAuditLogs", fields: [adminId], references: [id])
 
   @@index([adminId], map: "audit_logs_adminId_fkey")
-  @@index([createdAt(sort: Desc)])
+  @@index([createdAt])
   @@index([action])
   @@index([targetType])
-  @@index([adminId, createdAt(sort: Desc)])
-  @@index([action, createdAt(sort: Desc)])
+  @@index([adminId, createdAt])
+  @@index([action, createdAt])
   @@map("audit_logs")
 }
-
-enum audit_action {
-  ACCOUNT_CREATE
-  ACCOUNT_UPDATE
-  ACCOUNT_DELETE
-  ACCOUNT_ROLE_CHANGE
-  ACCOUNT_STATUS_CHANGE
-  LOGIN
-  LOGOUT
-  LOGIN_FAILED
-  INVENTORY_CREATE
-  INVENTORY_UPDATE
-  INVENTORY_DELETE
-  INVENTORY_STATUS_CHANGE
-  DISTRIBUTION_CREATE
-  DISTRIBUTION_UPDATE
-  DISTRIBUTION_DELETE
-  DISTRIBUTION_REQUEST_APPROVE
-  DISTRIBUTION_REQUEST_REJECT
-  DISTRIBUTION_REQUEST_NO_PICKUP
-  EIC_CREATE
-  EIC_UPDATE
-  EIC_DELETE
-  EIC_STATUS_CHANGE
-  EIC_REQUEST_APPROVE
-  EIC_REQUEST_REJECT
-  EIC_REQUEST_NO_PICKUP
-  SEMINAR_CREATE
-  SEMINAR_UPDATE
-  SEMINAR_DELETE
-  SEMINAR_STATUS_CHANGE
-  SEMINAR_PARTICIPANT_UPDATE
-  CONTENT_CREATE
-  CONTENT_UPDATE
-  CONTENT_DELETE
-  SYSTEM_BACKUP
-  SYSTEM_RESTORE
-  SYSTEM_MAINTENANCE
-  PROFILE_UPDATE
-  PROFILE_PICTURE_UPDATE
-  SETTINGS_UPDATE
-  INQUIRY_CREATE
-  INQUIRY_REPLY
-  INQUIRY_ASSIGN
-  INQUIRY_RESOLVE
-  INQUIRY_ATTACHMENT_UPLOAD
-  SURVEY_FORM_CREATE
-  SURVEY_FORM_UPDATE
-  SURVEY_FORM_DELETE
-  SURVEY_RESPONSE_SUBMIT
-  SURVEY_STATISTIC_UPDATE
-  REGISTERED_CROP_CREATE
-  REGISTERED_CROP_UPDATE
-  REGISTERED_CROP_DELETE
-  CROP_REPORT_SUBMIT
-}
-
 
 model ChatRoom {
   id           String            @id @default(cuid())
@@ -257,40 +171,17 @@ model ChatReadReceipt {
   @@map("chat_read_receipts")
 }
 
-enum RoomType {
-  DIRECT
-  GROUP
-  SUPPORT
-}
-
-enum ParticipantRole {
-  ADMIN
-  MEMBER
-}
-
-enum MessageType {
-  TEXT
-  IMAGE
-  FILE
-  SYSTEM
-}
-
-
-// Distribution quota and eligibility management
-// Used for controlling access to distribution items based on rules
-
 model DistributionQuota {
-  id                  String   @id @default(cuid())
-  itemStackId         String   @unique
-  maxPerUser          Int      @default(1) // Maximum quantity per user (lifetime)
-  maxRequestsPerMonth Int      @default(1) // Maximum requests per month
-  cooldownDays        Int      @default(30) // Days to wait between requests
-  eligibilityCriteria Json? // { "livelihood": ["Farming", "Livestock"], "barangay": ["Brgy A"] }
-  active              Boolean  @default(true)
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-
-  itemStack ItemStack @relation(fields: [itemStackId], references: [id], onDelete: Cascade)
+  id                  String    @id @default(cuid())
+  itemStackId         String    @unique
+  maxPerUser          Int       @default(1)
+  maxRequestsPerMonth Int       @default(1)
+  cooldownDays        Int       @default(30)
+  eligibilityCriteria String?   @db.LongText
+  active              Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  itemStack           ItemStack @relation(fields: [itemStackId], references: [id], onDelete: Cascade)
 
   @@index([itemStackId])
   @@index([active])
@@ -298,42 +189,39 @@ model DistributionQuota {
 }
 
 model DistributionHistory {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   accountId     String
   itemStackId   String
   quantity      Int
-  receivedAt    DateTime @default(now())
-  transactionId String? // Link to ItemTransaction if applicable
-
-  account   Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  itemStack ItemStack @relation(fields: [itemStackId], references: [id], onDelete: Cascade)
+  receivedAt    DateTime  @default(now())
+  transactionId String?
+  account       Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  itemStack     ItemStack @relation(fields: [itemStackId], references: [id], onDelete: Cascade)
 
   @@index([accountId, itemStackId])
-  @@index([accountId, receivedAt]) // For monthly counting
+  @@index([accountId, receivedAt])
   @@index([itemStackId])
   @@map("distribution_history")
 }
 
 model DistributionWaitlist {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   accountId   String
   itemStackId String
-  quantity    Int      @default(1)
-  position    Int // Queue position
-  notified    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  expiresAt   DateTime // Auto-remove if not claimed
+  quantity    Int       @default(1)
+  position    Int
+  notified    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime
+  account     Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  itemStack   ItemStack @relation(fields: [itemStackId], references: [id], onDelete: Cascade)
 
-  account   Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  itemStack ItemStack @relation(fields: [itemStackId], references: [id], onDelete: Cascade)
-
-  @@unique([accountId, itemStackId]) // One waitlist entry per user per item
-  @@index([itemStackId, position]) // For queue ordering
+  @@unique([accountId, itemStackId])
+  @@index([itemStackId, position])
   @@index([expiresAt])
   @@index([notified])
   @@map("distribution_waitlist")
 }
-
 
 model Inquiry {
   id           String              @id @default(cuid())
@@ -359,7 +247,7 @@ model Inquiry {
   @@index([assignedToId])
   @@index([createdAt])
   @@index([updatedAt])
-  @@index([status, updatedAt]) // Composite index for sorted active queries
+  @@index([status, updatedAt])
   @@index([resolvedById], map: "inquiries_resolvedById_fkey")
   @@map("inquiries")
 }
@@ -386,8 +274,8 @@ model InquiryReply {
   @@index([senderId])
   @@index([createdAt])
   @@index([senderType])
-  @@index([readByAdmin, senderType]) // Composite index for unread admin messages
-  @@index([readByUser, senderType]) // Composite index for unread user messages
+  @@index([readByAdmin, senderType])
+  @@index([readByUser, senderType])
   @@index([parentReplyId], map: "inquiry_replies_parentReplyId_fkey")
   @@map("inquiry_replies")
 }
@@ -450,38 +338,20 @@ model FAQ {
   @@map("faqs")
 }
 
-enum InquiryStatus {
-  PENDING
-  IN_PROGRESS
-  WAITING_USER
-  RESOLVED
-  CANCELLED
-
-  @@map("inquiry_status")
-}
-
-enum SenderType {
-  USER
-  ADMIN
-  BOT
-
-  @@map("sender_type")
-}
-
-
 model InventoryItem {
-  id            String         @id @default(cuid())
-  name          String         @unique
+  id            String        @id @default(cuid())
+  name          String        @unique
   description   String?
   picture       Bytes?
-  category      item_category  @default(Other)
-  seedVarietyId String? // For Seeds category - links to seed variety
-  unit          String? // "bags", "kilograms", "packets"
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  category      item_category @default(Other)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  seedVarietyId String?
+  unit          String?
+  seedVariety   SeedVariety?  @relation(fields: [seedVarietyId], references: [id])
   item_stacks   ItemStack[]
-  seedVariety   SeedVariety?   @relation(fields: [seedVarietyId], references: [id])
 
+  @@index([seedVarietyId], map: "inventory_items_seedVarietyId_fkey")
   @@map("inventory_items")
 }
 
@@ -489,54 +359,53 @@ model ItemStack {
   id                       String                 @id @default(cuid())
   itemId                   String
   quantity                 Int                    @default(1)
-  reservedQuantity         Int                    @default(0)
   status                   item_status            @default(Available)
   date_limit               Int?
-  max_quantity_per_request Int?
   createdAt                DateTime               @default(now())
   updatedAt                DateTime               @updatedAt
+  max_quantity_per_request Int?
+  reservedQuantity         Int                    @default(0)
+  distributionHistory      DistributionHistory[]
+  distributionQuota        DistributionQuota?
+  distributionWaitlist     DistributionWaitlist[]
   item                     InventoryItem          @relation(fields: [itemId], references: [id])
   itemTransactions         ItemTransaction[]
-  distributionQuota        DistributionQuota?
-  distributionHistory      DistributionHistory[]
-  distributionWaitlist     DistributionWaitlist[]
 
   @@index([itemId], map: "item_stacks_itemId_fkey")
   @@map("item_stacks")
 }
 
 model ItemTransaction {
-  id                 String             @id @default(cuid())
-  itemStackId        String
-  accountId          String
-  adminId            String?
-  quantity           Int                @default(1)
-  status             transaction_status @default(Pending)
-  pickupDate         DateTime
-  returnDate         DateTime?
-  requestNote        String?
-  autoStatusChanged  Boolean            @default(false)
-  statusChangedAt    DateTime?
-  statusChangeReason String?
-  previousStatus     String?
-  actual_pickup              DateTime?
-  actual_return              DateTime?
-  adjustedReturnDate         DateTime?
-  plantingReportRequired     Boolean          @default(false)
-  plantingReportId           String? // String to match PlantingReport.id (cuid)
-  plantingReportDeadline     DateTime?
-  plantingReportSubmittedAt  DateTime?
-  plantingReportArchivedAt   DateTime?
-  // Farmer-provided distribution details (required on request creation)
-  farmLocation               String?
-  areaPlanted                Float?
-  plantingMethod             PlantingMethod?
-  createdAt                  DateTime         @default(now())
-  updatedAt                  DateTime         @updatedAt
-  account                    Account          @relation(fields: [accountId], references: [id])
-  admin                      Account?         @relation("AdminTransactions", fields: [adminId], references: [id])
-  itemStack                  ItemStack        @relation(fields: [itemStackId], references: [id])
-  plantingReport             PlantingReport?  @relation(fields: [plantingReportId], references: [id])
+  id                        String             @id @default(cuid())
+  itemStackId               String
+  accountId                 String
+  adminId                   String?
+  quantity                  Int                @default(1)
+  status                    transaction_status @default(Pending)
+  pickupDate                DateTime
+  returnDate                DateTime?
+  requestNote               String?
+  createdAt                 DateTime           @default(now())
+  updatedAt                 DateTime           @updatedAt
+  autoStatusChanged         Boolean            @default(false)
+  statusChangeReason        String?
+  statusChangedAt           DateTime?
+  actual_pickup             DateTime?
+  actual_return             DateTime?
+  previousStatus            String?
+  adjustedReturnDate        DateTime?
+  plantingReportArchivedAt  DateTime?
+  plantingReportDeadline    DateTime?
+  plantingReportId          String?
+  plantingReportRequired    Boolean            @default(false)
+  plantingReportSubmittedAt DateTime?
+  areaPlanted               Float?
+  farmLocation              String?
+  plantingMethod            PlantingMethod?
+  account                   Account            @relation(fields: [accountId], references: [id])
+  admin                     Account?           @relation("AdminTransactions", fields: [adminId], references: [id])
+  itemStack                 ItemStack          @relation(fields: [itemStackId], references: [id])
+  plantingReport            PlantingReport?    @relation(fields: [plantingReportId], references: [id])
 
   @@index([accountId], map: "item_transactions_accountId_fkey")
   @@index([adminId], map: "item_transactions_adminId_fkey")
@@ -544,50 +413,9 @@ model ItemTransaction {
   @@index([status, returnDate])
   @@index([actual_pickup])
   @@index([actual_return])
+  @@index([plantingReportId], map: "item_transactions_plantingReportId_fkey")
   @@map("item_transactions")
 }
-
-enum transaction_status {
-  Pending
-  Approved
-  Borrowed
-  late_pickup
-  Rejected
-  Returned
-  No_Return
-  late_return
-  No_Pickup
-  Cancelled
-  Picked_Up    // Distribution: Seedling picked up on time
-  Planted      // Distribution: Planting report submitted
-  Archived     // Distribution: Report archived by admin
-}
-
-enum item_status {
-  Available
-  Unavailable
-  Damaged
-  EIC
-  Distributed
-  Reserved
-}
-
-enum item_category {
-  Farming_Equipment
-  Harvesting_Tools
-  Irrigation_Systems
-  Storage_Equipment
-  Processing_Equipment
-  Safety_Gear
-  Pest_Control
-  Livestock_Equipment
-  Measuring_Tools
-  Fisheries
-  Machinery
-  Seeds            // NEW: For seedling distribution
-  Other
-}
-
 
 model Notification {
   id        String            @id @default(cuid())
@@ -595,14 +423,14 @@ model Notification {
   type      notification_type
   title     String
   message   String            @db.Text
-  relatedId String? // Related transaction/item/seminar ID
+  relatedId String?
   read      Boolean           @default(false)
   createdAt DateTime          @default(now())
   account   Account           @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
-  @@index([accountId], map: "notifications_accountId_idx")
-  @@index([accountId, read], map: "notifications_accountId_read_idx")
-  @@index([createdAt], map: "notifications_createdAt_idx")
+  @@index([accountId])
+  @@index([accountId, read])
+  @@index([createdAt])
   @@map("notifications")
 }
 
@@ -620,96 +448,61 @@ model NotificationSettings {
   @@map("notification_settings")
 }
 
-enum notification_type {
-  REQUEST_APPROVED
-  REQUEST_REJECTED
-  ITEM_DUE_SOON
-  ITEM_OVERDUE
-  SEMINAR_REMINDER
-  SYSTEM_ALERT
-}
-
-
-// Planting Report System - Complete Redesign
-// Tracks planting and harvesting information for farmers
-
 model PlantingReport {
-  id String @id @default(cuid())
-
-  // Farmer Information
-  farmerName   String
-  farmLocation String
-  rsbsaNumber  String? // Optional RSBSA Number
-
-  // Seeding Information
-  croppingSeasonId   String?
-  areaPlanted        Float // in hectares (required from farmer request)
-  seedClassification SeedClassification
-  typeOfCrop         CropType
-  riceIrrigation     riceIrrigation? // Specific irrigation type if typeOfCrop is Rice
-  varietyId          String
-  dateOfPlanting     DateTime?
-  plantingMethod     PlantingMethod?   // Optional in State 1; required when transitioning to State 2
-  cropInsurance      Boolean            @default(false) // Crop insurance application checkbox
-
-  // Harvesting Information (admin-managed, optional until harvest is done)
-  harvestArea           Float? // in hectares
-  numberOfBags          Int?
-  weightPerBag          Float? // in kg
-  yieldMtPerHa          Float? // Yield in mt/ha (metric tons per hectare)
-  dateOfExpectedHarvest DateTime?
-
-  // Distribution linkage / metadata
-  distributionRequestId  String?
+  id                     String              @id @default(cuid())
+  farmerName             String
+  farmLocation           String
+  rsbsaNumber            String?
+  croppingSeasonId       String?
+  areaPlanted            Float
+  seedClassification     SeedClassification
+  typeOfCrop             CropType
+  riceIrrigation         riceIrrigation?
+  varietyId              String
+  dateOfPlanting         DateTime?
+  plantingMethod         PlantingMethod?
+  cropInsurance          Boolean             @default(false)
+  harvestArea            Float?
+  numberOfBags           Int?
+  weightPerBag           Float?
+  yieldMtPerHa           Float?
+  dateOfExpectedHarvest  DateTime?
+  isArchived             Boolean             @default(false)
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
   distributionItemId     String?
-  distributionQuantity   Int?
-  distributionUnit       String?
-  distributedQuantity    Float? // Track original distributed amount for comparison
   distributionPickupDate DateTime?
-  requestNote            String?
+  distributionQuantity   Int?
+  distributionRequestId  String?
+  distributionUnit       String?
+  lastUpdatedBy          String?
   plantingReportDeadline DateTime?
+  requestNote            String?
+  archivedAt             DateTime?
+  archivedBy             String?
+  deletedAt              DateTime?
+  deletedBy              String?
+  distributedQuantity    Float?
+  isDeleted              Boolean             @default(false)
+  state                  PlantingReportState @default(Planting)
+  stateHistory           String?             @db.LongText
+  itemTransactions       ItemTransaction[]
+  croppingSeason         PlantingSeason?     @relation(fields: [croppingSeasonId], references: [id], onDelete: Restrict)
+  variety                SeedVariety         @relation(fields: [varietyId], references: [id])
 
-  // System fields
-  // NEW: Three-state workflow
-  state        PlantingReportState  @default(Request_Report)
-
-  // Archive system (separate from state)
-  isArchived   Boolean              @default(false)
-  archivedAt   DateTime?
-  archivedBy   String?              // Account ID of user who archived
-
-  // Soft Delete (30-day recovery period)
-  isDeleted    Boolean              @default(false)
-  deletedAt    DateTime?
-  deletedBy    String?              // Account ID of user who deleted
-
-  lastUpdatedBy String? // account id of last editor
-  createdAt    DateTime             @default(now())
-  updatedAt    DateTime             @updatedAt
-
-  // Audit Trail
-  stateHistory Json?                // Tracks all state transitions with timestamps and users
-
-  // Relations
-  croppingSeason   PlantingSeason?    @relation(fields: [croppingSeasonId], references: [id], onDelete: Restrict)
-  variety          SeedVariety        @relation(fields: [varietyId], references: [id], onDelete: Restrict)
-  itemTransactions ItemTransaction[] // Reverse relation for seedling distributions
-
-  // Indexes for optimized queries
-  @@index([state, isArchived, isDeleted])  // Primary filtering index
-  @@index([distributionRequestId])         // Distribution lookups
-  @@index([isDeleted, deletedAt])          // Cleanup job queries
-  @@index([state, typeOfCrop])             // Filtered state queries
-  @@index([createdAt])                     // Sorting by date
-  @@index([varietyId])                     // Variety-based queries
-  @@index([croppingSeasonId])              // Season-based queries
+  @@index([state, isArchived, isDeleted])
+  @@index([distributionRequestId])
+  @@index([isDeleted, deletedAt])
+  @@index([state, typeOfCrop])
+  @@index([createdAt])
+  @@index([varietyId])
+  @@index([croppingSeasonId])
   @@map("planting_reports")
 }
 
-// Planting Season Reference Table
 model PlantingSeason {
   id              String           @id @default(cuid())
-  name            String           @unique // e.g., "Wet Season 2024", "Dry Season 2025"
+  name            String           @unique
   description     String?
   startDate       DateTime
   endDate         DateTime
@@ -723,59 +516,24 @@ model PlantingSeason {
   @@map("planting_seasons")
 }
 
-// Seed Variety Reference Table
 model SeedVariety {
-  id              String            @id @default(cuid())
-  name            String // e.g., "NSIC Rc222", "Pioneer 30G87"
+  id              String           @id @default(cuid())
+  name            String
   cropType        CropType
-  directSeededDAS Int // Days After Sowing
-  transplantedDAS Int // Days After Sowing
-  description     String?           @db.Text
-  plantingWindow  Int               @default(30) // Days until must be planted (for distributions)
-  isActive        Boolean           @default(true)
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  directSeededDAS Int
+  transplantedDAS Int
+  description     String?          @db.Text
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  plantingWindow  Int              @default(30)
+  inventoryItems  InventoryItem[]
   plantingReports PlantingReport[]
-  inventoryItems  InventoryItem[]   // Reverse relation for seedling items
 
-  @@unique([name, cropType]) // Prevent duplicate varieties for same crop
+  @@unique([name, cropType])
   @@index([cropType, isActive])
   @@map("seed_varieties")
 }
-
-// Enumerations
-
-enum riceIrrigation {
-  Irrigated
-  RainfedLowland @map("Rainfed Lowland")
-}
-
-enum SeedClassification {
-  Inbred_Certified // Inbred (Certified Seeds)
-  Hybrid_F1 // Hybrid (F1)
-  Inbred_Good // Inbred (Good Seeds)
-  Inbred_Farmers // Inbred (Farmer's Seed)
-}
-
-enum CropType {
-  Rice
-  Corn
-  High_Value_Crops
-}
-
-enum PlantingMethod {
-  Direct_Seeded
-  Transplanting
-}
-
-// ==================== NEW: Three-State System ====================
-// Replaces old PlantingReportStatus enum
-enum PlantingReportState {
-  Request_Report  // State 1: Seeds distributed/allocated, NOT planted yet
-  Planted         // State 2: Crop PLANTED, NOT harvested
-  Completed       // State 3: Crop HARVESTED, all data complete
-}
-
 
 model UserPreference {
   id        Int      @id @default(autoincrement())
@@ -789,7 +547,6 @@ model UserPreference {
   @@unique([userId, key])
   @@map("user_preferences")
 }
-
 
 model Seminar {
   id                    String               @id @default(cuid())
@@ -831,21 +588,6 @@ model SeminarParticipant {
   @@map("seminar_participants")
 }
 
-enum seminar_status {
-  Upcoming
-  Ongoing
-  Completed
-  Cancelled
-}
-
-enum participant_status {
-  Attended
-  Not_Attended @map("Not Attended")
-  Registered
-  Cancelled
-}
-
-
 model SurveyForm {
   id          String            @id @default(cuid())
   title       String
@@ -863,7 +605,7 @@ model SurveyForm {
   @@index([status])
   @@index([category])
   @@index([createdAt])
-  @@index([status, category]) // Composite index for filtered queries
+  @@index([status, category])
   @@index([createdById], map: "survey_forms_createdById_fkey")
   @@map("survey_forms")
 }
@@ -935,6 +677,233 @@ model SurveyStatistic {
   @@map("survey_statistics")
 }
 
+model SystemSettings {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  category    String   @default("general")
+  dataType    String   @default("string")
+  updatedBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  updater     Account? @relation("SystemSettingsUpdater", fields: [updatedBy], references: [id])
+
+  @@index([category])
+  @@index([updatedBy], map: "system_settings_updatedBy_fkey")
+  @@map("system_settings")
+}
+
+enum sexOption {
+  Male
+  Female
+}
+
+enum client_profile {
+  Fishfolk                          @map("Fishfolk")
+  Rural_Based_Org                   @map("Rural Based Org")
+  Student                           @map("Student")
+  Agricultural_Fisheries_Technician @map("Agricultural/Fisheries Technician")
+  Youth                             @map("Youth")
+  Women                             @map("Women")
+  Govt_Employee                     @map("Govt Employee")
+  PWD                               @map("PWD")
+  Indigenous_People                 @map("Indigenous People")
+  Other                             @map("Other")
+}
+
+enum access {
+  Admin
+  User
+  Super_Admin @map("Super Admin")
+}
+
+enum audit_action {
+  ACCOUNT_CREATE
+  ACCOUNT_UPDATE
+  ACCOUNT_DELETE
+  ACCOUNT_ROLE_CHANGE
+  ACCOUNT_STATUS_CHANGE
+  LOGIN
+  LOGOUT
+  LOGIN_FAILED
+  INVENTORY_CREATE
+  INVENTORY_UPDATE
+  INVENTORY_DELETE
+  INVENTORY_STATUS_CHANGE
+  DISTRIBUTION_CREATE
+  DISTRIBUTION_UPDATE
+  DISTRIBUTION_DELETE
+  DISTRIBUTION_REQUEST_APPROVE
+  DISTRIBUTION_REQUEST_REJECT
+  DISTRIBUTION_REQUEST_NO_PICKUP
+  EIC_CREATE
+  EIC_UPDATE
+  EIC_DELETE
+  EIC_STATUS_CHANGE
+  EIC_REQUEST_APPROVE
+  EIC_REQUEST_REJECT
+  EIC_REQUEST_NO_PICKUP
+  SEMINAR_CREATE
+  SEMINAR_UPDATE
+  SEMINAR_DELETE
+  SEMINAR_STATUS_CHANGE
+  SEMINAR_PARTICIPANT_UPDATE
+  CONTENT_CREATE
+  CONTENT_UPDATE
+  CONTENT_DELETE
+  SYSTEM_BACKUP
+  SYSTEM_RESTORE
+  SYSTEM_MAINTENANCE
+  PROFILE_UPDATE
+  PROFILE_PICTURE_UPDATE
+  SETTINGS_UPDATE
+  INQUIRY_CREATE
+  INQUIRY_REPLY
+  INQUIRY_ASSIGN
+  INQUIRY_RESOLVE
+  INQUIRY_ATTACHMENT_UPLOAD
+  SURVEY_FORM_CREATE
+  SURVEY_FORM_UPDATE
+  SURVEY_FORM_DELETE
+  SURVEY_RESPONSE_SUBMIT
+  SURVEY_STATISTIC_UPDATE
+  REGISTERED_CROP_CREATE
+  REGISTERED_CROP_UPDATE
+  REGISTERED_CROP_DELETE
+  CROP_REPORT_SUBMIT
+}
+
+enum RoomType {
+  DIRECT
+  GROUP
+  SUPPORT
+}
+
+enum ParticipantRole {
+  ADMIN
+  MEMBER
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  SYSTEM
+}
+
+enum InquiryStatus {
+  PENDING
+  IN_PROGRESS
+  WAITING_USER
+  RESOLVED
+  CANCELLED
+
+  @@map("inquiry_status")
+}
+
+enum SenderType {
+  USER
+  ADMIN
+  BOT
+
+  @@map("sender_type")
+}
+
+enum transaction_status {
+  Pending
+  Approved
+  Borrowed
+  late_pickup
+  Rejected
+  Returned
+  No_Return
+  late_return
+  No_Pickup
+  Cancelled
+  Picked_Up
+  Planted
+  Archived
+}
+
+enum item_status {
+  Available
+  Unavailable
+  Damaged
+  EIC
+  Distributed
+  Reserved
+}
+
+enum item_category {
+  Farming_Equipment
+  Harvesting_Tools
+  Irrigation_Systems
+  Storage_Equipment
+  Processing_Equipment
+  Safety_Gear
+  Pest_Control
+  Livestock_Equipment
+  Measuring_Tools
+  Fisheries
+  Machinery
+  Seeds
+  Other
+}
+
+enum notification_type {
+  REQUEST_APPROVED
+  REQUEST_REJECTED
+  ITEM_DUE_SOON
+  ITEM_OVERDUE
+  SEMINAR_REMINDER
+  SYSTEM_ALERT
+}
+
+enum riceIrrigation {
+  Irrigated
+  RainfedLowland @map("Rainfed Lowland")
+}
+
+enum SeedClassification {
+  Inbred_Certified
+  Hybrid_F1
+  Inbred_Good
+  Inbred_Farmers
+}
+
+enum CropType {
+  Rice
+  Corn
+  High_Value_Crops
+}
+
+enum PlantingMethod {
+  Direct_Seeded
+  Transplanting
+}
+
+enum PlantingReportState {
+  Distributed
+  Planting
+  Planted
+  Harvested
+}
+
+enum seminar_status {
+  Upcoming
+  Ongoing
+  Completed
+  Cancelled
+}
+
+enum participant_status {
+  Attended
+  Not_Attended @map("Not Attended")
+  Registered
+  Cancelled
+}
+
 enum survey_status {
   DRAFT
   ACTIVE
@@ -962,24 +931,4 @@ enum chart_type {
   AREA
   COLUMN
   SCATTER
-}
-
-
-// System-wide configuration settings
-// Used for: borrowing limits, quotas, cooldowns, feature toggles
-model SystemSettings {
-  id          String   @id @default(cuid())
-  key         String   @unique
-  value       String
-  description String?
-  category    String   @default("general") // 'eic', 'distribution', 'general', 'notification'
-  dataType    String   @default("string") // 'string', 'number', 'boolean', 'json'
-  updatedBy   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  updater Account? @relation(fields: [updatedBy], references: [id], name: "SystemSettingsUpdater")
-
-  @@index([category])
-  @@map("system_settings")
 }

@@ -62,14 +62,17 @@ const ReportModal = ({
                         seasonService.getAll(),
                         varietyService.getAll()
                     ]);
-                    // Extract data from API response
-                    setFreshSeasons(seasonsData.seasons || seasonsData || []);
-                    setFreshVarieties(varietiesData.varieties || varietiesData || []);
+                    // Extract data from API response and ensure arrays
+                    const extractedSeasons = seasonsData.seasons || seasonsData || [];
+                    const extractedVarieties = varietiesData.varieties || varietiesData || [];
+                    
+                    setFreshSeasons(Array.isArray(extractedSeasons) ? extractedSeasons : []);
+                    setFreshVarieties(Array.isArray(extractedVarieties) ? extractedVarieties : []);
                 } catch (error) {
                     console.error('Error fetching fresh data:', error);
-                    // Fallback to props if API fails
-                    setFreshSeasons(seasons);
-                    setFreshVarieties(varieties);
+                    // Fallback to props if API fails, ensure arrays
+                    setFreshSeasons(Array.isArray(seasons) ? seasons : []);
+                    setFreshVarieties(Array.isArray(varieties) ? varieties : []);
                 }
             };
             fetchFreshData();
@@ -118,7 +121,7 @@ const ReportModal = ({
                 }
                 
                 // Set selected variety - prioritize report.variety object
-                if (report.varietyId) {
+                if (report.varietyId && Array.isArray(freshVarieties)) {
                     const variety = report.variety || freshVarieties.find(v => v.id === report.varietyId);
                     setSelectedVariety(variety);
                 }
@@ -131,11 +134,11 @@ const ReportModal = ({
                         setFormData(parsed);
                         
                         // Restore filtered varieties and selected variety
-                        if (parsed.typeOfCrop) {
+                        if (parsed.typeOfCrop && Array.isArray(freshVarieties)) {
                             const filtered = freshVarieties.filter(v => v.cropType === parsed.typeOfCrop && v.isActive);
                             setFilteredVarieties(filtered);
                         }
-                        if (parsed.varietyId) {
+                        if (parsed.varietyId && Array.isArray(freshVarieties)) {
                             const variety = freshVarieties.find(v => v.id === parsed.varietyId);
                             setSelectedVariety(variety);
                         }
@@ -239,14 +242,18 @@ const ReportModal = ({
         }));
         
         // Filter varieties based on selected crop type (use fresh data)
-        const filtered = freshVarieties.filter(v => v.cropType === cropType && v.isActive);
+        const filtered = Array.isArray(freshVarieties) 
+            ? freshVarieties.filter(v => v.cropType === cropType && v.isActive)
+            : [];
         setFilteredVarieties(filtered);
         setSelectedVariety(null);
     };
 
     const handleVarietyChange = (selectedOption) => {
         const varietyId = selectedOption ? selectedOption.value : '';
-        const variety = freshVarieties.find(v => v.id === varietyId);
+        const variety = Array.isArray(freshVarieties) 
+            ? freshVarieties.find(v => v.id === varietyId)
+            : null;
         setSelectedVariety(variety || null);
         setFormData(prev => ({
             ...prev,
@@ -306,7 +313,10 @@ const ReportModal = ({
     if (!isOpen) return null;
 
     // Use freshSeasons if available (fetched from API), otherwise fallback to seasons prop
-    const seasonsToUse = freshSeasons.length > 0 ? freshSeasons : seasons;
+    // Ensure we always have an array to work with
+    const seasonsToUse = Array.isArray(freshSeasons) && freshSeasons.length > 0 
+        ? freshSeasons 
+        : (Array.isArray(seasons) ? seasons : []);
     const activeSeasons = seasonsToUse.filter(s => s.isActive);
 
     return createPortal(

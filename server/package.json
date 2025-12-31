@@ -48,7 +48,8 @@
     "fill": "node prisma/Seeds/index.js",
     "seed:modular": "node prisma/Seeds/index.js",
     "seed:requests": "node scripts/seedRequests.js",
-    "seed:comprehensive": "node prisma/comprehensive-seed.js",
+    "seed:planting": "node scripts/seedPlantingReports.js",
+    "seed:comprehensive": "node scripts/seedComprehensive.js",
     "reset": "npx prisma migrate reset --force && (prisma generate || echo 'Nothing to generate')",
     "seed:accounts": "node prisma/seed-accounts-only.js",
     "reset:accounts": "npx prisma migrate reset --force --skip-seed && node prisma/seed-accounts-only.js",
@@ -56,7 +57,7 @@
   },
   "prisma": {
     "seed": "node prisma/Seeds/index.js",
-    "schema": "prisma/schema/"
+    "schema": "prisma/schema/schema.prisma"
   },
   "keywords": [],
   "author": "",

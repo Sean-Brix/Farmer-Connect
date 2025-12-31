@@ -8,9 +8,9 @@ const SeedClassifications = [
   'Inbred_Certified',
   'Hybrid_F1',
   'Inbred_Good',
-  "Inbred_Farmers"
+  'Inbred_Farmers'
 ];
-const PlantingReportStates = ['Request_Report', 'Planted', 'Completed'];
+const PlantingReportStates = ['Planting', 'Planted', 'Harvested'];
 
 // ==================== BASE FIELDS ====================
 const farmerInfoFields = {
