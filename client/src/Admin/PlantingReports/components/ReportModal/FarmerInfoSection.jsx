@@ -12,7 +12,7 @@ export default function FarmerInfoSection({ data, errors, onChange, onBlur, read
 				Farmer Information
 			</Typography>
 			<Grid container spacing={2}>
-				{showFarmerSelector && (
+				{showFarmerSelector ? (
 					<Grid item xs={12}>
 						<FarmerSelector
 							value={data.farmerName}
@@ -26,21 +26,21 @@ export default function FarmerInfoSection({ data, errors, onChange, onBlur, read
 							helperText={errors.farmerName}
 						/>
 					</Grid>
+				) : (
+					<Grid item xs={12}>
+						<TextField
+							label="Farmer Name"
+							value={data.farmerName || ''}
+							onChange={(e) => onChange('farmerName', e.target.value)}
+							onBlur={() => onBlur('farmerName')}
+							error={Boolean(errors.farmerName)}
+							helperText={errors.farmerName || ''}
+							fullWidth
+							required
+							disabled={readOnly}
+						/>
+					</Grid>
 				)}
-
-				<Grid item xs={12} sm={6}>
-					<TextField
-						label="Farmer Name"
-						value={data.farmerName || ''}
-						onChange={(e) => onChange('farmerName', e.target.value)}
-						onBlur={() => onBlur('farmerName')}
-						error={Boolean(errors.farmerName)}
-						helperText={errors.farmerName || ''}
-						fullWidth
-						required
-						disabled={readOnly}
-					/>
-				</Grid>
 				<Grid item xs={12} sm={6}>
 					<TextField
 						label="Farm Location"
@@ -59,7 +59,7 @@ export default function FarmerInfoSection({ data, errors, onChange, onBlur, read
 						label={
 							<Box sx={{ display: 'flex', alignItems: 'center' }}>
 								RSBSA Number
-								<FieldTooltip title="Format: 00-00-00-000-000000" />
+								<FieldTooltip title="Format: RSBSA-XX-XXX-XXXX-XXXXX or XX-XXX-XXXX-XXXXX" />
 							</Box>
 						}
 						value={data.rsbsaNumber || ''}

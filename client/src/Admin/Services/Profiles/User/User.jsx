@@ -183,6 +183,7 @@ export default function User({ user, details, refetchRow, tabular = true }) {
                         user={account}
                         isEdit={editBtn}
                         refetchRow={refetchRow}
+                        onEditComplete={() => setEditBtn(false)}
                     />
                 </Modal>
             </>
@@ -282,6 +283,7 @@ export default function User({ user, details, refetchRow, tabular = true }) {
                     user={account}
                     isEdit={editBtn}
                     refetchRow={refetchRow}
+                    onEditComplete={() => setEditBtn(false)}
                 />
             </Modal>
         </>

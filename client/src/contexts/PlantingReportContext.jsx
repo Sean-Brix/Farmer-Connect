@@ -229,11 +229,39 @@ export const PlantingReportProvider = ({ children }) => {
 
     const deleteReport = useCallback(async (id) => {
         try {
-            await plantingReportService.delete(id);
+            await plantingReportService.deleteReport(id);
             // Invalidate cache
             setReportsCache({ data: null, timestamp: null });
         } catch (error) {
+            // If 404, the report was already deleted - treat as success
+            if (error.response?.status === 404) {
+                setReportsCache({ data: null, timestamp: null });
+                return; // Don't throw, treat as success
+            }
             console.error('Error deleting report:', error);
+            throw error;
+        }
+    }, []);
+
+    const restoreReport = useCallback(async (id) => {
+        try {
+            const response = await plantingReportService.restoreReport(id);
+            // Invalidate cache
+            setReportsCache({ data: null, timestamp: null });
+            return response.report;
+        } catch (error) {
+            console.error('Error restoring report:', error);
+            throw error;
+        }
+    }, []);
+
+    const permanentDeleteReport = useCallback(async (id) => {
+        try {
+            await plantingReportService.permanentDeleteReport(id);
+            // Invalidate cache
+            setReportsCache({ data: null, timestamp: null });
+        } catch (error) {
+            console.error('Error permanently deleting report:', error);
             throw error;
         }
     }, []);
@@ -276,6 +304,8 @@ export const PlantingReportProvider = ({ children }) => {
         createReport,
         updateReport,
         deleteReport,
+        restoreReport,
+        permanentDeleteReport,
         archiveReport
     };
 

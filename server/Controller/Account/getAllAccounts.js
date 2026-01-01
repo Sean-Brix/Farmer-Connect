@@ -42,10 +42,10 @@ async function getAllAccounts(req, res) {
 
         if (filters.search) {
             where.OR = [
-                { username: { contains: filters.search, mode: 'insensitive' } },
-                { firstName: { contains: filters.search, mode: 'insensitive' } },
-                { surname: { contains: filters.search, mode: 'insensitive' } },
-                { email: { contains: filters.search, mode: 'insensitive' } },
+                { username: { contains: filters.search } },
+                { firstName: { contains: filters.search } },
+                { surname: { contains: filters.search } },
+                { email: { contains: filters.search } },
             ];
         }
 
@@ -76,6 +76,7 @@ async function getAllAccounts(req, res) {
                     email: true,
                     access: true,
                     client_profile: true,
+                    rsbsaNumber: true,
                 },
                 where: where,
                 orderBy: orderBy,

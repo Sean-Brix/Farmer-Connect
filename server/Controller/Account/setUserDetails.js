@@ -18,6 +18,7 @@ async function setUserDetails(req, res) {
         dateOfBirth,
         access,
         client_profile,
+        rsbsaNumber,
     } = req.body;
 
     const validationResult = filterUpdateData(req.body);
@@ -55,6 +56,7 @@ async function setUserDetails(req, res) {
             dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
             access,
             client_profile,
+            rsbsaNumber: rsbsaNumber || null,
         },
     });
 
@@ -75,6 +77,7 @@ async function setUserDetails(req, res) {
     if (currentUser.access !== access) updatedFields.push('access');
     if (currentUser.client_profile !== client_profile)
         updatedFields.push('client_profile');
+    if (currentUser.rsbsaNumber !== rsbsaNumber) updatedFields.push('rsbsaNumber');
 
     // Log the account update action
     const auditAction =
@@ -172,6 +175,14 @@ function filterUpdateData(data) {
             const contactRegex = /^09\d{9}$/;
             if (!contactRegex.test(contactNumber)) {
                 return 'Invalid contact number format. Must start with 09 and be 11 digits long.';
+            }
+        }
+
+        // RSBSA number validation (if provided)
+        if (data.rsbsaNumber && data.rsbsaNumber.trim()) {
+            const rsbsaRegex = /^[a-zA-Z0-9-]+$/;
+            if (!rsbsaRegex.test(data.rsbsaNumber)) {
+                return 'Invalid RSBSA number format. Must contain only letters, numbers, and dashes.';
             }
         }
 

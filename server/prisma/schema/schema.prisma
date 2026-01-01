@@ -22,6 +22,7 @@ model Account {
   access                  access                 @default(User)
   email                   String?
   client_profile          client_profile         @default(Other)
+  rsbsaNumber             String?
   createdAt               DateTime               @default(now())
   updatedAt               DateTime               @updatedAt
   resetTokenExpiry        DateTime?

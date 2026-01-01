@@ -23,12 +23,14 @@ export const STATE_COLORS = {
   [PLANTING_STATES.PLANTING]: 'warning', // Orange for planting
   [PLANTING_STATES.PLANTED]: 'success', // Green for planted
   [PLANTING_STATES.HARVESTED]: 'primary', // Purple for harvested
+  'Distributed': 'warning', // Orange for distributed (same as planting)
   ARCHIVED: 'default', // Gray
   DELETED: 'error' // Red
 };
 
 export const STATE_TRANSITIONS = {
   [PLANTING_STATES.PLANTING]: [PLANTING_STATES.PLANTED],
+  'Distributed': [PLANTING_STATES.PLANTED], // Distributed → Planted (same as Planting)
   [PLANTING_STATES.PLANTED]: [PLANTING_STATES.HARVESTED],
   [PLANTING_STATES.HARVESTED]: [] // No transitions from Harvested
 };

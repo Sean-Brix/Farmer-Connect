@@ -27,6 +27,7 @@ import {
     unarchiveReport,
     // Soft delete / restore
     restoreReport,
+    permanentDeleteReport,
     getDeletedReports,
     // Bulk operations
     bulkArchiveReports,
@@ -88,6 +89,7 @@ router.patch('/reports/:id/unarchive', unarchiveReport);
 
 // Soft delete / restore
 router.patch('/reports/:id/restore', restoreReport);
+router.delete('/reports/:id/permanent', permanentDeleteReport);
 
 // Bulk operations
 router.post('/reports/bulk/archive', bulkArchiveReports);

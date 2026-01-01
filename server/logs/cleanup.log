@@ -127,3 +127,79 @@
 [2025-12-31T09:48:57.513Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
 [2025-12-31T09:58:43.747Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
 [2025-12-31T10:09:50.831Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T17:48:17.697Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T17:57:26.729Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T18:00:00.022Z] [Cleanup Job] Triggered at 2025-12-31T18:00:00.022Z
+[2025-12-31T18:00:00.023Z] 🧹 Cleanup starting (cutoff 2025-12-01T18:00:00.023Z)
+[2025-12-31T18:00:00.029Z] Pending delete: cmjt8cl5n002ktuycq618vtw3 | Xavier Zamora | Barangay Dalayap, Porac, Pampanga | 378 days deleted
+[2025-12-31T18:00:00.029Z] Pending delete: cmjt8cl5i002gtuychs6eqvzu | Vicente Morales | Barangay Sapang Bato, Angeles City, Pampanga | 376 days deleted
+[2025-12-31T18:00:00.030Z] Pending delete: cmjt8cl5k002ituycso2lzaqn | Wilma Padilla | Barangay Sta. Monica, Magalang, Pampanga | 374 days deleted
+[2025-12-31T18:00:00.030Z] Pending delete: cmjt8cl5q002mtuyctn1lela0 | Yolanda Rivera | Barangay Dolores, Angeles City, Pampanga | 373 days deleted
+[2025-12-31T18:00:00.031Z] Pending delete: cmjt8cl5s002otuycpgaxjrv4 | Zachary Bautista | Barangay Margot, Mabalacat, Pampanga | 372 days deleted
+[2025-12-31T18:00:00.040Z] ✅ Cleanup completed: 5 reports deleted
+[2025-12-31T18:00:00.040Z]    - Deleted: Xavier Zamora (cmjt8cl5n002ktuycq618vtw3)
+[2025-12-31T18:00:00.041Z]    - Deleted: Vicente Morales (cmjt8cl5i002gtuychs6eqvzu)
+[2025-12-31T18:00:00.041Z]    - Deleted: Wilma Padilla (cmjt8cl5k002ituycso2lzaqn)
+[2025-12-31T18:00:00.042Z]    - Deleted: Yolanda Rivera (cmjt8cl5q002mtuyctn1lela0)
+[2025-12-31T18:00:00.042Z]    - Deleted: Zachary Bautista (cmjt8cl5s002otuycpgaxjrv4)
+[2025-12-31T18:09:48.774Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T18:10:12.727Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T18:14:48.881Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T18:15:34.242Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T18:16:32.950Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T18:26:28.802Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T18:38:20.384Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T18:41:11.326Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T18:41:53.728Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T18:42:34.979Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T18:46:46.517Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T18:48:40.262Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T18:52:32.980Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T18:58:56.292Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T19:00:13.774Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T19:05:15.197Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T19:30:28.758Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T19:34:12.820Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T19:35:09.902Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T19:38:08.351Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T19:40:29.132Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T20:00:48.065Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T20:38:05.261Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T20:52:40.303Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T20:52:48.707Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T20:55:34.921Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T20:56:19.059Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T21:02:37.161Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T21:05:02.132Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T21:12:34.242Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T21:20:00.050Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T21:21:07.804Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T21:21:59.196Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T21:22:36.318Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T21:25:34.183Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T21:31:06.022Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T21:36:04.109Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T22:08:24.984Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T22:23:57.369Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T22:51:47.884Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T22:57:27.959Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T22:57:34.221Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T23:17:39.653Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T23:56:14.203Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2025-12-31T23:56:31.394Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2026-01-01T00:12:09.629Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2026-01-01T00:12:27.983Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2026-01-01T00:21:34.356Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2026-01-01T00:32:57.959Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2026-01-01T00:35:37.173Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2026-01-01T00:38:46.277Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2026-01-01T00:40:15.556Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2026-01-01T00:40:19.229Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2026-01-01T16:54:11.645Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2026-01-01T18:00:00.025Z] [Cleanup Job] Triggered at 2026-01-01T18:00:00.025Z
+[2026-01-01T18:00:00.027Z] 🧹 Cleanup starting (cutoff 2025-12-02T18:00:00.027Z)
+[2026-01-01T18:00:00.032Z] ✅ Cleanup completed: 0 reports deleted
+[2026-01-01T21:21:56.274Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2026-01-01T22:32:43.973Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2026-01-01T22:38:04.857Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30
+[2026-01-01T22:38:07.784Z] ✅ Cleanup job scheduled (0 0 2 * * *) timezone=Asia/Manila, cutoffDays=30

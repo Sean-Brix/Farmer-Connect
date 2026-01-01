@@ -87,6 +87,12 @@ export const plantingReportService = {
     return response.data;
   },
 
+  // Permanently delete report (hard delete)
+  async permanentDeleteReport(id) {
+    const response = await api.delete(`/planting-reports/reports/${id}/permanent`);
+    return response.data;
+  },
+
   // ===========================
   // STATE TRANSITIONS
   // ===========================
@@ -99,7 +105,7 @@ export const plantingReportService = {
 
   // Transition to Completed
   async transitionToCompleted(id, data) {
-    const response = await api.patch(`/planting-reports/reports/${id}/transition/completed`, data);
+    const response = await api.patch(`/planting-reports/reports/${id}/transition/harvested`, data);
     return response.data;
   },
 

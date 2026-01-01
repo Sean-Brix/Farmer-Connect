@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useTheme } from '../../../../contexts/ThemeContext';
 
-export default function User_Details({ user, isEdit, refetchRow}) {
+export default function User_Details({ user, isEdit, refetchRow, onEditComplete }) {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     const queryClient = useQueryClient();
@@ -12,6 +12,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
     const [editedUser, setEditedUser] = useState({});
     const [errorModal, setErrorModal] = useState({ open: false, message: '' });
     const [confirmModal, setConfirmModal] = useState({ open: false, onConfirm: null });
+    const [successModal, setSuccessModal] = useState({ open: false, message: '' });
 
     const { data: userDetail, refetch: refetchDetails } = useQuery({
         queryKey: ['userDetails', user.id],
@@ -58,6 +59,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                 email: updatedUser.email || null,
                 username: updatedUser.username || null,
                 client_profile: updatedUser.client_profile || null,
+                rsbsaNumber: updatedUser.rsbsaNumber || null,
                 access: updatedUser.access || 'User',
             };
 
@@ -80,10 +82,6 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                 throw new Error(data.message || 'Something Went Wrong');
             }
 
-            setIsEditing(false);
-            queryClient.invalidateQueries(['userDetails', user.id]);
-            queryClient.invalidateQueries({ queryKey: ['accounts'], exact: false });
-
             return response.json();
         },
 
@@ -99,6 +97,12 @@ export default function User_Details({ user, isEdit, refetchRow}) {
             }
 
             setIsEditing(false);
+            setSuccessModal({ open: true, message: 'User details updated successfully!' });
+            
+            // Notify parent that editing is complete
+            if (typeof onEditComplete === 'function') {
+                onEditComplete();
+            }
         },
         
         onError: (error) => {
@@ -137,6 +141,14 @@ export default function User_Details({ user, isEdit, refetchRow}) {
             // Limit to 11 digits
             if (value && value.length > 11) {
                 return;
+            }
+        }
+
+        // Input filtering for RSBSA Number
+        if (key === 'rsbsaNumber') {
+            // Only allow alphanumeric and dashes
+            if (value && !/^[a-zA-Z0-9-]*$/.test(value)) {
+                return; // Don't update if invalid characters
             }
         }
 
@@ -224,7 +236,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                 let pattern, title, maxLength, inputMode, max;
                 
                 if (['firstName', 'middleName', 'surname', 'extensionName'].includes(fieldName)) {
-                    pattern = '[a-zA-Z\\s.-]+';
+                    pattern = '[a-zA-Z .\\-]+';
                     title = `${label} can only contain letters, spaces, periods, and hyphens`;
                 }
                 
@@ -233,6 +245,11 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                     maxLength = '11';
                     inputMode = 'numeric';
                     title = 'Contact number must be exactly 11 digits starting with 09';
+                }
+                
+                if (fieldName === 'rsbsaNumber') {
+                    pattern = '[a-zA-Z0-9\\-]+';
+                    title = 'RSBSA Number can only contain letters, numbers, and dashes';
                 }
                 
                 if (fieldName === 'dateOfBirth') {
@@ -404,7 +421,8 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                     {renderField('Date of Birth', userDetail?.dateOfBirth, 'dateOfBirth', 'date')}
                                     {renderField('Contact Number', userDetail?.contactNumber, 'contactNumber', 'tel')}
                                 </div>
-                                <div className="grid grid-cols-1 gap-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                    {renderField('RSBSA Number', userDetail?.rsbsaNumber, 'rsbsaNumber')}
                                     {renderField('Client Profile', userDetail?.client_profile, 'client_profile')}
                                 </div>
                             </div>
@@ -553,7 +571,8 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                         {renderField('Date of Birth', editedUser?.dateOfBirth, 'dateOfBirth', 'date')}
                                         {renderField('Contact Number', editedUser?.contactNumber, 'contactNumber', 'tel')}
                                     </div>
-                                    <div className="grid grid-cols-1 gap-4">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {renderField('RSBSA Number', editedUser?.rsbsaNumber, 'rsbsaNumber')}
                                         {renderField('Client Profile', editedUser?.client_profile, 'client_profile', 'select', [
                                             { value: '', label: 'Select Profile' },
                                             { value: 'Fishfolk', label: 'Fishfolk' },
@@ -719,6 +738,29 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                 Cancel
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+            {successModal.open && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 ">
+                    <div className={`rounded-xl shadow-xl p-8 max-w-sm w-full text-center animate-fade-in ${
+                        isDark 
+                            ? 'bg-gray-800 border border-gray-700' 
+                            : 'bg-white'
+                    }`}>
+                        <div className="text-green-600 text-2xl mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 mx-auto">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 className={`text-lg font-bold mb-2 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>Success</h3>
+                        <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{successModal.message}</p>
+                        <button
+                            onClick={() => setSuccessModal({ open: false, message: '' })}
+                            className="bg-gradient-to-r from-green-400 to-green-600 text-white px-6 py-2 rounded-lg font-semibold shadow hover:from-green-500 hover:to-green-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-300"
+                        >
+                            Close
+                        </button>
                     </div>
                 </div>
             )}

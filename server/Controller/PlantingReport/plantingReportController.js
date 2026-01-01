@@ -787,13 +787,30 @@ export async function transitionToPlanted(req, res) {
             });
         }
 
-        const { error, value } = toPlantedSchema.validate(req.body);
+        console.log('🔍 [Transition Debug] Request body:', req.body);
+        console.log('🔍 [Transition Debug] Report typeOfCrop:', report.typeOfCrop);
+        console.log('🔍 [Transition Debug] Report areaPlanted:', report.areaPlanted);
+
+        // Validate with context from the existing report
+        const { error, value } = toPlantedSchema.validate(req.body, {
+            context: {
+                typeOfCrop: report.typeOfCrop,
+                areaPlanted: report.areaPlanted
+            },
+            stripUnknown: true,  // Remove unknown fields instead of erroring
+            abortEarly: false     // Show all errors
+        });
+        
         if (error) {
+            console.error('❌ [Transition Debug] Validation error:', error.details);
             return res.status(400).json({
                 success: false,
-                message: error.details[0].message
+                message: error.details[0].message,
+                errors: error.details.map(e => e.message)
             });
         }
+
+        console.log('✅ [Transition Debug] Validated value:', value);
 
         const { dateOfPlanting, plantingMethod, riceIrrigation, transitionNote } = value;
 
@@ -809,6 +826,15 @@ export async function transitionToPlanted(req, res) {
             dateOfPlanting,
             plantingMethod
         );
+
+        console.log('🔄 [Transition] Updating report:', {
+            id,
+            currentState: report.state,
+            newState: 'Planted',
+            dateOfPlanting,
+            plantingMethod,
+            riceIrrigation: riceIrrigation || report.riceIrrigation || null
+        });
 
         const updatedReport = await prisma.plantingReport.update({
             where: { id },
@@ -834,7 +860,8 @@ export async function transitionToPlanted(req, res) {
             }
         });
 
-        console.log(`✅ [Planting Report] ${id} transitioned: Request_Report → Planted`);
+        console.log(`✅ [Planting Report] ${id} transitioned: ${report.state} → Planted`);
+        console.log('📊 [Transition] Updated report state:', updatedReport.state);
 
         // Auto-update distribution request status if linked
         if (updatedReport.distributionRequestId) {
@@ -948,21 +975,10 @@ export async function transitionToHarvested(req, res) {
 
         console.log(`✅ [Planting Report] ${id} transitioned: Planted → Harvested (yield: ${yieldResult.yield} Mt/Ha)`);
 
-        // Auto-update distribution request status if linked
+        // Note: Distribution request status remains 'Planted' (transaction_status enum doesn't include 'Harvested')
+        // The planting report state tracks the full lifecycle: Distributed → Planted → Harvested
         if (updatedReport.distributionRequestId) {
-            try {
-                await prisma.itemTransaction.update({
-                    where: { id: updatedReport.distributionRequestId },
-                    data: { 
-                        status: 'Harvested',
-                        updatedAt: new Date()
-                    }
-                });
-                console.log(`✅ [Distribution] Auto-updated request ${updatedReport.distributionRequestId} status to Harvested`);
-            } catch (distError) {
-                console.error('⚠️ Failed to auto-update distribution request status:', distError);
-                // Don't fail the whole operation if distribution update fails
-            }
+            console.log(`ℹ️ [Distribution] Request ${updatedReport.distributionRequestId} status remains 'Planted' (report is now Harvested)`);
         }
 
         return res.status(200).json({
@@ -1164,6 +1180,47 @@ export async function restoreReport(req, res) {
         return res.status(500).json({
             success: false,
             message: 'Failed to restore planting report',
+            error: error.message
+        });
+    }
+}
+
+// PERMANENT DELETE - Hard delete a soft-deleted report
+export async function permanentDeleteReport(req, res) {
+    try {
+        const { id } = req.params;
+
+        // Find the deleted report
+        const report = await prisma.plantingReport.findFirst({
+            where: {
+                id,
+                isDeleted: true
+            }
+        });
+
+        if (!report) {
+            return res.status(404).json({
+                success: false,
+                message: 'Deleted report not found. It may have already been permanently deleted.'
+            });
+        }
+
+        // Permanently delete the report from database
+        await prisma.plantingReport.delete({
+            where: { id }
+        });
+
+        console.log(`🗑️ [Planting Report] Permanently deleted: ${id}`);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Planting report permanently deleted'
+        });
+    } catch (error) {
+        console.error('❌ [Planting Report] Permanent delete error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to permanently delete planting report',
             error: error.message
         });
     }

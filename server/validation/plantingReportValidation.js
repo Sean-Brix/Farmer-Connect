@@ -115,24 +115,12 @@ export const toPlantedSchema = Joi.object({
     }),
   riceIrrigation: Joi.string()
     .valid(...RiceIrrigationTypes)
-    .allow(null)
-    .when('typeOfCrop', {
-      is: 'Rice',
-      then: Joi.required(),
-      otherwise: Joi.optional()
-    })
-    .when('$typeOfCrop', {
-      is: 'Rice',
-      then: Joi.required(),
-      otherwise: Joi.optional()
-    })
+    .allow(null, '')
+    .optional()
     .messages({
-      'any.only': 'Rice irrigation must be Irrigated or RainfedLowland',
-      'any.required': 'Rice irrigation type is required for Rice crops'
+      'any.only': 'Rice irrigation must be Irrigated or RainfedLowland'
     }),
-  typeOfCrop: Joi.string().valid(...CropTypes).optional(),
-  areaPlanted: Joi.number().positive().max(1000).precision(2).optional(),
-  transitionNote: Joi.string().max(500).allow('').optional()
+  transitionNote: Joi.string().max(500).allow('', null).optional()
 });
 
 export const toCompletedSchema = Joi.object({
@@ -170,7 +158,7 @@ export const toCompletedSchema = Joi.object({
       'any.required': 'Weight per bag is required to transition to Completed state'
     }),
   transitionNote: Joi.string().max(500).allow('').optional()
-});
+}).options({ allowUnknown: true });
 
 export const archiveReportSchema = Joi.object({
   archiveNote: Joi.string().max(500).allow('').optional()

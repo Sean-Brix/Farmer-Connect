@@ -157,15 +157,32 @@ export function useDeleteReport() {
 
 	return useMutation({
 		mutationFn: (id) => plantingReportService.deleteReport(id),
-		onSuccess: () => {
+		onSuccess: async () => {
+			// Invalidate all related queries
 			queryClient.invalidateQueries({ queryKey: queryKeys.lists() });
 			queryClient.invalidateQueries({ queryKey: queryKeys.deleted() });
 			queryClient.invalidateQueries({ queryKey: queryKeys.statistics() });
 			queryClient.invalidateQueries({ queryKey: queryKeys.summary() });
+			
+			// Force immediate refetch of distribution requests
+			await queryClient.refetchQueries({ 
+				queryKey: ['distributionRequests'],
+				type: 'active'
+			});
+			
 			toast.success('Report deleted successfully');
 		},
 		onError: (error) => {
-			toast.error(error.response?.data?.message || 'Failed to delete report');
+			// Handle 404 as already deleted - still show success and refetch
+			if (error.response?.status === 404) {
+				queryClient.refetchQueries({ 
+					queryKey: ['distributionRequests'],
+					type: 'active'
+				});
+				toast.info('Report was already deleted');
+			} else {
+				toast.error(error.response?.data?.message || 'Failed to delete report');
+			}
 		}
 	});
 }
@@ -193,11 +210,18 @@ export function useTransitionToPlanted() {
 
 	return useMutation({
 		mutationFn: ({ id, data }) => plantingReportService.transitionToPlanted(id, data),
-		onSuccess: (data, variables) => {
+		onSuccess: async (data, variables) => {
 			queryClient.invalidateQueries({ queryKey: queryKeys.lists() });
 			queryClient.invalidateQueries({ queryKey: queryKeys.detail(variables.id) });
 			queryClient.invalidateQueries({ queryKey: queryKeys.statistics() });
 			queryClient.invalidateQueries({ queryKey: queryKeys.summary() });
+			
+			// Force immediate refetch of distribution requests
+			await queryClient.refetchQueries({ 
+				queryKey: ['distributionRequests'],
+				type: 'active'
+			});
+			
 			toast.success('Report transitioned to Planted state');
 			return data;
 		},
@@ -212,11 +236,18 @@ export function useTransitionToCompleted() {
 
 	return useMutation({
 		mutationFn: ({ id, data }) => plantingReportService.transitionToCompleted(id, data),
-		onSuccess: (data, variables) => {
+		onSuccess: async (data, variables) => {
 			queryClient.invalidateQueries({ queryKey: queryKeys.lists() });
 			queryClient.invalidateQueries({ queryKey: queryKeys.detail(variables.id) });
 			queryClient.invalidateQueries({ queryKey: queryKeys.statistics() });
 			queryClient.invalidateQueries({ queryKey: queryKeys.summary() });
+			
+			// Force immediate refetch of distribution requests
+			await queryClient.refetchQueries({ 
+				queryKey: ['distributionRequests'],
+				type: 'active'
+			});
+			
 			toast.success('Report transitioned to Completed state');
 			return data;
 		},

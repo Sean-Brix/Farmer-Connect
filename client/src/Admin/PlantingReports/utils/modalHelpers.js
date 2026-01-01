@@ -31,26 +31,34 @@ function getStateLabel(state) {
 
 /**
  * Determine which sections should be visible for the given state.
- * - Planting: Farmer Info + Seeding Details
- * - Planting (edit mode): + Planting Details (to allow transition to Planted)
+ * - Planting/Distributed: Farmer Info + Seeding Details + Planting Details (in edit/create mode)
  * - Planted: Farmer Info + Seeding Details + Planting Details
  * - Planted (edit mode): + Harvesting (to allow transition to Harvested)
  * - Harvested: All sections
  */
-export const getVisibleSections = (state, mode = 'view') => ({
-  farmerInfo: true,
-  seedingDetails: true,
-  // Show planting details when Planted/Harvested, OR when editing Planting (to fill for transition)
-  plantingDetails: 
-    state === PLANTING_STATES.PLANTED || 
-    state === PLANTING_STATES.HARVESTED || 
-    (state === PLANTING_STATES.PLANTING && mode === 'edit'),
-  // Show harvesting when Harvested, OR when editing Planted (to fill for transition)
-  harvesting: 
-    state === PLANTING_STATES.HARVESTED || 
-    (state === PLANTING_STATES.PLANTED && mode === 'edit'),
-  distributionMetadata: true
-});
+export const getVisibleSections = (state, mode = 'view') => {
+  // "Distributed" state is equivalent to "Planting" state (for distribution-linked reports)
+  const isPlantingState = state === PLANTING_STATES.PLANTING || state === 'Distributed';
+  
+  const visibility = {
+    farmerInfo: true,
+    seedingDetails: true,
+    // Show planting details when Planted/Harvested, OR when editing/creating Planting/Distributed (to fill for transition)
+    plantingDetails: 
+      state === PLANTING_STATES.PLANTED || 
+      state === PLANTING_STATES.HARVESTED || 
+      (isPlantingState && (mode === 'edit' || mode === 'create')),
+    // Show harvesting when Harvested, OR when editing Planted (to fill for transition)
+    harvesting: 
+      state === PLANTING_STATES.HARVESTED || 
+      (state === PLANTING_STATES.PLANTED && mode === 'edit'),
+    distributionMetadata: true
+  };
+  
+  console.log('🔍 [Modal Visibility]', { state, mode, isPlantingState, visibility });
+  
+  return visibility;
+};
 
 /**
  * Determine which sections should be read-only for the given state and mode.

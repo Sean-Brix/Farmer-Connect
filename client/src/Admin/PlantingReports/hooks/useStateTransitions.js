@@ -57,7 +57,7 @@ export function useStateTransitions() {
 				case PLANTING_STATES.PLANTED:
 					return 'Mark as Planted';
 				case PLANTING_STATES.HARVESTED:
-					return 'Mark as Completed';
+					return 'Mark as Harvested';
 				default:
 					return null;
 			}

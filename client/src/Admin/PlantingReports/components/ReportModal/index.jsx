@@ -32,6 +32,19 @@ import ErrorDisplay from '../common/ErrorDisplay';
 export default function ReportModal({ open, mode = 'create', report = null, onClose }) {
 	const { isMobile } = useResponsive();
 	const currentState = report?.state || PLANTING_STATES.PLANTING;
+	
+	// Debug logging
+	useEffect(() => {
+		if (open) {
+			console.log('🔵 [ReportModal] Opened', { 
+				mode, 
+				reportId: report?.id,
+				reportState: report?.state, 
+				currentState,
+				hasReport: !!report 
+			});
+		}
+	}, [open, mode, report, currentState]);
 
 	const {
 		formData,
@@ -365,11 +378,12 @@ export default function ReportModal({ open, mode = 'create', report = null, onCl
 						ml: { xs: 0, sm: 'auto' }
 					}}
 				>
-					<Button onClick={handleClose} disabled={loading} fullWidth={isMobile}>
+					<Button type="button" onClick={handleClose} disabled={loading} fullWidth={isMobile}>
 						{readOnly ? 'Close' : 'Cancel'}
 					</Button>
 					{!readOnly && (
 						<Button
+							type="button"
 							variant="contained"
 							onClick={handleSave}
 							disabled={loading}

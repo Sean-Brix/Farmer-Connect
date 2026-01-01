@@ -10,6 +10,7 @@ export const categories = [
     'Measuring Tools',
     'Fisheries',
     'Machinery',
+    'Distribution',
     'Other',
 ];
 

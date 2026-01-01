@@ -35,9 +35,9 @@ const farmLocationSchema = Joi.string()
 const rsbsaNumberSchema = Joi.string()
 	.optional()
 	.allow('', null)
-	.pattern(/^\d{2}-\d{2}-\d{2}-\d{3}-\d{6}$/)
+	.pattern(/^(RSBSA-)?\d{2}-\d{3}-\d{4}-\d{5}$/)
 	.messages({
-		'string.pattern.base': 'RSBSA number must be in format: XX-XX-XX-XXX-XXXXXX'
+		'string.pattern.base': 'RSBSA number must be in format: RSBSA-XX-XXX-XXXX-XXXXX or XX-XXX-XXXX-XXXXX'
 	});
 
 const typeOfCropSchema = Joi.string()
@@ -205,10 +205,44 @@ export const plantedReportSchema = Joi.object({
 		otherwise: Joi.optional().allow(null, '')
 	}),
 	dateOfExpectedHarvest: Joi.date().optional().allow(null),
-	harvestArea: Joi.any().valid(null, '').optional(),
-	numberOfBags: Joi.any().valid(null, '').optional(),
-	weightPerBag: Joi.any().valid(null, '').optional(),
-	yieldMtPerHa: Joi.any().valid(null, '').optional()
+	harvestArea: Joi.number()
+		.positive()
+		.max(Joi.ref('areaPlanted'))
+		.optional()
+		.allow(null, '')
+		.messages({
+			'number.base': 'Harvest area must be a number',
+			'number.positive': 'Harvest area must be positive',
+			'number.max': 'Harvest area cannot exceed planted area'
+		}),
+	numberOfBags: Joi.number()
+		.integer()
+		.positive()
+		.optional()
+		.allow(null, '')
+		.messages({
+			'number.base': 'Number of bags must be a number',
+			'number.integer': 'Number of bags must be a whole number',
+			'number.positive': 'Number of bags must be positive'
+		}),
+	weightPerBag: Joi.number()
+		.positive()
+		.max(1000)
+		.optional()
+		.allow(null, '')
+		.messages({
+			'number.base': 'Weight per bag must be a number',
+			'number.positive': 'Weight per bag must be positive',
+			'number.max': 'Weight per bag cannot exceed 1000 kg'
+		}),
+	yieldMtPerHa: Joi.number()
+		.positive()
+		.optional()
+		.allow(null, '')
+		.messages({
+			'number.base': 'Yield must be a number',
+			'number.positive': 'Yield must be positive'
+		})
 }).options({ allowUnknown: true }).custom((value, helpers) => {
 	// Conditional validation: if ANY harvest field is filled, ALL harvest fields required
 	const hasHarvestArea = value.harvestArea && value.harvestArea !== '' && value.harvestArea !== null;

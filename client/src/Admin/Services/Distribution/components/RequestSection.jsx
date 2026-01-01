@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { useTheme } from '../../../../contexts/ThemeContext';
-import { ChevronDown, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { ChevronDown, CheckCircle, XCircle, Clock, Eye, Edit, Trash2, RotateCcw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ReportModal from '../../../PlantingReports/components/ReportModal';
 import { usePlantingReport } from '../../../../contexts/PlantingReportContext';
@@ -161,19 +161,97 @@ export default function RequestSection({
   }, []);
   
   // Planting report context
-  const { createReport, updateReport, fetchSeasons, fetchVarieties, archiveReport } = usePlantingReport();
+  const { createReport, updateReport, fetchSeasons, fetchVarieties, archiveReport, deleteReport, restoreReport, permanentDeleteReport } = usePlantingReport();
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // Categorize requests by status
   const categorizedRequests = useMemo(() => {
-    const plantingInProgress = requests.filter(req => ['Picked_Up', 'late_pickup'].includes(req.status) && !isSeedingComplete(req));
-    const planted = requests.filter(req => req.status === 'Planted' || (['Picked_Up', 'late_pickup'].includes(req.status) && isSeedingComplete(req)));
+    console.log('🔵 [RequestSection] Categorizing requests:', requests.length);
+    
+    // Log each request with its deleted status
+    requests.forEach((req, idx) => {
+      if (req.plantingReport) {
+        console.log(`📋 [Request ${idx}]`, {
+          id: req.id,
+          farmerName: req.requestorName,
+          state: req.plantingReport.state,
+          isDeleted: req.plantingReport.isDeleted,
+          isDeletedType: typeof req.plantingReport.isDeleted
+        });
+      }
+    });
+    
+    // First, separate deleted reports from active ones
+    const activeRequests = requests.filter(req => {
+      const isNotDeleted = req.plantingReport?.isDeleted !== true;
+      if (req.plantingReport && !isNotDeleted) {
+        console.log('🗑️ [Filtering OUT deleted]', {
+          id: req.id,
+          farmerName: req.requestorName,
+          isDeleted: req.plantingReport.isDeleted
+        });
+      }
+      return isNotDeleted;
+    });
+    
+    const deletedRequests = requests.filter(req => {
+      const isDeleted = req.plantingReport?.isDeleted === true;
+      if (isDeleted) {
+        console.log('✅ [Adding to deleted tab]', {
+          id: req.id,
+          farmerName: req.requestorName,
+          state: req.plantingReport?.state
+        });
+      }
+      return isDeleted;
+    });
+    
+    console.log('📊 [Split]', { active: activeRequests.length, deleted: deletedRequests.length });
+    
+    const plantingInProgress = activeRequests.filter(req => 
+      ['Picked_Up', 'late_pickup'].includes(req.status) && 
+      !isSeedingComplete(req) &&
+      req.plantingReport?.state !== 'Harvested' &&
+      req.plantingReportId && // Must have a planting report
+      req.plantingReport // Must have planting report data
+    );
+    
+    const planted = activeRequests.filter(req => {
+      const isPlanted = req.status === 'Planted' || (['Picked_Up', 'late_pickup'].includes(req.status) && isSeedingComplete(req));
+      const notHarvested = req.plantingReport?.state !== 'Harvested';
+      const hasReport = req.plantingReportId && req.plantingReport; // Must have a planting report
+      return isPlanted && notHarvested && hasReport;
+    });
+    
+    const harvested = activeRequests.filter(req => {
+      const hasReport = req.plantingReportId && req.plantingReport;
+      const result = req.plantingReport?.state === 'Harvested' && hasReport;
+      if (result) {
+        console.log('🌾 [Adding to harvested tab]', {
+          id: req.id,
+          farmerName: req.requestorName,
+          isDeleted: req.plantingReport?.isDeleted
+        });
+      }
+      return result;
+    });
+    
+    console.log('📊 [Categorized]', {
+      pending: activeRequests.filter(req => req.status === 'Pending').length,
+      reserved: activeRequests.filter(req => req.status === 'Approved').length,
+      planting: plantingInProgress.length,
+      planted: planted.length,
+      harvested: harvested.length,
+      deleted: deletedRequests.length
+    });
+    
     return {
-      pending: requests.filter(req => req.status === 'Pending'),
-      reserved: requests.filter(req => req.status === 'Approved'),
+      pending: activeRequests.filter(req => req.status === 'Pending'),
+      reserved: activeRequests.filter(req => req.status === 'Approved'),
       planting: plantingInProgress,
       planted,
-      archive: requests.filter(req => ['Rejected', 'No_Pickup', 'Cancelled', 'Archived'].includes(req.status))
+      harvested,
+      deleted: deletedRequests
     };
   }, [requests, isSeedingComplete]);
 
@@ -222,10 +300,7 @@ export default function RequestSection({
       }
     }
 
-    // Status filter (for archive tab)
-    if (activeTab === 'archive' && statusFilter !== 'all') {
-      filtered = filtered.filter(req => req.status === statusFilter);
-    }
+    // Status filter removed (archive tab removed)
     
     return filtered;
   }, [categorizedRequests, activeTab, search, itemFilter, userFilter, dateFilter, statusFilter]);
@@ -351,7 +426,8 @@ export default function RequestSection({
     { id: 'reserved', label: 'Reserved', count: categorizedRequests.reserved.length },
     { id: 'planting', label: 'Planting', count: categorizedRequests.planting.length },
     { id: 'planted', label: 'Planted', count: categorizedRequests.planted.length },
-    { id: 'archive', label: 'Archive', count: categorizedRequests.archive.length }
+    { id: 'harvested', label: 'Harvested', count: categorizedRequests.harvested.length },
+    { id: 'deleted', label: 'Deleted', count: categorizedRequests.deleted?.length || 0 }
   ];
 
   const canArchiveReport = (report) => {
@@ -459,7 +535,7 @@ export default function RequestSection({
     });
     return Array.from(users).sort();
   }, [requests]);
-  const columnCount = activeTab === 'archive' ? 4 : 5;
+  const columnCount = 5;
   
   // Clear all filters
   const clearAllFilters = () => {
@@ -512,19 +588,6 @@ export default function RequestSection({
           <ChevronDown className="w-4 h-4 rotate-90" />
           Back to Items
         </button>
-        {activeTab === 'archive' && (
-          <button
-            disabled={isLoading}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
-              isDark
-                ? 'bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-700 disabled:text-gray-500'
-                : 'bg-green-500 hover:bg-green-600 text-white disabled:bg-gray-200 disabled:text-gray-400'
-            }`}
-          >
-            <i className="fa-solid fa-download"></i>
-            Export Excel
-          </button>
-        )}
       </div>
 
       {/* Tabs */}
@@ -624,24 +687,6 @@ export default function RequestSection({
             <option value="week">This Week</option>
             <option value="month">This Month</option>
           </select>
-
-          {activeTab === 'archive' && (
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className={`px-3 py-1.5 rounded-lg border text-sm ${
-                isDark
-                  ? 'bg-gray-700 border-gray-600 text-white'
-                  : 'bg-gray-50 border-gray-300 text-gray-900'
-              }`}
-            >
-              <option value="all">All Statuses</option>
-              <option value="Rejected">Rejected</option>
-              <option value="No_Pickup">No Pickup</option>
-              <option value="Cancelled">Cancelled</option>
-              <option value="Archived">Archived</option>
-            </select>
-          )}
           
           {/* Clear filters button */}
           {(search || itemFilter !== 'all' || userFilter !== 'all' || dateFilter !== 'all' || statusFilter !== 'all') && (
@@ -664,42 +709,52 @@ export default function RequestSection({
         <table className="w-full">
           <thead className={`${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
             <tr>
-              <th className={`px-4 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                Item
-              </th>
-              <th className={`px-4 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                Farmer
-              </th>
-              {activeTab === 'planted' ? (
+              {(activeTab === 'planting' || activeTab === 'planted' || activeTab === 'harvested' || activeTab === 'deleted') ? (
                 <>
-                  <th className={`px-4 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Planting Date
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+                    Farmer
                   </th>
-                  <th className={`px-4 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Harvest Date
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+                    Location
+                  </th>
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+                    Item
+                  </th>
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+                    Variety
+                  </th>
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+                    Area (ha)
+                  </th>
+                  <th className={`px-6 py-3 text-right text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+                    Actions
                   </th>
                 </>
               ) : (
                 <>
+                  <th className={`px-4 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Item
+                  </th>
+                  <th className={`px-4 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Farmer
+                  </th>
                   <th className={`px-4 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                     Quantity
                   </th>
                   <th className={`px-4 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                     Pickup Date
                   </th>
+                  <th className={`px-4 py-3 text-right text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Actions
+                  </th>
                 </>
-              )}
-              {activeTab !== 'archive' && (
-                <th className={`px-4 py-3 text-right text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Actions
-                </th>
               )}
             </tr>
           </thead>
           <tbody className={`divide-y ${isDark ? 'divide-gray-700' : 'divide-gray-200'}`}>
             {paginatedRequests.length === 0 ? (
               <tr>
-                <td colSpan={columnCount} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={(activeTab === 'planting' || activeTab === 'planted' || activeTab === 'harvested' || activeTab === 'deleted') ? 6 : columnCount} className="px-4 py-8 text-center text-gray-500">
                   {search ? 'No requests match your search' : `No ${tabs.find(t => t.id === activeTab)?.label.toLowerCase()} requests`}
                 </td>
               </tr>
@@ -710,30 +765,472 @@ export default function RequestSection({
                     onClick={() => toggleRow(request.id)}
                     className={`${isDark ? 'hover:bg-gray-750' : 'hover:bg-gray-50'} transition-colors cursor-pointer`}
                   >
-                    <td className="px-4 py-3">
-                      <div className="flex items-center space-x-3">
-                        <span className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                          {request.itemName || 'Unknown Item'}
-                        </span>
-                      </div>
-                    </td>
-                    <td className={`px-4 py-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                      {request.requestorName || 'N/A'}
-                    </td>
-                    <td className={`px-4 py-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                      {activeTab === 'planted'
-                        ? (request.plantingReport?.dateOfPlanting ? formatDate(request.plantingReport.dateOfPlanting) : '—')
-                        : request.quantity}
-                    </td>
-                    <td className={`px-4 py-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                      {activeTab === 'planted' ? (
-                        request.plantingReport?.dateOfExpectedHarvest
-                          ? formatDate(request.plantingReport.dateOfExpectedHarvest)
-                          : '—'
-                      ) : (
-                        <div>
-                          {(() => {
-                            const labels = getDateLabels(request);
+                    {(activeTab === 'planting' || activeTab === 'planted' || activeTab === 'harvested' || activeTab === 'deleted') ? (
+                      <>
+                        {/* Farmer column */}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div>
+                            <div className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                              {request.requestorName || 'N/A'}
+                            </div>
+                            {request.plantingReport?.rsbsaNumber && (
+                              <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                {request.plantingReport.rsbsaNumber}
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                        {/* Location column */}
+                        <td className="px-6 py-4">
+                          <div className={`text-sm max-w-xs truncate ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>
+                            {request.plantingReport?.farmLocation || '—'}
+                          </div>
+                        </td>
+                        {/* Item column */}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`px-2 py-1 text-xs font-semibold rounded-full ${isDark ? 'bg-green-900 text-green-200' : 'bg-green-100 text-green-800'}`}>
+                            {request.itemName || 'Unknown'}
+                          </span>
+                        </td>
+                        {/* Variety column */}
+                        <td className={`px-6 py-4 whitespace-nowrap text-sm ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>
+                          {request.plantingReport?.variety?.name || '—'}
+                        </td>
+                        {/* Area column */}
+                        <td className={`px-6 py-4 whitespace-nowrap text-sm ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>
+                          {request.plantingReport?.areaPlanted || '—'}
+                        </td>
+                        {/* Actions column */}
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex items-center justify-end space-x-1">
+                            {activeTab === 'deleted' ? (
+                              // Deleted tab actions: View, Restore, Permanently Delete
+                              <>
+                                {/* View icon button */}
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (request.plantingReportId && request.plantingReport) {
+                                      setReportModalMode('view');
+                                      setSelectedReport(request.plantingReport);
+                                      setCurrentDistributionRequest(request);
+                                      setIsReportModalOpen(true);
+                                    }
+                                  }}
+                                  disabled={!request.plantingReportId}
+                                  className={`p-2 rounded-lg transition-colors ${
+                                    request.plantingReportId
+                                      ? 'text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20'
+                                      : 'text-gray-300 cursor-not-allowed dark:text-gray-600'
+                                  }`}
+                                  title="View Report"
+                                >
+                                  <Eye size={18} />
+                                </button>
+                                
+                                {/* Restore icon button */}
+                                <button
+                                  onClick={async (e) => {
+                                    e.stopPropagation();
+                                    if (request.plantingReportId) {
+                                      try {
+                                        await restoreReport(request.plantingReportId);
+                                        toast.success('Report restored successfully');
+                                        onRefresh?.();
+                                      } catch (error) {
+                                        toast.error('Failed to restore report');
+                                      }
+                                    }
+                                  }}
+                                  disabled={!request.plantingReportId}
+                                  className={`p-2 rounded-lg transition-colors ${
+                                    request.plantingReportId
+                                      ? 'text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20'
+                                      : 'text-gray-300 cursor-not-allowed dark:text-gray-600'
+                                  }`}
+                                  title="Restore Report"
+                                >
+                                  <RotateCcw size={18} />
+                                </button>
+                                
+                                {/* Permanently Delete icon button */}
+                                <button
+                                  onClick={async (e) => {
+                                    e.stopPropagation();
+                                    if (!request.plantingReportId) return;
+                                    
+                                    // Create custom permanent delete confirmation modal
+                                    const alertDiv = document.createElement('div');
+                                    alertDiv.innerHTML = `
+                                      <div style="
+                                          position: fixed;
+                                          top: 0;
+                                          left: 0;
+                                          width: 100%;
+                                          height: 100%;
+                                          background: rgba(0, 0, 0, 0.6);
+                                          backdrop-filter: blur(4px);
+                                          display: flex;
+                                          align-items: center;
+                                          justify-content: center;
+                                          z-index: 9999;
+                                          animation: fadeIn 0.2s ease-out;
+                                      ">
+                                          <div style="
+                                              background: white;
+                                              border-radius: 1rem;
+                                              box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                                              width: 90%;
+                                              max-width: 500px;
+                                              padding: 2rem;
+                                              animation: slideUp 0.3s ease-out;
+                                          ">
+                                              <div style="
+                                                  display: flex;
+                                                  align-items: center;
+                                                  gap: 1rem;
+                                                  margin-bottom: 1.5rem;
+                                              ">
+                                                  <div style="
+                                                      width: 48px;
+                                                      height: 48px;
+                                                      background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+                                                      border-radius: 50%;
+                                                      display: flex;
+                                                      align-items: center;
+                                                      justify-content: center;
+                                                      box-shadow: 0 4px 14px 0 rgba(220, 38, 38, 0.3);
+                                                  ">
+                                                      <i class="fas fa-exclamation-triangle" style="color: white; font-size: 1.25rem;"></i>
+                                                  </div>
+                                                  <div>
+                                                      <h3 style="margin: 0; font-size: 1.5rem; font-weight: 700; color: #1f2937;">Permanently Delete?</h3>
+                                                      <p style="margin: 0.25rem 0 0 0; color: #dc2626; font-size: 0.875rem; font-weight: 600;">⚠️ This action CANNOT be undone!</p>
+                                                  </div>
+                                              </div>
+                                              <p style="margin: 0 0 1.5rem 0; color: #374151; line-height: 1.6; font-size: 0.9375rem;">
+                                                  This will <strong>permanently delete</strong> the planting report from the database. This action is irreversible and cannot be restored.
+                                              </p>
+                                              <p style="margin: 0 0 1.5rem 0; color: #dc2626; line-height: 1.6; font-size: 0.875rem; font-weight: 600;">
+                                                  Are you absolutely sure you want to continue?
+                                              </p>
+                                              <div style="display: flex; gap: 0.75rem;">
+                                                  <button id="perm-delete-cancel-btn" style="
+                                                      flex: 1;
+                                                      background: #f3f4f6;
+                                                      border: 2px solid #e5e7eb;
+                                                      color: #374151;
+                                                      padding: 0.875rem 1.5rem;
+                                                      border-radius: 0.75rem;
+                                                      font-weight: 600;
+                                                      font-size: 1rem;
+                                                      cursor: pointer;
+                                                      transition: all 0.2s;
+                                                  ">
+                                                      Cancel
+                                                  </button>
+                                                  <button id="perm-delete-confirm-btn" style="
+                                                      flex: 1;
+                                                      background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+                                                      border: none;
+                                                      color: white;
+                                                      padding: 0.875rem 1.5rem;
+                                                      border-radius: 0.75rem;
+                                                      font-weight: 600;
+                                                      font-size: 1rem;
+                                                      cursor: pointer;
+                                                      transition: all 0.2s;
+                                                      box-shadow: 0 4px 14px 0 rgba(220, 38, 38, 0.3);
+                                                  ">
+                                                      Permanently Delete
+                                                  </button>
+                                              </div>
+                                          </div>
+                                          <style>
+                                              @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+                                              @keyframes slideUp { from { opacity: 0; transform: translateY(40px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+                                              #perm-delete-cancel-btn:hover { background: #e2e8f0; border-color: #cbd5e1; color: #475569; transform: translateY(-1px); }
+                                              #perm-delete-confirm-btn:hover { background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%); transform: translateY(-1px); box-shadow: 0 8px 25px 0 rgba(220, 38, 38, 0.4); }
+                                          </style>
+                                      </div>
+                                    `;
+                                    document.body.appendChild(alertDiv);
+
+                                    const userChoice = await new Promise((resolve) => {
+                                      document.getElementById('perm-delete-confirm-btn').onclick = () => {
+                                        document.body.removeChild(alertDiv);
+                                        resolve(true);
+                                      };
+                                      document.getElementById('perm-delete-cancel-btn').onclick = () => {
+                                        document.body.removeChild(alertDiv);
+                                        resolve(false);
+                                      };
+                                      alertDiv.onclick = (e) => {
+                                        if (e.target === alertDiv) {
+                                          document.body.removeChild(alertDiv);
+                                          resolve(false);
+                                        }
+                                      };
+                                    });
+
+                                    if (userChoice) {
+                                      try {
+                                        await permanentDeleteReport(request.plantingReportId);
+                                        toast.success('Report permanently deleted');
+                                        onRefresh?.();
+                                      } catch (error) {
+                                        console.error('Error permanently deleting report:', error);
+                                        toast.error(error.response?.data?.message || 'Failed to permanently delete report');
+                                      }
+                                    }
+                                  }}
+                                  disabled={!request.plantingReportId}
+                                  className={`p-2 rounded-lg transition-colors ${
+                                    request.plantingReportId
+                                      ? 'text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20'
+                                      : 'text-gray-300 cursor-not-allowed dark:text-gray-600'
+                                  }`}
+                                  title="Permanently Delete"
+                                >
+                                  <Trash2 size={18} />
+                                </button>
+                              </>
+                            ) : (
+                              // Active tabs actions: View, Edit, Delete
+                              <>
+                                {/* View icon button */}
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    console.log('👁️ [View button clicked]', {
+                                      tab: activeTab,
+                                      requestId: request.id,
+                                      plantingReportId: request.plantingReportId,
+                                      hasPlantingReport: !!request.plantingReport,
+                                      plantingReportState: request.plantingReport?.state
+                                    });
+                                    
+                                    if (request.plantingReportId && request.plantingReport) {
+                                      setReportModalMode('view');
+                                      setSelectedReport(request.plantingReport);
+                                      setCurrentDistributionRequest(request);
+                                      setIsReportModalOpen(true);
+                                    } else {
+                                      console.warn('⚠️ Missing plantingReport data', { request });
+                                      toast.error('Unable to view report: Report data not found');
+                                    }
+                                  }}
+                                  disabled={!request.plantingReportId && (activeTab === 'pending' || activeTab === 'reserved')}
+                                  className={`p-2 rounded-lg transition-colors ${
+                                    request.plantingReportId || (activeTab !== 'pending' && activeTab !== 'reserved')
+                                      ? 'text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20'
+                                      : 'text-gray-300 cursor-not-allowed dark:text-gray-600'
+                                  }`}
+                                  title="View Report"
+                                >
+                                  <Eye size={18} />
+                                </button>
+                                
+                                {/* Edit icon button */}
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (request.plantingReportId && request.plantingReport) {
+                                      setReportModalMode('edit');
+                                      setSelectedReport(request.plantingReport);
+                                      setCurrentDistributionRequest(request);
+                                      setIsReportModalOpen(true);
+                                    } else {
+                                      // Create new report if no report exists
+                                      setReportModalMode('create');
+                                      setSelectedReport(null);
+                                      setCurrentDistributionRequest(request);
+                                      setIsReportModalOpen(true);
+                                    }
+                                  }}
+                                  className="p-2 rounded-lg text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20 transition-colors"
+                                  title={request.plantingReportId ? "Edit Report" : "Create Report"}
+                                >
+                                  <Edit size={18} />
+                                </button>
+                                
+                                {/* Delete icon button */}
+                                <button
+                                  onClick={async (e) => {
+                                e.stopPropagation();
+                                
+                                console.log('🗑️ [Delete button clicked]', {
+                                  tab: activeTab,
+                                  requestId: request.id,
+                                  plantingReportId: request.plantingReportId,
+                                  hasPlantingReport: !!request.plantingReport,
+                                  isDeleted: request.plantingReport?.isDeleted
+                                });
+                                
+                                // Check if report is already deleted
+                                if (request.plantingReport?.isDeleted) {
+                                  toast.error('This report is already deleted');
+                                  return;
+                                }
+                                
+                                if (request.plantingReportId) {
+                                  // Create custom delete confirmation modal
+                                  const alertDiv = document.createElement('div');
+                                  alertDiv.innerHTML = `
+                                    <div style="
+                                        position: fixed;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        background: rgba(0, 0, 0, 0.6);
+                                        backdrop-filter: blur(4px);
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        z-index: 9999;
+                                        animation: fadeIn 0.2s ease-out;
+                                    ">
+                                        <div style="
+                                            background: white;
+                                            border-radius: 1rem;
+                                            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                                            width: 90%;
+                                            max-width: 500px;
+                                            padding: 2rem;
+                                            animation: slideUp 0.3s ease-out;
+                                        ">
+                                            <div style="
+                                                display: flex;
+                                                align-items: center;
+                                                gap: 1rem;
+                                                margin-bottom: 1.5rem;
+                                            ">
+                                                <div style="
+                                                    width: 48px;
+                                                    height: 48px;
+                                                    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                                                    border-radius: 50%;
+                                                    display: flex;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                    box-shadow: 0 4px 14px 0 rgba(239, 68, 68, 0.3);
+                                                ">
+                                                    <i class="fas fa-trash" style="color: white; font-size: 1.25rem;"></i>
+                                                </div>
+                                                <div>
+                                                    <h3 style="margin: 0; font-size: 1.5rem; font-weight: 700; color: #1f2937;">Delete Report?</h3>
+                                                    <p style="margin: 0.25rem 0 0 0; color: #6b7280; font-size: 0.875rem;">This action can be undone within 30 days</p>
+                                                </div>
+                                            </div>
+                                            <p style="margin: 0 0 1.5rem 0; color: #374151; line-height: 1.6; font-size: 0.9375rem;">
+                                                The planting report will be moved to deleted reports and can be restored within 30 days. After 30 days, it will be permanently removed.
+                                            </p>
+                                            <div style="display: flex; gap: 0.75rem;">
+                                                <button id="delete-cancel-btn" style="
+                                                    flex: 1;
+                                                    background: #f3f4f6;
+                                                    border: 2px solid #e5e7eb;
+                                                    color: #374151;
+                                                    padding: 0.875rem 1.5rem;
+                                                    border-radius: 0.75rem;
+                                                    font-weight: 600;
+                                                    font-size: 1rem;
+                                                    cursor: pointer;
+                                                    transition: all 0.2s;
+                                                ">
+                                                    Cancel
+                                                </button>
+                                                <button id="delete-confirm-btn" style="
+                                                    flex: 1;
+                                                    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                                                    border: none;
+                                                    color: white;
+                                                    padding: 0.875rem 1.5rem;
+                                                    border-radius: 0.75rem;
+                                                    font-weight: 600;
+                                                    font-size: 1rem;
+                                                    cursor: pointer;
+                                                    transition: all 0.2s;
+                                                    box-shadow: 0 4px 14px 0 rgba(239, 68, 68, 0.3);
+                                                ">
+                                                    Delete Report
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <style>
+                                            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+                                            @keyframes slideUp { from { opacity: 0; transform: translateY(40px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+                                            #delete-cancel-btn:hover { background: #e2e8f0; border-color: #cbd5e1; color: #475569; transform: translateY(-1px); }
+                                            #delete-confirm-btn:hover { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); transform: translateY(-1px); box-shadow: 0 8px 25px 0 rgba(239, 68, 68, 0.4); }
+                                        </style>
+                                    </div>
+                                  `;
+                                  document.body.appendChild(alertDiv);
+
+                                  const userChoice = await new Promise((resolve) => {
+                                    document.getElementById('delete-confirm-btn').onclick = () => {
+                                      document.body.removeChild(alertDiv);
+                                      resolve(true);
+                                    };
+                                    document.getElementById('delete-cancel-btn').onclick = () => {
+                                      document.body.removeChild(alertDiv);
+                                      resolve(false);
+                                    };
+                                    alertDiv.onclick = (e) => {
+                                      if (e.target === alertDiv) {
+                                        document.body.removeChild(alertDiv);
+                                        resolve(false);
+                                      }
+                                    };
+                                  });
+
+                                  if (userChoice) {
+                                    try {
+                                      await deleteReport(request.plantingReportId);
+                                      toast.success('Report deleted successfully');
+                                      onRefresh();
+                                    } catch (error) {
+                                      console.error('Error deleting report:', error);
+                                      toast.error(error.response?.data?.message || 'Failed to delete report');
+                                    }
+                                  }
+                                }
+                              }}
+                              disabled={(!request.plantingReportId && (activeTab === 'pending' || activeTab === 'reserved')) || request.plantingReport?.isDeleted}
+                              className={`p-2 rounded-lg transition-colors ${
+                                (request.plantingReportId || (activeTab !== 'pending' && activeTab !== 'reserved')) && !request.plantingReport?.isDeleted
+                                  ? 'text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20'
+                                  : 'text-gray-300 cursor-not-allowed dark:text-gray-600'
+                              }`}
+                              title={request.plantingReport?.isDeleted ? "Report already deleted" : "Delete Report"}
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center space-x-3">
+                            <span className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                              {request.itemName || 'Unknown Item'}
+                            </span>
+                          </div>
+                        </td>
+                        <td className={`px-4 py-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                          {request.requestorName || 'N/A'}
+                        </td>
+                        <td className={`px-4 py-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                          {request.quantity}
+                        </td>
+                        <td className={`px-4 py-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                          <div>
+                            {(() => {
+                              const labels = getDateLabels(request);
                             const displayDate = request.actual_pickup || request.pickupDate;
                             
                             return (
@@ -753,19 +1250,17 @@ export default function RequestSection({
                             );
                           })()}
                         </div>
-                      )}
-                    </td>
-                    {activeTab !== 'archive' && (
+                      </td>
                       <td className="px-4 py-3 text-right">
                         <div className="flex items-center justify-end space-x-2">
                           {/* Pending tab actions */}
                           {activeTab === 'pending' && (
-                            <>
-                              <button
-                                onClick={(e) => { e.stopPropagation(); handleApprove(request); }}
-                                className="p-1.5 rounded-lg bg-green-600 hover:bg-green-700 text-white transition-colors"
-                                title="Approve"
-                              >
+                          <>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleApprove(request); }}
+                              className="p-1.5 rounded-lg bg-green-600 hover:bg-green-700 text-white transition-colors"
+                              title="Approve"
+                            >
                                 <CheckCircle className="w-4 h-4" />
                               </button>
                               <button
@@ -878,8 +1373,8 @@ export default function RequestSection({
                             </>
                           )}
 
-                          {/* Planted tab actions */}
-                          {activeTab === 'planted' && request.plantingReportId && (
+                          {/* Planted/Harvested tab actions */}
+                          {(activeTab === 'planted' || activeTab === 'harvested') && request.plantingReportId && (
                             <>
                               <button
                                 onClick={(e) => {
@@ -898,13 +1393,14 @@ export default function RequestSection({
                           )}
                         </div>
                       </td>
+                      </>
                     )}
                   </tr>
                   
                   {/* Expanded Details Row */}
                   {expandedRow === request.id && (
                     <tr className={`${isDark ? 'bg-gray-750' : 'bg-gray-50'}`}>
-                      <td colSpan="6" className="px-6 py-6">
+                      <td colSpan={(activeTab === 'planting' || activeTab === 'planted' || activeTab === 'harvested') ? 6 : 6} className="px-6 py-6">
                         <div className="space-y-6">
                           {/* REQUEST INFORMATION SECTION */}
                           <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
@@ -979,12 +1475,6 @@ export default function RequestSection({
                                   <p className={`text-purple-600 dark:text-purple-400 font-semibold`}>
                                     {formatDate(request.plantingReportArchivedAt)}
                                   </p>
-                                </div>
-                              )}
-                              {activeTab === 'archive' && request.adminName && (
-                                <div>
-                                  <span className={`font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Processed By:</span>
-                                  <p className={isDark ? 'text-gray-200' : 'text-gray-900'}>{request.adminName}</p>
                                 </div>
                               )}
                             </div>
