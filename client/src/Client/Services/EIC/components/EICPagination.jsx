@@ -3,7 +3,8 @@ import { useTheme } from '../../../../contexts/ThemeContext';
 export default function EICPagination({ 
     currentPage, 
     setCurrentPage, 
-    totalPages 
+    totalPages,
+    isTutorialActive
 }) {
     const { isDark } = useTheme();
     
@@ -12,6 +13,7 @@ export default function EICPagination({
     return (
         <div className="flex justify-center mt-6 mb-2">
             <nav
+                data-tutorial="pagination"
                 className={`flex items-center gap-1 ${isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-200'} rounded-lg shadow-md border-2 px-3 py-1.5`}
                 aria-label="Pagination"
             >

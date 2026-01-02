@@ -36,7 +36,7 @@ export default function MessageList({
     };
     
     return (
-        <div className={`flex-1 overflow-y-auto p-6 space-y-4 ${
+        <div data-tutorial="message-list" className={`flex-1 overflow-y-auto p-6 space-y-4 ${
             theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'
         }`}>
             {messages.map((msg, idx) => {

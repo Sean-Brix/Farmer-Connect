@@ -15,8 +15,8 @@ export default function PlantingDetailsSection({ data, errors, onChange, onBlur,
 	const showIrrigation = data.typeOfCrop === 'Rice';
 
 	return (
-		<Paper variant="outlined" sx={{ p: 2 }}>
-			<Typography variant="subtitle1" fontWeight={700} gutterBottom>
+		<Paper variant="outlined" sx={{ p: 2, bgcolor: 'background.paper', borderColor: 'divider' }}>
+			<Typography variant="subtitle1" fontWeight={700} gutterBottom color="text.primary">
 				Planting Details
 			</Typography>
 			<Grid container spacing={2}>

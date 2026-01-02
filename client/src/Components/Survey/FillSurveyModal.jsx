@@ -152,7 +152,7 @@ const FillSurveyModal = ({ isOpen, onClose, surveyId, title }) => {
 
   return (
     <div 
-      className="fixed inset-0 bg-black/30 flex items-center justify-center z-[100000] p-4" 
+      className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100000] p-4" 
       style={{ backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
       onClick={onClose}
     >

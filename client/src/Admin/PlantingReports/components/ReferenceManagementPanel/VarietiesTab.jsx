@@ -125,7 +125,7 @@ export function VarietiesTab() {
       ) : isMobile ? (
         <Stack spacing={2}>
           {varieties.map((variety) => (
-            <Card key={variety.id} variant="outlined">
+            <Card key={variety.id} variant="outlined" sx={{ bgcolor: 'background.paper' }}>
               <CardContent>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 1 }}>
                   <Typography variant="subtitle1" fontWeight="bold">
@@ -166,9 +166,9 @@ export function VarietiesTab() {
           ))}
         </Stack>
       ) : (
-        <TableContainer component={Paper} variant="outlined">
+        <TableContainer component={Paper} variant="outlined" sx={{ bgcolor: 'background.paper' }}>
           <Table>
-            <TableHead>
+            <TableHead sx={{ bgcolor: 'action.hover' }}>
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Crop Type</TableCell>

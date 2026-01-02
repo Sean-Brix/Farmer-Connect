@@ -7,8 +7,8 @@ import FieldTooltip from '../common/FieldTooltip';
 
 export default function SeedingDetailsSection({ data, errors, onChange, onBlur, readOnly }) {
 	return (
-		<Paper variant="outlined" sx={{ p: 2 }}>
-			<Typography variant="subtitle1" fontWeight={700} gutterBottom>
+		<Paper variant="outlined" sx={{ p: 2, bgcolor: 'background.paper', borderColor: 'divider' }}>
+			<Typography variant="subtitle1" fontWeight={700} gutterBottom color="text.primary">
 				Seeding Details
 			</Typography>
 			<Grid container spacing={2}>

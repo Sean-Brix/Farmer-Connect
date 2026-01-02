@@ -64,6 +64,7 @@ function Survey() {
   const [faqCategoryFilter, setFaqCategoryFilter] = useState('');
   const [faqStatusFilter, setFaqStatusFilter] = useState('');
   const [categoryPanelCollapsed, setCategoryPanelCollapsed] = useState(false);
+  const [showCategoriesModal, setShowCategoriesModal] = useState(false);
 
   // Category state
   const [categories, setCategories] = useState([]);
@@ -927,15 +928,15 @@ function Survey() {
                                     Edit Form
                                   </button>
                                   <button
-                                    onClick={() => downloadSurveyForm(survey)}
+                                    onClick={() => { setResponsesSurvey(survey); setShowResponsesModal(true); }}
                                     className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-all duration-200 flex items-center gap-2 ${
                                       isDark 
-                                        ? 'text-gray-300 hover:bg-purple-900/50 hover:text-purple-300' 
-                                        : 'text-gray-700 hover:bg-purple-50 hover:text-purple-700'
+                                        ? 'text-gray-300 hover:bg-emerald-900/50 hover:text-emerald-300' 
+                                        : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700'
                                     }`}
                                   >
                                     <span>📥</span>
-                                    Download JSON
+                                    Export Excel
                                   </button>
                                   <div className={`border-t my-1 ${isDark ? 'border-gray-600' : 'border-gray-100'}`}></div>
                                   <button
@@ -1598,15 +1599,6 @@ function Survey() {
                   Edit Survey
                 </button>
                 <button
-                  onClick={() => downloadSurveyForm(previewSurvey)}
-                  className="flex-1 sm:flex-initial bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-all duration-200 font-semibold flex items-center justify-center gap-2 shadow-sm"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Download
-                </button>
-                <button
                   onClick={() => {
                     setShowPreviewModal(false);
                     setPreviewSurvey(null);
@@ -1622,106 +1614,36 @@ function Survey() {
 
         {/* FAQ Management Section */}
         {activeTab === 'faq' && (
-          <div className={`rounded-xl shadow-lg p-6 max-w-5xl mx-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-              <h2 className={`text-xl sm:text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                FAQ & Category Management
-              </h2>
-              <button
-                onClick={() => setShowFaqForm(true)}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors text-sm sm:text-base w-full sm:w-auto justify-center"
-              >
-                <Plus size={16} />
-                Add FAQ
-              </button>
-            </div>
-
-            {/* Categories Section */}
-            <div className="mb-8">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+          <div className={`rounded-xl shadow-lg max-w-7xl mx-auto ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+            <div className={`p-6`}>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <h2 className={`text-xl sm:text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                  FAQ Management
+                </h2>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => setCategoryPanelCollapsed(!categoryPanelCollapsed)}
-                    className={`p-1 rounded hover:bg-gray-200 transition-colors ${isDark ? 'hover:bg-gray-700' : ''}`}
+                    onClick={() => setShowCategoriesModal(true)}
+                    className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
+                      isDark 
+                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' 
+                        : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                    }`}
+                    title="Manage Categories"
                   >
-                    <svg 
-                      className={`w-4 h-4 transition-transform ${categoryPanelCollapsed ? 'rotate-0' : 'rotate-90'} ${isDark ? 'text-gray-300' : 'text-gray-600'}`} 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
+                    <span className="hidden sm:inline">Categories</span>
                   </button>
-                  <h3 className={`text-base sm:text-lg font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                    FAQ Categories
-                  </h3>
+                  <button
+                    onClick={() => setShowFaqForm(true)}
+                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors text-sm sm:text-base"
+                  >
+                    <Plus size={16} />
+                    Add FAQ
+                  </button>
                 </div>
-                <button
-                  onClick={() => setShowCategoryForm(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg flex items-center gap-2 text-sm transition-colors w-full sm:w-auto justify-center"
-                >
-                  <Plus size={14} />
-                  Add Category
-                </button>
               </div>
-              {!categoryPanelCollapsed && (
-                categoryLoading ? (
-                  <div className="text-center py-4">
-                    <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-green-600"></div>
-                    <p className={`mt-2 text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Loading categories...</p>
-                  </div>
-                ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {categories.map((category) => (
-                    <div key={category.id} className={`p-4 rounded-lg border ${isDark ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'}`}>
-                      <div className="flex justify-between items-start mb-2">
-                        <h4 className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                          {category.name}
-                        </h4>
-                        <div className="flex gap-1">
-                          <button
-                            onClick={() => handleEditCategory(category)}
-                            className="text-blue-600 hover:text-blue-800 p-1 rounded transition-colors"
-                            title="Edit Category"
-                          >
-                            <Edit size={14} />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteCategory(category.id)}
-                            className="text-red-600 hover:text-red-800 p-1 rounded transition-colors"
-                            title="Delete Category"
-                          >
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      </div>
-                      <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                        {category.description || 'No description'}
-                      </p>
-                      <div className="flex justify-between items-center mt-3">
-                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                          category.isActive 
-                            ? isDark ? 'bg-green-900/50 text-green-300' : 'bg-green-100 text-green-800'
-                            : isDark ? 'bg-red-900/50 text-red-300' : 'bg-red-100 text-red-800'
-                        }`}>
-                          {category.isActive ? 'Active' : 'Inactive'}
-                        </span>
-                        <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                          {faqs.filter(faq => faq.categoryId === category.id).length} FAQs
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                  {categories.length === 0 && (
-                    <div className={`col-span-full text-center py-8 border-2 border-dashed rounded-lg ${isDark ? 'border-gray-600 text-gray-400' : 'border-gray-300 text-gray-500'}`}>
-                      <p>No categories found. Create a category to organize your FAQs.</p>
-                    </div>
-                  )}
-                </div>
-                )
-              )}
-            </div>
 
             {/* FAQ Search and Filter Controls */}
             <div className={`rounded-lg p-4 mb-6 ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
@@ -1927,10 +1849,123 @@ function Survey() {
                 )}
               </div>
             )}
+            </div>
+          </div>
+        )}
 
-            {/* FAQ Form Modal */}
-            {showFaqForm && (
-              <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-2 sm:p-4">
+        {/* Categories Modal */}
+        {showCategoriesModal && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-2 sm:p-4">
+            <div className={`w-full max-w-6xl max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl`}>
+              <div className={`p-6 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'} sticky top-0 ${isDark ? 'bg-gray-800' : 'bg-white'} z-10`}>
+                <div className="flex justify-between items-center">
+                  <h3 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>Category Management</h3>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setShowCategoryForm(true)}
+                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                    >
+                      <Plus size={16} />
+                      Add Category
+                    </button>
+                    <button
+                      onClick={() => setShowCategoriesModal(false)}
+                      className={`p-2 rounded-lg transition-colors ${
+                        isDark 
+                          ? 'hover:bg-gray-700 text-gray-300' 
+                          : 'hover:bg-gray-200 text-gray-600'
+                      }`}
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="p-6">
+                {categoryLoading ? (
+                  <div className="text-center py-8">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                    <p className={`mt-2 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Loading categories...</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className={`w-full border-collapse ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+                      <thead>
+                        <tr className={`${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                          <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Name</th>
+                          <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Description</th>
+                          <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Status</th>
+                          <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Created</th>
+                          <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>FAQ Count</th>
+                          <th className={`text-left p-4 font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {categories.length === 0 ? (
+                          <tr>
+                            <td colSpan="6" className={`text-center p-8 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                              No categories found. Click "Add Category" to create one.
+                            </td>
+                          </tr>
+                        ) : (
+                          categories.map((category) => (
+                            <tr key={category.id} className={`border-t ${isDark ? 'border-gray-700 hover:bg-gray-750' : 'border-gray-200 hover:bg-gray-50'}`}>
+                              <td className={`p-4 font-medium ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
+                                {category.name}
+                              </td>
+                              <td className={`p-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                                {category.description || 'No description'}
+                              </td>
+                              <td className="p-4">
+                                <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                                  category.isActive 
+                                    ? 'bg-green-100 text-green-800' 
+                                    : 'bg-red-100 text-red-800'
+                                }`}>
+                                  {category.isActive ? 'Active' : 'Inactive'}
+                                </span>
+                              </td>
+                              <td className={`p-4 text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                                {category.createdAt ? new Date(category.createdAt).toLocaleDateString() : 'N/A'}
+                              </td>
+                              <td className={`p-4 text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                                {faqs.filter(faq => faq.categoryId === category.id).length} FAQs
+                              </td>
+                              <td className="p-4">
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    onClick={() => handleEditCategory(category)}
+                                    className="text-blue-600 hover:text-blue-800 p-1 rounded transition-colors"
+                                    title="Edit Category"
+                                  >
+                                    <Edit size={16} />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteCategory(category.id)}
+                                    className="text-red-600 hover:text-red-800 p-1 rounded transition-colors"
+                                    title="Delete Category"
+                                  >
+                                    <Trash2 size={16} />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* FAQ Form Modal */}
+        {showFaqForm && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-2 sm:p-4">
                 <div className={`w-full max-w-2xl max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl p-4 sm:p-8 flex flex-col gap-4`}>
                   <h3 className={`text-xl font-bold mb-2 sm:mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>{editingFaq ? 'Edit FAQ' : 'Add New FAQ'}</h3>
                   <form onSubmit={handleFaqSubmit} className="space-y-4">
@@ -1995,8 +2030,6 @@ function Survey() {
                 </div>
               </div>
             )}
-          </div>
-        )}
 
         {/* Category Management Section */}
         {activeTab === 'categories' && (

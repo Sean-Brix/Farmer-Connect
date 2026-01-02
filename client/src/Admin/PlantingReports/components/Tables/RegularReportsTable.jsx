@@ -280,9 +280,9 @@ export function RegularReportsTable({ stateSubTab, search, filters, pagination, 
 				</Toolbar>
 			)}
 
-			<TableContainer>
+			<TableContainer sx={{ bgcolor: 'background.paper' }}>
 				<Table>
-					<TableHead>
+					<TableHead sx={{ bgcolor: 'action.hover' }}>
 						<TableRow>
 							<TableCell padding="checkbox">
 								<Checkbox

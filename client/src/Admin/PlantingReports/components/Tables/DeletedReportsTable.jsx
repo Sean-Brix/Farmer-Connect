@@ -249,9 +249,9 @@ export function DeletedReportsTable({ search, filters, pagination, onView }) {
 				</Toolbar>
 			)}
 
-			<TableContainer>
+			<TableContainer sx={{ bgcolor: 'background.paper' }}>
 				<Table>
-					<TableHead>
+					<TableHead sx={{ bgcolor: 'action.hover' }}>
 						<TableRow>
 							<TableCell padding="checkbox">
 								<Checkbox

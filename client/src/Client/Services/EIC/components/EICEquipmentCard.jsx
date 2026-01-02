@@ -8,7 +8,7 @@ import {
 } from "@material-tailwind/react";
 
 // Equipment card component
-export default function EICEquipmentCard({ item, onRequestClick, typeIcon, hasActiveRequest, isDisabled, disabledReason, onOpenMyRequests }) {
+export default function EICEquipmentCard({ item, onRequestClick, typeIcon, hasActiveRequest, isDisabled, disabledReason, onOpenMyRequests, isTutorialActive }) {
     
     const handleClick = () => {
         if (hasActiveRequest) {
@@ -26,7 +26,7 @@ export default function EICEquipmentCard({ item, onRequestClick, typeIcon, hasAc
     };
     
     return (
-        <Card className="w-full h-[500px] flex flex-col">
+        <Card data-tutorial="equipment-card" className="w-full h-[500px] flex flex-col">
             {/* Image Header - Fixed Height */}
             <CardHeader shadow={false} floated={false} className="h-48 m-0 rounded-t-xl rounded-b-none relative shrink-0">
                 <img
@@ -96,6 +96,7 @@ export default function EICEquipmentCard({ item, onRequestClick, typeIcon, hasAc
                             ? 'bg-gray-400 hover:bg-gray-500 text-white'
                             : 'bg-green-600 hover:bg-green-700 text-white'
                     }`}
+                    data-tutorial="request-button"
                 >
                     {hasActiveRequest ? (
                         <>

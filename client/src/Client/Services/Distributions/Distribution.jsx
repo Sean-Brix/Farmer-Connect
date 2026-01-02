@@ -4,6 +4,8 @@ import { useTheme } from '../../../contexts/ThemeContext';
 import Navbar from '../../Components/Navbar';
 import { isBefore, startOfDay, addYears } from 'date-fns';
 import { CardGridSkeleton, PageHeaderSkeleton, FilterBarSkeleton } from '../../../Components/Skeletons/ServiceSkeletons';
+import { createDistributionTutorial } from './distributionTutorial';
+import './distributionTutorial.css';
 
 // ASSETS
 import default_image from './Assets/default_image.webp';
@@ -76,6 +78,8 @@ export default function Distribution() {
         isAuthenticated: false,
         role: null,
     });
+    const [tutorial, setTutorial] = useState(null);
+    const [isTutorialActive, setIsTutorialActive] = useState(false);
 
     const typeOptions = Array.from(
         new Set(distributionItems.map((i) => getSeedType(i)).filter(Boolean))
@@ -169,6 +173,51 @@ export default function Distribution() {
             used,
             remaining: Math.max(0, MONTHLY_LIMIT - used),
         };
+    };
+
+    // Demo request for tutorial (for users with no requests)
+    const demoRequest = {
+        id: 'demo-1',
+        itemName: 'NSIC Rc222 (Rice)',
+        quantity: 5,
+        unit: 'kg',
+        status: 'Pending',
+        pickupDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        farmLocation: 'Demo Farm Location',
+        areaPlanted: '1 hectare',
+        plantingMethod: 'Transplanting',
+        createdAt: new Date().toISOString(),
+        request_note: 'Demo request for tutorial purposes'
+    };
+
+    // Use demo data during tutorial if user has no requests
+    const displayRequests = isTutorialActive && myRequests.length === 0 ? [demoRequest] : myRequests;
+
+    // Initialize tutorial
+    useEffect(() => {
+        const tourInstance = createDistributionTutorial();
+        setTutorial(tourInstance);
+
+        return () => {
+            if (tourInstance) {
+                tourInstance.complete();
+            }
+        };
+    }, []);
+
+    const startTutorial = () => {
+        if (tutorial) {
+            setIsTutorialActive(true);
+            tutorial.start();
+
+            tutorial.on('complete', () => {
+                setIsTutorialActive(false);
+            });
+
+            tutorial.on('cancel', () => {
+                setIsTutorialActive(false);
+            });
+        }
     };
 
     const isAdminUser = ['admin', 'super_admin', 'super admin'].includes(
@@ -1533,7 +1582,6 @@ export default function Distribution() {
                             </span>
                             <h1
                                 className={`text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center ${isDark ? 'text-white' : 'text-gray-900'}`}
-                                
                             >
                                 Distribution Center
                             </h1>
@@ -1543,7 +1591,7 @@ export default function Distribution() {
                         <div className="w-full max-w-5xl mb-8 mx-auto space-y-4">
                             <div className="w-full flex flex-wrap items-center gap-3 justify-between">
                                 {canShowUserActions && monthlyUsage && (
-                                    <div className={`${isDark ? 'bg-gray-800 border-gray-700 text-gray-100' : 'bg-blue-50 border-blue-200 text-blue-900'} border rounded-2xl px-4 py-3 flex items-center gap-3 shadow-sm`}> 
+                                    <div data-tutorial="monthly-limit" className={`${isDark ? 'bg-gray-800 border-gray-700 text-gray-100' : 'bg-blue-50 border-blue-200 text-blue-900'} border rounded-2xl px-4 py-3 flex items-center gap-3 shadow-sm`}> 
                                         <div className={`${isDark ? 'bg-green-700 text-white' : 'bg-green-600 text-white'} w-10 h-10 rounded-xl flex items-center justify-center shadow-md`}>
                                             <i className="fa-solid fa-circle-info text-base"></i>
                                         </div>
@@ -1559,38 +1607,50 @@ export default function Distribution() {
                                     {canShowUserActions && !monthlyUsage && (
                                         <span className={`${isDark ? 'text-gray-400' : 'text-gray-500'} text-xs sm:text-sm`}>Login to view monthly limit</span>
                                     )}
-                                    {canShowUserActions && (
-                                        <button
-                                            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-lg text-sm sm:text-base ${isDark ? 'bg-green-600 hover:bg-green-700' : 'bg-green-600 hover:bg-green-700'} text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-green-400`}
-                                            onClick={handleMyRequestsClick}
-                                        >
-                                            <i className="fa-solid fa-list-check text-base sm:text-lg"></i>
-                                            <span className="hidden sm:inline">My Requests</span>
-                                            <span className="sm:hidden">Requests</span>
-                                        </button>
-                                    )}
+                                    {/* My Requests Button - Always visible for consistency with EIC page */}
+                                    <button
+                                        data-tutorial="my-requests-button"
+                                        className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-lg text-sm sm:text-base ${isDark ? 'bg-green-600 hover:bg-green-700' : 'bg-green-600 hover:bg-green-700'} text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-green-400`}
+                                        onClick={handleMyRequestsClick}
+                                    >
+                                        <i className="fa-solid fa-list-check text-base sm:text-lg"></i>
+                                        <span className="hidden sm:inline">My Requests</span>
+                                        <span className="sm:hidden">Requests</span>
+                                    </button>
                                 </div>
                             </div>
 
                             {/* Search and Filter Section */}
                             <div className="w-full flex flex-col sm:flex-row gap-3 items-stretch sm:items-center sm:justify-between">
-                                {/* Search Input */}
-                                <div className="relative flex-1 sm:max-w-md">
-                                    <input
-                                        type="text"
-                                        className={`w-full px-10 py-2.5 rounded-lg border text-sm sm:text-base ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-gray-500 focus:ring-2 focus:ring-gray-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-900 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 placeholder:text-gray-400'} shadow transition font-medium`}
-                                        placeholder="Search by name or description..."
-                                        value={search}
-                                        onChange={(e) => setSearch(e.target.value)}
-                                    />
-                                    <span className={`absolute left-3 top-1/2 -translate-y-1/2 ${isDark ? 'text-gray-400' : 'text-gray-400'} pointer-events-none`}>
-                                        <i className="fa-solid fa-magnifying-glass"></i>
-                                    </span>
+                                {/* Search Input with Help Button */}
+                                <div className="relative flex-1 sm:max-w-md flex gap-2">
+                                    <div className="relative flex-1">
+                                        <input
+                                            data-tutorial="search-bar"
+                                            type="text"
+                                            className={`w-full px-10 py-2.5 rounded-lg border text-sm sm:text-base ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-gray-500 focus:ring-2 focus:ring-gray-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-900 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 placeholder:text-gray-400'} shadow transition font-medium`}
+                                            placeholder="Search by name or description..."
+                                            value={search}
+                                            onChange={(e) => setSearch(e.target.value)}
+                                        />
+                                        <span className={`absolute left-3 top-1/2 -translate-y-1/2 ${isDark ? 'text-gray-400' : 'text-gray-400'} pointer-events-none`}>
+                                            <i className="fa-solid fa-magnifying-glass"></i>
+                                        </span>
+                                    </div>
+                                    <button
+                                        onClick={startTutorial}
+                                        className={`${isDark ? 'text-gray-400 hover:text-gray-200 bg-gray-800 border-gray-600' : 'text-gray-400 hover:text-gray-600 bg-white border-gray-300'} transition-colors px-3 rounded-lg border shadow hover:bg-opacity-80`}
+                                        title="Start Tutorial"
+                                        aria-label="Start Tutorial"
+                                    >
+                                        <i className="fa-solid fa-circle-question text-xl"></i>
+                                    </button>
                                 </div>
 
                                 {/* Filter Dropdown */}
                                 <div className="relative w-auto sm:w-auto sm:ml-auto">
                                     <button
+                                        data-tutorial="filter-button"
                                         id="modernFilterButton"
                                         className={`w-auto sm:w-auto flex items-center justify-between sm:justify-start gap-2 px-4 sm:px-5 py-2.5 rounded-lg text-sm sm:text-base ${isDark ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'} font-semibold border shadow transition focus:outline-none`}
                                         onClick={() => setShowFilter((f) => !f)}
@@ -1638,7 +1698,7 @@ export default function Distribution() {
                                     No distribution items found.
                                 </div>
                             ) : (
-                                paginatedItems.map((item) => {
+                                paginatedItems.map((item, index) => {
                                     const matchedType = getSeedType(item);
                                     const availableQty =
                                         item.availableQuantity ?? item.quantity ?? 0;
@@ -1651,6 +1711,7 @@ export default function Distribution() {
                                     return (
                                         <div
                                             key={item.id}
+                                            data-tutorial={index === 0 ? "seedling-card" : undefined}
                                             className={`w-full max-w-sm ${isDark ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-200'} rounded-2xl shadow-lg hover:shadow-xl border transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[430px]`}
                                         >
                                             <div className="relative">
@@ -1709,6 +1770,7 @@ export default function Distribution() {
                                                     </span>
                                                 </div>
                                                 <button
+                                                    data-tutorial={index === 0 ? "request-button" : undefined}
                                                     className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 mt-auto"
                                                     onClick={() =>
                                                         handleRequestClick(item)
@@ -1726,6 +1788,7 @@ export default function Distribution() {
                         {totalPages > 1 && (
                             <div className="flex justify-center mt-6 mb-2">
                                 <nav
+                                    data-tutorial="pagination"
                                     className={`flex items-center gap-1 ${isDark ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow px-3 py-1.5`}
                                     aria-label="Pagination"
                                 >
@@ -1888,7 +1951,7 @@ export default function Distribution() {
             </div>
             {modalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 transition-all pt-24 sm:pt-20 md:pt-16 overflow-y-auto">
-                    <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-2xl p-0 max-w-4xl w-full relative overflow-hidden animate-fade-in mx-4`}> 
+                    <div data-tutorial="request-modal" className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-2xl p-0 max-w-4xl w-full relative overflow-hidden animate-fade-in mx-4`}> 
                         {/* Modal Header */}
                         <div className={`flex items-center justify-between px-8 py-6 ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b bg-gradient-to-r from-green-600 to-green-700`}>
                             <h2 className="text-xl font-bold text-white">
@@ -1896,6 +1959,7 @@ export default function Distribution() {
                                 Request Distribution Item
                             </h2>
                             <button
+                                data-tutorial="close-request-modal"
                                 className="text-white text-2xl hover:text-green-200 transition"
                                 onClick={handleCloseModal}
                                 aria-label="Close"
@@ -2251,7 +2315,7 @@ export default function Distribution() {
             )}
             {showMyRequestsModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 transition-all pt-24 sm:pt-20 md:pt-16">
-                    <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-2xl p-0 max-w-6xl w-full mx-4 relative overflow-hidden animate-fade-in max-h-[90vh] flex flex-col`}>
+                    <div data-tutorial="requests-modal" className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-2xl p-0 max-w-6xl w-full mx-4 relative overflow-hidden animate-fade-in max-h-[90vh] flex flex-col`}>
                         {/* Modal Header */}
                         <div className={`flex items-center justify-between px-8 py-6 ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b bg-gradient-to-r from-green-600 to-green-700 flex-shrink-0`}>
                             <h2 className="text-xl font-bold text-white">
@@ -2259,6 +2323,7 @@ export default function Distribution() {
                                 My Distribution Requests
                             </h2>
                             <button
+                                data-tutorial="close-requests-modal"
                                 className="text-white text-2xl hover:text-green-200 transition"
                                 onClick={handleCloseMyRequestsModal}
                                 aria-label="Close"
@@ -2294,13 +2359,13 @@ export default function Distribution() {
                                     </div>
                                 </div>
                             )}
-                            {myRequests.length > 0 ? (
+                            {displayRequests.length > 0 ? (
                                 <div>
                                     <div className={`mb-6 text-sm ${isDark ? 'text-gray-300 bg-gray-700 border-gray-600' : 'text-gray-600 bg-gray-50 border-gray-200'} p-4 rounded-xl border`}>
                                         <i className={`fa-solid fa-info-circle mr-2 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}></i>
                                         <span className="font-medium">
-                                            Found {myRequests.length} request
-                                            {myRequests.length !== 1 ? 's' : ''}
+                                            Found {displayRequests.length} request
+                                            {displayRequests.length !== 1 ? 's' : ''}
                                         </span>
                                         <span className={`ml-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                                             • Sorted by most recent first
@@ -2331,7 +2396,7 @@ export default function Distribution() {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {myRequests.map(
+                                                {displayRequests.map(
                                                     (request, index) => (
                                                         <tr
                                                             key={request.id}

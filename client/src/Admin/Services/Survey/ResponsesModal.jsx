@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { surveyFormsAPI } from './surveyFormsAPI.js';
+import * as XLSX from 'xlsx';
 
 const groupByUser = (responses) => {
   const map = new Map();
@@ -91,6 +92,68 @@ const ResponsesModal = ({ isOpen, onClose, survey }) => {
   const [userSearch, setUserSearch] = useState('');
   const [userSort, setUserSort] = useState('recent'); // 'recent' | 'name'
 
+  // Excel export function
+  const exportToExcel = () => {
+    try {
+      // Prepare data for export
+      const exportData = [];
+      
+      groups.forEach((group) => {
+        group.items.forEach((response, idx) => {
+          const row = {
+            'Participant': group.label,
+            'Email': group.email || 'No email',
+            'Submission #': idx + 1,
+            'Submitted At': formatDateTime(response.submittedAt),
+          };
+          
+          // Add each answer as a column
+          (response.answers || []).forEach((answer, ansIdx) => {
+            const fieldLabel = answer.field?.label || `Field ${ansIdx + 1}`;
+            const answerValue = Array.isArray(answer.answer) 
+              ? answer.answer.join(', ') 
+              : String(answer.answer ?? 'No answer');
+            row[fieldLabel] = answerValue;
+          });
+          
+          exportData.push(row);
+        });
+      });
+
+      // Create workbook and worksheet
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(exportData);
+
+      // Auto-fit columns
+      const maxWidth = 50;
+      const colWidths = [];
+      const headers = Object.keys(exportData[0] || {});
+      
+      headers.forEach((header, i) => {
+        const headerLen = header.length;
+        const maxLen = exportData.reduce((max, row) => {
+          const cellValue = String(row[header] || '');
+          return Math.max(max, cellValue.length);
+        }, headerLen);
+        colWidths[i] = { wch: Math.min(maxLen + 2, maxWidth) };
+      });
+      
+      ws['!cols'] = colWidths;
+
+      // Add worksheet to workbook
+      XLSX.utils.book_append_sheet(wb, ws, 'Survey Responses');
+
+      // Generate filename
+      const filename = `${survey?.title?.replace(/[^a-z0-9]/gi, '_') || 'survey'}_responses_${new Date().toISOString().split('T')[0]}.xlsx`;
+      
+      // Write file
+      XLSX.writeFile(wb, filename);
+    } catch (error) {
+      console.error('Error exporting to Excel:', error);
+      alert('Failed to export to Excel. Please try again.');
+    }
+  };
+
   useEffect(() => {
     if (!isOpen || !survey?.id) return;
     (async () => {
@@ -176,16 +239,29 @@ const ResponsesModal = ({ isOpen, onClose, survey }) => {
               </div>
             </div>
           </div>
-          <button 
-            aria-label="Close responses" 
-            onClick={onClose} 
-            className="flex-shrink-0 ml-2 p-1 sm:p-2 text-gray-500 hover:text-gray-700 hover:bg-white/50 rounded-lg transition-colors"
-            title="Close"
-          >
-            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={exportToExcel}
+              disabled={groups.length === 0}
+              className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Export to Excel"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span className="hidden sm:inline">Export Excel</span>
+            </button>
+            <button 
+              aria-label="Close responses" 
+              onClick={onClose} 
+              className="flex-shrink-0 p-1 sm:p-2 text-gray-500 hover:text-gray-700 hover:bg-white/50 rounded-lg transition-colors"
+              title="Close"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Body */}

@@ -25,6 +25,8 @@ import {
     useCreateInquiry,
     useResolveInquiry
 } from '../../hooks/useInquiryPolling.js';
+import { createInquiryTutorial } from './inquiryTutorial.js';
+import './inquiryTutorial.css';
 
 // Modular Components
 import ChatModal from './ChatModal.jsx';
@@ -54,6 +56,8 @@ function Chat() {
     const [attachments, setAttachments] = useState([]);
     const [viewer, setViewer] = useState({ open: false, src: '', filename: '' });
     const messagesEndRef = useRef(null);
+    const [tutorial, setTutorial] = useState(null);
+    const [isTutorialActive, setIsTutorialActive] = useState(false);
 
     // HTTP Polling Hooks - Only enabled when modal is open
     const { activeInquiry, refetch: refetchActiveInquiry } = useActiveInquiry({ enabled: open });
@@ -76,27 +80,69 @@ function Chat() {
         return () => { document.body.style.overflow = ''; };
     }, [open]);
 
+    // Initialize tutorial
+    useEffect(() => {
+        const tourInstance = createInquiryTutorial();
+        setTutorial(tourInstance);
+
+        return () => {
+            if (tourInstance) {
+                tourInstance.complete();
+            }
+        };
+    }, []);
+
+    const startTutorial = () => {
+        if (tutorial) {
+            setIsTutorialActive(true);
+            tutorial.start();
+
+            tutorial.on('complete', () => {
+                setIsTutorialActive(false);
+            });
+
+            tutorial.on('cancel', () => {
+                setIsTutorialActive(false);
+            });
+        }
+    };
+
     // Initialize on open
     useEffect(() => {
+        console.log('[CHAT] Modal open state changed:', open);
+        console.log('[CHAT] Active inquiry:', activeInquiry);
+        console.log('[CHAT] Active inquiry status:', activeInquiry?.status);
+        console.log('[CHAT] Active inquiry replies:', activeInquiry?.replies?.length || 0);
         if (open) {
-            if (activeInquiry && ['PENDING', 'IN_PROGRESS'].includes(activeInquiry?.status)) {
-                // Resume existing inquiry
+            // Check if there's an active inquiry with messages
+            const hasActiveInquiryWithMessages = activeInquiry && 
+                ['PENDING', 'IN_PROGRESS'].includes(activeInquiry?.status) && 
+                activeInquiry.replies && 
+                activeInquiry.replies.length > 0;
+            
+            if (hasActiveInquiryWithMessages) {
+                // Resume existing inquiry with messages
+                console.log('[CHAT] ✓ Resuming existing inquiry with messages, switching to agent mode');
                 setChatMode('agent');
                 loadInquiryMessages();
             } else {
-                // Start with bot
+                // Start with bot (no inquiry, or inquiry has no messages yet)
+                console.log('[CHAT] ✓ Starting with bot mode (no active inquiry with messages)');
                 setChatMode('bot');
                 initializeBotChat();
             }
         } else {
             // Reset on close
+            console.log('[CHAT] Resetting chat on close');
             resetChat();
         }
-    }, [open, activeInquiry?.id]);
+    }, [open, activeInquiry?.id, activeInquiry?.replies?.length]);
 
     // Sync polled messages to local state
     useEffect(() => {
+        console.log('[MESSAGES] Chat mode:', chatMode, 'Polled messages:', polledMessages?.length || 0);
         if (chatMode === 'agent' && polledMessages && polledMessages.length > 0) {
+            console.log('[MESSAGES] Formatting polled messages:', polledMessages);
             const formatted = polledMessages.map(msg => ({
                 id: msg.id,
                 from: msg.senderType === 'ADMIN' ? 'admin' : 'user',
@@ -134,13 +180,17 @@ function Chat() {
 
     // Auto-scroll to bottom
     useEffect(() => {
+        console.log('[MESSAGES] Local messages updated, count:', localMessages.length);
+        console.log('[MESSAGES] Current messages:', localMessages);
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [localMessages]);
 
     // === BOT FUNCTIONS ===
     const initializeBotChat = async () => {
+        console.log('[BOT] Initializing bot chat...');
         try {
             const welcomeData = await botAPI.getWelcomeMessage();
+            console.log('[BOT] Welcome data received:', welcomeData);
             if (welcomeData) {
                 setBotWelcomeMessage(welcomeData);
                 const botMsg = {
@@ -149,11 +199,14 @@ function Chat() {
                     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                     botData: welcomeData
                 };
+                console.log('[BOT] Setting bot message:', botMsg);
                 setLocalMessages([botMsg]);
                 setShowingCategories(true);
+            } else {
+                console.warn('[BOT] No welcome data received');
             }
         } catch (error) {
-            console.error('Error initializing bot:', error);
+            console.error('[BOT] Error initializing bot:', error);
             escalateToAgent();
         }
     };
@@ -424,10 +477,14 @@ function Chat() {
     );
 
     // === RENDER ===
+    console.log('[RENDER] Rendering Chat - open:', open, 'chatMode:', chatMode, 'messages:', localMessages.length);
+    console.log('[RENDER] showingCategories:', showingCategories, 'showingFAQs:', showingFAQs);
+    
     return (
         <>
             {/* Chat Button */}
             <button
+                data-tutorial="chat-button"
                 onClick={() => setOpen(true)}
                 className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 rounded-full bg-green-600 text-white shadow-lg hover:bg-green-700 transition-all hover:scale-110"
                 aria-label="Open Chat"
@@ -451,6 +508,7 @@ function Chat() {
                         appLogo={appLogo}
                         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
                         onClose={() => setOpen(false)}
+                        onStartTutorial={startTutorial}
                     />
 
                     {/* Main Content Area */}
@@ -458,6 +516,14 @@ function Chat() {
                         
                         {/* Messages */}
                         <div className="flex-1 flex flex-col min-w-0">
+                            {console.log('[RENDER MessageList] Props:', {
+                                messagesCount: localMessages.length,
+                                messages: localMessages,
+                                theme,
+                                showingCategories,
+                                showingFAQs,
+                                chatMode
+                            })}
                             <MessageList
                                 messages={localMessages}
                                 theme={theme}

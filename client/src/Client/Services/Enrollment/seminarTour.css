@@ -1,0 +1,150 @@
+/* Custom Shepherd.js Tutorial Styles - Light Mode Optimized */
+
+.shepherd-modal-overlay-container {
+  z-index: 9998;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.shepherd-element {
+  z-index: 9999 !important;
+  max-width: 420px;
+  background: #ffffff;
+  border: 2px solid #10b981;
+}
+
+.shepherd-theme-custom {
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(16, 185, 129, 0.1);
+}
+
+.shepherd-header {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  padding: 1rem 1.25rem;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid #d1fae5;
+}
+
+.shepherd-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #065f46;
+  margin: 0;
+}
+
+.shepherd-cancel-icon {
+  color: #6b7280;
+  opacity: 0.7;
+  font-size: 1.5rem;
+  font-weight: 300;
+  transition: all 0.2s;
+}
+
+.shepherd-cancel-icon:hover {
+  opacity: 1;
+  color: #374151;
+}
+
+.shepherd-text {
+  padding: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #374151;
+}
+
+.shepherd-text p {
+  margin-bottom: 0.75rem;
+  color: #374151;
+}
+
+.shepherd-text p:last-child {
+  margin-bottom: 0;
+}
+
+.shepherd-text ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.shepherd-text li {
+  margin: 6px 0;
+  color: #6b7280;
+}
+
+.shepherd-text strong {
+  color: #374151;
+  font-weight: 600;
+}
+
+.shepherd-footer {
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border-radius: 0 0 12px 12px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.shepherd-button {
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.shepherd-button-primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.shepherd-button-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.shepherd-button-secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.shepherd-button-secondary:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.shepherd-arrow::before {
+  background: #ffffff;
+  border: inherit;
+}
+
+/* Target Element Highlight - Subtle Green Glow */
+.shepherd-target {
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.4), 0 0 20px rgba(16, 185, 129, 0.2);
+  border-radius: 8px;
+  transition: box-shadow 0.3s;
+}
+
+.shepherd-target-click-disabled {
+  pointer-events: none;
+}
+
+/* Animation for tour start */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.shepherd-element {
+  animation: fadeInScale 0.3s ease-out;
+}

@@ -6,8 +6,12 @@ import { seedSurveyForms } from './surveys.seed.js';
 import { seedInventoryItems, seedItemStacks } from './inventory.seed.js';
 import { seedSeminars } from './seminars.seed.js';
 import { seedDistributionRequests } from './distribution.seed.js';
+import { seedComprehensiveAllStates } from './comprehensive-all-states.seed.js';
 
 const prisma = new PrismaClient();
+
+// Check for --comprehensive flag
+const useComprehensive = process.argv.includes('--comprehensive') || process.argv.includes('--all-states');
 
 function makeSpinner(label) {
   const frames = ['-', '\\', '|', '/'];
@@ -49,6 +53,13 @@ async function runStep(label, fn) {
 
 async function main() {
   try {
+    // If --comprehensive flag is used, run the comprehensive all-states seed
+    if (useComprehensive) {
+      console.log('🚀 Running COMPREHENSIVE ALL-STATES seed...\n');
+      await seedComprehensiveAllStates();
+      return;
+    }
+
     console.log('🌱 Starting comprehensive seed process...\n');
 
     // Clean existing data in correct order (respecting foreign keys)

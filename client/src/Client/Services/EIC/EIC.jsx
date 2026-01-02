@@ -4,6 +4,8 @@ import { useTheme } from '../../../contexts/ThemeContext.jsx';
 import Navbar from '../../Components/Navbar';
 import { differenceInDays, isAfter, isBefore, startOfDay, addYears, addDays } from 'date-fns';
 import { ARCHIVED_STATUSES } from '../../../constants/eicStatuses';
+import { createEICTutorial } from './eicTutorial';
+import './eicTutorial.css';
 
 // TANSTACK QUERY HOOKS
 import { useEICEquipment, useUserRequests, useSubmitRequest, useCancelRequest } from './hooks/useEICQueries';
@@ -80,9 +82,39 @@ export default function Eic() {
     const [formErrors, setFormErrors] = useState({});
     const [expandedRowId, setExpandedRowId] = useState(null); // Track which row is expanded
     const [highlightedItemId, setHighlightedItemId] = useState(null); // Track which item to highlight
+    const [tutorial, setTutorial] = useState(null);
+    const [isTutorialActive, setIsTutorialActive] = useState(false);
 
     // NEW HOOKS - System Settings
     const { settings: systemSettings, loading: settingsLoading } = useSystemSettings();
+
+    // Tutorial initialization
+    useEffect(() => {
+        const newTutorial = createEICTutorial();
+        setTutorial(newTutorial);
+
+        return () => {
+            if (newTutorial) {
+                newTutorial.complete();
+            }
+        };
+    }, []);
+
+    // Start tutorial function
+    const startTutorial = () => {
+        if (tutorial) {
+            setIsTutorialActive(true);
+            tutorial.start();
+
+            tutorial.on('complete', () => {
+                setIsTutorialActive(false);
+            });
+
+            tutorial.on('cancel', () => {
+                setIsTutorialActive(false);
+            });
+        }
+    };
 
     // TANSTACK QUERY HOOKS
     const { 
@@ -495,6 +527,27 @@ ${'='.repeat(60)}
         }
     };
 
+    // Demo data for tutorial when user has no requests
+    const demoRequest = {
+        id: 'demo-1',
+        itemStackId: 'demo-item-1',
+        itemName: 'Hand Tractor',
+        itemImage: '/src/Client/Services/EIC/Assets/default_image.webp',
+        itemCategory: 'Machinery',
+        quantity: 1,
+        status: 'Pending',
+        pickupDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days from now
+        returnDate: new Date(Date.now() + 9 * 24 * 60 * 60 * 1000).toISOString(), // 9 days from now
+        requestNote: 'Need for plowing rice field',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    };
+
+    // Display requests (use demo data during tutorial if user has no requests)
+    const displayRequests = isTutorialActive && myRequests.length === 0 
+        ? [demoRequest] 
+        : myRequests;
+
     const handleCloseMyRequestsModal = () => {
         setShowMyRequestsModal(false);
     };
@@ -673,6 +726,7 @@ ${'='.repeat(60)}
                             onMyRequestsClick={handleMyRequestsClick}
                             activeRequestsCount={activeRequestsCount}
                             maxActiveRequests={systemSettings?.eic_max_simultaneous_borrows || 3}
+                            onStartTutorial={startTutorial}
                         />
 
                         <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-8 lg:grid-cols-3 justify-items-center">
@@ -705,6 +759,7 @@ ${'='.repeat(60)}
                                             isDisabled={!requestCheck.can}
                                             disabledReason={disabledReason}
                                             onOpenMyRequests={handleOpenMyRequestsWithHighlight}
+                                            isTutorialActive={isTutorialActive}
                                         />
                                     );
                                 })
@@ -715,13 +770,14 @@ ${'='.repeat(60)}
                             currentPage={currentPage}
                             setCurrentPage={setCurrentPage}
                             totalPages={totalPages}
+                            isTutorialActive={isTutorialActive}
                         />
                     </section>
                 </main>
             </div>
             {modalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 transition-all pt-20 sm:pt-20 md:pt-16 lg:pt-20 px-4 sm:px-6 md:px-8">
-                    <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-2xl p-0 max-w-lg w-full relative overflow-hidden animate-fade-in border-2 ${isDark ? 'border-gray-600' : 'border-gray-300'} mt-8 sm:mt-6 md:mt-4 max-h-[calc(100vh-6rem)] sm:max-h-[calc(100vh-5rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto`}>
+                    <div data-tutorial="request-modal" className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-2xl p-0 max-w-lg w-full relative overflow-hidden animate-fade-in border-2 ${isDark ? 'border-gray-600' : 'border-gray-300'} mt-8 sm:mt-6 md:mt-4 max-h-[calc(100vh-6rem)] sm:max-h-[calc(100vh-5rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto`}>
                         {/* Modal Header */}
                         <div className={`flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 border-b-2 ${isDark ? 'border-gray-600' : 'border-gray-200'} bg-green-600`}>
                             <h2 className="text-lg sm:text-xl font-bold text-white">
@@ -729,6 +785,7 @@ ${'='.repeat(60)}
                                 Request Equipment
                             </h2>
                             <button
+                                data-tutorial="close-request-modal"
                                 className="text-white text-xl sm:text-2xl hover:text-green-200 transition"
                                 onClick={handleCloseModal}
                                 aria-label="Close"
@@ -1097,7 +1154,7 @@ ${'='.repeat(60)}
             )}
             {showMyRequestsModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 transition-all pt-24 sm:pt-20 md:pt-16 lg:pt-20 px-2 sm:px-4 md:px-6">
-                    <div className={`${isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} rounded-3xl shadow-2xl p-0 max-w-6xl w-full mx-2 sm:mx-4 relative overflow-hidden animate-fade-in max-h-[calc(100vh-7rem)] sm:max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-5rem)] lg:max-h-[90vh] flex flex-col border-2 mt-8 sm:mt-6 md:mt-4`}>
+                    <div data-tutorial="my-requests-modal" className={`${isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} rounded-3xl shadow-2xl p-0 max-w-6xl w-full mx-2 sm:mx-4 relative overflow-hidden animate-fade-in max-h-[calc(100vh-7rem)] sm:max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-5rem)] lg:max-h-[90vh] flex flex-col border-2 mt-8 sm:mt-6 md:mt-4`}>
                         {/* Modal Header */}
                         <div className={`flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 border-b-2 ${isDark ? 'border-gray-600' : 'border-gray-200'} bg-green-600 flex-shrink-0`}>
                             <h2 className="text-lg sm:text-xl font-bold text-white">
@@ -1105,6 +1162,7 @@ ${'='.repeat(60)}
                                 My Requests
                             </h2>
                             <button
+                                data-tutorial="close-requests-modal"
                                 className="text-white text-xl sm:text-2xl hover:text-green-200 transition"
                                 onClick={handleCloseMyRequestsModal}
                                 aria-label="Close"
@@ -1115,7 +1173,7 @@ ${'='.repeat(60)}
                         {/* Tabs */}
                         <div className={`flex border-b-2 ${isDark ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-gray-50'} px-4 sm:px-6 md:px-8`}>
                             {['active', 'history', 'cancelled'].map((tab) => {
-                                const count = myRequests.filter(r => {
+                                const count = displayRequests.filter(r => {
                                     if (tab === 'active') return !ARCHIVED_STATUSES.includes(r.status);
                                     if (tab === 'cancelled') return r.status === 'Cancelled';
                                     return ['Returned', 'late_return', 'No_Return', 'No_Pickup', 'Rejected'].includes(r.status);
@@ -1147,7 +1205,7 @@ ${'='.repeat(60)}
                         {/* Modal Body */}
                         <div className="px-8 py-6 space-y-5 overflow-y-auto flex-1">
                             {(() => {
-                                const filteredRequests = myRequests.filter(r => {
+                                const filteredRequests = displayRequests.filter(r => {
                                     if (requestsTab === 'active') return !ARCHIVED_STATUSES.includes(r.status);
                                     if (requestsTab === 'cancelled') return r.status === 'Cancelled';
                                     return ['Returned', 'late_return', 'No_Return', 'No_Pickup', 'Rejected'].includes(r.status);

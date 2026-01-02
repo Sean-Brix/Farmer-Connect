@@ -44,7 +44,7 @@ export default function ChatInput({
     }
 
     return (
-        <div className={`p-4 border-t ${
+        <div data-tutorial="chat-input" className={`p-4 border-t ${
             theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
         }`}>
             {/* Attachments */}
@@ -122,6 +122,7 @@ export default function ChatInput({
                 {/* Resolve Button */}
                 {chatMode === 'agent' && activeInquiry && activeInquiry.status !== 'RESOLVED' && (
                     <button
+                        data-tutorial="escalate-button"
                         onClick={onResolve}
                         className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                         title={t('chat.mark_resolved')}

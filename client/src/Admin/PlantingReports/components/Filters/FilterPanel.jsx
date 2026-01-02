@@ -48,7 +48,8 @@ export function FilterPanel({ search, filters, onSearchChange, onFiltersChange, 
 			elevation={2}
 			sx={{
 				borderRadius: 2,
-				boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+				boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+				bgcolor: 'background.paper'
 			}}
 		>
 			{isMobile && (
@@ -62,7 +63,7 @@ export function FilterPanel({ search, filters, onSearchChange, onFiltersChange, 
 					}}
 				>
 					<FilterIcon sx={{ mr: 1, color: 'text.secondary' }} />
-					<Typography variant="subtitle1" sx={{ flex: 1 }}>
+					<Typography variant="subtitle1" sx={{ flex: 1 }} color="text.primary">
 						Filters {hasActiveFilters && `(${countActiveFilters(search, filters)})`}
 					</Typography>
 					<IconButton

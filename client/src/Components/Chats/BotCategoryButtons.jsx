@@ -8,8 +8,7 @@ const BotCategoryButtons = ({ categories, onCategorySelect, onEscalate }) => {
                 <div className="text-sm text-gray-700 mb-3">
                     What can I help you with today? Choose a category:
                 </div>
-                <div className="grid gap-2">
-                    {categories.map((category) => (
+                <div data-tutorial="category-buttons" className="grid gap-2">{categories.map((category) => (
                         <button
                             key={category.id}
                             onClick={() => onCategorySelect(category)}

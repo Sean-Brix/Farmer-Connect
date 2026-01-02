@@ -10,12 +10,13 @@ export default function ChatHeader({
     activeInquiry, 
     appLogo, 
     onToggleSidebar, 
-    onClose 
+    onClose,
+    onStartTutorial
 }) {
     const { t } = useCustomTranslation();
     
     return (
-        <div className={`flex items-center justify-between px-6 py-4 border-b ${
+        <div data-tutorial="chat-header" className={`flex items-center justify-between px-6 py-4 border-b ${
             theme === 'dark' ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
         }`}>
             <div className="flex items-center gap-3">
@@ -34,8 +35,24 @@ export default function ChatHeader({
                 </div>
             </div>
             <div className="flex items-center gap-2">
+                {onStartTutorial && (
+                    <button
+                        onClick={onStartTutorial}
+                        className={`p-2 rounded-lg transition-colors ${
+                            theme === 'dark' 
+                                ? 'hover:bg-gray-700 text-gray-300' 
+                                : 'hover:bg-gray-100 text-gray-700'
+                        }`}
+                        title="Start Tutorial"
+                    >
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </button>
+                )}
                 {chatMode === 'agent' && (
                     <button
+                        data-tutorial="history-button"
                         onClick={onToggleSidebar}
                         className={`p-2 rounded-lg transition-colors ${
                             theme === 'dark' 
@@ -50,6 +67,7 @@ export default function ChatHeader({
                     </button>
                 )}
                 <button
+                    data-tutorial="close-chat"
                     onClick={onClose}
                     className={`p-2 rounded-lg transition-colors ${
                         theme === 'dark' 

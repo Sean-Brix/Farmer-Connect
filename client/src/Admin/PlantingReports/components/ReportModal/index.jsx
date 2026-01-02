@@ -264,7 +264,7 @@ export default function ReportModal({ open, mode = 'create', report = null, onCl
 			>
 				<Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 					<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-						<Typography variant="h6" fontWeight={700}>
+						<Typography variant="h6" fontWeight={700} color="text.primary">
 							{getModalTitle(mode, currentState)}
 						</Typography>
 						{report?.distributionRequestId && (

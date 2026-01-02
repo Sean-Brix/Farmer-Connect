@@ -22,8 +22,8 @@ export default function DistributionMetadataSection({ distribution, distribution
 	if (!hasData) return null;
 
 	return (
-		<Paper variant="outlined" sx={{ p: 2 }}>
-			<Typography variant="subtitle1" fontWeight={700} gutterBottom>
+		<Paper variant="outlined" sx={{ p: 2, bgcolor: 'background.paper', borderColor: 'divider' }}>
+			<Typography variant="subtitle1" fontWeight={700} gutterBottom color="text.primary">
 				Distribution Metadata
 			</Typography>
 			{!meta ? (

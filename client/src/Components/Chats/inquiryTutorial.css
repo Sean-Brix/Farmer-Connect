@@ -1,0 +1,187 @@
+/* Inquiry Tutorial - Light Mode with Green Theme */
+
+.shepherd-modal-overlay-container {
+    z-index: 10002 !important;
+}
+
+.shepherd-element {
+    z-index: 10003 !important;
+    max-width: 400px;
+}
+
+.shepherd-theme-custom {
+    background: white;
+    border: 2px solid #10b981;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15);
+    z-index: 10003 !important;
+}
+
+.shepherd-header {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-bottom: 2px solid #10b981;
+    border-radius: 10px 10px 0 0;
+    padding: 20px;
+}
+
+.shepherd-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #065f46;
+    margin: 0;
+}
+
+.shepherd-cancel-icon {
+    color: #10b981;
+    font-size: 1.5rem;
+    transition: all 0.2s;
+    opacity: 0.7;
+}
+
+.shepherd-cancel-icon:hover {
+    color: #059669;
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.shepherd-text {
+    padding: 20px;
+    color: #1f2937;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.shepherd-text p {
+    margin: 0 0 12px 0;
+}
+
+.shepherd-text ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.shepherd-text li {
+    margin: 6px 0;
+    color: #374151;
+}
+
+.shepherd-text strong {
+    color: #065f46;
+    font-weight: 600;
+}
+
+.shepherd-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #d1fae5;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    background: #f9fafb;
+    border-radius: 0 0 10px 10px;
+}
+
+.shepherd-button {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.shepherd-button:hover {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.shepherd-button-secondary {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.shepherd-button-secondary:hover {
+    background: #d1d5db;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Highlight Effect */
+.shepherd-target {
+    position: relative !important;
+    z-index: 10003 !important;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.4) !important;
+    border-radius: 8px !important;
+}
+
+.shepherd-target-click-disabled {
+    pointer-events: auto !important;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .shepherd-element {
+        max-width: 90vw;
+        margin: 0 5vw;
+    }
+
+    .shepherd-text {
+        font-size: 0.9rem;
+        padding: 15px;
+    }
+
+    .shepherd-header {
+        padding: 15px;
+    }
+
+    .shepherd-title {
+        font-size: 1.1rem;
+    }
+
+    .shepherd-footer {
+        flex-direction: column;
+    }
+
+    .shepherd-button {
+        width: 100%;
+        padding: 12px;
+    }
+}
+
+/* Desktop side positioning */
+@media (min-width: 641px) {
+    .shepherd-element[data-popper-placement^="right"],
+    .shepherd-element[data-popper-placement^="left"] {
+        margin-left: 15px !important;
+        margin-right: 15px !important;
+    }
+
+    .shepherd-element[data-popper-placement^="top"],
+    .shepherd-element[data-popper-placement^="bottom"] {
+        margin-top: 15px !important;
+        margin-bottom: 15px !important;
+    }
+}
+
+/* Prevent arrow display */
+.shepherd-arrow {
+    display: none !important;
+}
+
+/* Smooth animations */
+.shepherd-element {
+    animation: shepherdFadeIn 0.3s ease-in-out;
+}
+
+@keyframes shepherdFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

@@ -45,7 +45,7 @@ export function ReferenceManagementPanel({ open, onClose }) {
 		>
 			<Box sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
 				<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-					<Typography variant="h5" fontWeight={600}>Reference Management</Typography>
+					<Typography variant="h5" fontWeight={600} color="text.primary">Reference Management</Typography>
 					<IconButton onClick={onClose}>
 						<CloseIcon />
 					</IconButton>

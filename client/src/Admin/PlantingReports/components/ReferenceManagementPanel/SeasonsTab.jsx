@@ -137,7 +137,7 @@ export function SeasonsTab() {
       ) : isMobile ? (
         <Stack spacing={2}>
           {seasons.map((season) => (
-            <Card key={season.id} variant="outlined">
+            <Card key={season.id} variant="outlined" sx={{ bgcolor: 'background.paper' }}>
               <CardContent>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 1 }}>
                   <Typography variant="subtitle1" fontWeight="bold">
@@ -178,9 +178,9 @@ export function SeasonsTab() {
           ))}
         </Stack>
       ) : (
-        <TableContainer component={Paper} variant="outlined">
+        <TableContainer component={Paper} variant="outlined" sx={{ bgcolor: 'background.paper' }}>
           <Table>
-            <TableHead>
+            <TableHead sx={{ bgcolor: 'action.hover' }}>
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Description</TableCell>

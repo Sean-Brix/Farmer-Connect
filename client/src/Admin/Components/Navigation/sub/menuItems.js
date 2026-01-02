@@ -47,7 +47,7 @@ export const menuItems = [
     {
         key: 'chat',
         label: 'Inquiries',
-        icon: <i className="fas fa-question-circle w-5 h-5"></i>,
+        icon: <i className="fas fa-comments w-5 h-5"></i>,
     },
     {
         key: 'seed',

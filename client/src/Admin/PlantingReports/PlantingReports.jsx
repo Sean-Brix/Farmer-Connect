@@ -105,7 +105,7 @@ function PlantingReports() {
 		<ErrorBoundary>
 			<Box sx={{ pt: '80px', px: 3, minHeight: '100vh', bgcolor: 'background.default' }}>
 				<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-					<Typography variant="h4" fontWeight={700} color="success.main">
+					<Typography variant="h4" fontWeight={700} color="text.primary" sx={{ color: 'success.main' }}>
 						{t('title') || 'Planting Reports'}
 					</Typography>
 					<Tooltip title="Manage Varieties & Seasons">
@@ -127,7 +127,8 @@ function PlantingReports() {
 					sx={{ 
 						mb: 2,
 						borderRadius: 2,
-						boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+						boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+						bgcolor: 'background.paper'
 					}}
 				>
 					<Tabs
@@ -143,7 +144,7 @@ function PlantingReports() {
 								fontWeight: 600,
 								textTransform: 'none',
 								fontSize: '1rem',
-								color: 'success.main'
+								color: 'text.secondary'
 							},
 							'& .Mui-selected': {
 								color: 'success.main'
@@ -170,7 +171,8 @@ function PlantingReports() {
 					sx={{ 
 						mt: 2,
 						borderRadius: 2,
-						boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+						boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+						bgcolor: 'background.paper'
 					}}
 				>
 					{mainTab === MAIN_TABS.ALL && (

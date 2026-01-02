@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTheme } from '../../../contexts/ThemeContext';
 import { ProgramListSkeleton, FilterBarSkeleton } from '../../../Components/Skeletons/ServiceSkeletons';
+import { createSeminarTutorial } from './seminarTour';
+import './seminarTour.css';
 
 // SUB COMPONENT
 import Navbar from '../../Components/Navbar';
@@ -176,6 +178,38 @@ export default function Seminar() {
     // React Query
     const queryClient = useQueryClient();
 
+    // Shepherd tutorial
+    const [tutorial, setTutorial] = useState(null);
+    const [isTutorialActive, setIsTutorialActive] = useState(false);
+
+    useEffect(() => {        const tutorialInstance = createSeminarTutorial();
+        setTutorial(tutorialInstance);
+        
+        return () => {
+            if (tutorialInstance) {
+                tutorialInstance.complete();
+            }
+        };
+    }, []);
+
+    const startTutorial = () => {
+        if (tutorial) {
+            setIsTutorialActive(true);
+            tutorial.start();
+            
+            // Clean up when tutorial ends
+            tutorial.on('complete', () => {
+                setIsTutorialActive(false);
+                setShowUserSeminarsModal(false);
+            });
+            
+            tutorial.on('cancel', () => {
+                setIsTutorialActive(false);
+                setShowUserSeminarsModal(false);
+            });
+        }
+    };
+
     const { data: seminars = [], isLoading } = useQuery({
         queryKey: ['seminars', { search, filterBy }],
         queryFn: fetchSeminars,
@@ -196,6 +230,27 @@ export default function Seminar() {
         queryFn: fetchUserRegisteredSeminars,
         enabled: showUserSeminarsModal, // Only fetch when modal is open
     });
+
+    // Create temporary demo data for tutorial if user has no registered seminars
+    const demoSeminar = {
+        id: 'demo-001',
+        title: 'Introduction to Modern Farming Techniques',
+        description: 'Learn about the latest agricultural practices and technologies.',
+        speaker: 'Dr. Maria Santos',
+        location: 'Agricultural Training Center',
+        schedule: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
+        duration: '3 hours',
+        status: 'Upcoming',
+        totalParticipants: 45,
+        capacity: 50,
+        participantStatus: 'Approved',
+        photo: default_seminar_pic
+    };
+
+    // Use demo data during tutorial if no real registrations exist
+    const displaySeminars = isTutorialActive && userRegisteredSeminars.length === 0 
+        ? [demoSeminar] 
+        : userRegisteredSeminars;
 
     
     const applyMutation = useMutation({
@@ -318,7 +373,7 @@ export default function Seminar() {
                 <main className="flex-1 w-full relative z-10 mt-30 ">
                     <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-[8vh] ">
                         {/* Header */}
-                        <header className="flex flex-col items-center mb-12 w-full">
+                        <header className="flex flex-col items-center mb-12 w-full relative">
                             <span className={`uppercase tracking-widest text-xs font-semibold mb-1 letter-spacing-wide ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                 Welcome to
                             </span>
@@ -335,6 +390,7 @@ export default function Seminar() {
                             {/* My Registered Seminars Button - Top Right on Desktop, Top on Mobile */}
                             <div className="w-full flex justify-end mb-3">
                                 <button
+                                    data-tutorial="my-seminars-btn"
                                     className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold shadow-md hover:shadow-lg transition border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm sm:text-base"
                                     onClick={() => setShowUserSeminarsModal(true)}
                                 >
@@ -346,26 +402,43 @@ export default function Seminar() {
                             
                             {/* Search and Filter Section */}
                             <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center sm:justify-between">
-                                {/* Search Bar */}
-                                <div className="relative flex-1 sm:max-w-md">
-                                    <input
-                                        type="text"
-                                        className={`w-full px-10 py-2.5 rounded-lg border-2 focus:ring-2 shadow-sm transition font-medium text-sm sm:text-base ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-green-400 focus:ring-green-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-800 focus:border-green-500 focus:ring-green-200 placeholder:text-gray-500'}`}
-                                        placeholder={`Search by ${filterBy.toLowerCase()}...`}
-                                        value={search}
-                                        onChange={(e) => {
-                                            setSearch(e.target.value);
-                                            setCurrentPage(1);
-                                        }}
-                                    />
-                                    <span className={`absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                                        <i className="fa-solid fa-magnifying-glass"></i>
-                                    </span>
+                                {/* Search Bar with Help Icon */}
+                                <div className="relative flex-1 sm:max-w-md flex items-center gap-2">
+                                    <div className="relative flex-1">
+                                        <input
+                                            data-tutorial="search-input"
+                                            type="text"
+                                            className={`w-full px-10 py-2.5 rounded-lg border-2 focus:ring-2 shadow-sm transition font-medium text-sm sm:text-base ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-green-400 focus:ring-green-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-800 focus:border-green-500 focus:ring-green-200 placeholder:text-gray-500'}`}
+                                            placeholder={`Search by ${filterBy.toLowerCase()}...`}
+                                            value={search}
+                                            onChange={(e) => {
+                                                setSearch(e.target.value);
+                                                setCurrentPage(1);
+                                            }}
+                                        />
+                                        <span className={`absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            <i className="fa-solid fa-magnifying-glass"></i>
+                                        </span>
+                                    </div>
+                                    {/* Help Button - Beside Search */}
+                                    <button
+                                        onClick={startTutorial}
+                                        className={`flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-all border ${
+                                            isDark 
+                                                ? 'bg-gray-700 hover:bg-gray-600 text-gray-400 hover:text-gray-300 border-gray-600' 
+                                                : 'bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-700 border-gray-300'
+                                        }`}
+                                        title="Need Help?"
+                                        aria-label="Start tutorial"
+                                    >
+                                        <i className="fa-solid fa-circle-question text-base"></i>
+                                    </button>
                                 </div>
                                 
                                 {/* Filter Dropdown */}
                                 <div className="relative flex-shrink-0 w-auto sm:w-auto sm:ml-auto">
                                     <button
+                                        data-tutorial="filter-btn"
                                         className={`w-auto sm:w-auto flex items-center justify-between sm:justify-start gap-2 px-4 py-2.5 rounded-lg font-semibold border-2 shadow-sm hover:shadow-md transition focus:outline-none text-sm sm:text-base ${
                                             isDark 
                                                 ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' 
@@ -438,6 +511,7 @@ export default function Seminar() {
                                     return (
                                         <div
                                             key={program.id}
+                                            data-tutorial={paginatedPrograms.indexOf(program) === 0 ? "seminar-card" : undefined}
                                             className={`relative flex flex-col border-2 hover:border-green-300 rounded-lg shadow-lg hover:shadow-xl transition-all overflow-hidden group w-full max-w-md mx-auto ${
                                                 isDark 
                                                     ? 'bg-gray-800 border-gray-700' 
@@ -522,6 +596,7 @@ export default function Seminar() {
                                                         </button>
                                                     ) : (
                                                         <button
+                                                            data-tutorial={paginatedPrograms.indexOf(program) === 0 ? "enroll-btn" : undefined}
                                                             onClick={() =>
                                                                 applyMutation.mutate(
                                                                     program.id
@@ -536,6 +611,7 @@ export default function Seminar() {
                                                         </button>
                                                     )}
                                                     <button
+                                                        data-tutorial={paginatedPrograms.indexOf(program) === 0 ? "view-details-btn" : undefined}
                                                         onClick={() =>
                                                             setSelectedSeminarId(
                                                                 program.id
@@ -554,7 +630,7 @@ export default function Seminar() {
                         </div>
                         {/* Pagination */}
                         {totalPages > 1 && (
-                            <div className="flex justify-center mt-6 mb-2">
+                            <div className="flex justify-center mt-6 mb-2" data-tutorial="pagination">
                                 <nav
                                     className={`flex items-center gap-1 rounded-lg shadow-md border-2 px-3 py-1.5 ${
                                         isDark 
@@ -719,9 +795,10 @@ export default function Seminar() {
             {/* NEW: Modal for user's registered seminars */}
             {showUserSeminarsModal && (
                 <UserSeminarsModal
-                    seminars={userRegisteredSeminars}
+                    seminars={displaySeminars}
                     isLoading={isUserSeminarsLoading}
                     onClose={() => setShowUserSeminarsModal(false)}
+                    isTutorialActive={isTutorialActive}
                 />
             )}
 
@@ -1016,7 +1093,7 @@ function SeminarDetails({ seminar, onClose }) {
 }
 
 // NEW: Modal to show user's registered seminars
-function UserSeminarsModal({ seminars, isLoading, onClose }) {
+function UserSeminarsModal({ seminars, isLoading, onClose, isTutorialActive = false }) {
     const { isDark } = useTheme();
     const [currentModalPage, setCurrentModalPage] = useState(1);
     const MODAL_ITEMS_PER_PAGE = 3;
@@ -1050,6 +1127,7 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
                         </div>
                     </div>
                     <button
+                        data-tutorial="close-modal"
                         onClick={onClose}
                         className="w-8 h-8 rounded-full hover:bg-white/20 flex items-center justify-center text-white hover:text-white/80 transition-colors"
                         aria-label="Close"

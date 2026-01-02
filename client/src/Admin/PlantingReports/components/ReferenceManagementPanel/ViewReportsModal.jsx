@@ -88,9 +88,9 @@ export function ViewReportsModal({ open, onClose, reference, type }) {
         )}
 
         {!isLoading && !isError && reports.length > 0 && (
-          <TableContainer component={Paper} variant="outlined">
+          <TableContainer component={Paper} variant="outlined" sx={{ bgcolor: 'background.paper' }}>
             <Table>
-              <TableHead>
+              <TableHead sx={{ bgcolor: 'action.hover' }}>
                 <TableRow>
                   <TableCell>Farmer</TableCell>
                   <TableCell>Location</TableCell>

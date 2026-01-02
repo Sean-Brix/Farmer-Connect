@@ -39,6 +39,8 @@ export function MobileReportCard({
 		<Card
 			sx={{
 				mb: 2,
+				bgcolor: 'background.paper',
+				borderColor: 'divider',
 				'&:hover': {
 					boxShadow: 3
 				}
@@ -47,7 +49,7 @@ export function MobileReportCard({
 			<CardContent>
 				{/* Header: Farmer Name + State Chip */}
 				<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 1 }}>
-					<Typography variant="subtitle1" fontWeight={600} sx={{ flex: 1 }}>
+					<Typography variant="subtitle1" fontWeight={600} sx={{ flex: 1 }} color="text.primary">
 						{report.farmerName}
 					</Typography>
 					<Chip label={getStateLabel(report.state)} size="small" color={getStateColor(report.state)} sx={{ ml: 1 }} />
