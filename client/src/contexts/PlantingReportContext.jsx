@@ -187,7 +187,9 @@ export const PlantingReportProvider = ({ children }) => {
         setLoadingReports(true);
         try {
             const response = await plantingReportService.getAll(params);
-            const reports = response.reports || [];
+            const reports = response.data || response.reports || [];
+            
+            console.log('📊 Fetched reports:', reports.length);
             
             // Only cache full list without params
             if (!hasParams) {

@@ -7,11 +7,17 @@ import {
     Award,
     Target,
     Activity,
-    Loader
+    Loader,
+    Package,
+    Download,
+    FileSpreadsheet,
+    FileText
 } from 'lucide-react';
 import { useTheme } from '../../../contexts/ThemeContext';
 import { usePlantingReport } from '../../../contexts/PlantingReportContext';
 import { toast } from 'react-hot-toast';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
 
 function PlantingReportAnalytics() {
     const { isDark } = useTheme();
@@ -94,8 +100,22 @@ function PlantingReportAnalytics() {
         const seasonYield = {};
         const seasonArea = {};
         const locationDistribution = {};
+        const stateDistribution = {};
+        const stateByArea = {};
+        const stateYields = {};
 
         filteredReports.forEach(r => {
+            // State tracking
+            const state = r.state || 'Unknown';
+            stateDistribution[state] = (stateDistribution[state] || 0) + 1;
+            stateByArea[state] = (stateByArea[state] || 0) + (r.areaPlanted || 0);
+            
+            if (r.yieldMtPerHa && state === 'Harvested') {
+                if (!stateYields[state]) stateYields[state] = { total: 0, count: 0 };
+                stateYields[state].total += r.yieldMtPerHa;
+                stateYields[state].count += 1;
+            }
+            
             cropTypeDistribution[r.typeOfCrop] = (cropTypeDistribution[r.typeOfCrop] || 0) + 1;
             
             const variety = varieties.find(v => v.id === r.varietyId);
@@ -159,7 +179,14 @@ function PlantingReportAnalytics() {
             mostProductiveSeason,
             seasonYield,
             insuredReports,
-            insuranceRate
+            insuranceRate,
+            stateDistribution,
+            stateByArea,
+            stateYields,
+            distributedReports: stateDistribution['Distributed'] || 0,
+            plantingReports: stateDistribution['Planting'] || 0,
+            plantedReports: stateDistribution['Planted'] || 0,
+            harvestedReportsCount: stateDistribution['Harvested'] || 0
         };
     }, [filteredReports, varieties, seasons]);
 
@@ -168,6 +195,415 @@ function PlantingReportAnalytics() {
         { id: 'farmers', label: 'Farmers', icon: Users },
         { id: 'production', label: 'Production', icon: TrendingUp }
     ];
+
+    const exportToExcel = useCallback(() => {
+        try {
+            const wb = XLSX.utils.book_new();
+            
+            // Helper function to auto-fit columns
+            const autoFitColumns = (ws, data) => {
+                const cols = [];
+                const keys = Object.keys(data[0] || {});
+                
+                keys.forEach((key, idx) => {
+                    const headerLength = key.length;
+                    const maxDataLength = Math.max(
+                        ...data.map(row => {
+                            const value = String(row[key] || '');
+                            return value.length;
+                        }),
+                        0
+                    );
+                    cols[idx] = { wch: Math.max(headerLength, maxDataLength) + 2 };
+                });
+                
+                ws['!cols'] = cols;
+            };
+            
+            // Helper function to set alignment and format numbers as text
+            const setLeftAlign = (ws, rowCount, colCount) => {
+                for (let R = 0; R < rowCount; R++) {
+                    for (let C = 0; C < colCount; C++) {
+                        const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
+                        if (!ws[cellRef]) continue;
+                        
+                        // Convert numbers to text to force left alignment
+                        if (typeof ws[cellRef].v === 'number') {
+                            ws[cellRef].t = 's'; // Set type to string
+                            ws[cellRef].v = String(ws[cellRef].v);
+                        }
+                        
+                        if (!ws[cellRef].s) ws[cellRef].s = {};
+                        ws[cellRef].s.alignment = { horizontal: 'left', vertical: 'center' };
+                    }
+                }
+            };
+            
+            // Overview Sheet - Create first
+            const overviewData = [
+                ['PLANTING REPORTS ANALYTICS - OVERVIEW'],
+                ['Generated:', new Date().toLocaleString()],
+                [],
+                ['SUMMARY STATISTICS'],
+                ['Total Reports', filteredReports.length],
+                ['Total Farmers', analytics.totalFarmers],
+                ['Farmers with RSBSA', analytics.farmersWithRSBSA],
+                ['Total Area (ha)', analytics.totalArea.toFixed(2)],
+                ['Average Yield (mt/ha)', analytics.averageYield.toFixed(2)],
+                [],
+                ['STATE DISTRIBUTION'],
+                ['Distributed', analytics.distributedReports, `${analytics.stateByArea['Distributed']?.toFixed(2) || 0} ha`],
+                ['Planting', analytics.plantingReports, `${analytics.stateByArea['Planting']?.toFixed(2) || 0} ha`],
+                ['Planted', analytics.plantedReports, `${analytics.stateByArea['Planted']?.toFixed(2) || 0} ha`],
+                ['Harvested', analytics.harvestedReportsCount, `${analytics.stateByArea['Harvested']?.toFixed(2) || 0} ha`],
+                [],
+                ['CROP TYPE DISTRIBUTION'],
+                ...Object.entries(analytics.cropTypeDistribution).map(([crop, count]) => [
+                    crop.replace(/_/g, ' '), count
+                ]),
+                [],
+                ['TOP VARIETIES'],
+                ...Object.entries(analytics.varietyDistribution)
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 10)
+                    .map(([variety, count]) => [variety, count]),
+                [],
+                ['SEASONAL PERFORMANCE'],
+                ...Object.entries(analytics.seasonYield).map(([season, data]) => [
+                    season,
+                    `${data.count} reports`,
+                    `${(data.total / data.count).toFixed(2)} mt/ha avg`,
+                    `${analytics.seasonArea[season]?.toFixed(2) || 0} ha`
+                ])
+            ];
+            
+            const overviewWS = XLSX.utils.aoa_to_sheet(overviewData);
+            overviewWS['!cols'] = [{ wch: 30 }, { wch: 20 }, { wch: 20 }];
+            setLeftAlign(overviewWS, overviewData.length, 3);
+            XLSX.utils.book_append_sheet(wb, overviewWS, 'Overview');
+            
+            // Separate reports by state
+            const plantingReports = filteredReports.filter(r => r.state === 'Planting');
+            const plantedReports = filteredReports.filter(r => r.state === 'Planted');
+            const harvestedReports = filteredReports.filter(r => r.state === 'Harvested');
+            
+            // Planting Sheet
+            if (plantingReports.length > 0) {
+                const plantingData = plantingReports.map(r => ({
+                    'Farmer Name': r.farmerName || '',
+                    'Crop Type': (r.typeOfCrop || '').replace(/_/g, ' '),
+                    'Variety': varieties.find(v => v.id === r.varietyId)?.name || '',
+                    'RSBSA': r.rsbsaNumber || 'N/A',
+                    'Farm Location': r.farmLocation || ''
+                }));
+                
+                const plantingWS = XLSX.utils.json_to_sheet(plantingData);
+                autoFitColumns(plantingWS, plantingData);
+                setLeftAlign(plantingWS, plantingData.length + 1, 5);
+                XLSX.utils.book_append_sheet(wb, plantingWS, 'Planting');
+            } else {
+                const noDataWS = XLSX.utils.aoa_to_sheet([['No Planting Reports']]);
+                noDataWS['!cols'] = [{ wch: 30 }];
+                XLSX.utils.book_append_sheet(wb, noDataWS, 'Planting');
+            }
+            
+            // Planted Sheet
+            if (plantedReports.length > 0) {
+                const plantedData = plantedReports.map(r => ({
+                    'Farmer Name': r.farmerName || '',
+                    'Crop Type': (r.typeOfCrop || '').replace(/_/g, ' '),
+                    'Variety': varieties.find(v => v.id === r.varietyId)?.name || '',
+                    'RSBSA': r.rsbsaNumber || 'N/A',
+                    'Farm Location': r.farmLocation || '',
+                    'Cropping Season': seasons.find(s => s.id === r.croppingSeasonId)?.name || '',
+                    'Area Planted (ha)': r.areaPlanted || 0,
+                    'Seed Classification': r.seedClassification || '',
+                    'Crop Insurance': r.cropInsurance ? 'Yes' : 'No',
+                    'Date of Planting': r.dateOfPlanting ? new Date(r.dateOfPlanting).toLocaleDateString() : '',
+                    'Planting Method': r.plantingMethod || '',
+                    'Irrigation': r.irrigation || '',
+                    'Expected Harvest Date': r.estimatedHarvestDate ? new Date(r.estimatedHarvestDate).toLocaleDateString() : ''
+                }));
+                
+                const plantedWS = XLSX.utils.json_to_sheet(plantedData);
+                autoFitColumns(plantedWS, plantedData);
+                setLeftAlign(plantedWS, plantedData.length + 1, 13);
+                XLSX.utils.book_append_sheet(wb, plantedWS, 'Planted');
+            } else {
+                const noDataWS = XLSX.utils.aoa_to_sheet([['No Planted Reports']]);
+                noDataWS['!cols'] = [{ wch: 30 }];
+                XLSX.utils.book_append_sheet(wb, noDataWS, 'Planted');
+            }
+            
+            // Harvested Sheet
+            if (harvestedReports.length > 0) {
+                const harvestedData = harvestedReports.map(r => ({
+                    'Farmer Name': r.farmerName || '',
+                    'Crop Type': (r.typeOfCrop || '').replace(/_/g, ' '),
+                    'Variety': varieties.find(v => v.id === r.varietyId)?.name || '',
+                    'RSBSA': r.rsbsaNumber || 'N/A',
+                    'Farm Location': r.farmLocation || '',
+                    'Cropping Season': seasons.find(s => s.id === r.croppingSeasonId)?.name || '',
+                    'Area Planted (ha)': r.areaPlanted || 0,
+                    'Seed Classification': r.seedClassification || '',
+                    'Crop Insurance': r.cropInsurance ? 'Yes' : 'No',
+                    'Date of Planting': r.dateOfPlanting ? new Date(r.dateOfPlanting).toLocaleDateString() : '',
+                    'Planting Method': r.plantingMethod || '',
+                    'Irrigation': r.irrigation || '',
+                    'Expected Harvest Date': r.estimatedHarvestDate ? new Date(r.estimatedHarvestDate).toLocaleDateString() : '',
+                    'Harvest Area': r.harvestArea || 0,
+                    'Number of Bags': r.numberOfBags || 0,
+                    'Weight per Bag (kg)': r.weightPerBag || 0,
+                    'Yield (Mt/Ha)': r.yieldMtPerHa || 0
+                }));
+                
+                const harvestedWS = XLSX.utils.json_to_sheet(harvestedData);
+                autoFitColumns(harvestedWS, harvestedData);
+                setLeftAlign(harvestedWS, harvestedData.length + 1, 17);
+                XLSX.utils.book_append_sheet(wb, harvestedWS, 'Harvested');
+            } else {
+                const noDataWS = XLSX.utils.aoa_to_sheet([['No Harvested Reports']]);
+                noDataWS['!cols'] = [{ wch: 30 }];
+                XLSX.utils.book_append_sheet(wb, noDataWS, 'Harvested');
+            }
+            
+            // Generate filename with timestamp
+            const filename = `Planting_Reports_Analytics_${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(wb, filename);
+            
+            toast.success('Excel report exported successfully!');
+        } catch (error) {
+            console.error('Excel export error:', error);
+            toast.error('Failed to export Excel report');
+        }
+    }, [filteredReports, analytics, varieties, seasons]);
+
+    const exportToPDF = useCallback(() => {
+        try {
+            const doc = new jsPDF('landscape', 'mm', 'a4'); // Landscape for better table display
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            let yPos = 15;
+            
+            // Title
+            doc.setFontSize(18);
+            doc.setFont(undefined, 'bold');
+            doc.text('Planting Reports Analytics - All Reports', pageWidth / 2, yPos, { align: 'center' });
+            yPos += 8;
+            
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'normal');
+            doc.text(`Generated: ${new Date().toLocaleString()}`, pageWidth / 2, yPos, { align: 'center' });
+            yPos += 10;
+            
+            // Prepare all reports data for table
+            const tableData = filteredReports.map(r => [
+                r.farmerName || '',
+                (r.typeOfCrop || '').replace(/_/g, ' '),
+                varieties.find(v => v.id === r.varietyId)?.name || '',
+                r.rsbsaNumber || 'N/A',
+                r.farmLocation || '',
+                seasons.find(s => s.id === r.croppingSeasonId)?.name || '',
+                r.areaPlanted?.toFixed(2) || '0',
+                r.dateOfPlanting ? new Date(r.dateOfPlanting).toLocaleDateString() : '',
+                r.plantingMethod || '',
+                r.state || ''
+            ]);
+            
+            const headers = [
+                'Farmer Name',
+                'Crop Type',
+                'Variety',
+                'RSBSA',
+                'Farm Location',
+                'Season',
+                'Area (ha)',
+                'Date Planted',
+                'Method',
+                'State'
+            ];
+            
+            // Calculate column widths to use full page width
+            const margin = 10;
+            const availableWidth = pageWidth - (2 * margin);
+            const colWidths = [
+                availableWidth * 0.14,  // Farmer Name - 14%
+                availableWidth * 0.11,  // Crop Type - 11%
+                availableWidth * 0.11,  // Variety - 11%
+                availableWidth * 0.10,  // RSBSA - 10%
+                availableWidth * 0.13,  // Farm Location - 13%
+                availableWidth * 0.10,  // Season - 10%
+                availableWidth * 0.08,  // Area (ha) - 8%
+                availableWidth * 0.10,  // Date Planted - 10%
+                availableWidth * 0.09,  // Method - 9%
+                availableWidth * 0.04   // State - 4%
+            ];
+            const startX = margin;
+            let currentY = yPos;
+            
+            // Helper function to draw table
+            const drawTable = (data, startY) => {
+                let y = startY;
+                
+                // Draw headers
+                doc.setFillColor(59, 130, 246); // Blue background
+                doc.rect(startX, y, colWidths.reduce((a, b) => a + b, 0), 8, 'F');
+                
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'bold');
+                
+                let x = startX + 2;
+                headers.forEach((header, idx) => {
+                    doc.text(header, x, y + 5.5);
+                    x += colWidths[idx];
+                });
+                
+                y += 8;
+                doc.setTextColor(0, 0, 0);
+                doc.setFont(undefined, 'normal');
+                
+                // Draw data rows
+                data.forEach((row, rowIdx) => {
+                    // Check if we need a new page
+                    if (y > pageHeight - 30) {
+                        doc.addPage();
+                        y = 15;
+                        
+                        // Redraw headers on new page
+                        doc.setFillColor(59, 130, 246);
+                        doc.rect(startX, y, colWidths.reduce((a, b) => a + b, 0), 8, 'F');
+                        doc.setTextColor(255, 255, 255);
+                        doc.setFont(undefined, 'bold');
+                        
+                        let headerX = startX + 2;
+                        headers.forEach((header, idx) => {
+                            doc.text(header, headerX, y + 5.5);
+                            headerX += colWidths[idx];
+                        });
+                        
+                        y += 8;
+                        doc.setTextColor(0, 0, 0);
+                        doc.setFont(undefined, 'normal');
+                    }
+                    
+                    // Alternating row colors
+                    if (rowIdx % 2 === 0) {
+                        doc.setFillColor(249, 250, 251);
+                        doc.rect(startX, y, colWidths.reduce((a, b) => a + b, 0), 7, 'F');
+                    }
+                    
+                    // Draw cell borders
+                    doc.setDrawColor(229, 231, 235);
+                    doc.rect(startX, y, colWidths.reduce((a, b) => a + b, 0), 7);
+                    
+                    // Draw cell data
+                    let cellX = startX + 2;
+                    row.forEach((cell, cellIdx) => {
+                        const cellText = String(cell || '');
+                        const maxWidth = colWidths[cellIdx] - 4;
+                        
+                        // Truncate text if too long
+                        const lines = doc.splitTextToSize(cellText, maxWidth);
+                        doc.text(lines[0], cellX, y + 5);
+                        
+                        cellX += colWidths[cellIdx];
+                    });
+                    
+                    y += 7;
+                });
+                
+                return y;
+            };
+            
+            // Draw the main table
+            const finalY = drawTable(tableData, currentY);
+            
+            // Add summary section
+            let summaryY = finalY + 10;
+            
+            // Check if we need a new page for summary
+            if (summaryY > pageHeight - 40) {
+                doc.addPage();
+                summaryY = 15;
+            }
+            
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.text('Summary Statistics', startX, summaryY);
+            summaryY += 8;
+            
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'normal');
+            
+            const summaryStats = [
+                `Total Reports: ${filteredReports.length}`,
+                `Total Farmers: ${analytics.totalFarmers}`,
+                `Farmers with RSBSA: ${analytics.farmersWithRSBSA}`,
+                `Total Area: ${analytics.totalArea.toFixed(2)} ha`,
+                `Average Yield: ${analytics.averageYield.toFixed(2)} mt/ha`
+            ];
+            
+            const col1X = startX;
+            const col2X = startX + 70;
+            const col3X = startX + 140;
+            
+            summaryStats.forEach((stat, idx) => {
+                const colNum = idx % 3;
+                const x = colNum === 0 ? col1X : colNum === 1 ? col2X : col3X;
+                
+                if (colNum === 0 && idx > 0) summaryY += 6;
+                
+                doc.text(stat, x, summaryY);
+            });
+            
+            summaryY += 10;
+            
+            // State distribution summary
+            doc.setFont(undefined, 'bold');
+            doc.text('State Distribution:', startX, summaryY);
+            summaryY += 6;
+            
+            doc.setFont(undefined, 'normal');
+            const stateStats = [
+                `Distributed: ${analytics.distributedReports} (${analytics.stateByArea['Distributed']?.toFixed(2) || 0} ha)`,
+                `Planting: ${analytics.plantingReports} (${analytics.stateByArea['Planting']?.toFixed(2) || 0} ha)`,
+                `Planted: ${analytics.plantedReports} (${analytics.stateByArea['Planted']?.toFixed(2) || 0} ha)`,
+                `Harvested: ${analytics.harvestedReportsCount} (${analytics.stateByArea['Harvested']?.toFixed(2) || 0} ha)`
+            ];
+            
+            stateStats.forEach((stat, idx) => {
+                const colNum = idx % 2;
+                const x = colNum === 0 ? col1X : col2X;
+                
+                if (colNum === 0 && idx > 0) summaryY += 6;
+                
+                doc.text(stat, x, summaryY);
+            });
+            
+            // Footer on each page
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'normal');
+                doc.text(
+                    `Page ${i} of ${pageCount}`,
+                    pageWidth / 2,
+                    pageHeight - 8,
+                    { align: 'center' }
+                );
+            }
+            
+            const filename = `Planting_Reports_Analytics_${new Date().toISOString().split('T')[0]}.pdf`;
+            doc.save(filename);
+            
+            toast.success('PDF report exported successfully!');
+        } catch (error) {
+            console.error('PDF export error:', error);
+            toast.error('Failed to export PDF report');
+        }
+    }, [filteredReports, analytics, varieties, seasons]);
 
     if (isLoading) {
         return (
@@ -190,9 +626,35 @@ function PlantingReportAnalytics() {
         }`}>
             <div className="max-w-7xl mx-auto">
                 <div className="mb-8">
-                    <h1 className={`text-3xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        Planting Report Analytics
-                    </h1>
+                    <div className="flex justify-between items-center mb-2">
+                        <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            Planting Report Analytics
+                        </h1>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={exportToExcel}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+                                    isDark 
+                                        ? 'bg-green-600 hover:bg-green-700 text-white' 
+                                        : 'bg-green-500 hover:bg-green-600 text-white'
+                                } shadow-md hover:shadow-lg hover:scale-105`}
+                            >
+                                <FileSpreadsheet size={20} />
+                                <span className="font-medium">Export Excel</span>
+                            </button>
+                            <button
+                                onClick={exportToPDF}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+                                    isDark 
+                                        ? 'bg-red-600 hover:bg-red-700 text-white' 
+                                        : 'bg-red-500 hover:bg-red-600 text-white'
+                                } shadow-md hover:shadow-lg hover:scale-105`}
+                            >
+                                <FileText size={20} />
+                                <span className="font-medium">Export PDF</span>
+                            </button>
+                        </div>
+                    </div>
                     <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>
                         Interactive insights into seeding, farmers, and production performance
                     </p>
@@ -268,7 +730,7 @@ function PlantingReportAnalytics() {
                     <SeedingAnalytics analytics={analytics} isDark={isDark} varieties={varieties} seasons={seasons} filteredReports={filteredReports} />
                 )}
                 {activeTab === 'farmers' && (
-                    <FarmersAnalytics analytics={analytics} isDark={isDark} />
+                    <FarmersAnalytics analytics={analytics} isDark={isDark} filteredReports={filteredReports} />
                 )}
                 {activeTab === 'production' && (
                     <ProductionAnalytics analytics={analytics} isDark={isDark} reports={filteredReports} />
@@ -277,6 +739,189 @@ function PlantingReportAnalytics() {
         </div>
     );
 }
+
+const OverviewAnalytics = ({ analytics, isDark, filteredReports }) => {
+    const stateColors = {
+        'Distributed': '#3B82F6',
+        'Planting': '#8B5CF6',
+        'Planted': '#10B981',
+        'Harvested': '#F59E0B'
+    };
+
+    const stateIcons = {
+        'Distributed': '📦',
+        'Planting': '🌱',
+        'Planted': '🌾',
+        'Harvested': '✅'
+    };
+
+    return (
+        <div className="space-y-6">
+            {/* State Summary Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className={`p-6 rounded-xl ${isDark ? 'bg-gray-800' : 'bg-white shadow-lg'} border-l-4 border-blue-500`}>
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-3xl">{stateIcons['Distributed']}</span>
+                        <Activity className="text-blue-500" size={24} />
+                    </div>
+                    <p className={`text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Distributed</p>
+                    <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        {analytics.distributedReports}
+                    </p>
+                    <p className={`text-xs mt-1 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                        {analytics.stateByArea['Distributed']?.toFixed(2) || 0} ha
+                    </p>
+                </div>
+
+                <div className={`p-6 rounded-xl ${isDark ? 'bg-gray-800' : 'bg-white shadow-lg'} border-l-4 border-purple-500`}>
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-3xl">{stateIcons['Planting']}</span>
+                        <Sprout className="text-purple-500" size={24} />
+                    </div>
+                    <p className={`text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Planting</p>
+                    <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        {analytics.plantingReports}
+                    </p>
+                    <p className={`text-xs mt-1 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                        {analytics.stateByArea['Planting']?.toFixed(2) || 0} ha
+                    </p>
+                </div>
+
+                <div className={`p-6 rounded-xl ${isDark ? 'bg-gray-800' : 'bg-white shadow-lg'} border-l-4 border-green-500`}>
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-3xl">{stateIcons['Planted']}</span>
+                        <Target className="text-green-500" size={24} />
+                    </div>
+                    <p className={`text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Planted</p>
+                    <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        {analytics.plantedReports}
+                    </p>
+                    <p className={`text-xs mt-1 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                        {analytics.stateByArea['Planted']?.toFixed(2) || 0} ha
+                    </p>
+                </div>
+
+                <div className={`p-6 rounded-xl ${isDark ? 'bg-gray-800' : 'bg-white shadow-lg'} border-l-4 border-yellow-500`}>
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-3xl">{stateIcons['Harvested']}</span>
+                        <Award className="text-yellow-500" size={24} />
+                    </div>
+                    <p className={`text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Harvested</p>
+                    <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        {analytics.harvestedReportsCount}
+                    </p>
+                    <p className={`text-xs mt-1 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                        {analytics.stateByArea['Harvested']?.toFixed(2) || 0} ha
+                    </p>
+                </div>
+            </div>
+
+            {/* State Distribution Chart */}
+            <div className={`p-6 rounded-xl ${isDark ? 'bg-gray-800' : 'bg-white shadow-lg'}`}>
+                <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    Report State Distribution
+                </h3>
+                <div className="space-y-3">
+                    {Object.entries(analytics.stateDistribution).map(([state, count]) => {
+                        const percentage = ((count / analytics.totalReports) * 100).toFixed(1);
+                        return (
+                            <div key={state}>
+                                <div className="flex items-center justify-between mb-1">
+                                    <span className={`text-sm font-medium flex items-center gap-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                        <span>{stateIcons[state] || '📋'}</span>
+                                        {state}
+                                    </span>
+                                    <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        {count} ({percentage}%)
+                                    </span>
+                                </div>
+                                <div className={`w-full h-3 rounded-full overflow-hidden ${isDark ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                                    <div
+                                        className="h-full rounded-full transition-all duration-500"
+                                        style={{ 
+                                            width: `${percentage}%`,
+                                            backgroundColor: stateColors[state] || '#6B7280'
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* Progress Funnel */}
+            <div className={`p-6 rounded-xl ${isDark ? 'bg-gray-800' : 'bg-white shadow-lg'}`}>
+                <h3 className={`text-lg font-semibold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    Planting Progress Funnel
+                </h3>
+                <div className="space-y-4">
+                    <div className="relative">
+                        <div className="flex items-center gap-4">
+                            <div className="flex-1">
+                                <div className={`p-4 rounded-lg bg-blue-500 text-white font-semibold text-center`}>
+                                    Distributed: {analytics.distributedReports}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="absolute left-1/2 transform -translate-x-1/2 text-2xl">↓</div>
+                    </div>
+                    
+                    <div className="relative ml-8">
+                        <div className="flex items-center gap-4">
+                            <div className="flex-1">
+                                <div className={`p-4 rounded-lg bg-purple-500 text-white font-semibold text-center`}>
+                                    Planting: {analytics.plantingReports}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="absolute left-1/2 transform -translate-x-1/2 text-2xl">↓</div>
+                    </div>
+
+                    <div className="relative ml-16">
+                        <div className="flex items-center gap-4">
+                            <div className="flex-1">
+                                <div className={`p-4 rounded-lg bg-green-500 text-white font-semibold text-center`}>
+                                    Planted: {analytics.plantedReports}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="absolute left-1/2 transform -translate-x-1/2 text-2xl">↓</div>
+                    </div>
+
+                    <div className="relative ml-24">
+                        <div className="flex items-center gap-4">
+                            <div className="flex-1">
+                                <div className={`p-4 rounded-lg bg-yellow-500 text-white font-semibold text-center`}>
+                                    Harvested: {analytics.harvestedReportsCount}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="mt-6 pt-6 border-t ${isDark ? 'border-gray-700' : 'border-gray-200'}">
+                    <div className="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                            <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Completion Rate</p>
+                            <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                {analytics.totalReports > 0 
+                                    ? ((analytics.harvestedReportsCount / analytics.totalReports) * 100).toFixed(1)
+                                    : 0}%
+                            </p>
+                        </div>
+                        <div>
+                            <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>In Progress</p>
+                            <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                {analytics.distributedReports + analytics.plantingReports + analytics.plantedReports}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const SeedingAnalytics = ({ analytics, isDark, varieties, seasons, filteredReports }) => {
     const [selectedCrop, setSelectedCrop] = useState('all');
@@ -399,14 +1044,86 @@ const SeedingAnalytics = ({ analytics, isDark, varieties, seasons, filteredRepor
     );
 };
 
-const FarmersAnalytics = ({ analytics, isDark }) => {
+const FarmersAnalytics = ({ analytics, isDark, filteredReports }) => {
     const farmerEngagement = analytics.totalFarmers > 0 
         ? ((analytics.farmersWithRSBSA / analytics.totalFarmers) * 100).toFixed(1)
         : 0;
 
+    // Calculate seed distribution metrics
+    const seedDistributionData = useMemo(() => {
+        const distributedReports = filteredReports.filter(r => r.state === 'Distributed');
+        const totalDistributed = distributedReports.length;
+        const totalAreaDistributed = distributedReports.reduce((sum, r) => sum + (r.areaPlanted || 0), 0);
+        
+        // Monthly distribution tracking
+        const monthlyDistribution = {};
+        const cropDistribution = {};
+        const farmerDistribution = {};
+        
+        distributedReports.forEach(r => {
+            const date = new Date(r.distributedAt || r.dateOfPlanting);
+            const monthKey = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            
+            // Monthly counts
+            if (!monthlyDistribution[monthKey]) {
+                monthlyDistribution[monthKey] = { count: 0, area: 0, date };
+            }
+            monthlyDistribution[monthKey].count += 1;
+            monthlyDistribution[monthKey].area += r.areaPlanted || 0;
+            
+            // Crop type distribution
+            const crop = r.typeOfCrop || 'Unknown';
+            if (!cropDistribution[crop]) {
+                cropDistribution[crop] = { count: 0, area: 0 };
+            }
+            cropDistribution[crop].count += 1;
+            cropDistribution[crop].area += r.areaPlanted || 0;
+            
+            // Farmer distribution
+            const farmerKey = r.rsbsaNumber || `${r.farmerName}-${r.farmLocation}`;
+            if (!farmerDistribution[farmerKey]) {
+                farmerDistribution[farmerKey] = {
+                    name: r.farmerName,
+                    count: 0,
+                    area: 0,
+                    hasRSBSA: !!r.rsbsaNumber
+                };
+            }
+            farmerDistribution[farmerKey].count += 1;
+            farmerDistribution[farmerKey].area += r.areaPlanted || 0;
+        });
+        
+        // Sort monthly data by date
+        const sortedMonthly = Object.entries(monthlyDistribution)
+            .sort(([, a], [, b]) => a.date - b.date)
+            .slice(-12); // Last 12 months
+        
+        // Top farmers by distribution count
+        const topFarmers = Object.values(farmerDistribution)
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 10);
+        
+        return {
+            totalDistributed,
+            totalAreaDistributed,
+            monthlyDistribution: sortedMonthly,
+            cropDistribution,
+            topFarmers
+        };
+    }, [filteredReports]);
+
     return (
         <div className="space-y-6">
+            {/* Seed Distribution Overview Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <MetricCard
+                    icon={Package}
+                    label="Seeds Distributed"
+                    value={seedDistributionData.totalDistributed}
+                    subtitle={`${seedDistributionData.totalAreaDistributed.toFixed(1)} ha coverage`}
+                    isDark={isDark}
+                    color="green"
+                />
                 <MetricCard
                     icon={Users}
                     label="Total Farmers"
@@ -421,14 +1138,6 @@ const FarmersAnalytics = ({ analytics, isDark }) => {
                     value={analytics.farmersWithRSBSA}
                     subtitle="Registered farmers"
                     isDark={isDark}
-                    color="green"
-                />
-                <MetricCard
-                    icon={Users}
-                    label="Without RSBSA"
-                    value={analytics.clientsWithoutRSBSA}
-                    subtitle="Other clients"
-                    isDark={isDark}
                     color="yellow"
                 />
                 <MetricCard
@@ -439,6 +1148,40 @@ const FarmersAnalytics = ({ analytics, isDark }) => {
                     isDark={isDark}
                     color="purple"
                 />
+            </div>
+
+            {/* Monthly Distribution Chart */}
+            <div className={`p-6 rounded-lg ${isDark ? 'bg-gray-800' : 'bg-white shadow-sm'}`}>
+                <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    Monthly Seed Distribution (Last 12 Months)
+                </h3>
+                <MonthlyDistributionChart 
+                    data={seedDistributionData.monthlyDistribution}
+                    isDark={isDark}
+                />
+            </div>
+
+            {/* Crop Type Distribution & Top Farmers */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className={`p-6 rounded-lg ${isDark ? 'bg-gray-800' : 'bg-white shadow-sm'}`}>
+                    <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        Seeds by Crop Type
+                    </h3>
+                    <SeedCropDistributionChart 
+                        data={seedDistributionData.cropDistribution}
+                        isDark={isDark}
+                    />
+                </div>
+
+                <div className={`p-6 rounded-lg ${isDark ? 'bg-gray-800' : 'bg-white shadow-sm'}`}>
+                    <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        Top Farmers by Distribution
+                    </h3>
+                    <TopFarmersDistributionList 
+                        farmers={seedDistributionData.topFarmers}
+                        isDark={isDark}
+                    />
+                </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -526,34 +1269,63 @@ const ProductionAnalytics = ({ analytics, isDark, reports }) => {
 
     return (
         <div className="space-y-6">
+            {/* State-based metric cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <MetricCard
-                    icon={TrendingUp}
-                    label="Avg Yield"
-                    value={`${analytics.averageYield.toFixed(2)} mt/ha`}
-                    subtitle={`${analytics.harvestedReports} harvested`}
-                    isDark={isDark}
-                    color="green"
-                />
-                <MetricCard
-                    icon={Sprout}
-                    label="Harvest Area"
-                    value={`${analytics.totalArea.toFixed(1)} ha`}
-                    subtitle="Total planted"
+                    icon={Activity}
+                    label="Distributed"
+                    value={analytics.distributedReports}
+                    subtitle={`${analytics.stateByArea['Distributed']?.toFixed(2) || 0} ha`}
                     isDark={isDark}
                     color="blue"
                 />
                 <MetricCard
-                    icon={Calendar}
-                    label="Completion"
-                    value={`${((analytics.harvestedReports / analytics.totalReports) * 100 || 0).toFixed(1)}%`}
-                    subtitle={`${analytics.pendingHarvest} pending`}
+                    icon={Sprout}
+                    label="Planting"
+                    value={analytics.plantingReports}
+                    subtitle={`${analytics.stateByArea['Planting']?.toFixed(2) || 0} ha`}
                     isDark={isDark}
-                    color="yellow"
+                    color="purple"
+                />
+                <MetricCard
+                    icon={Target}
+                    label="Planted"
+                    value={analytics.plantedReports}
+                    subtitle={`${analytics.stateByArea['Planted']?.toFixed(2) || 0} ha`}
+                    isDark={isDark}
+                    color="green"
                 />
                 <MetricCard
                     icon={Award}
-                    label="Best Yield"
+                    label="Harvested"
+                    value={analytics.harvestedReportsCount}
+                    subtitle={`${analytics.stateByArea['Harvested']?.toFixed(2) || 0} ha`}
+                    isDark={isDark}
+                    color="yellow"
+                />
+            </div>
+
+            {/* Production Overview Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <MetricCard
+                    icon={TrendingUp}
+                    label="Avg Yield"
+                    value={`${analytics.averageYield.toFixed(2)} mt/ha`}
+                    subtitle={`${analytics.harvestedReports} reports`}
+                    isDark={isDark}
+                    color="green"
+                />
+                <MetricCard
+                    icon={Calendar}
+                    label="Total Area"
+                    value={`${analytics.totalArea.toFixed(1)} ha`}
+                    subtitle="All reports"
+                    isDark={isDark}
+                    color="blue"
+                />
+                <MetricCard
+                    icon={Award}
+                    label="Best Season"
                     value={`${analytics.mostProductiveSeason.avgYield.toFixed(2)} mt/ha`}
                     subtitle={analytics.mostProductiveSeason.name}
                     isDark={isDark}
@@ -1092,7 +1864,19 @@ const PlantHarvestTimelineChart = ({ timelineReports, startDate, endDate, isDark
             </div>
 
             {/* Timeline Lines */}
-            <div className="relative" style={{ minHeight: '300px', maxHeight: '400px', overflowY: 'auto' }}>
+            <div className="relative pb-20" style={{ 
+                minHeight: '300px', 
+                maxHeight: '400px', 
+                overflowY: 'auto',
+                scrollbarWidth: 'none', /* Firefox */
+                msOverflowStyle: 'none'  /* IE and Edge */
+            }}>
+                <style>{`
+                    /* Hide scrollbar for Chrome, Safari and Opera */
+                    .relative.pb-20::-webkit-scrollbar {
+                        display: none;
+                    }
+                `}</style>
                 {reportLines.length === 0 ? (
                     <div className={`text-center py-12 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                         No reports found for selected filters
@@ -1102,7 +1886,7 @@ const PlantHarvestTimelineChart = ({ timelineReports, startDate, endDate, isDark
                         {reportLines.map((line) => (
                             <div
                                 key={line.id}
-                                className="relative h-6 cursor-pointer"
+                                className="relative h-6 cursor-pointer group"
                                 onMouseEnter={() => setHoveredReport(line.id)}
                                 onMouseLeave={() => setHoveredReport(null)}
                             >
@@ -1140,14 +1924,15 @@ const PlantHarvestTimelineChart = ({ timelineReports, startDate, endDate, isDark
                                     )}
                                 </div>
 
-                                {/* Tooltip on hover */}
+                                {/* Tooltip on hover - positioned below the bar */}
                                 {hoveredReport === line.id && (
                                     <div
-                                        className={`absolute top-8 z-20 px-3 py-2 rounded-lg shadow-lg text-xs whitespace-nowrap ${
-                                            isDark ? 'bg-gray-700 text-white' : 'bg-white text-gray-900 border border-gray-200'
+                                        className={`absolute z-50 px-3 py-2 rounded-lg shadow-xl text-xs whitespace-nowrap pointer-events-none ${
+                                            isDark ? 'bg-gray-700 text-white border border-gray-600' : 'bg-white text-gray-900 border border-gray-200'
                                         }`}
                                         style={{
-                                            left: `${Math.min(line.startPercent + line.width / 2, 80)}%`,
+                                            left: `${Math.min(Math.max(line.startPercent + line.width / 2, 10), 85)}%`,
+                                            top: '28px',
                                             transform: 'translateX(-50%)'
                                         }}
                                     >
@@ -1270,6 +2055,172 @@ const ProductionOverviewChart = ({ seasonYield, seasonArea, isDark }) => {
                     </div>
                 );
             })}
+        </div>
+    );
+};
+
+// Monthly Distribution Chart Component
+const MonthlyDistributionChart = ({ data, isDark }) => {
+    if (!data || data.length === 0) {
+        return (
+            <div className={`text-center py-8 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                No distribution data available
+            </div>
+        );
+    }
+
+    const maxCount = Math.max(...data.map(([, d]) => d.count));
+    const maxArea = Math.max(...data.map(([, d]) => d.area));
+
+    return (
+        <div className="space-y-4">
+            <div className="flex gap-4 justify-center text-sm">
+                <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded bg-green-500"></div>
+                    <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Distribution Count</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded bg-blue-500"></div>
+                    <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>Area (ha)</span>
+                </div>
+            </div>
+            <div className="space-y-3">
+                {data.map(([month, stats]) => {
+                    const countPercent = (stats.count / maxCount) * 100;
+                    const areaPercent = (stats.area / maxArea) * 100;
+
+                    return (
+                        <div key={month} className="space-y-1">
+                            <div className="flex justify-between items-center">
+                                <span className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                    {month}
+                                </span>
+                                <div className="flex gap-3 text-xs">
+                                    <span className={isDark ? 'text-green-400' : 'text-green-600'}>
+                                        {stats.count} distributions
+                                    </span>
+                                    <span className={isDark ? 'text-blue-400' : 'text-blue-600'}>
+                                        {stats.area.toFixed(1)} ha
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="relative h-8 rounded-lg overflow-hidden">
+                                <div className={`absolute inset-0 ${isDark ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                                    <div
+                                        className="h-1/2 bg-gradient-to-r from-green-500 to-emerald-600 transition-all duration-300"
+                                        style={{ width: `${countPercent}%` }}
+                                    />
+                                    <div
+                                        className="h-1/2 bg-gradient-to-r from-blue-500 to-cyan-600 transition-all duration-300"
+                                        style={{ width: `${areaPercent}%` }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+// Seed Crop Distribution Chart Component
+const SeedCropDistributionChart = ({ data, isDark }) => {
+    const cropColors = {
+        'Rice': '#10b981',
+        'Corn': '#3b82f6',
+        'High_Value_Crops': '#f59e0b'
+    };
+
+    const totalCount = Object.values(data).reduce((sum, d) => sum + d.count, 0);
+    const sortedData = Object.entries(data).sort(([, a], [, b]) => b.count - a.count);
+
+    return (
+        <div className="space-y-4">
+            {sortedData.map(([crop, stats]) => {
+                const percentage = totalCount > 0 ? (stats.count / totalCount) * 100 : 0;
+                const color = cropColors[crop] || '#6b7280';
+
+                return (
+                    <div key={crop} className="space-y-2">
+                        <div className="flex justify-between items-center">
+                            <span className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                {crop.replace(/_/g, ' ')}
+                            </span>
+                            <div className="flex gap-3 text-xs">
+                                <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>
+                                    {stats.count} distributions
+                                </span>
+                                <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>
+                                    {stats.area.toFixed(1)} ha
+                                </span>
+                            </div>
+                        </div>
+                        <div className="relative h-6 rounded-full overflow-hidden">
+                            <div className={`absolute inset-0 ${isDark ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                                <div
+                                    className="h-full transition-all duration-300 flex items-center px-2"
+                                    style={{ 
+                                        width: `${percentage}%`,
+                                        backgroundColor: color
+                                    }}
+                                >
+                                    {percentage > 15 && (
+                                        <span className="text-white text-xs font-medium">
+                                            {percentage.toFixed(1)}%
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+};
+
+// Top Farmers Distribution List Component
+const TopFarmersDistributionList = ({ farmers, isDark }) => {
+    if (!farmers || farmers.length === 0) {
+        return (
+            <div className={`text-center py-8 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                No farmer data available
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-2 max-h-96 overflow-y-auto">
+            {farmers.map((farmer, idx) => (
+                <div 
+                    key={idx}
+                    className={`p-3 rounded-lg transition-all duration-200 hover:scale-105 ${
+                        isDark ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
+                >
+                    <div className="flex items-center justify-between">
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                                <span className={`text-sm font-medium truncate ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                    {farmer.name}
+                                </span>
+                                {farmer.hasRSBSA && (
+                                    <Award className="w-3 h-3 text-green-500 flex-shrink-0" />
+                                )}
+                            </div>
+                            <div className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                {farmer.area.toFixed(2)} ha distributed
+                            </div>
+                        </div>
+                        <div className={`ml-3 px-2 py-1 rounded-full text-xs font-semibold ${
+                            isDark ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-800'
+                        }`}>
+                            {farmer.count}
+                        </div>
+                    </div>
+                </div>
+            ))}
         </div>
     );
 };
