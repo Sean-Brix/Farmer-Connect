@@ -4,8 +4,6 @@ import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 import { useTheme } from '../../contexts/ThemeContext.jsx';
 import Navbar from '../../Client/Components/Navbar';
 import Preferences from './Preferences';
-import Notifications from './Notifications';
-import AccountSettings from './AccountSettings';
 import ProfileSettings from './ProfileSettings';
 
 const Settings = () => {
@@ -33,18 +31,6 @@ const Settings = () => {
       label: t('settings.profile_settings'), 
       icon: 'fas fa-user',
       component: ProfileSettings 
-    },
-    { 
-      id: 'notifications', 
-      label: t('settings.notifications'), 
-      icon: 'fas fa-bell',
-      component: Notifications 
-    },
-    { 
-      id: 'account', 
-      label: t('settings.account_settings'), 
-      icon: 'fas fa-user-cog',
-      component: AccountSettings 
     }
   ];
 
