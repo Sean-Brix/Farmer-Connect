@@ -11,12 +11,39 @@ async function getItems(req, res) {
                         id: true,
                         quantity: true,
                         status: true,
+                        reservedQuantity: true,
                         createdAt: true,
                         updatedAt: true,
                     },
                 },
             },
         });
+
+        // Count approved requests per item (these are "reserved" items)
+        // Include BOTH EIC and Distribution approved requests
+        const approvedRequests = await prisma.itemTransaction.findMany({
+            where: { 
+                status: 'Approved',
+                itemStack: {
+                    status: { in: ['EIC', 'Distributed'] }  // Count both EIC and Distribution
+                }
+            },
+            select: {
+                itemStack: {
+                    select: {
+                        itemId: true
+                    }
+                },
+                quantity: true
+            }
+        });
+
+        // Create a map of itemId to total reserved quantity from approved requests
+        const reservedMap = approvedRequests.reduce((acc, request) => {
+            const itemId = request.itemStack.itemId;
+            acc[itemId] = (acc[itemId] || 0) + request.quantity;
+            return acc;
+        }, {});
 
         console.log(`📦 [Inventory API] Found ${items.length} items`);
         if (items.length > 0) {
@@ -28,12 +55,21 @@ async function getItems(req, res) {
             });
         }
 
-        // Calculate total quantity for each item
+        // Calculate total quantity and reserved quantity for each item
         const list = items.map((item) => {
-            const totalQuantity = item.item_stacks.reduce(
+            // Filter out only Reserved stacks (legacy - now calculated from approved requests)
+            // Keep Distributed stacks as they represent items offered for distribution
+            const activeStacks = item.item_stacks.filter(
+                stack => stack.status !== 'Reserved'
+            );
+            
+            // Calculate total from all non-Reserved stacks (Available, Unavailable, Damaged, EIC, Distributed)
+            const totalQuantity = activeStacks.reduce(
                 (sum, stack) => sum + stack.quantity,
                 0
             );
+
+            const reservedQty = reservedMap[item.id] || 0;
 
             // Convert database enum format to display format (underscores to spaces)
             const displayCategory = item.category ? item.category.replace(/_/g, ' ') : 'Other';
@@ -45,7 +81,8 @@ async function getItems(req, res) {
                 picture: '/api/inventory/item/' + item.id + '/picture',
                 category: displayCategory,
                 totalQuantity: totalQuantity,
-                stacks: item.item_stacks,
+                reservedQuantity: reservedQty,
+                stacks: activeStacks, // Return all non-Reserved stacks
                 createdAt: item.createdAt,
                 updatedAt: item.updatedAt,
             };

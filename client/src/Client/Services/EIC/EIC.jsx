@@ -744,6 +744,10 @@ ${'='.repeat(60)}
                                     // Check if user can request this item
                                     const requestCheck = canRequestItem(userRequests, item.id, systemSettings);
                                     
+                                    // Check if user has reached 3 active request limit
+                                    const maxActiveRequests = systemSettings?.eic_max_simultaneous_borrows || 3;
+                                    const atRequestLimit = activeRequestsCount >= maxActiveRequests;
+                                    
                                     // Determine disabled reason
                                     const disabledReason = hasActiveRequest 
                                         ? `You already have an active request for this item`
@@ -756,6 +760,7 @@ ${'='.repeat(60)}
                                             onRequestClick={handleRequestClick}
                                             typeIcon={typeIcon}
                                             hasActiveRequest={hasActiveRequest}
+                                            atRequestLimit={atRequestLimit}
                                             isDisabled={!requestCheck.can}
                                             disabledReason={disabledReason}
                                             onOpenMyRequests={handleOpenMyRequestsWithHighlight}

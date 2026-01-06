@@ -171,6 +171,11 @@ export function buildReportQuery(filters = {}) {
     where.state = filters.state;
   }
 
+  // Exclude "Distributed" state (used for regular planting reports page)
+  if (filters.excludeDistributed) {
+    where.state = { not: 'Distributed' };
+  }
+
   if (filters.isArchived !== undefined) {
     where.isArchived = filters.isArchived;
   }

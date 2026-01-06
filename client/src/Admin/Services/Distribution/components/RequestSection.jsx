@@ -242,6 +242,7 @@ export default function RequestSection({
       planting: plantingInProgress.length,
       planted: planted.length,
       harvested: harvested.length,
+      archived: requests.filter(req => req.status === 'Archived' && !req.plantingReport?.isDeleted).length,
       deleted: deletedRequests.length
     });
     
@@ -251,6 +252,7 @@ export default function RequestSection({
       planting: plantingInProgress,
       planted,
       harvested,
+      archived: requests.filter(req => req.status === 'Archived' && !req.plantingReport?.isDeleted),
       deleted: deletedRequests
     };
   }, [requests, isSeedingComplete]);
@@ -427,6 +429,7 @@ export default function RequestSection({
     { id: 'planting', label: 'Planting', count: categorizedRequests.planting.length },
     { id: 'planted', label: 'Planted', count: categorizedRequests.planted.length },
     { id: 'harvested', label: 'Harvested', count: categorizedRequests.harvested.length },
+    { id: 'archived', label: 'Archived', count: categorizedRequests.archived?.length || 0 },
     { id: 'deleted', label: 'Deleted', count: categorizedRequests.deleted?.length || 0 }
   ];
 
@@ -709,7 +712,7 @@ export default function RequestSection({
         <table className="w-full">
           <thead className={`${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
             <tr>
-              {(activeTab === 'planting' || activeTab === 'planted' || activeTab === 'harvested' || activeTab === 'deleted') ? (
+              {(activeTab === 'planting' || activeTab === 'planted' || activeTab === 'harvested' || activeTab === 'archived' || activeTab === 'deleted') ? (
                 <>
                   <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
                     Farmer
@@ -754,7 +757,7 @@ export default function RequestSection({
           <tbody className={`divide-y ${isDark ? 'divide-gray-700' : 'divide-gray-200'}`}>
             {paginatedRequests.length === 0 ? (
               <tr>
-                <td colSpan={(activeTab === 'planting' || activeTab === 'planted' || activeTab === 'harvested' || activeTab === 'deleted') ? 6 : columnCount} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={(activeTab === 'planting' || activeTab === 'planted' || activeTab === 'harvested' || activeTab === 'archived' || activeTab === 'deleted') ? 6 : columnCount} className="px-4 py-8 text-center text-gray-500">
                   {search ? 'No requests match your search' : `No ${tabs.find(t => t.id === activeTab)?.label.toLowerCase()} requests`}
                 </td>
               </tr>
@@ -765,7 +768,7 @@ export default function RequestSection({
                     onClick={() => toggleRow(request.id)}
                     className={`${isDark ? 'hover:bg-gray-750' : 'hover:bg-gray-50'} transition-colors cursor-pointer`}
                   >
-                    {(activeTab === 'planting' || activeTab === 'planted' || activeTab === 'harvested' || activeTab === 'deleted') ? (
+                    {(activeTab === 'planting' || activeTab === 'planted' || activeTab === 'harvested' || activeTab === 'archived' || activeTab === 'deleted') ? (
                       <>
                         {/* Farmer column */}
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -1373,8 +1376,8 @@ export default function RequestSection({
                             </>
                           )}
 
-                          {/* Planted/Harvested tab actions */}
-                          {(activeTab === 'planted' || activeTab === 'harvested') && request.plantingReportId && (
+                          {/* Planted/Harvested/Archived tab actions */}
+                          {(activeTab === 'planted' || activeTab === 'harvested' || activeTab === 'archived') && request.plantingReportId && (
                             <>
                               <button
                                 onClick={(e) => {
@@ -1400,7 +1403,7 @@ export default function RequestSection({
                   {/* Expanded Details Row */}
                   {expandedRow === request.id && (
                     <tr className={`${isDark ? 'bg-gray-750' : 'bg-gray-50'}`}>
-                      <td colSpan={(activeTab === 'planting' || activeTab === 'planted' || activeTab === 'harvested') ? 6 : 6} className="px-6 py-6">
+                      <td colSpan={(activeTab === 'planting' || activeTab === 'planted' || activeTab === 'harvested' || activeTab === 'archived') ? 6 : 6} className="px-6 py-6">
                         <div className="space-y-6">
                           {/* REQUEST INFORMATION SECTION */}
                           <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>

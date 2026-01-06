@@ -1408,10 +1408,10 @@ function Content() {
                                                                     
                                                                     // Create entries for filtered statuses only
                                                                     return availableStatuses.map((status) => {
-                                                                        const statusData = groupedStacks[status] || {
-                                                                            stacks: [],
-                                                                            totalQuantity: 0,
-                                                                        };
+                                                                        // For Reserved status, use calculated reservedQuantity from API instead of Reserved stacks
+                                                                        const statusData = status === 'Reserved' 
+                                                                            ? { stacks: [], totalQuantity: item.reservedQuantity || 0 }
+                                                                            : (groupedStacks[status] || { stacks: [], totalQuantity: 0 });
 
                                                                         const getStatusStyles = (status) => {
                                                                             switch (status) {

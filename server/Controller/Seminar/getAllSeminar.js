@@ -1,7 +1,11 @@
 import prisma from '../../config/database.js';
+import { updateSeminarStatuses } from '../../Utils/seminarStatusUpdater.js';
 
 async function getAllSeminar(req, res) {
     try {
+        // Automatically update seminar statuses based on date/time
+        await updateSeminarStatuses();
+
         const search = req.query.find || '';
         const searchFilter = req.query.filter || 'Title';
         let statusFilter = req.query.status || 'all';

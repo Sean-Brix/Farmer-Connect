@@ -298,10 +298,10 @@ export default function Landing() {
 
     // Hero slideshow state
     const heroSlides = [
-        { img: i1, desc: 'Advancing sustainable agriculture and community well-being through innovation and dedicated support.' },
-        { img: i3, desc: 'Supporting sustainable crop production through modern techniques, research, and farmer education.' },
-        { img: i2, desc: 'Promoting eco-friendly practices and healthier produce for the community.' },
-        { img: i4, desc: 'Sustainability begins not with the tools we use, but with the values we sow.' },
+        { img: i1, desc: t('landing.hero.hero_desc_1') },
+        { img: i3, desc: t('landing.hero.hero_desc_2') },
+        { img: i2, desc: t('landing.hero.hero_desc_3') },
+        { img: i4, desc: t('landing.hero.hero_desc_4') },
     ];
     const [heroIndex, setHeroIndex] = useState(0);
     const heroTimeout = useRef();
@@ -344,26 +344,26 @@ export default function Landing() {
                         <div className={`inline-flex items-center gap-2 mt-[25%] sm:mt-0 border rounded-full px-4 py-2 mb-6 ${theme === 'dark' ? 'bg-gray-800 border-green-400 text-green-400' : 'bg-green-50 border-green-200 text-green-700'}`} data-aos="fade-right" data-aos-delay="100">
                             <div className={`w-2 h-2 rounded-full animate-pulse ${theme === 'dark' ? 'bg-green-400' : 'bg-green-500'}`}></div>
                             <span className="font-semibold text-sm uppercase tracking-wide">
-                                Transforming Agriculture
+                                {t('landing.hero.transforming_agriculture')}
                             </span>
                         </div>
                         
                         {/* Enhanced title with modern typography */}
                         <h1 className={`font-montserrat font-black text-[2.5rem] md:text-[4rem] lg:text-[4.5rem] m-0 leading-[0.9] tracking-tight mb-6 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`} data-aos="fade-up" data-aos-delay="200">
-                            Empowering{' '}
+                            {t('landing.hero.title_empowering')}{' '}
                             <span className={`text-transparent bg-clip-text animate-gradient-x ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 via-green-500 to-green-600' : 'bg-gradient-to-r from-green-600 via-green-700 to-green-800'}`}>
-                                Agriculture
+                                {t('landing.hero.title_agriculture')}
                             </span>
                             <br />
                             <span className={`text-[2rem] md:text-[3rem] lg:text-[3.5rem] font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                                Enriching Lives
+                                {t('landing.hero.title_enriching')}
                             </span>
                         </h1>
                         
                         {/* Professional description */}
                         <p className={`font-poppins text-lg md:text-xl mt-6 max-w-2xl font-medium leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} data-aos="fade-up" data-aos-delay="300">
-                            Discover innovative agricultural solutions, connect with expert farmers, and access cutting-edge technology to{' '}
-                            <span className={`font-semibold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>transform your farming journey</span> today.
+                            {t('landing.hero.description')}{' '}
+                            <span className={`font-semibold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>{t('landing.hero.transform_journey')}</span> {t('landing.hero.today')}.
                         </p>
                         
                         {/* Professional CTA buttons */}
@@ -376,7 +376,7 @@ export default function Landing() {
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                     </svg>
-                                    Explore Programs
+                                    {t('landing.hero.explore_programs')}
                                 </span>
                                 <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-green-500' : 'bg-gradient-to-r from-green-500 to-green-600'}`}></div>
                             </button>
@@ -389,7 +389,7 @@ export default function Landing() {
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    Learn More
+                                    {t('landing.hero.learn_more')}
                                 </span>
                             </button>
                         </div>
@@ -439,7 +439,7 @@ export default function Landing() {
                                 <button
                                     className={`backdrop-blur-sm hover:bg-white/30 text-white rounded-xl p-3 transition-all duration-300 hover:scale-110 shadow-lg border ${theme === 'dark' ? 'bg-gray-900/40 border-gray-700' : 'bg-white/20 border-white/20'}`}
                                     onClick={handlePrevHero}
-                                    aria-label="Previous Slide"
+                                    aria-label={t('landing.hero.prev_slide')}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -448,7 +448,7 @@ export default function Landing() {
                                 <button
                                     className={`backdrop-blur-sm hover:bg-white/30 text-white rounded-xl p-3 transition-all duration-300 hover:scale-110 shadow-lg border ${theme === 'dark' ? 'bg-gray-900/40 border-gray-700' : 'bg-white/20 border-white/20'}`}
                                     onClick={handleNextHero}
-                                    aria-label="Next Slide"
+                                    aria-label={t('landing.hero.next_slide')}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -466,7 +466,7 @@ export default function Landing() {
                                             </svg>
                                         </div>
                                         <span className={`font-semibold text-sm uppercase tracking-wide ${theme === 'dark' ? 'text-green-300' : 'text-green-400'}`}>
-                                            Feature Highlight
+                                            {t('landing.hero.feature_highlight')}
                                         </span>
                                     </div>
                                     <p className="font-poppins font-medium text-lg md:text-xl leading-relaxed text-white/95">
@@ -520,10 +520,10 @@ export default function Landing() {
                 <div className="text-center mb-12 relative z-10 mt-6">
                 
                     <h2 className={`text-2xl md:text-3xl lg:text-4xl font-black mb-4 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`} data-aos="fade-up" data-aos-delay="200">
-                        Our <span className={`text-transparent bg-clip-text ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-600 to-emerald-600'}`}>Purpose</span> & Vision
+                        {t('landing.mission_vision.section_title')} <span className={`text-transparent bg-clip-text ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-600 to-emerald-600'}`}>{t('landing.mission_vision.purpose')}</span> {t('landing.mission_vision.and_vision')}
                     </h2>
                     <p className={`text-base max-w-2xl mx-auto font-medium leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} data-aos="fade-up" data-aos-delay="300">
-                        Driving agricultural innovation and community empowerment through sustainable solutions.
+                        {t('landing.mission_vision.subtitle')}
                     </p>
                 </div>
                
@@ -549,20 +549,20 @@ export default function Landing() {
                                 {/* Content */}
                                 <div className="space-y-4 flex-grow">
                                     <div>
-                                        <h3 className={`text-xl lg:text-2xl font-black mb-2 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Mission</h3>
+                                        <h3 className={`text-xl lg:text-2xl font-black mb-2 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{t('landing.mission_vision.mission')}</h3>
                                         <div className={`w-12 h-1 rounded-full ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}></div>
                                     </div>
                                     
                                     <p className={`text-sm lg:text-base leading-relaxed font-medium min-h-[4rem] ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                                        To drive <span className={`font-bold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>sustainable agricultural growth</span> and elevate community livelihoods through innovative solutions, transformative education, and <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-700'}`}>collaborative partnerships</span>.
+                                        {t('landing.mission_vision.mission_text')} <span className={`font-bold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>{t('landing.mission_vision.sustainable_growth')}</span> {t('landing.mission_vision.mission_text_2')} <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-700'}`}>{t('landing.mission_vision.collaborative_partnerships')}</span>.
                                     </p>
                                     
                                     {/* Key points */}
                                     <div className="space-y-2 pt-2">
                                         {[
-                                            'Sustainable Growth',
-                                            'Community Empowerment', 
-                                            'Innovation Excellence'
+                                            t('landing.mission_vision.mission_point_1'),
+                                            t('landing.mission_vision.mission_point_2'), 
+                                            t('landing.mission_vision.mission_point_3')
                                         ].map((point, idx) => (
                                             <div key={idx} className="flex items-center gap-2">
                                                 <div className={`w-1.5 h-1.5 rounded-full ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}></div>
@@ -597,20 +597,20 @@ export default function Landing() {
                                 {/* Content */}
                                 <div className="space-y-4 flex-grow">
                                     <div>
-                                        <h3 className={`text-xl lg:text-2xl font-black mb-2 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Vision</h3>
+                                        <h3 className={`text-xl lg:text-2xl font-black mb-2 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{t('landing.mission_vision.vision')}</h3>
                                         <div className={`w-12 h-1 rounded-full ${theme === 'dark' ? 'bg-gradient-to-r from-emerald-400 to-green-400' : 'bg-gradient-to-r from-emerald-500 to-green-500'}`}></div>
                                     </div>
                                     
                                     <p className={`text-sm lg:text-base leading-relaxed font-medium min-h-[4rem] ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                                        To be a <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-700'}`}>catalyst for agricultural transformation</span>, fostering innovation and building resilient, <span className={`font-bold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>thriving communities</span> for generations to come.
+                                        {t('landing.mission_vision.vision_text')} <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-700'}`}>{t('landing.mission_vision.catalyst')}</span>{t('landing.mission_vision.vision_text_2')} <span className={`font-bold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>{t('landing.mission_vision.thriving_communities')}</span> {t('landing.mission_vision.vision_text_3')}
                                     </p>
                                     
                                     {/* Key points */}
                                     <div className="space-y-2 pt-2">
                                         {[
-                                            'Agricultural Leadership',
-                                            'Innovation Catalyst',
-                                            'Community Resilience'
+                                            t('landing.mission_vision.vision_point_1'),
+                                            t('landing.mission_vision.vision_point_2'),
+                                            t('landing.mission_vision.vision_point_3')
                                         ].map((point, idx) => (
                                             <div key={idx} className="flex items-center gap-2">
                                                 <div className={`w-1.5 h-1.5 rounded-full ${theme === 'dark' ? 'bg-gradient-to-r from-emerald-400 to-green-400' : 'bg-gradient-to-r from-emerald-500 to-green-500'}`}></div>
@@ -629,10 +629,10 @@ export default function Landing() {
                     {/* Bottom stats/achievements */}
                     <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
                         {[
-                            { number: '5+', label: 'Years of Excellence', icon: '🏆' },
-                            { number: '1,200+', label: 'Farmers Supported', icon: '👥' },
-                            { number: '50+', label: 'Communities Served', icon: '🌍' },
-                            { number: '98%', label: 'Success Rate', icon: '📈' }
+                            { number: t('landing.mission_vision.stat_years'), label: t('landing.mission_vision.stat_years_label'), icon: '🏆' },
+                            { number: t('landing.mission_vision.stat_farmers'), label: t('landing.mission_vision.stat_farmers_label'), icon: '👥' },
+                            { number: t('landing.mission_vision.stat_communities'), label: t('landing.mission_vision.stat_communities_label'), icon: '🌍' },
+                            { number: t('landing.mission_vision.stat_success'), label: t('landing.mission_vision.stat_success_label'), icon: '📈' }
                         ].map((stat, idx) => (
                             <div key={idx} className="group">
                                 <div className="text-2xl mb-2">{stat.icon}</div>
@@ -659,10 +659,10 @@ export default function Landing() {
                 <div className="text-center mt-6 mb-10 relative z-10">
                   
                     <h2 className={`text-2xl md:text-3xl font-black mb-4 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`} data-aos="fade-up" data-aos-delay="200">
-                        Professional <span className={`text-transparent bg-clip-text ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-600 to-emerald-600'}`}>Programs</span>
+                        {t('landing.programs.section_title')} <span className={`text-transparent bg-clip-text ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-600 to-emerald-600'}`}>{t('landing.programs.programs')}</span>
                     </h2>
                     <p className={`text-base max-w-2xl mx-auto font-medium leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} data-aos="fade-up" data-aos-delay="300">
-                        Comprehensive training and development programs designed to elevate agricultural excellence.
+                        {t('landing.programs.subtitle')}
                     </p>
                 </div>
 
@@ -676,7 +676,7 @@ export default function Landing() {
                                 container.scrollBy({ left: -300, behavior: 'smooth' });
                             }}
                             className={`absolute left-2 top-1/2 -translate-y-1/2 z-20 rounded-full w-12 h-12 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 border ${theme === 'dark' ? 'bg-gray-800/95 hover:bg-gray-700 text-green-400 hover:text-green-300 border-gray-600' : 'bg-white/95 hover:bg-white text-green-600 hover:text-green-700 border-green-100'}`}
-                            aria-label="Scroll left"
+                            aria-label={t('landing.programs.scroll_left')}
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -690,7 +690,7 @@ export default function Landing() {
                                 container.scrollBy({ left: 300, behavior: 'smooth' });
                             }}
                             className={`absolute right-2 top-1/2 -translate-y-1/2 z-20 rounded-full w-12 h-12 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 border ${theme === 'dark' ? 'bg-gray-800/95 hover:bg-gray-700 text-green-400 hover:text-green-300 border-gray-600' : 'bg-white/95 hover:bg-white text-green-600 hover:text-green-700 border-green-100'}`}
-                            aria-label="Scroll right"
+                            aria-label={t('landing.programs.scroll_right')}
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -780,7 +780,7 @@ export default function Landing() {
                                         
                                         {/* Category tag */}
                                         <div className={`absolute bottom-3 left-3 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-lg ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}>
-                                            Training Program
+                                            {t('landing.programs.training_program')}
                                         </div>
                                     </div>
 
@@ -802,7 +802,7 @@ export default function Landing() {
                                             className={`inline-flex items-center gap-2 text-white px-6 py-3 rounded-lg font-semibold text-sm transition-all duration-300 hover:shadow-xl hover:scale-105 group/btn ${theme === 'dark' ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600' : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700'}`}
                                             onClick={e => { e.preventDefault(); window.location = '/seminar'; }}
                                         >
-                                            Learn More
+                                            {t('landing.hero.learn_more')}
                                             <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                             </svg>
@@ -818,7 +818,7 @@ export default function Landing() {
                                 <svg className={`w-4 h-4 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
                                 </svg>
-                                <span className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Scroll or Drag explore programs</span>
+                                <span className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>{t('landing.programs.scroll_hint')}</span>
                                 <svg className={`w-4 h-4 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                 </svg>
@@ -842,10 +842,10 @@ export default function Landing() {
                 <div className="text-center mt-6 mb-12 relative z-10">
                     
                     <h2 className={`text-3xl md:text-4xl font-black mb-4 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`} data-aos="fade-up" data-aos-delay="200">
-                        News & <span className={`text-transparent bg-clip-text ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-600 to-emerald-600'}`}>Updates</span>
+                        {t('landing.news.section_title')} <span className={`text-transparent bg-clip-text ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-600 to-emerald-600'}`}>{t('landing.news.updates')}</span>
                     </h2>
                     <p className={`text-base max-w-2xl mx-auto font-medium leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} data-aos="fade-up" data-aos-delay="300">
-                        Stay informed with the latest developments, achievements, and upcoming initiatives in agricultural innovation.
+                        {t('landing.news.subtitle')}
                     </p>
                 </div>
 
@@ -859,23 +859,23 @@ export default function Landing() {
                                 
                                 {/* Status badge */}
                                 <div className={`absolute top-4 left-4 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg ${theme === 'dark' ? 'bg-green-900/95 text-green-300' : 'bg-green-100/95 text-green-700'}`}>
-                                    <span className="font-bold text-xs">New</span>
+                                    <span className="font-bold text-xs">{t('landing.news.badge_new')}</span>
                                 </div>
                                 
                                 {/* Date badge */}
                                 <div className={`absolute bottom-4 right-4 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg ${theme === 'dark' ? 'bg-gray-800/95 text-gray-300' : 'bg-white/95 text-gray-700'}`}>
-                                    <span className="font-semibold text-xs">June 2025</span>
+                                    <span className="font-semibold text-xs">{t('landing.news.news_1_date')}</span>
                                 </div>
                             </div>
                             
                             <div className="p-6">
                                 <div className="mb-4">
                                     <h3 className={`text-xl font-bold mb-3 transition-colors duration-300 leading-tight ${theme === 'dark' ? 'text-white group-hover:text-green-400' : 'text-gray-900 group-hover:text-green-600'}`}>
-                                        FITS Center Launches New Farmer Training
+                                        {t('landing.news.news_1_title')}
                                     </h3>
                                     <div className={`w-12 h-1 rounded-full mb-4 ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}></div>
                                     <p className={`text-sm leading-relaxed line-clamp-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                                        The FITS Center recently conducted a hands-on training session for local farmers, focusing on sustainable crop management and modern agricultural techniques.
+                                        {t('landing.news.news_1_desc')}
                                     </p>
                                 </div>
                                 
@@ -885,7 +885,7 @@ export default function Landing() {
                                     rel="noopener noreferrer"
                                     className={`inline-flex items-center gap-2 font-semibold text-sm transition-all duration-300 group/link ${theme === 'dark' ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-700'}`}
                                 >
-                                    Read More
+                                    {t('landing.news.read_more')}
                                     <svg className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                     </svg>
@@ -901,23 +901,23 @@ export default function Landing() {
                                 
                                 {/* Status badge */}
                                 <div className={`absolute top-4 left-4 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg ${theme === 'dark' ? 'bg-emerald-900/95 text-emerald-300' : 'bg-emerald-100/95 text-emerald-700'}`}>
-                                    <span className="font-bold text-xs">Update</span>
+                                    <span className="font-bold text-xs">{t('landing.news.badge_update')}</span>
                                 </div>
                                 
                                 {/* Date badge */}
                                 <div className={`absolute bottom-4 right-4 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg ${theme === 'dark' ? 'bg-gray-800/95 text-gray-300' : 'bg-white/95 text-gray-700'}`}>
-                                    <span className="font-semibold text-xs">May 2025</span>
+                                    <span className="font-semibold text-xs">{t('landing.news.news_2_date')}</span>
                                 </div>
                             </div>
                             
                             <div className="p-6">
                                 <div className="mb-4">
                                     <h3 className={`text-xl font-bold mb-3 transition-colors duration-300 leading-tight ${theme === 'dark' ? 'text-white group-hover:text-green-400' : 'text-gray-900 group-hover:text-green-600'}`}>
-                                        Organic Farming Initiative Expands
+                                        {t('landing.news.news_2_title')}
                                     </h3>
                                     <div className={`w-12 h-1 rounded-full mb-4 ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}></div>
                                     <p className={`text-sm leading-relaxed line-clamp-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                                        Our organic farming program has expanded to include more barangays, promoting healthier produce and eco-friendly practices across the region.
+                                        {t('landing.news.news_2_desc')}
                                     </p>
                                 </div>
                                 
@@ -927,7 +927,7 @@ export default function Landing() {
                                     rel="noopener noreferrer"
                                     className={`inline-flex items-center gap-2 font-semibold text-sm transition-all duration-300 group/link ${theme === 'dark' ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-700'}`}
                                 >
-                                    Read More
+                                    {t('landing.news.read_more')}
                                     <svg className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                     </svg>
@@ -943,23 +943,23 @@ export default function Landing() {
                                 
                                 {/* Status badge */}
                                 <div className={`absolute top-4 left-4 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg ${theme === 'dark' ? 'bg-green-800/95 text-green-300' : 'bg-green-200/95 text-green-800'}`}>
-                                    <span className="font-bold text-xs">Event</span>
+                                    <span className="font-bold text-xs">{t('landing.news.badge_event')}</span>
                                 </div>
                                 
                                 {/* Date badge */}
                                 <div className={`absolute bottom-4 right-4 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg ${theme === 'dark' ? 'bg-gray-800/95 text-gray-300' : 'bg-white/95 text-gray-700'}`}>
-                                    <span className="font-semibold text-xs">April 2025</span>
+                                    <span className="font-semibold text-xs">{t('landing.news.news_3_date')}</span>
                                 </div>
                             </div>
                             
                             <div className="p-6">
                                 <div className="mb-4">
                                     <h3 className={`text-xl font-bold mb-3 transition-colors duration-300 leading-tight ${theme === 'dark' ? 'text-white group-hover:text-green-400' : 'text-gray-900 group-hover:text-green-600'}`}>
-                                        Rabies Awareness Campaign
+                                        {t('landing.news.news_3_title')}
                                     </h3>
                                     <div className={`w-12 h-1 rounded-full mb-4 ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}></div>
                                     <p className={`text-sm leading-relaxed line-clamp-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                                        The Rabies Control team held a successful awareness drive, educating pet owners and distributing free vaccines to ensure community safety.
+                                        {t('landing.news.news_3_desc')}
                                     </p>
                                 </div>
                                 
@@ -969,7 +969,7 @@ export default function Landing() {
                                     rel="noopener noreferrer"
                                     className={`inline-flex items-center gap-2 font-semibold text-sm transition-all duration-300 group/link ${theme === 'dark' ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-700'}`}
                                 >
-                                    Read More
+                                    {t('landing.news.read_more')}
                                     <svg className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                     </svg>
@@ -987,7 +987,7 @@ export default function Landing() {
                     {/* Compact Header */}
                     <div className="text-center mb-10">
                         <h2 className={`text-3xl font-extrabold tracking-tight mb-2 ${theme === 'dark' ? 'text-white' : 'text-green-900'}`} data-aos="fade-up" data-aos-delay="100">
-                            External Resources
+                            {t('landing.resources.section_title')}
                         </h2>
                         <div className={`w-16 h-1 rounded-full mx-auto ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`} data-aos="fade-up" data-aos-delay="200"></div>
                     </div>
@@ -1016,13 +1016,13 @@ export default function Landing() {
                                 {/* Compact Content */}
                                 <div className="text-center">
                                     <h3 className={`text-lg font-bold transition-colors duration-300 mb-2 ${theme === 'dark' ? 'text-white group-hover:text-green-400' : 'text-gray-900 group-hover:text-green-600'}`}>
-                                        Department of Agriculture
+                                        {t('landing.resources.resource_1_title')}
                                     </h3>
                                     <p className={`text-sm mb-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                                        Government portal for agriculture programs and resources.
+                                        {t('landing.resources.resource_1_desc')}
                                     </p>
                                     <span className={`inline-flex items-center gap-1 font-semibold text-sm ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>
-                                        Visit
+                                        {t('landing.resources.visit')}
                                         <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                         </svg>
@@ -1053,13 +1053,13 @@ export default function Landing() {
                                 {/* Compact Content */}
                                 <div className="text-center">
                                     <h3 className={`text-lg font-bold transition-colors duration-300 mb-2 ${theme === 'dark' ? 'text-white group-hover:text-green-400' : 'text-gray-900 group-hover:text-green-600'}`}>
-                                        Agricultural Training Institute
+                                        {t('landing.resources.resource_2_title')}
                                     </h3>
                                     <p className={`text-sm mb-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                                        Training and e-learning for farmers and agri-entrepreneurs.
+                                        {t('landing.resources.resource_2_desc')}
                                     </p>
                                     <span className={`inline-flex items-center gap-1 font-semibold text-sm ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>
-                                        Visit
+                                        {t('landing.resources.visit')}
                                         <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                         </svg>
@@ -1090,13 +1090,13 @@ export default function Landing() {
                                 {/* Compact Content */}
                                 <div className="text-center">
                                     <h3 className={`text-lg font-bold transition-colors duration-300 mb-2 ${theme === 'dark' ? 'text-white group-hover:text-green-400' : 'text-gray-900 group-hover:text-green-600'}`}>
-                                        PhilRice
+                                        {t('landing.resources.resource_3_title')}
                                     </h3>
                                     <p className={`text-sm mb-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                                        Research and innovations for rice farmers and industry.
+                                        {t('landing.resources.resource_3_desc')}
                                     </p>
                                     <span className={`inline-flex items-center gap-1 font-semibold text-sm ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>
-                                        Visit
+                                        {t('landing.resources.visit')}
                                         <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                         </svg>
@@ -1129,14 +1129,13 @@ export default function Landing() {
                                         <img src={logo} alt="FITS Logo" className="w-12 h-12 rounded-full border-2 border-white shadow-lg" />
                                     </div>
                                     <div>
-                                        <span className={`text-2xl font-extrabold tracking-wide ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>FITS-Tanza</span>
-                                        <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>Farmers' Information & Technology Services</p>
+                                        <span className={`text-2xl font-extrabold tracking-wide ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>{t('footer.fits_brand')}</span>
+                                        <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>{t('footer.fits_subtitle')}</p>
                                     </div>
                                 </div>
                                 
                                 <p className={`text-sm leading-relaxed mb-6 max-w-2xl ${theme === 'dark' ? 'text-gray-300' : 'text-white'}`}>
-                                    Empowering local farmers and communities through innovative agricultural programs, advanced training, 
-                                    and comprehensive support services for sustainable farming practices.
+                                    {t('footer.about_description')}
                                 </p>
                             </div>
                             
@@ -1244,16 +1243,16 @@ export default function Landing() {
                                         <svg className={`w-4 h-4 ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                         </svg>
-                                        <span className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>Message Us</span>
+                                        <span className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>{t('footer.message_us')}</span>
                                     </div>
                                     <a href="https://m.me/fitstanza" target="_blank" rel="noopener noreferrer" className={`text-sm transition-colors duration-300 font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>
-                                        Facebook Messenger
+                                        {t('footer.facebook_messenger')}
                                     </a>
                                 </div>
                             </div>
                             
                             <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>
-                                For urgent concerns, please call or visit our office during working hours.
+                                {t('footer.urgent_concerns')}
                             </p>
                         </div>
                     </div>
@@ -1261,9 +1260,9 @@ export default function Landing() {
                     {/* Enhanced Social Media & Connect Section */}
                     <div className={`border-t pt-8 mb-8 ${theme === 'dark' ? 'border-gray-600' : 'border-white/30'}`}>
                         <div className="text-center mb-6">
-                            <h4 className={`text-xl font-bold mb-3 ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>Stay Connected</h4>
+                            <h4 className={`text-xl font-bold mb-3 ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>{t('footer.stay_connected')}</h4>
                             <p className={`text-base max-w-2xl mx-auto ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>
-                                Follow us on social media for the latest updates on agricultural programs, events, and farming innovations.
+                                {t('footer.social_description')}
                             </p>
                         </div>
                         
@@ -1314,23 +1313,23 @@ export default function Landing() {
                         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                             <div className="text-center md:text-left">
                                 <p className={`text-lg font-medium mb-1 ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>
-                                    &copy; {new Date().getFullYear()} FITS-Tanza. All rights reserved.
+                                    &copy; {new Date().getFullYear()} {t('footer.fits_brand')}. {t('footer.all_rights_reserved')}.
                                 </p>
                                 <p className={`text-base ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>
-                                    Developed by the FITS-Tanza IT Team. 
+                                    {t('footer.developed_by')} 
                                     <a href="mailto:fitstanza@gmail.com" className={`font-bold ml-1 transition-colors duration-300 underline ${
                                         theme === 'dark' ? 'text-gray-200 hover:text-gray-100' : 'text-white hover:text-gray-200'
                                     }`}>
-                                        Contact Webmaster
+                                        {t('footer.contact_webmaster')}
                                     </a>
                                 </p>
                             </div>
                             
                             <div className="flex flex-wrap justify-center gap-6 text-base">
                                 {[
-                                    { href: '/privacy', label: 'Privacy Policy' },
-                                    { href: '/terms', label: 'Terms of Service' },
-                                    { href: '/accessibility', label: 'Accessibility' }
+                                    { href: '/privacy', label: t('footer.privacy_policy') },
+                                    { href: '/terms', label: t('footer.terms_service') },
+                                    { href: '/accessibility', label: t('footer.accessibility') }
                                 ].map((link, index) => (
                                     <a
                                         key={index}
@@ -1357,7 +1356,7 @@ export default function Landing() {
                         : 'bg-white text-green-700 hover:bg-gray-50'
                 }`}
                 onClick={scrollToTop}
-                aria-label="Back to top"
+                aria-label={t('footer.back_to_top')}
                 style={{
                     transform: showBackToTop ? 'translateY(0)' : 'translateY(16px)',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'

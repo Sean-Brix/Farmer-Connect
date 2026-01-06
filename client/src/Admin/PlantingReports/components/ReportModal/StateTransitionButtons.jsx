@@ -120,7 +120,9 @@ export default function StateTransitionButtons({ report, formData, onTransition,
       onTransition?.();
     } catch (error) {
       console.error('❌ [Transition] Error:', error);
-      toast.error(error.message || 'Unable to transition report');
+      // Extract user-friendly error message from API response
+      const errorMessage = error.response?.data?.message || error.message || 'Unable to transition report';
+      toast.error(errorMessage);
     }
   }, [formData, nextState, onTransition, report?.id, report?.typeOfCrop, transitionToCompleted, transitionToPlanted]);
 

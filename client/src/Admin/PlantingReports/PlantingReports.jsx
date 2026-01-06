@@ -152,7 +152,6 @@ function PlantingReports() {
 						}}
 					>
 						<Tab label={`${t('tabs.all')} (${allCount})`} value={MAIN_TABS.ALL} />
-						<Tab label={`${t('tabs.distribution')} (${distributionCount})`} value={MAIN_TABS.DISTRIBUTION} />
 						<Tab label={`${t('tabs.harvested')} (${harvestedCount})`} value={MAIN_TABS.HARVESTED} />
 						<Tab label={`${t('tabs.deleted')} (${deletedCount})`} value={MAIN_TABS.DELETED} />
 					</Tabs>
@@ -177,17 +176,6 @@ function PlantingReports() {
 				>
 					{mainTab === MAIN_TABS.ALL && (
 						<RegularReportsTable
-							stateSubTab={filters.state || STATE_SUB_TABS.ALL}
-							search={search}
-							filters={filters}
-							pagination={pagination}
-							onView={handleViewReport}
-							onEdit={handleEditReport}
-						/>
-					)}
-
-					{mainTab === MAIN_TABS.DISTRIBUTION && (
-						<DistributionReportsTable
 							stateSubTab={filters.state || STATE_SUB_TABS.ALL}
 							search={search}
 							filters={filters}

@@ -123,6 +123,138 @@ export async function seedSurveyForms(prisma) {
   return createdForms;
 }
 
+export async function seedSurveyResponsesWithAnswers(prisma) {
+  // Get all survey forms with their fields
+  const surveyForms = await prisma.surveyForm.findMany({
+    where: { status: 'ACTIVE' },
+    include: {
+      fields: {
+        orderBy: { order: 'asc' }
+      }
+    }
+  });
+
+  if (surveyForms.length === 0) {
+    console.log('⏭️  No active survey forms found. Skipping survey responses.');
+    return;
+  }
+
+  // Get all users (excluding super admins)
+  const users = await prisma.account.findMany({
+    where: {
+      access: { in: ['User', 'Admin'] }
+    },
+    select: { id: true }
+  });
+
+  if (users.length === 0) {
+    console.log('⏭️  No users found. Skipping survey responses.');
+    return;
+  }
+
+  // Sample data for different field types
+  const textSamples = [
+    'Very helpful program',
+    'Good experience overall',
+    'Excellent service',
+    'Need improvement in some areas',
+    'Satisfied with the support provided'
+  ];
+
+  const emailSamples = [
+    'farmer1@example.com',
+    'farmer2@example.com', 
+    'user@mail.com',
+    'contact@farm.ph',
+    'info@agriculture.ph'
+  ];
+
+  let totalResponses = 0;
+
+  // Create 2-3 responses per survey form
+  for (const survey of surveyForms) {
+    const numResponses = Math.floor(Math.random() * 2) + 2; // 2-3 responses
+    
+    for (let i = 0; i < numResponses && i < users.length; i++) {
+      const user = users[i];
+      
+      // Create survey response
+      const response = await prisma.surveyResponse.create({
+        data: {
+          surveyFormId: survey.id,
+          userId: user.id,
+          submittedAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000), // Random date within last 30 days
+        }
+      });
+
+      // Create answers for each field
+      const answers = survey.fields.map(field => {
+        let value = '';
+        
+        switch (field.type) {
+          case 'TEXT':
+            value = field.label.toLowerCase().includes('name') 
+              ? 'John Doe' 
+              : textSamples[Math.floor(Math.random() * textSamples.length)];
+            break;
+            
+          case 'EMAIL':
+            value = emailSamples[Math.floor(Math.random() * emailSamples.length)];
+            break;
+            
+          case 'NUMBER':
+            value = String(Math.floor(Math.random() * 100) + 1);
+            break;
+            
+          case 'DATE':
+            const randomDate = new Date(Date.now() - Math.random() * 180 * 24 * 60 * 60 * 1000);
+            value = randomDate.toISOString().split('T')[0];
+            break;
+            
+          case 'TEXTAREA':
+            value = 'This is a detailed response. ' + textSamples[Math.floor(Math.random() * textSamples.length)] + '. Thank you for the opportunity to provide feedback.';
+            break;
+            
+          case 'SELECT':
+          case 'RADIO':
+            const options = JSON.parse(field.options || '[]');
+            value = options[Math.floor(Math.random() * options.length)] || '';
+            break;
+            
+          case 'CHECKBOX':
+            const checkOptions = JSON.parse(field.options || '[]');
+            const numSelected = Math.floor(Math.random() * Math.min(3, checkOptions.length)) + 1;
+            const selectedOptions = [];
+            for (let j = 0; j < numSelected; j++) {
+              const option = checkOptions[Math.floor(Math.random() * checkOptions.length)];
+              if (!selectedOptions.includes(option)) {
+                selectedOptions.push(option);
+              }
+            }
+            value = JSON.stringify(selectedOptions);
+            break;
+        }
+
+        return {
+          responseId: response.id,
+          fieldId: field.id,
+          answer: value
+        };
+      });
+
+      // Batch create all answers for this response
+      await prisma.surveyAnswer.createMany({
+        data: answers
+      });
+
+      totalResponses++;
+    }
+  }
+
+  console.log(`✅ Created ${totalResponses} survey responses with answers`);
+  return totalResponses;
+}
+
 export async function seedSurveyResponses(prisma) {
   // Responses removed - not needed for initial seed
   console.log('⏭️  Skipping survey responses (can be added later if needed)');

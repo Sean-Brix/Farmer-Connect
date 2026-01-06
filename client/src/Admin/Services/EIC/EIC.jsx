@@ -89,6 +89,14 @@ export default function EIC() {
     const isLoading = stacksLoading || requestsLoading;
     const error = stacksError || requestsError || allItemsError;
 
+    // Debug: Check if reservedQuantity is in the data
+    useEffect(() => {
+        if (eicStacks && eicStacks.length > 0) {
+            console.log('🔍 EIC Stacks Data Sample:', eicStacks[0]);
+            console.log('🔍 Reserved Quantity:', eicStacks[0]?.reservedQuantity);
+        }
+    }, [eicStacks]);
+
     // Helper to show alert
     const showAlert = (message, type = 'success') => {
         setAlert({ show: true, message, type });
@@ -585,9 +593,10 @@ export default function EIC() {
                                 <div className="grid grid-cols-12 gap-4 items-center font-semibold text-sm uppercase">
                                     <div className="col-span-3 text-green-600">Item Name</div>
                                     <div className="col-span-2 text-green-600">Category</div>
-                                    <div className="col-span-2 text-green-600">Quantity</div>
+                                    <div className="col-span-2 text-green-600">Available</div>
+                                    <div className="col-span-1 text-green-600">Reserved</div>
                                     <div className="col-span-2 text-green-600">Date Added</div>
-                                    <div className="col-span-3 text-right text-green-600">Actions</div>
+                                    <div className="col-span-2 text-right text-green-600">Actions</div>
                                 </div>
                             </div>
 
@@ -1474,7 +1483,7 @@ function EICItemRow({ stack, onViewDetails, onEdit, imageUpdateTimestamp, isDark
                         </span>
                     </div>
 
-                    {/* Quantity - Col 2 */}
+                    {/* Available Quantity - Col 2 */}
                     <div className="col-span-2">
                         <div className="flex items-center gap-2">
                             {stack.quantity === 0 ? (
@@ -1498,6 +1507,19 @@ function EICItemRow({ stack, onViewDetails, onEdit, imageUpdateTimestamp, isDark
                         </div>
                     </div>
 
+                    {/* Reserved Quantity - Col 1 */}
+                    <div className="col-span-1">
+                        <div className="flex items-center gap-1">
+                            <span className={`font-semibold ${
+                                stack.reservedQuantity > 0 
+                                    ? isDark ? 'text-yellow-400' : 'text-yellow-600'
+                                    : isDark ? 'text-gray-400' : 'text-gray-600'
+                            }`}>
+                                {stack.reservedQuantity || 0}
+                            </span>
+                        </div>
+                    </div>
+
                     {/* Date Added - Col 2 */}
                     <div className="col-span-2">
                         <span className={`text-sm ${
@@ -1507,8 +1529,8 @@ function EICItemRow({ stack, onViewDetails, onEdit, imageUpdateTimestamp, isDark
                         </span>
                     </div>
 
-                    {/* Actions - Col 3 */}
-                    <div className="col-span-3 flex justify-end space-x-2">
+                    {/* Actions - Col 2 */}
+                    <div className="col-span-2 flex justify-end space-x-2">
                         <button
                             onClick={() => onViewDetails(stack)}
                             className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${

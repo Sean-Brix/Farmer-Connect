@@ -5,6 +5,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import app from './config/app.js'
 import { scheduleCleanupJob } from './jobs/cleanupDeletedReports.js'
+import { startSeminarStatusUpdater } from './jobs/seminarStatusUpdater.js'
 
 // Configuration
 dotenv.config();
@@ -26,6 +27,13 @@ server.listen(PORT, ()=>{
         scheduleCleanupJob();
     } else {
         console.log('⚠️  [Cleanup Job] Disabled via DISABLE_CLEANUP_JOB env flag');
+    }
+
+    // Start scheduled seminar status updater unless disabled
+    if (process.env.DISABLE_SEMINAR_STATUS_UPDATE !== 'true') {
+        startSeminarStatusUpdater();
+    } else {
+        console.log('⚠️  [Seminar Status Updater] Disabled via DISABLE_SEMINAR_STATUS_UPDATE env flag');
     }
 
 })

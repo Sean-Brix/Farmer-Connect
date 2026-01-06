@@ -185,28 +185,28 @@ export const createReportSchema = Joi.object({
 });
 
 export const updateReportSchema = Joi.object({
-  farmerName: Joi.string().trim().min(2).max(100).optional(),
-  farmLocation: Joi.string().trim().min(2).max(200).optional(),
+  farmerName: Joi.string().trim().min(2).max(100).allow(null, '').optional(),
+  farmLocation: Joi.string().trim().min(2).max(200).allow(null, '').optional(),
   rsbsaNumber: Joi.string().trim().pattern(/^[A-Za-z0-9-]+$/).allow(null, '').optional(),
-  typeOfCrop: Joi.string().valid(...CropTypes).optional(),
-  varietyId: Joi.string().trim().optional(),
+  typeOfCrop: Joi.string().valid(...CropTypes).allow(null, '').optional(),
+  varietyId: Joi.string().trim().allow(null, '').optional(),
   croppingSeasonId: Joi.string().trim().allow(null).optional(),
-  areaPlanted: Joi.number().positive().max(1000).precision(2).optional(),
-  seedClassification: Joi.string().valid(...SeedClassifications).optional(),
-  cropInsurance: Joi.boolean().optional(),
-  dateOfPlanting: Joi.date().max('now').optional(),
-  plantingMethod: Joi.string().valid(...PlantingMethods).optional(),
+  areaPlanted: Joi.number().positive().max(1000).precision(2).allow(null).optional(),
+  seedClassification: Joi.string().valid(...SeedClassifications).allow(null, '').optional(),
+  cropInsurance: Joi.boolean().allow(null).optional(),
+  dateOfPlanting: Joi.date().allow(null, '').optional(),
+  plantingMethod: Joi.string().valid(...PlantingMethods).allow(null, '').optional(),
   riceIrrigation: Joi.string().valid(...RiceIrrigationTypes).allow(null).optional(),
-  harvestArea: Joi.number().positive().max(1000).precision(2).optional(),
-  numberOfBags: Joi.number().integer().positive().optional(),
-  weightPerBag: Joi.number().positive().min(5).max(100).precision(2).optional(),
-  yieldMtPerHa: Joi.number().positive().precision(2).optional(),
-  dateOfExpectedHarvest: Joi.date().optional(),
+  harvestArea: Joi.number().positive().max(1000).precision(2).allow(null).optional(),
+  numberOfBags: Joi.number().integer().positive().allow(null).optional(),
+  weightPerBag: Joi.number().positive().min(5).max(100).precision(2).allow(null).optional(),
+  yieldMtPerHa: Joi.number().positive().precision(2).allow(null).optional(),
+  dateOfExpectedHarvest: Joi.date().allow(null, '').optional(),
   requestNote: Joi.string().max(1000).allow('').optional(),
   isArchived: Joi.boolean().optional(),
   isDeleted: Joi.boolean().optional(),
   state: Joi.string().valid(...PlantingReportStates).optional()
-});
+}).unknown(true);
 
 // ==================== BULK OPERATION SCHEMAS ====================
 export const bulkArchiveSchema = Joi.object({
@@ -243,12 +243,7 @@ export function validateYieldSanity(cropType, yieldMtPerHa) {
   }
 
   if (cropType === 'Rice') {
-    if (yieldValue < 1 || yieldValue > 12) {
-      return {
-        valid: false,
-        warning: `Rice yield (${yieldValue} Mt/Ha) is outside acceptable range (1-12 Mt/Ha). Please verify harvest data.`
-      };
-    }
+    // Allow all positive values, just warn if unusual
     if (yieldValue < 3 || yieldValue > 8) {
       return {
         valid: true,

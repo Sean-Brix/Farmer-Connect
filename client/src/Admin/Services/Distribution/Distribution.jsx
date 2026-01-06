@@ -789,8 +789,8 @@ export default function Distribution() {
                                             <th className="pl-6 pr-2 py-4 text-left text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12 rounded-tl-lg">Item</th>
                                             <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12">Category</th>
                                             <th className="pl-4 pr-4 py-4 text-center text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12">Quantity</th>
-                                            <th className="pl-4 pr-4 py-4 text-center text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-2/12">Status</th>
-                                            <th className="px-4 py-4 text-center text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-4/12 rounded-tr-lg">Actions</th>
+                                            <th className="pl-4 pr-4 py-4 text-center text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-1/12">Reserved</th>
+                                            <th className="px-4 py-4 text-center text-base font-semibold text-green-600 uppercase tracking-wider whitespace-nowrap w-3/12 rounded-tr-lg">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody className={`divide-y ${
@@ -843,13 +843,13 @@ export default function Distribution() {
                                                             </span>
                                                         </div>
                                                     </td>
-                                                    <td className="pl-4 pr-4 py-4 text-center w-2/12">
-                                                        <span className={`text-sm font-semibold ${
-                                                            stack.quantity > 0
-                                                                ? 'text-green-700'
-                                                                : 'text-red-700'
+                                                    <td className="pl-4 pr-4 py-4 text-center w-1/12">
+                                                        <span className={`text-lg font-semibold ${
+                                                            stack.reservedQuantity > 0 
+                                                                ? isDark ? 'text-yellow-400' : 'text-yellow-600'
+                                                                : isDark ? 'text-gray-400' : 'text-gray-600'
                                                         }`}>
-                                                            {stack.quantity > 0 ? 'In Stock' : 'Out of Stock'}
+                                                            {stack.reservedQuantity || 0}
                                                         </span>
                                                     </td>
                                                     <td className="px-4 py-4 whitespace-nowrap text-center w-4/12">

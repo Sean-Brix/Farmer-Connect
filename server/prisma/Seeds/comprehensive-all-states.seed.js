@@ -16,6 +16,60 @@ const daysFromNow = (days) => new Date(Date.now() + days * 24 * 60 * 60 * 1000);
 export async function seedComprehensiveAllStates() {
   console.log('🌱 Starting comprehensive all-states seed...\n');
 
+  // ==================== CLEANUP EXISTING DATA ====================
+  console.log('🧹 Cleaning existing data...');
+  try {
+    // Delete in correct order (respecting foreign keys)
+    await prisma.chatAttachment.deleteMany({});
+    await prisma.chatReadReceipt.deleteMany({});
+    await prisma.chatMessage.deleteMany({});
+    await prisma.chatParticipant.deleteMany({});
+    await prisma.chatRoom.deleteMany({});
+    await prisma.notification.deleteMany({});
+    await prisma.notificationSettings.deleteMany({});
+    
+    await prisma.inquiryAttachment.deleteMany({});
+    await prisma.inquiryReply.deleteMany({});
+    await prisma.inquiry.deleteMany({});
+    
+    await prisma.surveyAnswer.deleteMany({});
+    await prisma.surveyResponse.deleteMany({});
+    await prisma.surveyStatistic.deleteMany({});
+    await prisma.surveyField.deleteMany({});
+    await prisma.surveyForm.deleteMany({});
+    
+    await prisma.seminarParticipant.deleteMany({});
+    await prisma.seminar.deleteMany({});
+    
+    await prisma.plantingReport.deleteMany({});
+    
+    await prisma.distributionHistory.deleteMany({});
+    await prisma.distributionWaitlist.deleteMany({});
+    await prisma.distributionQuota.deleteMany({});
+    
+    const deletedTxn = await prisma.itemTransaction.deleteMany({});
+    const deletedStacks = await prisma.itemStack.deleteMany({});
+    const deletedItems = await prisma.inventoryItem.deleteMany({});
+    console.log(`  ✓ Deleted ${deletedTxn.count} transactions, ${deletedStacks.count} stacks, ${deletedItems.count} items`);
+    
+    await prisma.seedVariety.deleteMany({});
+    await prisma.plantingSeason.deleteMany({});
+    
+    await prisma.fAQ.deleteMany({});
+    await prisma.fAQCategory.deleteMany({});
+    
+    await prisma.auditLog.deleteMany({});
+    
+    await prisma.userPreference.deleteMany({});
+    const deletedAccounts = await prisma.account.deleteMany({});
+    console.log(`  ✓ Deleted ${deletedAccounts.count} accounts`);
+    
+    console.log('✅ Database completely wiped clean\n');
+  } catch (error) {
+    console.error('❌ Error during cleanup:', error.message);
+    throw error;
+  }
+
   // ====================  ACCOUNTS ====================
   console.log('👥 Creating diverse user accounts...');
   const hashedPassword = await bcrypt.hash('123456', 10);
@@ -330,81 +384,120 @@ export async function seedComprehensiveAllStates() {
   // ==================== INVENTORY ITEMS ====================
   console.log('\n📦 Creating inventory items with various stock levels...');
   
-  const inventoryData = [];
+  // ==================== EIC ITEMS (Farming Equipment) ====================
+  const eicItemsData = [
+    { name: 'Hand Tractor - Kubota KJ15', description: '15HP diesel-powered hand tractor', category: 'Farming_Equipment' },
+    { name: 'Knapsack Sprayer - 16L', description: 'Manual backpack sprayer', category: 'Pest_Control' },
+    { name: 'Rice Thresher - Portable', description: 'Gasoline-powered portable rice thresher', category: 'Harvesting_Tools' },
+    { name: 'Water Pump - 2-inch', description: 'Gasoline-powered water pump for irrigation', category: 'Irrigation_Systems' },
+    { name: 'Rice Dryer - Batch Type', description: 'Batch-type mechanical dryer', category: 'Processing_Equipment' },
+    { name: 'Corn Sheller - Hand Operated', description: 'Manual corn sheller with dual rollers', category: 'Harvesting_Tools' },
+  ];
+
+  await prisma.inventoryItem.createMany({ data: eicItemsData, skipDuplicates: true });
   
-  for (let i = 0; i < 25; i++) {
-    inventoryData.push({
-      name: `${['Rice Seeds', 'Corn Seeds', 'Fertilizer', 'Pesticide', 'Hand Tractor'][i % 5]} - Batch ${Math.floor(i / 5) + 1}`,
-      description: `Quality agricultural ${['seeds', 'seeds', 'fertilizer', 'pesticide', 'equipment'][i % 5]} for farming`,
-      category: ['Seeds', 'Seeds', 'Other', 'Pest_Control', 'Farming_Equipment'][i % 5],
-      createdAt: daysAgo(100 - i * 2),
-    });
-  }
+  // ==================== DISTRIBUTION ITEMS (Seeds Only) ====================
+  // First create seed varieties
+  const varietiesData = [
+    { name: 'RC 160', cropType: 'Rice', description: 'High-yielding rice variety', directSeededDAS: 90, transplantedDAS: 110, plantingWindow: 30, isActive: true },
+    { name: 'RC 222', cropType: 'Rice', description: 'Drought-resistant rice', directSeededDAS: 85, transplantedDAS: 105, plantingWindow: 30, isActive: true },
+    { name: 'NSIC Rc 216', cropType: 'Rice', description: 'Premium rice quality', directSeededDAS: 95, transplantedDAS: 115, plantingWindow: 30, isActive: true },
+    { name: 'PSB Rc 18', cropType: 'Rice', description: 'Salt-tolerant variety', directSeededDAS: 88, transplantedDAS: 108, plantingWindow: 30, isActive: true },
+    { name: 'IPB Var 6', cropType: 'Corn', description: 'Yellow corn variety', directSeededDAS: 90, transplantedDAS: 90, plantingWindow: 20, isActive: true },
+    { name: 'Pioneer 3021', cropType: 'Corn', description: 'Hybrid corn seeds', directSeededDAS: 95, transplantedDAS: 95, plantingWindow: 20, isActive: true },
+  ];
 
-  await prisma.inventoryItem.createMany({ data: inventoryData, skipDuplicates: true });
-  console.log(`✅ Created ${inventoryData.length} inventory items`);
+  await prisma.seedVariety.createMany({ data: varietiesData, skipDuplicates: true });
+  const varieties = await prisma.seedVariety.findMany();
 
-  // Create item stacks for each inventory item
-  const createdItems = await prisma.inventoryItem.findMany({
-    where: { name: { in: inventoryData.map(i => i.name) } }
+  // Create seed inventory items linked to varieties
+  const distributionItemsData = varieties.map(variety => ({
+    name: `${variety.name} Seeds`,
+    description: `${variety.description}`,
+    category: 'Seeds',
+    unit: 'kg',
+    seedVarietyId: variety.id
+  }));
+
+  await prisma.inventoryItem.createMany({ data: distributionItemsData, skipDuplicates: true });
+  
+  console.log(`✅ Created ${eicItemsData.length + distributionItemsData.length} inventory items (${eicItemsData.length} EIC equipment, ${distributionItemsData.length} seeds)`);
+
+  // ==================== CREATE ITEM STACKS ====================
+  const eicItems = await prisma.inventoryItem.findMany({
+    where: { seedVarietyId: null }
+  });
+  
+  const distributionItems = await prisma.inventoryItem.findMany({
+    where: { seedVarietyId: { not: null } }
   });
 
   const stacksData = [];
-  const statuses = ['Available', 'Unavailable', 'Damaged', 'EIC', 'Distributed'];
   
-  for (let i = 0; i < createdItems.length; i++) {
-    const item = createdItems[i];
-    // Create 1-3 stacks per item with different statuses
-    const numStacks = 1 + (i % 3);
-    
-    for (let j = 0; j < numStacks; j++) {
-      const status = statuses[j % statuses.length];
-      let quantity;
-      
-      if (status === 'Available') {
-        quantity = 50 + i * 10;
-      } else if (status === 'Damaged') {
-        quantity = 5 + i;
-      } else if (status === 'EIC') {
-        quantity = 20 + i * 3;
-      } else {
-        quantity = 30 + i * 5;
-      }
+  // EIC stacks (Available, Unavailable, Damaged, EIC)
+  const eicStatuses = ['Available', 'Unavailable', 'Damaged', 'EIC'];
+  for (const item of eicItems) {
+    for (let i = 0; i < eicStatuses.length; i++) {
+      const status = eicStatuses[i];
+      const quantity = status === 'Available' ? 8 :
+                      status === 'Damaged' ? 1 :
+                      status === 'EIC' ? 5 : 4;
       
       stacksData.push({
         itemId: item.id,
-        quantity: quantity,
-        status: status,
+        quantity,
+        status,
         date_limit: status === 'EIC' ? 30 : null,
-        max_quantity_per_request: status === 'Available' ? 10 : null,
+        max_quantity_per_request: status === 'EIC' ? 1 : null,
       });
     }
   }
+  
+  // Distribution stacks (Available, Distributed)
+  for (const item of distributionItems) {
+    stacksData.push({
+      itemId: item.id,
+      quantity: 500, // 500kg available
+      status: 'Available',
+      max_quantity_per_request: 50,
+    });
+    
+    stacksData.push({
+      itemId: item.id,
+      quantity: 1000, // 1000kg distributed
+      status: 'Distributed',
+      max_quantity_per_request: 50,
+    });
+  }
 
   await prisma.itemStack.createMany({ data: stacksData, skipDuplicates: true });
-  console.log(`✅ Created ${stacksData.length} item stacks with various statuses`);
+  console.log(`✅ Created ${stacksData.length} item stacks (${eicItems.length * 4} EIC, ${distributionItems.length * 2} Distribution)`);
 
-  // ==================== DISTRIBUTION REQUESTS (ITEM TRANSACTIONS) ====================
+  // ==================== DISTRIBUTION REQUESTS (ITEM TRANSACTIONS) - DISABLED ====================
+  /*
   console.log('\n🚚 Creating distribution requests with all statuses...');
   
-  const inventoryItems = await prisma.inventoryItem.findMany({ take: 10 });
-  
-  // Get item stacks for distributions
-  const itemStacks = await prisma.itemStack.findMany({
+  // Get distribution stacks (seeds only)
+  const distributionStacks = await prisma.itemStack.findMany({
     where: {
-      itemId: { in: inventoryItems.map(item => item.id) },
-      status: 'Available'
+      status: 'Distributed',
+      item: { seedVarietyId: { not: null } }
     },
+    include: { item: true },
     take: 10
   });
   
   const transactionStatuses = ['Pending', 'Approved', 'Picked_Up', 'Rejected', 'Cancelled'];
   const distributionData = [];
+  
+  // Create requests ensuring no user has multiple active requests for the same stack
+  let stackIndex = 0;
+  let userIndex = 0;
 
   for (const status of transactionStatuses) {
     for (let i = 0; i < 5; i++) {
-      const user = users[i % users.length];
-      const stack = itemStacks[i % itemStacks.length];
+      const user = users[userIndex % users.length];
+      const stack = distributionStacks[stackIndex % distributionStacks.length];
       const daysOld = status === 'Pending' ? i * 2 : status === 'Approved' ? 10 + i * 2 : status === 'Picked_Up' ? 30 + i * 3 : status === 'Rejected' ? 20 + i * 4 : 25 + i * 3;
       
       distributionData.push({
@@ -420,13 +513,19 @@ export async function seedComprehensiveAllStates() {
         createdAt: daysAgo(daysOld),
         updatedAt: daysAgo(Math.floor(daysOld / 2)),
       });
+      
+      // Rotate to next user and stack to avoid duplicates
+      userIndex++;
+      stackIndex++;
     }
   }
 
   await prisma.itemTransaction.createMany({ data: distributionData, skipDuplicates: true });
   console.log(`✅ Created ${distributionData.length} distribution requests (5 per status: Pending, Approved, Picked_Up, Rejected, Cancelled)`);
+  */
 
-  // ==================== EIC TRANSACTIONS ====================
+  // ==================== EIC TRANSACTIONS - DISABLED ====================
+  /*
   console.log('\n🔧 Creating EIC (Equipment in Circulation) transactions...');
   
   // Get EIC item stacks
@@ -439,11 +538,16 @@ export async function seedComprehensiveAllStates() {
     const eicStatuses = ['Pending', 'Approved', 'Borrowed', 'Returned', 'late_return', 'No_Return', 'Rejected', 'Cancelled', 'No_Pickup', 'late_pickup'];
     const eicTransactions = [];
     const admins = accounts.filter(a => a.access === 'Admin' || a.access === 'Super_Admin');
+    
+    // Track user-stack combinations to avoid duplicates and enforce 3 request limit
+    // Reduced from 5 to 3 iterations to respect 3 active request limit per user
+    let eicUserIndex = 0;
+    let eicStackIndex = 0;
 
     for (const status of eicStatuses) {
-      for (let i = 0; i < 5; i++) {
-        const user = users[i % users.length];
-        const stack = eicStacks[i % eicStacks.length];
+      for (let i = 0; i < 3; i++) {
+        const user = users[eicUserIndex % users.length];
+        const stack = eicStacks[eicStackIndex % eicStacks.length];
         const admin = admins[i % admins.length];
         const daysOld = i * 3 + 5;
         
@@ -511,17 +615,22 @@ export async function seedComprehensiveAllStates() {
           createdAt: daysAgo(daysOld),
           updatedAt: daysAgo(Math.max(0, daysOld - 2)),
         });
+        
+        // Rotate to next user and stack to avoid duplicates
+        eicUserIndex++;
+        eicStackIndex++;
       }
     }
 
     await prisma.itemTransaction.createMany({ data: eicTransactions, skipDuplicates: true });
-    console.log(`✅ Created ${eicTransactions.length} EIC transactions (5 per status: ${eicStatuses.join(', ')})`);
+    console.log(`✅ Created ${eicTransactions.length} EIC transactions (3 per status: ${eicStatuses.join(', ')})`);
   } else {
     console.log('⚠️  No EIC stacks found, skipping EIC transactions');
   }
+  */
 
   // ==================== PLANTING SEASONS & VARIETIES ====================
-  console.log('\n🌾 Creating planting seasons and seed varieties...');
+  console.log('\n🌾 Creating planting seasons...');
   
   const seasonsData = [
     { name: 'Dry Season 2024', startDate: new Date('2024-01-01'), endDate: new Date('2024-05-31'), description: 'Dry season planting period', isActive: false },
@@ -533,20 +642,8 @@ export async function seedComprehensiveAllStates() {
 
   await prisma.plantingSeason.createMany({ data: seasonsData, skipDuplicates: true });
   const seasons = await prisma.plantingSeason.findMany();
-
-  const varietiesData = [
-    { name: 'RC 160', cropType: 'Rice', description: 'High-yielding rice variety', directSeededDAS: 90, transplantedDAS: 110, plantingWindow: 30, isActive: true },
-    { name: 'RC 222', cropType: 'Rice', description: 'Drought-resistant rice', directSeededDAS: 85, transplantedDAS: 105, plantingWindow: 30, isActive: true },
-    { name: 'NSIC Rc 216', cropType: 'Rice', description: 'Premium rice quality', directSeededDAS: 95, transplantedDAS: 115, plantingWindow: 30, isActive: true },
-    { name: 'PSB Rc 18', cropType: 'Rice', description: 'Salt-tolerant variety', directSeededDAS: 88, transplantedDAS: 108, plantingWindow: 30, isActive: true },
-    { name: 'IPB Var 6', cropType: 'Corn', description: 'Yellow corn variety', directSeededDAS: 90, transplantedDAS: 90, plantingWindow: 20, isActive: true },
-    { name: 'Pioneer 3021', cropType: 'Corn', description: 'Hybrid corn seeds', directSeededDAS: 95, transplantedDAS: 95, plantingWindow: 20, isActive: false },
-  ];
-
-  await prisma.seedVariety.createMany({ data: varietiesData, skipDuplicates: true });
-  const varieties = await prisma.seedVariety.findMany();
   
-  console.log(`✅ Created ${seasons.length} planting seasons and ${varieties.length} seed varieties`);
+  console.log(`✅ Created ${seasons.length} planting seasons (seed varieties already created with inventory)`);
 
   // ==================== PLANTING REPORTS ====================
   console.log('\n📊 Creating planting reports with all states...');
@@ -665,12 +762,7 @@ export async function seedComprehensiveAllStates() {
   📦 Inventory Items:       ${inventoryCount}
      - Various stock levels (In Stock, Low Stock, Out of Stock, Reserved)
 
-  🚚 Distribution Requests: ${distributionCount}
-     - Pending:             5
-     - Approved:            5
-     - Picked_Up:           5
-     - Rejected:            5
-     - Cancelled:           5
+  🚚 Distribution Requests: 0 (DISABLED - create manually)
 
   🌾 Planting Data:
      - Seasons:             ${seasonCount}

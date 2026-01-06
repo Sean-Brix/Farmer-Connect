@@ -238,9 +238,8 @@ async function setStatus(req, res) {
                 'Reserved',
                 transaction.quantity
             );
-        } else if (newStatus === 'Picked_Up') {
-            // Deduct from Reserved stack (quantity goes to 0)
-            stackQuantityChange = -transaction.quantity;
+        } else if (newStatus === 'Picked_Up' || newStatus === 'late_pickup') {
+            // Deduct from Reserved stack ONLY (don't touch Distributed stack)
             // Find Reserved stack to deduct from
             const reservedStack = await prisma.itemStack.findFirst({
                 where: {
@@ -254,6 +253,8 @@ async function setStatus(req, res) {
                     data: { quantity: reservedStack.quantity - transaction.quantity }
                 });
             }
+            // Don't set stackQuantityChange - we already handled Reserved stack above
+            stackQuantityChange = 0;
         } else if (newStatus === 'Rejected') {
             // No change for rejected
             stackQuantityChange = 0;

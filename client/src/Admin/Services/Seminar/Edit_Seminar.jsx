@@ -40,30 +40,109 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
     const [newImage, setNewImage] = useState(null);
     const [showImagePreview, setShowImagePreview] = useState(false);
     const changedImage = useRef(false);
+    
+    // Validation state
+    const [validationErrors, setValidationErrors] = useState({});
 
     // Update newData when initialData changes
     useEffect(() => {
         setNewData(initialData);
     }, [initialData]);
+    
+    // Validate form data
+    const validateForm = () => {
+        const errors = {};
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
+        
+        // Validate capacity
+        if (!newData.capacity || newData.capacity < 1) {
+            errors.capacity = 'Capacity must be at least 1';
+        }
+        
+        // Validate dates exist
+        if (!newData.start_date) {
+            errors.start_date = 'Start date is required';
+        }
+        if (!newData.end_date) {
+            errors.end_date = 'End date is required';
+        }
+        if (!newData.registration_deadline) {
+            errors.registration_deadline = 'Registration deadline is required';
+        }
+        if (!newData.start_time) {
+            errors.start_time = 'Start time is required';
+        }
+        if (!newData.end_time) {
+            errors.end_time = 'End time is required';
+        }
+        
+        // Only validate date logic if all dates are present
+        if (newData.start_date && newData.end_date && newData.registration_deadline) {
+            const startDate = new Date(newData.start_date);
+            startDate.setHours(0, 0, 0, 0);
+            const endDate = new Date(newData.end_date);
+            endDate.setHours(0, 0, 0, 0);
+            const regDeadline = new Date(newData.registration_deadline);
+            regDeadline.setHours(0, 0, 0, 0);
+            
+            // For upcoming seminars, start date cannot be in the past
+            if (newData.status === 'Upcoming' && startDate < currentDate) {
+                errors.start_date = 'Start date cannot be in the past for upcoming seminars';
+            }
+            
+            // End date must be on or after start date
+            if (endDate < startDate) {
+                errors.end_date = 'End date must be on or after start date';
+            }
+            
+            // Registration deadline must be before start date
+            if (regDeadline >= startDate) {
+                errors.registration_deadline = 'Registration deadline must be before start date';
+            }
+            
+            // Validate times for same-day events
+            if (newData.start_time && newData.end_time && startDate.getTime() === endDate.getTime()) {
+                if (newData.end_time <= newData.start_time) {
+                    errors.end_time = 'End time must be after start time on same-day events';
+                }
+            }
+            
+            // For multi-day events, just check that times are valid format (no additional validation needed)
+        }
+        
+        // Always validate times if both are present - regardless of dates
+        // This catches illogical times like 9am end, 5pm start
+        if (newData.start_time && newData.end_time) {
+            // For same-day or unknown date situations, end time must be after start time
+            const startDate = newData.start_date ? new Date(newData.start_date) : null;
+            const endDate = newData.end_date ? new Date(newData.end_date) : null;
+            
+            // Only validate time order if same day OR dates not set OR dates are same
+            const shouldValidateTimes = !startDate || !endDate || 
+                                       (startDate.getTime() === endDate.getTime());
+            
+            if (shouldValidateTimes && newData.end_time <= newData.start_time) {
+                errors.end_time = 'End time must be after start time';
+            }
+        }
+        
+        setValidationErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+    
+    // Run validation whenever relevant fields change
+    useEffect(() => {
+        validateForm();
+    }, [newData]);
 
     // Save the record
     const saveSeminar = async (e) => {
         e.preventDefault();
-
-        // Validate dates
-        const startDate = new Date(newData.start_date);
-        const endDate = new Date(newData.end_date);
-        const regDeadline = new Date(newData.registration_deadline);
-
-        // Registration deadline must be before start date
-        if (regDeadline >= startDate) {
-            alert('Registration deadline must be earlier than the start date.');
-            return;
-        }
-
-        // End date must be same day or after start date
-        if (endDate < startDate) {
-            alert('End date cannot be earlier than the start date.');
+        
+        // Validate form before submission
+        if (!validateForm()) {
+            alert('Please fix all validation errors before submitting.');
             return;
         }
 
@@ -198,6 +277,62 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
 
                 {/* Content */}
                 <div className="p-6 overflow-y-auto flex-1">
+                    {/* Status Warning for Completed/Cancelled */}
+                    {(newData.status === 'Completed' || newData.status === 'Cancelled') && (
+                        <div className={`mb-6 rounded-lg border-2 p-4 ${
+                            newData.status === 'Completed'
+                                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                                : 'border-orange-500 bg-orange-50 dark:bg-orange-900/20'
+                        }`}>
+                            <div className="flex items-start gap-3">
+                                <svg className={`w-5 h-5 mt-0.5 flex-shrink-0 ${
+                                    newData.status === 'Completed'
+                                        ? 'text-blue-600 dark:text-blue-400'
+                                        : 'text-orange-600 dark:text-orange-400'
+                                }`} fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                                </svg>
+                                <div>
+                                    <h3 className={`text-sm font-semibold mb-1 ${
+                                        newData.status === 'Completed'
+                                            ? 'text-blue-800 dark:text-blue-300'
+                                            : 'text-orange-800 dark:text-orange-300'
+                                    }`}>
+                                        {newData.status === 'Completed' ? 'Completed Seminar' : 'Cancelled Seminar'}
+                                    </h3>
+                                    <p className={`text-sm ${
+                                        newData.status === 'Completed'
+                                            ? 'text-blue-700 dark:text-blue-400'
+                                            : 'text-orange-700 dark:text-orange-400'
+                                    }`}>
+                                        This seminar is {newData.status.toLowerCase()}. Consider the impact of any changes carefully.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* Validation Error Summary */}
+                    {Object.keys(validationErrors).length > 0 && (
+                        <div className="mb-6 rounded-lg border-2 border-red-500 bg-red-50 dark:bg-red-900/20 p-4">
+                            <div className="flex items-start gap-3">
+                                <svg className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                </svg>
+                                <div className="flex-1">
+                                    <h3 className="text-sm font-semibold text-red-800 dark:text-red-300 mb-2">
+                                        Please fix the following errors before submitting:
+                                    </h3>
+                                    <ul className="list-disc list-inside space-y-1 text-sm text-red-700 dark:text-red-400">
+                                        {Object.entries(validationErrors).map(([field, error]) => (
+                                            <li key={field}>{error}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
                     {/* Combined Information Box */}
                     <div className="mb-6">
                         <div className={`rounded-xl p-6 border ${
@@ -250,16 +385,26 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                             <input
                                                 type="number"
                                                 min="1"
-                                                className={`w-full border rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition ${
-                                                    isDark 
-                                                        ? 'border-gray-600 bg-gray-800 text-gray-100' 
-                                                        : 'border-green-300 bg-white text-gray-900'
+                                                className={`w-full border rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 transition ${
+                                                    validationErrors.capacity
+                                                        ? 'border-red-500 focus:ring-red-400'
+                                                        : isDark 
+                                                            ? 'border-gray-600 bg-gray-800 text-gray-100 focus:ring-green-400' 
+                                                            : 'border-green-300 bg-white text-gray-900 focus:ring-green-400'
                                                 }`}
                                                 value={newData.capacity}
                                                 onChange={(e) => setNewData({ ...newData, capacity: e.target.value })}
                                                 required
                                                 autoComplete="off"
                                             />
+                                            {validationErrors.capacity && (
+                                                <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
+                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                    </svg>
+                                                    {validationErrors.capacity}
+                                                </p>
+                                            )}
                                         </div>
                                         <div className="md:col-span-2">
                                             <label className={`block text-sm font-medium mb-2 ${
@@ -352,10 +497,12 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                             }`}>Start Date</label>
                                             <input
                                                 type="date"
-                                                className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition text-sm ${
-                                                    isDark 
-                                                        ? 'border-gray-600 bg-gray-800 text-gray-100' 
-                                                        : 'border-green-300 bg-white text-gray-900'
+                                                className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 transition text-sm ${
+                                                    validationErrors.start_date
+                                                        ? 'border-red-500 focus:ring-red-400'
+                                                        : isDark 
+                                                            ? 'border-gray-600 bg-gray-800 text-gray-100 focus:ring-green-400' 
+                                                            : 'border-green-300 bg-white text-gray-900 focus:ring-green-400'
                                                 }`}
                                                 value={newData.start_date || ''}
                                                 min={newData.registration_deadline || undefined}
@@ -363,6 +510,9 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                                 required
                                                 autoComplete="off"
                                             />
+                                            {validationErrors.start_date && (
+                                                <p className="mt-1 text-xs text-red-500">{validationErrors.start_date}</p>
+                                            )}
                                         </div>
                                         <div>
                                             <label className={`block text-xs font-medium mb-1 ${
@@ -370,10 +520,12 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                             }`}>End Date</label>
                                             <input
                                                 type="date"
-                                                className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition text-sm ${
-                                                    isDark 
-                                                        ? 'border-gray-600 bg-gray-800 text-gray-100' 
-                                                        : 'border-green-300 bg-white text-gray-900'
+                                                className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 transition text-sm ${
+                                                    validationErrors.end_date
+                                                        ? 'border-red-500 focus:ring-red-400'
+                                                        : isDark 
+                                                            ? 'border-gray-600 bg-gray-800 text-gray-100 focus:ring-green-400' 
+                                                            : 'border-green-300 bg-white text-gray-900 focus:ring-green-400'
                                                 }`}
                                                 value={newData.end_date || ''}
                                                 min={newData.start_date || undefined}
@@ -381,6 +533,9 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                                 required
                                                 autoComplete="off"
                                             />
+                                            {validationErrors.end_date && (
+                                                <p className="mt-1 text-xs text-red-500">{validationErrors.end_date}</p>
+                                            )}
                                         </div>
                                         <div>
                                             <label className={`block text-xs font-medium mb-1 ${
@@ -388,16 +543,21 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                             }`}>Start Time</label>
                                             <input
                                                 type="time"
-                                                className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition text-sm ${
-                                                    isDark 
-                                                        ? 'border-gray-600 bg-gray-800 text-gray-100' 
-                                                        : 'border-green-300 bg-white text-gray-900'
+                                                className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 transition text-sm ${
+                                                    validationErrors.start_time
+                                                        ? 'border-red-500 focus:ring-red-400'
+                                                        : isDark 
+                                                            ? 'border-gray-600 bg-gray-800 text-gray-100 focus:ring-green-400' 
+                                                            : 'border-green-300 bg-white text-gray-900 focus:ring-green-400'
                                                 }`}
                                                 value={newData.start_time}
                                                 onChange={(e) => setNewData({ ...newData, start_time: e.target.value })}
                                                 required
                                                 autoComplete="off"
                                             />
+                                            {validationErrors.start_time && (
+                                                <p className="mt-1 text-xs text-red-500">{validationErrors.start_time}</p>
+                                            )}
                                         </div>
                                         <div>
                                             <label className={`block text-xs font-medium mb-1 ${
@@ -405,16 +565,21 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                             }`}>End Time</label>
                                             <input
                                                 type="time"
-                                                className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition text-sm ${
-                                                    isDark 
-                                                        ? 'border-gray-600 bg-gray-800 text-gray-100' 
-                                                        : 'border-green-300 bg-white text-gray-900'
+                                                className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 transition text-sm ${
+                                                    validationErrors.end_time
+                                                        ? 'border-red-500 focus:ring-red-400'
+                                                        : isDark 
+                                                            ? 'border-gray-600 bg-gray-800 text-gray-100 focus:ring-green-400' 
+                                                            : 'border-green-300 bg-white text-gray-900 focus:ring-green-400'
                                                 }`}
                                                 value={newData.end_time}
                                                 onChange={(e) => setNewData({ ...newData, end_time: e.target.value })}
                                                 required
                                                 autoComplete="off"
                                             />
+                                            {validationErrors.end_time && (
+                                                <p className="mt-1 text-xs text-red-500">{validationErrors.end_time}</p>
+                                            )}
                                         </div>
                                     </div>
                                     <div>
@@ -423,10 +588,12 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                         }`}>Registration Deadline</label>
                                         <input
                                             type="date"
-                                            className={`w-full border rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition ${
-                                                isDark 
-                                                    ? 'border-gray-600 bg-gray-800 text-gray-100' 
-                                                    : 'border-green-300 bg-white text-gray-900'
+                                            className={`w-full border rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 transition ${
+                                                validationErrors.registration_deadline
+                                                    ? 'border-red-500 focus:ring-red-400'
+                                                    : isDark 
+                                                        ? 'border-gray-600 bg-gray-800 text-gray-100 focus:ring-green-400' 
+                                                        : 'border-green-300 bg-white text-gray-900 focus:ring-green-400'
                                             }`}
                                             value={newData.registration_deadline || ''}
                                             max={newData.start_date ? new Date(new Date(newData.start_date).getTime() - 86400000).toISOString().split('T')[0] : undefined}
@@ -434,6 +601,14 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                             required
                                             autoComplete="off"
                                         />
+                                        {validationErrors.registration_deadline && (
+                                            <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
+                                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                </svg>
+                                                {validationErrors.registration_deadline}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -515,7 +690,13 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                     </button>
                     <button
                         type="submit"
-                        className="px-6 py-2.5 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-400 shadow-sm"
+                        disabled={Object.keys(validationErrors).length > 0}
+                        className={`px-6 py-2.5 font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 shadow-sm ${
+                            Object.keys(validationErrors).length > 0
+                                ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                                : 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-400'
+                        }`}
+                        title={Object.keys(validationErrors).length > 0 ? 'Please fix all validation errors' : 'Update seminar'}
                     >
                         Update Seminar
                     </button>

@@ -72,12 +72,12 @@ async function checkBorrowLimit(req, res, next) {
 
 /**
  * Check distribution request limits
- * Validates monthly request quotas
+ * Validates active request quotas (not monthly)
  */
 async function checkDistributionLimit(req, res, next) {
   try {
     const userId = req.user?.id;
-    const { quantity } = req.body;
+    const { quantity, item_id } = req.body;
     
     if (!userId) {
       return res.status(401).json({
@@ -87,49 +87,56 @@ async function checkDistributionLimit(req, res, next) {
     }
     
     // Get system settings
-    const maxPerMonth = await getSetting('distribution_max_requests_per_month', 2);
-    const maxQuantity = await getSetting('distribution_max_quantity_per_request', 10);
+    const maxActiveRequests = await getSetting('distribution_max_active_requests', 2);
     
-    // 1. Check monthly request limit
-    const startOfMonth = new Date();
-    startOfMonth.setDate(1);
-    startOfMonth.setHours(0, 0, 0, 0);
-    
-    const requestsThisMonth = await prisma.itemTransaction.count({
+    // 1. Check active request limit (not monthly)
+    // Active statuses: Pending, Approved, Picked_Up
+    const activeRequests = await prisma.itemTransaction.count({
       where: {
         accountId: userId,
         itemStack: {
           status: 'Distributed' // Distribution items have status 'Distributed'
         },
-        createdAt: {
-          gte: startOfMonth
+        status: {
+          in: ['Pending', 'Approved', 'Picked_Up']
         }
       }
     });
     
-    if (requestsThisMonth >= maxPerMonth) {
+    if (activeRequests >= maxActiveRequests) {
       return res.status(400).json({
-        error: 'Monthly limit reached',
-        message: `You can only make ${maxPerMonth} distribution request(s) per month`,
+        error: 'Active request limit reached',
+        message: `You can only have ${maxActiveRequests} active distribution request(s) at a time`,
         details: {
-          current: requestsThisMonth,
-          limit: maxPerMonth,
-          type: 'monthly_limit'
+          current: activeRequests,
+          limit: maxActiveRequests,
+          type: 'active_request_limit'
         }
       });
     }
     
-    // 2. Check quantity limit
-    if (quantity && parseInt(quantity) > maxQuantity) {
-      return res.status(400).json({
-        error: 'Quantity limit exceeded',
-        message: `Maximum ${maxQuantity} unit(s) can be requested per distribution request`,
-        details: {
-          requested: parseInt(quantity),
-          limit: maxQuantity,
-          type: 'quantity_limit'
+    // 2. Check quantity limit against the specific ItemStack's limit
+    if (quantity && item_id) {
+      const itemStack = await prisma.itemStack.findFirst({
+        where: {
+          itemId: item_id,
+          status: 'Distributed'
         }
       });
+      
+      if (itemStack && itemStack.max_quantity_per_request) {
+        if (parseInt(quantity) > itemStack.max_quantity_per_request) {
+          return res.status(400).json({
+            error: 'Quantity limit exceeded',
+            message: `Maximum ${itemStack.max_quantity_per_request} unit(s) can be requested per distribution request`,
+            details: {
+              requested: parseInt(quantity),
+              limit: itemStack.max_quantity_per_request,
+              type: 'quantity_limit'
+            }
+          });
+        }
+      }
     }
     
     // All checks passed

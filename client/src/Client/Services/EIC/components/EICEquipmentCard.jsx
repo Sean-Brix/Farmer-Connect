@@ -8,7 +8,7 @@ import {
 } from "@material-tailwind/react";
 
 // Equipment card component
-export default function EICEquipmentCard({ item, onRequestClick, typeIcon, hasActiveRequest, isDisabled, disabledReason, onOpenMyRequests, isTutorialActive }) {
+export default function EICEquipmentCard({ item, onRequestClick, typeIcon, hasActiveRequest, atRequestLimit, isDisabled, disabledReason, onOpenMyRequests, isTutorialActive }) {
     
     const handleClick = () => {
         if (hasActiveRequest) {
@@ -18,12 +18,51 @@ export default function EICEquipmentCard({ item, onRequestClick, typeIcon, hasAc
             }
             return;
         }
+        if (atRequestLimit) {
+            // Open My Requests modal to show user their active requests
+            if (onOpenMyRequests) {
+                onOpenMyRequests();
+            }
+            return;
+        }
         if (isDisabled) {
             alert(disabledReason || 'Cannot request this item');
             return;
         }
         onRequestClick(item);
     };
+    
+    // Determine button appearance based on status
+    const getButtonStatus = () => {
+        if (hasActiveRequest) {
+            return {
+                color: 'bg-yellow-500 hover:bg-yellow-600',
+                icon: 'fa-clock',
+                text: 'View Active Request'
+            };
+        }
+        if (atRequestLimit) {
+            return {
+                color: 'bg-gray-500 hover:bg-gray-600',
+                icon: 'fa-list-check',
+                text: 'Request Limit Reached'
+            };
+        }
+        if (isDisabled) {
+            return {
+                color: 'bg-gray-400 hover:bg-gray-500',
+                icon: 'fa-ban',
+                text: 'Currently Unavailable'
+            };
+        }
+        return {
+            color: 'bg-green-600 hover:bg-green-700',
+            icon: 'fa-paper-plane',
+            text: 'Request Equipment'
+        };
+    };
+    
+    const buttonStatus = getButtonStatus();
     
     return (
         <Card data-tutorial="equipment-card" className="w-full h-[500px] flex flex-col">
@@ -41,6 +80,12 @@ export default function EICEquipmentCard({ item, onRequestClick, typeIcon, hasAc
                         <span className="px-3 py-1.5 rounded-lg text-xs font-bold bg-yellow-500 text-white shadow-lg backdrop-blur-sm">
                             <i className="fa-solid fa-clock mr-1.5"></i>
                             ACTIVE
+                        </span>
+                    )}
+                    {!hasActiveRequest && atRequestLimit && (
+                        <span className="px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-500 text-white shadow-lg backdrop-blur-sm">
+                            <i className="fa-solid fa-list-check mr-1.5"></i>
+                            LIMIT REACHED
                         </span>
                     )}
                     <span className="px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-lg bg-green-600/90 backdrop-blur-sm ml-auto">
@@ -89,31 +134,11 @@ export default function EICEquipmentCard({ item, onRequestClick, typeIcon, hasAc
                     ripple={false}
                     fullWidth={true}
                     onClick={handleClick}
-                    className={`h-12 normal-case text-sm font-bold shadow-md hover:shadow-lg transition-all duration-200 ${
-                        hasActiveRequest
-                            ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
-                            : isDisabled
-                            ? 'bg-gray-400 hover:bg-gray-500 text-white'
-                            : 'bg-green-600 hover:bg-green-700 text-white'
-                    }`}
+                    className={`h-12 normal-case text-sm font-bold shadow-md hover:shadow-lg transition-all duration-200 ${buttonStatus.color} text-white`}
                     data-tutorial="request-button"
                 >
-                    {hasActiveRequest ? (
-                        <>
-                            <i className="fa-solid fa-clock mr-2"></i>
-                            View Active Request
-                        </>
-                    ) : isDisabled ? (
-                        <>
-                            <i className="fa-solid fa-ban mr-2"></i>
-                            Currently Unavailable
-                        </>
-                    ) : (
-                        <>
-                            <i className="fa-solid fa-paper-plane mr-2"></i>
-                            Request Equipment
-                        </>
-                    )}
+                    <i className={`fa-solid ${buttonStatus.icon} mr-2`}></i>
+                    {buttonStatus.text}
                 </Button>
             </CardFooter>
         </Card>

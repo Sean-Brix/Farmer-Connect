@@ -48,6 +48,7 @@ async function getMyRequest(req, res) {
             count: requests.length,
             requests: requests.map((request) => ({
                 id: request.id,
+                itemStackId: request.itemStackId, // Include itemStackId for matching
                 itemName: request.itemStack.item.name,
                 itemCategory: request.itemStack.item.category,
                 quantity: request.quantity,

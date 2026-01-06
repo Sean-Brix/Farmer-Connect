@@ -318,6 +318,7 @@ export default function Seminar() {
     const { isDark } = useTheme();
     const [searchInput, setSearchInput] = useState(''); // Local input state
     const [search, setSearch] = useState(''); // Debounced search value
+    const [activeTab, setActiveTab] = useState('upcoming'); // New tab state
     const [statusFilter, setStatusFilter] = useState('all');
     const [searchFilter, setSearchFilter] = useState('Title');
     const [showAdd, setShowAdd] = useState(false);
@@ -328,7 +329,7 @@ export default function Seminar() {
     const [showDescriptionModal, setShowDescriptionModal] = useState(false);
     const [selectedDescription, setSelectedDescription] = useState({ title: '', description: '', seminar: null });
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(6);
+    const [itemsPerPage, setItemsPerPage] = useState(9);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [seminarToDelete, setSeminarToDelete] = useState(null);
     const editData = useRef(null);
@@ -440,12 +441,31 @@ export default function Seminar() {
         setShowParticipants(true);
     };
 
+    // Filter seminars based on active tab
+    const filteredByTab = programList?.filter(seminar => {
+        if (activeTab === 'all') return true;
+        return seminar.status.toLowerCase() === activeTab;
+    }) || [];
+
     useEffect(() => {
         if (currentPage > totalPages) setCurrentPage(1);
-    }, [programList, currentPage]);
+    }, [filteredByTab, currentPage]);
 
-    const totalPages = programList? Math.ceil(programList.length / itemsPerPage): 0;
-    const paginatedPrograms = programList? programList.slice((currentPage - 1) * itemsPerPage,currentPage * itemsPerPage): [];
+    useEffect(() => {
+        setCurrentPage(1); // Reset to page 1 when switching tabs
+    }, [activeTab]);
+
+    const totalPages = filteredByTab? Math.ceil(filteredByTab.length / itemsPerPage): 0;
+    const paginatedPrograms = filteredByTab? filteredByTab.slice((currentPage - 1) * itemsPerPage,currentPage * itemsPerPage): [];
+    
+    // Get counts for each tab
+    const tabCounts = {
+        all: programList?.length || 0,
+        upcoming: programList?.filter(s => s.status === 'Upcoming').length || 0,
+        ongoing: programList?.filter(s => s.status === 'Ongoing').length || 0,
+        completed: programList?.filter(s => s.status === 'Completed').length || 0,
+        cancelled: programList?.filter(s => s.status === 'Cancelled').length || 0
+    };
 
     if (isLoading) {
         return (
@@ -463,34 +483,59 @@ export default function Seminar() {
 
     return (
                 <div className={`min-h-screen pt-30 pb-8 px-2 md:px-6 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-                        <div className="w-full max-w-[1400px] mx-auto">
+                        <div className="w-full">
 
-                                {/* Search, Filters, and Actions - Aligned to table */}
-                                <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8 mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                                    {/* Search bar */}
-                                      <div className="relative flex-1 min-w-0 w-full md:w-1/2 max-w-md">
-                                        <input
-                                            type="search"
-                                            placeholder="Search seminars, speakers, locations..."
-                                            className={`block w-full pl-10 pr-3 py-2 text-base border rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all placeholder-gray-400 ${
-                                                    isDark 
-                                                            ? 'bg-gray-700 border-gray-600 text-white' 
-                                                            : 'bg-gray-50 border-gray-200 text-gray-900'
-                                            }`}
-                                            value={searchInput}
-                                            onChange={(e) => setSearchInput(e.target.value)}
-                                            aria-label="Search seminars"
-                                        />
-                                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                            <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
+                                {/* Header */}
+                                <div className="w-full px-2 md:px-8 mb-6">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                                Seminar Management
+                                            </h1>
+                                            <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                                Manage and organize agricultural seminars and training programs
+                                            </p>
                                         </div>
+                                        <button
+                                            className="flex items-center justify-center px-6 py-3 rounded-xl text-sm font-semibold bg-green-600 hover:bg-green-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-green-300 shadow-lg"
+                                            onClick={() => setShowAdd(true)}
+                                            aria-label="Add seminar"
+                                        >
+                                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            Add Seminar
+                                        </button>
                                     </div>
-                                    {/* Filters and Controls */}
-                                    <div className="flex flex-row gap-2 w-full md:w-auto items-center">
+                                </div>
+
+                                {/* Search and Filters */}
+                                <div className="w-full px-2 md:px-8 mb-6">
+                                    <div className="flex flex-col md:flex-row gap-4">
+                                        {/* Search bar */}
+                                        <div className="relative flex-1 max-w-md">
+                                            <input
+                                                type="search"
+                                                placeholder="Search seminars, speakers, locations..."
+                                                className={`block w-full pl-10 pr-3 py-2.5 text-base border rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all placeholder-gray-400 ${
+                                                        isDark 
+                                                                ? 'bg-gray-700 border-gray-600 text-white' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-900'
+                                                }`}
+                                                value={searchInput}
+                                                onChange={(e) => setSearchInput(e.target.value)}
+                                                aria-label="Search seminars"
+                                            />
+                                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Filter dropdown */}
                                         <select
-                                            className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full md:w-auto border-2 ${
+                                            className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2.5 px-4 transition-all w-full md:w-auto border-2 ${
                                                 isDark 
                                                     ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
                                                     : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
@@ -499,37 +544,48 @@ export default function Seminar() {
                                             onChange={(e) => setSearchFilter(e.target.value)}
                                             aria-label="Filter by"
                                         >
-                                            <option value="title">Title</option>
-                                            <option value="speaker">Speaker</option>
-                                            <option value="location">Location</option>
+                                            <option value="title">Search by Title</option>
+                                            <option value="speaker">Search by Speaker</option>
+                                            <option value="location">Search by Location</option>
                                         </select>
-                                        <select
-                                            className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full md:w-auto border-2 ${
-                                                isDark 
-                                                    ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
-                                                    : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
-                                            }`}
-                                            value={statusFilter}
-                                            onChange={(e) => setStatusFilter(e.target.value)}
-                                            aria-label="Status filter"
-                                        >
-                                            <option value="all">All Statuses</option>
-                                            <option value="Upcoming">Upcoming</option>
-                                            <option value="Ongoing">Ongoing</option>
-                                            <option value="Completed">Completed</option>
-                                            <option value="Cancelled">Cancelled</option>
-                                        </select>
-                                        <button
-                                            className="flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-600 hover:bg-green-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-green-300 shadow-sm"
-                                            onClick={() => setShowAdd(true)}
-                                            aria-label="Add seminar"
-                                            style={{ minWidth: '120px' }}
-                                        >
-                                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                                            </svg>
-                                            Add Seminar
-                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Tab Navigation */}
+                                <div className="w-full px-2 md:px-8 mb-6">
+                                    <div className={`border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+                                        <nav className="-mb-px flex space-x-4 overflow-x-auto">
+                                            {[
+                                                { id: 'all', label: 'All', count: tabCounts.all },
+                                                { id: 'upcoming', label: 'Upcoming', count: tabCounts.upcoming },
+                                                { id: 'ongoing', label: 'Ongoing', count: tabCounts.ongoing },
+                                                { id: 'completed', label: 'Completed', count: tabCounts.completed },
+                                                { id: 'cancelled', label: 'Cancelled', count: tabCounts.cancelled }
+                                            ].map(tab => (
+                                                <button
+                                                    key={tab.id}
+                                                    onClick={() => setActiveTab(tab.id)}
+                                                    className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                                                        activeTab === tab.id
+                                                            ? 'border-green-500 text-green-600'
+                                                            : isDark
+                                                                ? 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-600'
+                                                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                                    }`}
+                                                >
+                                                    <span>{tab.label}</span>
+                                                    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                                                        activeTab === tab.id
+                                                            ? 'bg-green-100 text-green-700'
+                                                            : isDark
+                                                                ? 'bg-gray-700 text-gray-300'
+                                                                : 'bg-gray-100 text-gray-600'
+                                                    }`}>
+                                                        {tab.count}
+                                                    </span>
+                                                </button>
+                                            ))}
+                                        </nav>
                                     </div>
                                 </div>
 
@@ -556,7 +612,7 @@ export default function Seminar() {
                 )}
 
                 {/* TABLE LAYOUT - Clean and professional seminar management */}
-                <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8">
+                <div className="w-full px-2 md:px-8">
                     <div className={`rounded-t-xl shadow-lg border overflow-hidden ${
                         isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
                     }`}>
@@ -637,41 +693,42 @@ export default function Seminar() {
                                                                 setSelectedDescription({ title: item.title, description: item.description, seminar: item });
                                                                 setShowDescriptionModal(true);
                                                             }}
-                                                            className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                                                            className={`inline-flex items-center justify-center p-2 rounded-md transition-colors ${
                                                                 isDark 
-                                                                    ? 'bg-green-600 hover:bg-green-500 text-green-100' 
-                                                                    : 'bg-green-200 hover:bg-green-300 text-green-800'
+                                                                    ? 'bg-green-600 hover:bg-green-500 text-white' 
+                                                                    : 'bg-green-100 hover:bg-green-200 text-green-700'
                                                             }`}
-                                                            title="View full description"
+                                                            title="View details"
                                                         >
-                                                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                             </svg>
-                                                            Details
                                                         </button>
                                                         <button
                                                             onClick={(e) => { edit_seminar(e, item); }}
-                                                            className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                                                            className={`inline-flex items-center justify-center p-2 rounded-md transition-colors ${
                                                                 isDark 
-                                                                    ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' 
-                                                                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                                                                    ? 'bg-blue-600 hover:bg-blue-500 text-white' 
+                                                                    : 'bg-blue-100 hover:bg-blue-200 text-blue-700'
                                                             }`}
                                                             title="Edit seminar"
                                                         >
-                                                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                             </svg>
-                                                            Edit
                                                         </button>
                                                         <button
                                                             onClick={() => handleDeleteSingle(item)}
-                                                            className="inline-flex items-center px-3 py-1 text-xs font-medium rounded-md bg-red-100 hover:bg-red-200 text-red-700 transition-colors"
+                                                            className={`inline-flex items-center justify-center p-2 rounded-md transition-colors ${
+                                                                isDark
+                                                                    ? 'bg-red-600 hover:bg-red-500 text-white'
+                                                                    : 'bg-red-100 hover:bg-red-200 text-red-700'
+                                                            }`}
                                                             title="Delete seminar"
                                                         >
-                                                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                             </svg>
-                                                            Delete
                                                         </button>
                                                     </div>
                                                 </td>
@@ -695,50 +752,15 @@ export default function Seminar() {
                     </div>
                 </div>
 
-                {/* Showing items info and rows per page selector */}
+                {/* Showing items info */}
                 {paginatedPrograms && paginatedPrograms.length > 0 && (
-                    <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8 mt-4">
-                        <div className="flex justify-between items-center mb-2">
-                            <span className={`text-xs ${
+                    <div className="w-full px-2 md:px-8 mt-4">
+                        <div className="mb-2">
+                            <span className={`text-sm ${
                                 isDark ? 'text-gray-400' : 'text-gray-500'
                             }`}>
-                                Showing {paginatedPrograms.length} of {programList?.length || 0} seminars
+                                Showing {paginatedPrograms.length} of {filteredByTab.length} seminars
                             </span>
-                            
-                            <div className="flex items-center gap-2">
-                                <span className={`text-xs ${
-                                    isDark ? 'text-gray-400' : 'text-gray-500'
-                                }`}>
-                                    Rows per page:
-                                </span>
-                                <div className="relative">
-                                    <select
-                                        className={`appearance-none border text-sm rounded-lg focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-3 pr-10 min-w-[70px] transition ${
-                                            isDark 
-                                                ? 'bg-gray-700 border-gray-600 text-gray-200' 
-                                                : 'bg-white border-gray-300 text-gray-700'
-                                        }`}
-                                        value={itemsPerPage}
-                                        onChange={(e) => {
-                                            setItemsPerPage(Number(e.target.value));
-                                            setCurrentPage(1); // Reset to first page when changing items per page
-                                        }}
-                                        aria-label="Rows per page"
-                                    >
-                                        <option value={5}>5</option>
-                                        <option value={6}>6</option>
-                                        <option value={10}>10</option>
-                                        <option value={15}>15</option>
-                                        <option value={20}>20</option>
-                                        <option value={25}>25</option>
-                                    </select>
-                                    <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#059669' }}>
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                            <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 )}

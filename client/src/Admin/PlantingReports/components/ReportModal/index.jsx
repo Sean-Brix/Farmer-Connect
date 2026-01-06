@@ -18,7 +18,7 @@ import { useResponsive } from '../../hooks/useResponsive';
 import { useReportForm } from '../../hooks/useReportForm';
 import { useCreateReport, useUpdateReport } from '../../hooks/usePlantingReportQueries';
 import { getModalTitle, getReadOnlySections, getVisibleSections } from '../../utils/modalHelpers';
-import { useActiveVarieties } from '../../hooks/useReferenceData';
+import { useActiveVarieties, useActiveSeasons } from '../../hooks/useReferenceData';
 
 import StateWorkflowIndicator from './StateWorkflowIndicator';
 import FarmerInfoSection from './FarmerInfoSection';
@@ -60,16 +60,46 @@ export default function ReportModal({ open, mode = 'create', report = null, onCl
 	const createMutation = useCreateReport();
 	const updateMutation = useUpdateReport();
 	const { data: varietiesData } = useActiveVarieties();
+	const { data: seasonsData } = useActiveSeasons();
 
 	useEffect(() => {
 		if (!open) return;
 
 		if (report) {
-			setFields(report);
+			// Validate variety and season IDs before setting fields
+			const varieties = Array.isArray(varietiesData?.data) ? varietiesData.data : Array.isArray(varietiesData) ? varietiesData : [];
+			const seasons = Array.isArray(seasonsData?.data) ? seasonsData.data : Array.isArray(seasonsData) ? seasonsData : [];
+			
+			const sanitizedReport = { ...report };
+			
+			// Check if varietyId still exists in database
+			if (report.varietyId) {
+				const varietyExists = varieties.some(v => String(v.id) === String(report.varietyId));
+				if (!varietyExists) {
+					console.warn(`⚠️ Variety ID ${report.varietyId} no longer exists, resetting to empty`);
+					sanitizedReport.varietyId = '';
+				}
+			}
+			
+			// Check if croppingSeasonId still exists in database
+			if (report.croppingSeasonId) {
+				const seasonExists = seasons.some(s => String(s.id) === String(report.croppingSeasonId));
+				if (!seasonExists) {
+					console.warn(`⚠️ Season ID ${report.croppingSeasonId} no longer exists, resetting to empty`);
+					sanitizedReport.croppingSeasonId = '';
+				} else {
+					console.log(`✓ Cropping season ${report.croppingSeasonId} exists, will be set`);
+				}
+			} else {
+				console.log(`⚠️ Report has no croppingSeasonId:`, report);
+			}
+			
+			console.log('Setting fields with sanitized report:', sanitizedReport);
+			setFields(sanitizedReport);
 		} else {
 			resetForm();
 		}
-	}, [open, report, setFields, resetForm]);
+	}, [open, report, setFields, resetForm, varietiesData, seasonsData]);
 
 	// Auto-calculate expected harvest date based on variety DAS and planting date
 	useEffect(() => {
@@ -109,9 +139,10 @@ export default function ReportModal({ open, mode = 'create', report = null, onCl
 	const readOnly = mode === 'view' || report?.isArchived || report?.isDeleted;
 
 	const visibility = useMemo(() => getVisibleSections(currentState, mode), [currentState, mode]);
+	// Admin has full control - no readonly sections
 	const readOnlySections = useMemo(
-		() => getReadOnlySections(currentState, mode, report?.isArchived, report?.isDeleted),
-		[currentState, mode, report?.isArchived, report?.isDeleted]
+		() => ({}),
+		[]
 	);
 
 	const handleClose = () => {
@@ -121,12 +152,9 @@ export default function ReportModal({ open, mode = 'create', report = null, onCl
 	};
 
 	const handleSave = () => {
-		const valid = validateForm();
-		if (!valid) {
-			console.log('Validation failed:', errors);
-			console.log('Form data:', formData);
-			return;
-		}
+		// No validation for Save button - only validate on state transitions
+		// Admin can save partial data at any time
+		console.log('💾 [Save] Saving without validation', { mode, reportState: report?.state });
 
 		// Helper to clean up form data - convert empty strings to null for numeric fields
 		const sanitizeData = (data) => {
@@ -206,6 +234,7 @@ export default function ReportModal({ open, mode = 'create', report = null, onCl
 				archivedAt,
 				archivedBy,
 				deletedAt,
+				deletedBy,
 				user,
 				seedVariety,
 				variety,

@@ -1,5 +1,6 @@
 import prisma from '../../config/database.js';
 import auditLogger from '../../Services/auditLogger.js';
+import { validateSeminarDates } from '../../Utils/seminarStatusUpdater.js';
 
 async function editSeminar(req, res) {
     try {
@@ -38,6 +39,26 @@ async function editSeminar(req, res) {
                 success: false,
                 error: 'Seminar not found',
             });
+        }
+
+        // Validate dates if provided
+        if (start_date || end_date || start_time || end_time || registration_deadline || capacity) {
+            const validation = validateSeminarDates({
+                start_date: start_date || currentSeminar.start_date,
+                end_date: end_date || currentSeminar.end_date,
+                start_time: start_time || currentSeminar.start_time,
+                end_time: end_time || currentSeminar.end_time,
+                registration_deadline: registration_deadline || currentSeminar.registration_deadline,
+                capacity: capacity || currentSeminar.capacity,
+                status: status || currentSeminar.status
+            });
+            if (!validation.isValid) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Validation failed',
+                    errors: validation.errors
+                });
+            }
         }
 
         // Prepare update data

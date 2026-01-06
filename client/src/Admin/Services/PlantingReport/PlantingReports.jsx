@@ -106,6 +106,9 @@ const PlantingReports = () => {
         const reportsToDisplay = viewMode === 'active' ? activeReports : archivedReports;
         
         return reportsToDisplay.filter(report => {
+            // Exclude distribution-linked reports
+            if (report.distributionRequestId) return false;
+            
             const matchesSearch = !searchTerm || 
                 report.farmerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 report.farmLocation.toLowerCase().includes(searchTerm.toLowerCase()) ||

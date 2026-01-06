@@ -159,14 +159,15 @@ export default function Distribution() {
         setCurrentPage(1);
     }, [filter, search]);
 
-    const calculateMonthlyUsage = (requests = []) => {
-        const now = new Date();
+    const calculateActiveRequests = (requests = []) => {
+        // Count all active/ongoing requests (no time limit, just status-based)
+        const excludedStatuses = ['Rejected', 'Cancelled', 'No_Pickup', 'Archived'];
         const used = requests.filter((req) => {
-            const created = new Date(req.createdAt);
-            return (
-                created.getFullYear() === now.getFullYear() &&
-                created.getMonth() === now.getMonth()
-            );
+            // Exclude specifically rejected/cancelled/archived requests
+            if (excludedStatuses.includes(req.status)) return false;
+            // Exclude requests with Harvested planting reports (complete, not active)
+            if (req.plantingReport?.state === 'Harvested') return false;
+            return true;
         }).length;
 
         return {
@@ -191,7 +192,21 @@ export default function Distribution() {
     };
 
     // Use demo data during tutorial if user has no requests
-    const displayRequests = isTutorialActive && myRequests.length === 0 ? [demoRequest] : myRequests;
+    // Sort requests: ongoing (Pending, Approved, Picked_Up) at top, then others
+    const sortedRequests = [...myRequests].sort((a, b) => {
+        const ongoingStatuses = ['Pending', 'Approved', 'Picked_Up', 'Planted'];
+        // Requests with Harvested planting reports are considered complete, not ongoing
+        const aIsOngoing = ongoingStatuses.includes(a.status) && a.plantingReport?.state !== 'Harvested';
+        const bIsOngoing = ongoingStatuses.includes(b.status) && b.plantingReport?.state !== 'Harvested';
+        
+        if (aIsOngoing && !bIsOngoing) return -1;
+        if (!aIsOngoing && bIsOngoing) return 1;
+        
+        // If both are same type (both ongoing or both not), sort by date (newest first)
+        return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+    
+    const displayRequests = isTutorialActive && myRequests.length === 0 ? [demoRequest] : sortedRequests;
 
     // Initialize tutorial
     useEffect(() => {
@@ -225,6 +240,47 @@ export default function Distribution() {
     );
     const canShowUserActions = authInfo.checked && !isAdminUser;
 
+    // Check if user has active (pending/approved/ongoing) request for an item
+    const hasActiveRequestForItem = (stackId) => {
+        const hasActive = myRequests.some(
+            (req) => {
+                if (req.itemStackId !== stackId) return false;
+                // Check if request has a harvested planting report - not active
+                if (req.plantingReport?.state === 'Harvested') return false;
+                // Otherwise check status
+                return ['Pending', 'Approved', 'Picked_Up', 'Planted'].includes(req.status);
+            }
+        );
+        if (hasActive) {
+            console.log('Found active request for stackId:', stackId, myRequests.filter(r => r.itemStackId === stackId));
+        }
+        return hasActive;
+    };
+
+    // Get the active request status for an item
+    const getActiveRequestStatus = (stackId) => {
+        const activeReq = myRequests.find(
+            (req) => {
+                if (req.itemStackId !== stackId) return false;
+                // Exclude harvested planting reports
+                if (req.plantingReport?.state === 'Harvested') return false;
+                // Check for active statuses
+                return ['Pending', 'Approved', 'Picked_Up', 'Planted'].includes(req.status);
+            }
+        );
+        return activeReq ? activeReq.status : null;
+    };
+
+    // Check if there's a harvested request for an item (completed, not active)
+    const hasHarvestedRequestForItem = (stackId) => {
+        return myRequests.some(
+            (req) =>
+                req.itemStackId === stackId &&
+                req.status === 'Planted' &&
+                req.plantingReport?.state === 'Harvested'
+        );
+    };
+
     useEffect(() => {
         const fetchUsage = async () => {
             try {
@@ -232,14 +288,26 @@ export default function Distribution() {
                     credentials: 'include',
                 });
 
-                if (!response.ok) return;
+                if (!response.ok) {
+                    console.log('Failed to fetch requests:', response.status);
+                    return;
+                }
 
                 const data = await response.json();
                 const requests = Array.isArray(data.requests)
                     ? data.requests
                     : [];
 
-                setMonthlyUsage(calculateMonthlyUsage(requests));
+                console.log('Fetched requests on mount:', requests);
+                console.log('Planted requests with planting report state:', 
+                    requests.filter(r => r.status === 'Planted').map(r => ({
+                        id: r.id,
+                        status: r.status,
+                        plantingReportState: r.plantingReport?.state
+                    }))
+                );
+                setMyRequests(requests);
+                setMonthlyUsage(calculateActiveRequests(requests));
             } catch (error) {
                 console.error('Failed to fetch monthly usage:', error);
             }
@@ -1042,7 +1110,7 @@ export default function Distribution() {
                     : [];
 
                 setMyRequests(requestsList);
-                setMonthlyUsage(calculateMonthlyUsage(requestsList));
+                setMonthlyUsage(calculateActiveRequests(requestsList));
                 setShowMyRequestsModal(true);
             } else {
                 // Show error alert for other errors
@@ -1596,9 +1664,9 @@ export default function Distribution() {
                                             <i className="fa-solid fa-circle-info text-base"></i>
                                         </div>
                                         <div className="flex flex-col leading-tight">
-                                            <span className="font-semibold text-sm">{MONTHLY_LIMIT} requests / month</span>
+                                            <span className="font-semibold text-sm">{MONTHLY_LIMIT} active request limit</span>
                                             <span className={`${isDark ? 'text-gray-300' : 'text-blue-900/80'} text-xs font-medium`}>
-                                                {monthlyUsage.remaining} remaining · {monthlyUsage.used} used
+                                                {monthlyUsage.remaining} remaining · {monthlyUsage.used} active request{monthlyUsage.used !== 1 ? 's' : ''}
                                             </span>
                                         </div>
                                     </div>
@@ -1769,16 +1837,50 @@ export default function Distribution() {
                                                             : '—'}
                                                     </span>
                                                 </div>
-                                                <button
-                                                    data-tutorial={index === 0 ? "request-button" : undefined}
-                                                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 mt-auto"
-                                                    onClick={() =>
-                                                        handleRequestClick(item)
-                                                    }
-                                                >
-                                                    <i className="fa-solid fa-paper-plane mr-2"></i>
-                                                    Request Item
-                                                </button>
+                                                {hasActiveRequestForItem(item.stackId) ? (
+                                                    <div
+                                                        className={`w-full ${
+                                                            getActiveRequestStatus(item.stackId) === 'Pending'
+                                                                ? 'bg-yellow-50 border-yellow-300 text-yellow-800'
+                                                                : getActiveRequestStatus(item.stackId) === 'Approved'
+                                                                ? 'bg-green-50 border-green-300 text-green-800'
+                                                                : 'bg-blue-50 border-blue-300 text-blue-800'
+                                                        } border-2 font-semibold py-2.5 px-4 rounded-xl text-center mt-auto`}
+                                                    >
+                                                        <i className={`fa-solid ${
+                                                            getActiveRequestStatus(item.stackId) === 'Pending'
+                                                                ? 'fa-clock'
+                                                                : getActiveRequestStatus(item.stackId) === 'Approved'
+                                                                ? 'fa-check-circle'
+                                                                : 'fa-box-open'
+                                                        } mr-2`}></i>
+                                                        {getActiveRequestStatus(item.stackId) === 'Pending'
+                                                            ? 'Request Pending'
+                                                            : getActiveRequestStatus(item.stackId) === 'Approved'
+                                                            ? 'Request Approved'
+                                                            : getActiveRequestStatus(item.stackId) === 'Planted'
+                                                            ? 'Planted - Ongoing'
+                                                            : 'Picked Up - Ongoing'}
+                                                    </div>
+                                                ) : monthlyUsage && monthlyUsage.remaining === 0 ? (
+                                                    <div
+                                                        className={`w-full bg-gray-100 border-2 border-gray-300 text-gray-500 font-semibold py-2.5 px-4 rounded-xl text-center mt-auto cursor-not-allowed`}
+                                                    >
+                                                        <i className="fa-solid fa-ban mr-2"></i>
+                                                        Request Limit Reached
+                                                    </div>
+                                                ) : (
+                                                    <button
+                                                        data-tutorial={index === 0 ? "request-button" : undefined}
+                                                        className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 mt-auto"
+                                                        onClick={() =>
+                                                            handleRequestClick(item)
+                                                        }
+                                                    >
+                                                        <i className="fa-solid fa-paper-plane mr-2"></i>
+                                                        Request Item
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                     );
@@ -2289,21 +2391,7 @@ export default function Distribution() {
                                 </button>
                                 <button
                                     type="submit"
-                                    disabled={
-                                        !requestData.pickupDate ||
-                                        !requestData.quantity ||
-                                        !requestData.farmLocation.trim() ||
-                                        !requestData.areaPlanted ||
-                                        !requestData.plantingMethod ||
-                                        Object.keys(formErrors).length > 0
-                                    }
-                                    className={`font-semibold px-6 py-2 rounded-xl shadow transition focus:outline-none ${
-                                        !requestData.pickupDate ||
-                                        !requestData.quantity ||
-                                        Object.keys(formErrors).length > 0
-                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                            : 'bg-green-600 hover:bg-green-700 text-white'
-                                    }`}
+                                    className="font-semibold px-6 py-2 rounded-xl shadow transition focus:outline-none bg-green-600 hover:bg-green-700 text-white"
                                 >
                                     <i className="fa-solid fa-paper-plane mr-2"></i>
                                     Submit Request
@@ -2340,9 +2428,9 @@ export default function Distribution() {
                                             <i className="fa-solid fa-circle-info"></i>
                                         </div>
                                         <div>
-                                            <div className="font-semibold text-sm sm:text-base">Monthly limit: {MONTHLY_LIMIT} requests</div>
+                                            <div className="font-semibold text-sm sm:text-base">{MONTHLY_LIMIT} active request limit</div>
                                             <div className={`${isDark ? 'text-gray-300' : 'text-blue-900/80'} text-xs sm:text-sm`}>
-                                                {monthlyUsage.remaining} remaining · {monthlyUsage.used} used this month
+                                                {monthlyUsage.remaining} remaining · {monthlyUsage.used} active request{monthlyUsage.used !== 1 ? 's' : ''}
                                             </div>
                                         </div>
                                     </div>
@@ -2387,8 +2475,8 @@ export default function Distribution() {
                                                     <th className={`py-4 px-4 font-semibold ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b text-center min-w-[100px]`}>
                                                         Status
                                                     </th>
-                                                    <th className={`py-4 px-6 font-semibold ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b text-center min-w-[100px]`}>
-                                                        Requested
+                                                    <th className={`py-4 px-6 font-semibold ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b text-center min-w-[160px]`}>
+                                                        Next Steps
                                                     </th>
                                                     <th className={`py-4 px-4 font-semibold ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b text-center min-w-[120px]`}>
                                                         Actions
@@ -2457,7 +2545,13 @@ export default function Distribution() {
                                                             <td className="py-5 px-4 text-center">
                                                                 <span
                                                                     className={`px-3 py-2 rounded-full text-xs font-bold min-w-[80px] inline-block ${
-                                                                        request.status ===
+                                                                        // Check for archived request with harvested planting report - show as Harvested
+                                                                        (request.status === 'Archived' && request.plantingReport?.state === 'Harvested')
+                                                                            ? 'bg-purple-100 text-purple-800 border border-purple-200'
+                                                                            // Or check for harvested planting report regardless of status
+                                                                            : request.plantingReport?.state === 'Harvested'
+                                                                            ? 'bg-purple-100 text-purple-800 border border-purple-200'
+                                                                            : request.status ===
                                                                         'Pending'
                                                                             ? 'bg-yellow-100 text-yellow-800 border border-yellow-200'
                                                                             : request.status ===
@@ -2487,7 +2581,14 @@ export default function Distribution() {
                                                                             : 'bg-gray-100 text-gray-800 border border-gray-200'
                                                                     }`}
                                                                 >
-                                                                    {request.status ===
+                                                                    {
+                                                                        // Show Harvested for archived requests with harvested planting reports
+                                                                        (request.status === 'Archived' && request.plantingReport?.state === 'Harvested')
+                                                                        ? 'Harvested'
+                                                                        // Or check for harvested planting report regardless of status
+                                                                        : request.plantingReport?.state === 'Harvested'
+                                                                        ? 'Harvested'
+                                                                        : request.status ===
                                                                     'No_Pickup'
                                                                         ? 'No Pickup'
                                                                         : request.status ===
@@ -2499,18 +2600,80 @@ export default function Distribution() {
                                                                         : request.status}
                                                                 </span>
                                                             </td>
-                                                            <td className="py-5 px-6 text-center">
-                                                                <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'} font-medium`}>
-                                                                    <i className="fa-solid fa-clock mr-1"></i>
-                                                                    {new Date(
-                                                                        request.createdAt
-                                                                    ).toLocaleDateString(
-                                                                        'en-US',
-                                                                        {
-                                                                            year: 'numeric',
-                                                                            month: 'short',
-                                                                            day: 'numeric',
-                                                                        }
+                                                            <td className="py-5 px-6">
+                                                                <div className={`text-xs font-medium ${
+                                                                    request.plantingReport?.state === 'Harvested'
+                                                                        ? isDark ? 'text-purple-300 bg-purple-900/20' : 'text-purple-700 bg-purple-50'
+                                                                        : request.status === 'Pending'
+                                                                        ? isDark ? 'text-yellow-300 bg-yellow-900/20' : 'text-yellow-700 bg-yellow-50'
+                                                                        : request.status === 'Approved'
+                                                                        ? isDark ? 'text-green-300 bg-green-900/20' : 'text-green-700 bg-green-50'
+                                                                        : request.status === 'Picked_Up'
+                                                                        ? isDark ? 'text-blue-300 bg-blue-900/20' : 'text-blue-700 bg-blue-50'
+                                                                        : request.status === 'Rejected'
+                                                                        ? isDark ? 'text-red-300 bg-red-900/20' : 'text-red-700 bg-red-50'
+                                                                        : request.status === 'Cancelled' || request.status === 'No_Pickup'
+                                                                        ? isDark ? 'text-gray-400 bg-gray-700' : 'text-gray-600 bg-gray-100'
+                                                                        : isDark ? 'text-gray-400' : 'text-gray-600'
+                                                                } px-3 py-2 rounded-lg border ${isDark ? 'border-gray-600' : 'border-gray-200'}`}>
+                                                                    {request.plantingReport?.state === 'Harvested' ? (
+                                                                        <>
+                                                                            <i className="fa-solid fa-check-circle mr-1"></i>
+                                                                            Harvest completed
+                                                                        </>
+                                                                    ) : request.status === 'Pending' && (
+                                                                        <>
+                                                                            <i className="fa-solid fa-hourglass-half mr-1"></i>
+                                                                            Waiting for admin approval
+                                                                        </>
+                                                                    )}
+                                                                    {request.status === 'Approved' && (
+                                                                        <>
+                                                                            <i className="fa-solid fa-box mr-1"></i>
+                                                                            Pick up on {new Date(request.pickupDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                                                        </>
+                                                                    )}
+                                                                    {request.status === 'Picked_Up' && !request.plantingReport && (
+                                                                        <>
+                                                                            <i className="fa-solid fa-seedling mr-1"></i>
+                                                                            Plant and report progress
+                                                                        </>
+                                                                    )}
+                                                                    {request.status === 'Picked_Up' && request.plantingReport && request.plantingReport.state !== 'Harvested' && (
+                                                                        <>
+                                                                            <i className="fa-solid fa-seedling mr-1"></i>
+                                                                            Continue reporting progress
+                                                                        </>
+                                                                    )}
+                                                                    {request.status === 'Planted' && request.plantingReport?.state !== 'Harvested' && (
+                                                                        <>
+                                                                            <i className="fa-solid fa-seedling mr-1"></i>
+                                                                            Continue reporting progress
+                                                                        </>
+                                                                    )}
+                                                                    {request.status === 'Rejected' && (
+                                                                        <>
+                                                                            <i className="fa-solid fa-ban mr-1"></i>
+                                                                            Request was not approved
+                                                                        </>
+                                                                    )}
+                                                                    {request.status === 'Cancelled' && (
+                                                                        <>
+                                                                            <i className="fa-solid fa-circle-xmark mr-1"></i>
+                                                                            Request cancelled
+                                                                        </>
+                                                                    )}
+                                                                    {request.status === 'No_Pickup' && (
+                                                                        <>
+                                                                            <i className="fa-solid fa-calendar-xmark mr-1"></i>
+                                                                            Pickup window expired
+                                                                        </>
+                                                                    )}
+                                                                    {request.status === 'Archived' && (
+                                                                        <>
+                                                                            <i className="fa-solid fa-archive mr-1"></i>
+                                                                            Request completed
+                                                                        </>
                                                                     )}
                                                                 </div>
                                                             </td>

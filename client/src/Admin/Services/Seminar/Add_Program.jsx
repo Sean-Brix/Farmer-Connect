@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTheme } from '../../../contexts/ThemeContext';
 import default_seminar_pic from '../../../Assets/default_seminar_pic.jpg';
@@ -26,6 +26,7 @@ export default function Add_Program({
 
     const [newImage, setNewImage] = useState(default_seminar_pic);
     const [showImagePreview, setShowImagePreview] = useState(false);
+    const [validationErrors, setValidationErrors] = useState({});
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
@@ -36,6 +37,13 @@ export default function Add_Program({
             });
             if (!response.ok) {
                 const errorData = await response.json();
+                
+                // If validation errors exist, format them nicely
+                if (errorData.payload?.errors) {
+                    const errorMessages = errorData.payload.errors.join('\n• ');
+                    throw new Error(`Validation Errors:\n• ${errorMessages}`);
+                }
+                
                 throw new Error(
                     errorData.payload?.Error || 'Failed to add program'
                 );
@@ -50,16 +58,103 @@ export default function Add_Program({
         },
         onError: (error) => {
             console.error('Error adding program:', error.message);
-            alert(
-                error.message === 'Failed to add program'
-                    ? 'All Parameters Required'
-                    : error.message
-            );
+            
+            // Display formatted error message
+            alert(error.message);
         },
     });
+    
+    // Validate form data
+    const validateForm = () => {
+        const errors = {};
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
+        
+        // Validate capacity
+        if (!newProgram.capacity || newProgram.capacity < 1) {
+            errors.capacity = 'Capacity must be at least 1';
+        }
+        
+        // Validate dates and times exist
+        if (!newProgram.startDate) {
+            errors.startDate = 'Start date is required';
+        }
+        if (!newProgram.endDate) {
+            errors.endDate = 'End date is required';
+        }
+        if (!newProgram.registrationDeadline) {
+            errors.registrationDeadline = 'Registration deadline is required';
+        }
+        if (!newProgram.openTime) {
+            errors.openTime = 'Start time is required';
+        }
+        if (!newProgram.closeTime) {
+            errors.closeTime = 'End time is required';
+        }
+        
+        // Validate date logic if all dates are present
+        if (newProgram.startDate && newProgram.endDate && newProgram.registrationDeadline) {
+            const startDate = new Date(newProgram.startDate);
+            startDate.setHours(0, 0, 0, 0);
+            const endDate = new Date(newProgram.endDate);
+            endDate.setHours(0, 0, 0, 0);
+            const regDeadline = new Date(newProgram.registrationDeadline);
+            regDeadline.setHours(0, 0, 0, 0);
+            
+            // Start date cannot be in the past
+            if (startDate < currentDate) {
+                errors.startDate = 'Start date cannot be in the past';
+            }
+            
+            // End date must be on or after start date
+            if (endDate < startDate) {
+                errors.endDate = 'End date must be on or after start date';
+            }
+            
+            // Registration deadline must be before start date
+            if (regDeadline >= startDate) {
+                errors.registrationDeadline = 'Registration deadline must be before start date';
+            }
+            
+            // Validate times for same-day events
+            if (newProgram.openTime && newProgram.closeTime && startDate.getTime() === endDate.getTime()) {
+                if (newProgram.closeTime <= newProgram.openTime) {
+                    errors.closeTime = 'End time must be after start time on same-day events';
+                }
+            }
+        }
+        
+        // Always validate times if both are present
+        if (newProgram.openTime && newProgram.closeTime) {
+            const startDate = newProgram.startDate ? new Date(newProgram.startDate) : null;
+            const endDate = newProgram.endDate ? new Date(newProgram.endDate) : null;
+            
+            const shouldValidateTimes = !startDate || !endDate || 
+                                       (startDate.getTime() === endDate.getTime());
+            
+            if (shouldValidateTimes && newProgram.closeTime <= newProgram.openTime) {
+                errors.closeTime = 'End time must be after start time';
+            }
+        }
+        
+        setValidationErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+    
+    // Run validation whenever relevant fields change
+    useEffect(() => {
+        validateForm();
+    }, [newProgram.capacity, newProgram.startDate, newProgram.endDate, 
+        newProgram.registrationDeadline, newProgram.openTime, newProgram.closeTime]);
 
     const handleAddProgram = async (e) => {
         e.preventDefault();
+        
+        // Validate before submitting
+        if (!validateForm()) {
+            alert('Please fix all validation errors before submitting.');
+            return;
+        }
 
         const formData = new FormData();
         formData.append('title', newProgram.title);
@@ -155,6 +250,27 @@ export default function Add_Program({
 
                     {/* Content */}
                     <div className="p-6 overflow-y-auto flex-1">
+                        {/* Validation Error Summary */}
+                        {Object.keys(validationErrors).length > 0 && (
+                            <div className="mb-6 rounded-lg border-2 border-red-500 bg-red-50 dark:bg-red-900/20 p-4">
+                                <div className="flex items-start gap-3">
+                                    <svg className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                    </svg>
+                                    <div className="flex-1">
+                                        <h3 className="text-sm font-semibold text-red-800 dark:text-red-300 mb-2">
+                                            Please fix the following errors before submitting:
+                                        </h3>
+                                        <ul className="list-disc list-inside space-y-1 text-sm text-red-700 dark:text-red-400">
+                                            {Object.entries(validationErrors).map(([field, error]) => (
+                                                <li key={field}>{error}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        
                         {/* Combined Information Box */}
                         <div className="mb-6">
                             <div className={`rounded-xl p-6 border ${
@@ -499,8 +615,13 @@ export default function Add_Program({
                         </button>
                         <button
                             type="submit"
-                            disabled={mutation.isPending}
-                            className="px-6 py-2.5 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-400 shadow-sm disabled:opacity-50"
+                            disabled={mutation.isPending || Object.keys(validationErrors).length > 0}
+                            className={`px-6 py-2.5 font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 shadow-sm ${
+                                mutation.isPending || Object.keys(validationErrors).length > 0
+                                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                                    : 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-400'
+                            }`}
+                            title={Object.keys(validationErrors).length > 0 ? 'Please fix all validation errors' : 'Add seminar'}
                         >
                             {mutation.isPending ? 'Adding...' : 'Add Seminar'}
                         </button>

@@ -70,7 +70,8 @@ export function RegularReportsTable({ stateSubTab, search, filters, pagination, 
 			page: pagination.page,
 			limit: pagination.limit,
 			search,
-			// Don't filter by distributionLinked - show all reports including distribution ones
+			// Filter out distribution-linked reports - they appear in Distribution page only
+			distributionLinked: false,
 			sortBy,
 			sortOrder,
 			...restFilters
@@ -88,7 +89,9 @@ export function RegularReportsTable({ stateSubTab, search, filters, pagination, 
 		} else if (stateSubTab === STATE_SUB_TABS.ARCHIVED) {
 			result.isArchived = true;
 		} else {
+			// When showing all reports, exclude "Distributed" state (distribution-only)
 			result.isArchived = false;
+			result.excludeDistributed = true;
 		}
 
 		return result;

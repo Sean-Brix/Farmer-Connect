@@ -176,6 +176,7 @@ export async function getAllPlantingReports(req, res) {
             req.query.isArchived === 'false' ? false : undefined,
             distributionLinked: req.query.distributionLinked === 'true' ? true :
             req.query.distributionLinked === 'false' ? false : undefined,
+            excludeDistributed: req.query.excludeDistributed === 'true',
             distributionRequestId: req.query.distributionRequestId,
             typeOfCrop: req.query.typeOfCrop,
             varietyId: req.query.varietyId,
@@ -975,10 +976,20 @@ export async function transitionToHarvested(req, res) {
 
         console.log(`✅ [Planting Report] ${id} transitioned: Planted → Harvested (yield: ${yieldResult.yield} Mt/Ha)`);
 
-        // Note: Distribution request status remains 'Planted' (transaction_status enum doesn't include 'Harvested')
-        // The planting report state tracks the full lifecycle: Distributed → Planted → Harvested
+        // Update the distribution request status to 'Archived' when harvest is completed
         if (updatedReport.distributionRequestId) {
-            console.log(`ℹ️ [Distribution] Request ${updatedReport.distributionRequestId} status remains 'Planted' (report is now Harvested)`);
+            try {
+                await prisma.itemTransaction.update({
+                    where: { id: updatedReport.distributionRequestId },
+                    data: {
+                        status: 'Archived',
+                        updatedAt: new Date()
+                    }
+                });
+                console.log(`✅ [Distribution] Request ${updatedReport.distributionRequestId} archived (planting report harvested)`);
+            } catch (err) {
+                console.error(`❌ [Distribution] Failed to archive request ${updatedReport.distributionRequestId}:`, err);
+            }
         }
 
         return res.status(200).json({

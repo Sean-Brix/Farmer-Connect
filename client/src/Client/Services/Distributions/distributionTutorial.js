@@ -83,8 +83,8 @@ export const createDistributionTutorial = () => {
 
     tour.addStep({
         id: 'monthly-limit',
-        title: 'Monthly Request Limit',
-        text: 'Keep track of your monthly request limit here. You can make up to 2 requests per month.',
+        title: 'Active Request Limit',
+        text: 'Keep track of your active request limit here. You can have up to 2 active requests at a time (Pending, Approved, or Picked Up).',
         attachTo: {
             element: '[data-tutorial="monthly-limit"]',
             on: 'bottom'

@@ -1,5 +1,6 @@
 import prisma from '../../config/database.js';
 import auditLogger from '../../Services/auditLogger.js';
+import { validateSeminarDates } from '../../Utils/seminarStatusUpdater.js';
 
 async function addSeminar(req, res) {
     try {
@@ -32,6 +33,17 @@ async function addSeminar(req, res) {
             return res
                 .status(400)
                 .json({ payload: { Error: 'All parameters are required' } });
+
+        // Validate seminar dates and times
+        const validation = validateSeminarDates(req.body);
+        if (!validation.isValid) {
+            return res.status(400).json({ 
+                payload: { 
+                    Error: 'Validation failed', 
+                    errors: validation.errors 
+                } 
+            });
+        }
 
         let picture = null;
         let mimeType = null;

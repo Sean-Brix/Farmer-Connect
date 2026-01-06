@@ -19,13 +19,53 @@ async function getAll(req, res) {
             },
         });
 
-        const list = distributedStacks.map((stack) => ({
-            ...stack,
-            item: {
-                ...stack.item,
-                picture: `/api/distribution/photo/${stack.itemId}`,
+        // Count approved Distribution requests per item (these are "reserved" items)
+        // Only count transactions for Distribution items (not EIC)
+        const approvedRequests = await prisma.itemTransaction.findMany({
+            where: { 
+                status: 'Approved',
+                itemStack: {
+                    status: 'Distributed'  // Only count Distribution transactions, not EIC
+                }
             },
-            count: stack.count,
+            select: {
+                itemStack: {
+                    select: {
+                        itemId: true
+                    }
+                },
+                quantity: true
+            }
+        });
+
+        // Create a map of itemId to total reserved quantity from approved requests
+        const reservedMap = approvedRequests.reduce((acc, request) => {
+            const itemId = request.itemStack.itemId;
+            acc[itemId] = (acc[itemId] || 0) + request.quantity;
+            return acc;
+        }, {});
+
+        // Update reservedQuantity in database and prepare response
+        const list = await Promise.all(distributedStacks.map(async (stack) => {
+            const reservedQty = reservedMap[stack.itemId] || 0;
+            
+            // Update database if reservedQuantity changed
+            if (stack.reservedQuantity !== reservedQty) {
+                await prisma.itemStack.update({
+                    where: { id: stack.id },
+                    data: { reservedQuantity: reservedQty }
+                });
+            }
+
+            return {
+                ...stack,
+                item: {
+                    ...stack.item,
+                    picture: `/api/distribution/photo/${stack.itemId}`,
+                },
+                count: stack.count,
+                reservedQuantity: reservedQty,
+            };
         }));
 
         // Return success response with the distributed stacks data

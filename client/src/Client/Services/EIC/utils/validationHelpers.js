@@ -150,8 +150,11 @@ export const checkMaxActiveRequests = (userRequests, systemSettings) => {
     return { atLimit: false, current: 0, limit: 0, message: '' };
   }
 
+  // Import ARCHIVED_STATUSES at the top of the file
+  const ARCHIVED_STATUSES = ['Returned', 'late_return', 'Rejected', 'No_Return', 'No_Pickup', 'Cancelled'];
+  
   const activeCount = userRequests.filter(
-    r => ['Pending', 'Approved'].includes(r.status)
+    r => !ARCHIVED_STATUSES.includes(r.status)
   ).length;
 
   const limit = systemSettings.eic_max_simultaneous_borrows;
